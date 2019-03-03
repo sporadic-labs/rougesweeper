@@ -2,6 +2,9 @@ import "../css/main.scss";
 import Phaser from "phaser";
 import { Loading, Test, SCENE_NAME } from "./scenes";
 import "./ui-app/";
+import disableRightClickMenu from "./helpers/disable-right-click-menu";
+
+if (PRODUCTION) disableRightClickMenu("body");
 
 const gameDimensions = 750;
 const containerId = "game-container";
@@ -19,12 +22,6 @@ const game = new Phaser.Game({
       debug: false
     }
   }
-});
-
-// Disable right click menu
-document.getElementById(containerId).addEventListener("contextmenu", e => {
-  e.preventDefault();
-  return false;
 });
 
 game.scene.add(SCENE_NAME.LOADING, Loading);
