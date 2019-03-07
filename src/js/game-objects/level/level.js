@@ -24,6 +24,8 @@ export default class Level {
         return tile;
       })
     );
+
+    this.tiles[playerPos.y][playerPos.x].flipToFront();
   }
 
   getStartingPosition() {
