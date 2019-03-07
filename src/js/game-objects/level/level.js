@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
@@ -7,10 +8,14 @@ export default class Level {
     this.scene = scene;
 
     const composition = {
-      [TILE_TYPES.ENEMY]: 5,
-      [TILE_TYPES.GOLD]: 5
+      [TILE_TYPES.ENEMY]: 10,
+      [TILE_TYPES.GOLD]: 10
     };
-    this.data = new LevelData(7, 7, composition, { x: 0, y: 0 }, { x: 6, y: 6 });
+    const w = 9;
+    const h = 6;
+    const playerPos = { x: 0, y: Phaser.Math.Between(0, h - 1) };
+    const exitPos = { x: w - 1, y: Phaser.Math.Between(0, h - 1) };
+    this.data = new LevelData(w, h, composition, playerPos, exitPos);
     this.data.debugDump();
 
     this.tiles = this.data.tiles.map((row, y) =>
