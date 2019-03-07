@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import { Math as PMath } from "phaser";
 import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
@@ -13,8 +13,8 @@ export default class Level {
     };
     const w = 9;
     const h = 6;
-    const playerPos = { x: 0, y: Phaser.Math.Between(0, h - 1) };
-    const exitPos = { x: w - 1, y: Phaser.Math.Between(0, h - 1) };
+    const playerPos = { x: 0, y: PMath.Between(0, h - 1) };
+    const exitPos = { x: w - 1, y: PMath.Between(0, h - 1) };
     this.data = new LevelData(w, h, composition, playerPos, exitPos);
     this.data.debugDump();
 
