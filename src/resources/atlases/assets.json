@@ -32,9 +32,17 @@
 	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
 	"sourceSize": {"w":76,"h":76}
 },
-"tiles/tile-gold":
+"tiles/tile-exit":
 {
 	"frame": {"x":229,"y":403,"w":74,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
+	"sourceSize": {"w":76,"h":76}
+},
+"tiles/tile-gold":
+{
+	"frame": {"x":305,"y":403,"w":74,"h":74},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
@@ -47,6 +55,6 @@
 	"format": "RGBA8888",
 	"size": {"w":402,"h":478},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:76f629a566af4bb03e4d326179922b1f:a49a639e1129f59fc9a947b35c77b356:a759b6bbc8381ac9c472b28f589ad0d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:abe3bc0d79b5e131dc6735f779453a9f:bc16078ccc6f7bc3c986dd568be18a3e:a759b6bbc8381ac9c472b28f589ad0d6$"
 }
 }

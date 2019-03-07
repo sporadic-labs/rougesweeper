@@ -197,6 +197,7 @@
             <key type="filename">assets/tiles/tile-back.png</key>
             <key type="filename">assets/tiles/tile-blank.png</key>
             <key type="filename">assets/tiles/tile-enemy.png</key>
+            <key type="filename">assets/tiles/tile-exit.png</key>
             <key type="filename">assets/tiles/tile-gold.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
