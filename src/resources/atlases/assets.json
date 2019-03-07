@@ -1,5 +1,13 @@
 {"frames": {
 
+"player":
+{
+	"frame": {"x":381,"y":403,"w":40,"h":60},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":60},
+	"sourceSize": {"w":40,"h":60}
+},
 "subtle-pattern-ep-natural-black":
 {
 	"frame": {"x":1,"y":1,"w":400,"h":400},
@@ -53,8 +61,8 @@
 	"version": "1.0",
 	"image": "assets.png",
 	"format": "RGBA8888",
-	"size": {"w":402,"h":478},
+	"size": {"w":422,"h":478},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:abe3bc0d79b5e131dc6735f779453a9f:bc16078ccc6f7bc3c986dd568be18a3e:a759b6bbc8381ac9c472b28f589ad0d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:bbe81734d15fff876856d377d2cf00fe:6efcb5c2518a175bbdcd4e9d89f0ab75:a759b6bbc8381ac9c472b28f589ad0d6$"
 }
 }

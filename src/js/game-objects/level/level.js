@@ -15,10 +15,23 @@ export default class Level {
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
-        const tile = new Tile(scene, type, 50 + x * 80, 50 + y * 80);
+        const tile = new Tile(scene, type, this.gridXToWorldX(x), this.gridYToWorldY(y));
         if (type === TILE_TYPES.EXIT) tile.flipToFront();
         return tile;
       })
     );
+  }
+
+  getStartingPosition() {
+    const pos = this.data.playerPosition;
+    return { x: this.gridXToWorldX(pos.x), y: this.gridYToWorldY(pos.y) };
+  }
+
+  gridXToWorldX(x) {
+    return 50 + x * 80;
+  }
+
+  gridYToWorldY(y) {
+    return 50 + y * 80;
   }
 }
