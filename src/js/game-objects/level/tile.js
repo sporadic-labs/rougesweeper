@@ -37,7 +37,6 @@ export default class Tile {
   };
 
   onHoverEnd = () => {
-    this.flipToBack();
     if (this.tween) this.tween.stop();
     this.tween = this.scene.add.tween({
       targets: this.container,
