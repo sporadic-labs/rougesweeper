@@ -16,7 +16,6 @@ export default class Level {
     const playerPos = { x: 0, y: PMath.Between(0, h - 1) };
     const exitPos = { x: w - 1, y: PMath.Between(0, h - 1) };
     this.data = new LevelData(w, h, composition, playerPos, exitPos);
-    this.data.debugDump();
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
