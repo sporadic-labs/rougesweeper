@@ -3,8 +3,6 @@ import Phaser from "phaser";
 import { Loading, Test, SCENE_NAME } from "./scenes";
 import "./ui-app/";
 import disableRightClickMenu from "./helpers/disable-right-click-menu";
-// TESTING
-import Level from "./game-objects/level-generator/index";
 
 if (PRODUCTION) disableRightClickMenu("body");
 
