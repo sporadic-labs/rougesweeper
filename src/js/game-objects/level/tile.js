@@ -15,13 +15,33 @@ export default class Tile {
     this.levelEvents = levelEvents;
     this.type = type;
 
+    this.gridX = 0;
+    this.gridY = 0;
+
     this.backSprite = scene.add.sprite(0, 0, "assets", `tiles/tile-back`);
-    this.frontSprite = scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`);
-    this.container = scene.add.container(x, y, [this.backSprite, this.frontSprite]);
+    this.frontSprite = scene.add.sprite(
+      0,
+      0,
+      "assets",
+      `tiles/${TYPE_TO_KEY[type]}`
+    );
+    this.container = scene.add.container(x, y, [
+      this.backSprite,
+      this.frontSprite
+    ]);
     this.frontSprite.setVisible(false);
     this.isFrontVisible = false;
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
+  }
+
+  setGridPosition(x, y) {
+    this.gridX = x;
+    this.gridY = y;
+  }
+
+  getGridPosition() {
+    return { x: this.gridX, y: this.gridY };
   }
 
   enableInteractive() {
@@ -43,7 +63,6 @@ export default class Tile {
   };
 
   onHoverStart = () => {
-    this.flipToFront();
     if (this.tween) this.tween.stop();
     this.tween = this.scene.add.tween({
       targets: this.container,
@@ -75,5 +94,9 @@ export default class Tile {
     this.isFrontVisible = false;
     this.backSprite.setVisible(!this.isFrontVisible);
     this.frontSprite.setVisible(this.isFrontVisible);
+  }
+
+  getPosition() {
+    return { x: this.container.x, y: this.container.y };
   }
 }
