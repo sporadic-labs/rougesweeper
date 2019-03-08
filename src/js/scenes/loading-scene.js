@@ -17,6 +17,6 @@ export default class LoadingScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start(SCENE_NAME.TEST);
+    this.scene.start(SCENE_NAME.MAIN);
   }
 }

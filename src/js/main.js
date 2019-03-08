@@ -1,6 +1,6 @@
 import "../css/main.scss";
 import Phaser from "phaser";
-import { Loading, Test, SCENE_NAME } from "./scenes";
+import { SCENE_NAME, installScenes } from "./scenes";
 import "./ui-app/";
 import disableRightClickMenu from "./helpers/disable-right-click-menu";
 
@@ -24,6 +24,5 @@ const game = new Phaser.Game({
   }
 });
 
-game.scene.add(SCENE_NAME.LOADING, Loading);
-game.scene.add(SCENE_NAME.TEST, Test);
+installScenes(game);
 game.scene.start(SCENE_NAME.LOADING);
