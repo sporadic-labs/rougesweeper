@@ -29,7 +29,7 @@ export default class Level {
     this.tiles[playerPos.y][playerPos.x].flipToFront();
   }
 
-  getStartingPosition() {
+  getStartingWorldPosition() {
     const pos = this.data.playerPosition;
     return { x: this.gridXToWorldX(pos.x), y: this.gridYToWorldY(pos.y) };
   }
