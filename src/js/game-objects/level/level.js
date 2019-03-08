@@ -1,4 +1,4 @@
-import { Math as PMath } from "phaser";
+import { Math as PMath, Events } from "phaser";
 import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
@@ -6,6 +6,7 @@ import LevelData from "./level-data";
 export default class Level {
   constructor(scene) {
     this.scene = scene;
+    this.events = new Events.EventEmitter();
 
     const composition = {
       [TILE_TYPES.ENEMY]: 10,
