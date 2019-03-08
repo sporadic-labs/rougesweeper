@@ -27,6 +27,7 @@ export default class Level {
           this.gridYToWorldY(y),
           this.events
         );
+        tile.setGridPosition(x, y);
         tile.enableInteractive();
         if (type === TILE_TYPES.EXIT) tile.flipToFront();
         return tile;
@@ -41,11 +42,50 @@ export default class Level {
     return { x: this.gridXToWorldX(pos.x), y: this.gridYToWorldY(pos.y) };
   }
 
+  getStartingGridPosition() {
+    const pos = this.data.playerPosition;
+    return { x: pos.x, y: pos.y };
+  }
+
   gridXToWorldX(x) {
     return 50 + x * 80;
   }
 
   gridYToWorldY(y) {
     return 50 + y * 80;
+  }
+
+  getTileFromGrid(x, y) {
+    if (this.tiles[y] && this.tiles[y][x]) {
+      return this.tiles[y][x];
+    }
+    return null;
+  }
+
+  enableAllTiles() {
+    this.tiles.forEach(row => {
+      row.forEach(tile => {
+        tile.enableInteractive();
+      });
+    });
+  }
+
+  disableAllTiles() {
+    this.tiles.forEach(row => {
+      row.forEach(tile => {
+        tile.disableInteractive();
+      });
+    });
+  }
+
+  isTileInPlayerRange(playerPos, tilePos) {
+    return (
+      (tilePos.x <= playerPos.x + 1 &&
+        tilePos.x >= playerPos.x - 1 &&
+        tilePos.y === playerPos.y) ||
+      (tilePos.y <= playerPos.y + 1 &&
+        tilePos.y >= playerPos.y - 1 &&
+        tilePos.x === playerPos.x)
+    );
   }
 }
