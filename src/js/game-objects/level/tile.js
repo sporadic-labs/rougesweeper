@@ -1,4 +1,5 @@
 import TILE_TYPES from "./tile-types";
+import LEVEL_EVENTS from "./events";
 
 const TYPE_TO_KEY = {
   [TILE_TYPES.BLANK]: "tile-blank",
@@ -9,8 +10,10 @@ const TYPE_TO_KEY = {
 
 export default class Tile {
   /** @param {Phaser.Scene} scene */
-  constructor(scene, type, x, y) {
+  constructor(scene, type, x, y, levelEvents) {
     this.scene = scene;
+    this.levelEvents = levelEvents;
+    this.type = type;
 
     this.backSprite = scene.add.sprite(0, 0, "assets", `tiles/tile-back`);
     this.frontSprite = scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`);
@@ -18,12 +21,26 @@ export default class Tile {
     this.frontSprite.setVisible(false);
     this.isFrontVisible = false;
 
-    // TESTING
     this.container.setSize(this.backSprite.width, this.backSprite.height);
+  }
+
+  enableInteractive() {
     this.container.setInteractive();
     this.container.on("pointerover", this.onHoverStart);
     this.container.on("pointerout", this.onHoverEnd);
+    this.container.on("pointerdown", this.onPointerDown);
   }
+
+  disableInteractive() {
+    this.container.disableInteractive();
+    this.container.off("pointerover", this.onHoverStart);
+    this.container.off("pointerout", this.onHoverEnd);
+    this.container.off("pointerdown", this.onPointerDown);
+  }
+
+  onPointerDown = () => {
+    this.levelEvents.emit(LEVEL_EVENTS.TILE_SELECT, this);
+  };
 
   onHoverStart = () => {
     this.flipToFront();
@@ -34,6 +51,7 @@ export default class Tile {
       scaleY: 1.1,
       duration: 100
     });
+    this.levelEvents.emit(LEVEL_EVENTS.TILE_OUT, this);
   };
 
   onHoverEnd = () => {
@@ -44,6 +62,7 @@ export default class Tile {
       scaleY: 1,
       duration: 100
     });
+    this.levelEvents.emit(LEVEL_EVENTS.TILE_OUT, this);
   };
 
   flipToFront() {

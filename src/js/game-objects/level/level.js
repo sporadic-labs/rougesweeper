@@ -20,7 +20,14 @@ export default class Level {
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
-        const tile = new Tile(scene, type, this.gridXToWorldX(x), this.gridYToWorldY(y));
+        const tile = new Tile(
+          scene,
+          type,
+          this.gridXToWorldX(x),
+          this.gridYToWorldY(y),
+          this.events
+        );
+        tile.enableInteractive();
         if (type === TILE_TYPES.EXIT) tile.flipToFront();
         return tile;
       })
