@@ -16,19 +16,13 @@ export default class GameManager {
   }
 
   startMoveFlow() {
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT, tile => {
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       // Check if tile is in range of player
       const tileGridPos = tile.getGridPosition();
-      if (
-        this.level.isTileInPlayerRange(
-          this.player.getGridPosition(),
-          tileGridPos
-        )
-      ) {
+      if (this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos)) {
         //  disable tile interactivity
         this.level.disableAllTiles();
-        //  reveal tile
-        tile.flipToFront();
+        if (!tile.isRevealed()) await tile.flipToFront();
         //  apply tile effect
         switch (tile.type) {
           case TILE_TYPES.ENEMY:

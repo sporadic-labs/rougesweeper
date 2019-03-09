@@ -1,5 +1,6 @@
 import TILE_TYPES from "./tile-types";
 import LEVEL_EVENTS from "./events";
+import FlipEffect from "./flip-effect";
 
 const TYPE_TO_KEY = {
   [TILE_TYPES.BLANK]: "tile-blank",
@@ -19,20 +20,17 @@ export default class Tile {
     this.gridY = 0;
 
     this.backSprite = scene.add.sprite(0, 0, "assets", `tiles/tile-back`);
-    this.frontSprite = scene.add.sprite(
-      0,
-      0,
-      "assets",
-      `tiles/${TYPE_TO_KEY[type]}`
-    );
-    this.container = scene.add.container(x, y, [
-      this.backSprite,
-      this.frontSprite
-    ]);
-    this.frontSprite.setVisible(false);
-    this.isFrontVisible = false;
+    this.frontSprite = scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`);
+    this.container = scene.add.container(x, y, [this.backSprite, this.frontSprite]);
+
+    this.flipEffect = new FlipEffect(scene, this.frontSprite, this.backSprite);
+    this.flipEffect.setToBack();
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
+  }
+
+  isRevealed() {
+    return this.flipEffect.flipProgress === 1;
   }
 
   setGridPosition(x, y) {
@@ -85,15 +83,17 @@ export default class Tile {
   };
 
   flipToFront() {
-    this.isFrontVisible = true;
-    this.backSprite.setVisible(!this.isFrontVisible);
-    this.frontSprite.setVisible(this.isFrontVisible);
+    return new Promise(resolve => {
+      this.flipEffect.events.once("complete", resolve);
+      this.flipEffect.flipToFront();
+    });
   }
 
   flipToBack() {
-    this.isFrontVisible = false;
-    this.backSprite.setVisible(!this.isFrontVisible);
-    this.frontSprite.setVisible(this.isFrontVisible);
+    return new Promise(resolve => {
+      this.flipEffect.events.once("complete", resolve);
+      this.flipEffect.flipToBack();
+    });
   }
 
   getPosition() {
