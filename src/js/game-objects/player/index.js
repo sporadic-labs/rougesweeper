@@ -1,7 +1,7 @@
 export default class Player {
   /** @param {Phaser.Scene} scene */
   constructor(scene, x, y) {
-    this.sprite = scene.add.sprite(x, y, "assets", "tiles/player");
+    this.sprite = scene.add.sprite(x, y, "assets", "player");
 
     this.gridX = 0;
     this.gridY = 0;

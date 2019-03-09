@@ -1,32 +1,32 @@
 {"frames": {
 
-"player":
+"attack":
 {
-	"frame": {"x":403,"y":227,"w":40,"h":60},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":60},
-	"sourceSize": {"w":40,"h":60}
-},
-"subtle-pattern-ep-natural-black":
-{
-	"frame": {"x":1,"y":1,"w":400,"h":400},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
-	"sourceSize": {"w":400,"h":400}
-},
-"tiles/attack":
-{
-	"frame": {"x":403,"y":1,"w":45,"h":57},
+	"frame": {"x":155,"y":1,"w":45,"h":57},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":15,"y":9,"w":45,"h":57},
 	"sourceSize": {"w":75,"h":75}
 },
+"player":
+{
+	"frame": {"x":202,"y":1,"w":45,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":5,"w":45,"h":64},
+	"sourceSize": {"w":75,"h":75}
+},
+"subtle-pattern-ep-natural-black":
+{
+	"frame": {"x":1,"y":77,"w":400,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
+	"sourceSize": {"w":400,"h":400}
+},
 "tiles/enemy":
 {
-	"frame": {"x":403,"y":179,"w":44,"h":46},
+	"frame": {"x":1,"y":1,"w":44,"h":46},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":16,"y":15,"w":44,"h":46},
@@ -34,31 +34,23 @@
 },
 "tiles/exit":
 {
-	"frame": {"x":403,"y":126,"w":44,"h":51},
+	"frame": {"x":97,"y":1,"w":56,"h":55},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":19,"y":12,"w":44,"h":51},
+	"spriteSourceSize": {"x":10,"y":11,"w":56,"h":55},
 	"sourceSize": {"w":76,"h":76}
 },
 "tiles/gold":
 {
-	"frame": {"x":381,"y":403,"w":48,"h":48},
+	"frame": {"x":47,"y":1,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":14,"y":14,"w":48,"h":48},
 	"sourceSize": {"w":76,"h":76}
 },
-"tiles/player":
-{
-	"frame": {"x":403,"y":60,"w":44,"h":64},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":16,"y":6,"w":44,"h":64},
-	"sourceSize": {"w":75,"h":75}
-},
 "tiles/tile-back":
 {
-	"frame": {"x":1,"y":403,"w":74,"h":74},
+	"frame": {"x":249,"y":1,"w":74,"h":74},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
@@ -66,31 +58,7 @@
 },
 "tiles/tile-blank":
 {
-	"frame": {"x":77,"y":403,"w":74,"h":74},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
-	"sourceSize": {"w":76,"h":76}
-},
-"tiles/tile-enemy":
-{
-	"frame": {"x":153,"y":403,"w":74,"h":74},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
-	"sourceSize": {"w":76,"h":76}
-},
-"tiles/tile-exit":
-{
-	"frame": {"x":229,"y":403,"w":74,"h":74},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
-	"sourceSize": {"w":76,"h":76}
-},
-"tiles/tile-gold":
-{
-	"frame": {"x":305,"y":403,"w":74,"h":74},
+	"frame": {"x":325,"y":1,"w":74,"h":74},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
@@ -101,8 +69,8 @@
 	"version": "1.0",
 	"image": "assets.png",
 	"format": "RGBA8888",
-	"size": {"w":449,"h":478},
+	"size": {"w":402,"h":478},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:9face29e6c0646ce5c92523f99898ac1:c45ed183a7fd4ac7123fec5d4077c569:a759b6bbc8381ac9c472b28f589ad0d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:076fe4b3f3ec4ea611a0bc25d1133700:c13c2378f301315c9d53818b26ce24a8:a759b6bbc8381ac9c472b28f589ad0d6$"
 }
 }

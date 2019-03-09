@@ -199,6 +199,24 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">assets/attack.png</key>
+            <key type="filename">assets/tiles/enemy.png</key>
+            <key type="filename">assets/tiles/exit.png</key>
+            <key type="filename">assets/tiles/gold.png</key>
+            <key type="filename">assets/tiles/tile-back.png</key>
+            <key type="filename">assets/tiles/tile-blank.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>19,19,38,38</rect>
+                <key>scale9Paddings</key>
+                <rect>19,19,38,38</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">assets/player.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -222,28 +240,6 @@
                 <rect>100,100,200,200</rect>
                 <key>scale9Paddings</key>
                 <rect>100,100,200,200</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">assets/tiles/attack.png</key>
-            <key type="filename">assets/tiles/enemy.png</key>
-            <key type="filename">assets/tiles/exit.png</key>
-            <key type="filename">assets/tiles/gold.png</key>
-            <key type="filename">assets/tiles/player.png</key>
-            <key type="filename">assets/tiles/tile-back.png</key>
-            <key type="filename">assets/tiles/tile-blank.png</key>
-            <key type="filename">assets/tiles/tile-enemy.png</key>
-            <key type="filename">assets/tiles/tile-exit.png</key>
-            <key type="filename">assets/tiles/tile-gold.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>19,19,38,38</rect>
-                <key>scale9Paddings</key>
-                <rect>19,19,38,38</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
