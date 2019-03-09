@@ -42,6 +42,41 @@ export default class Tile {
     return this.flipEffect.flipProgress === 1;
   }
 
+  playTileGraphicAnimation() {
+    if (this.type !== TILE_TYPES.BLANK) {
+      this.frontTile.getAt(1).destroy();
+
+      // TODO(rex): Add some tweens so this is a better animation.
+      //   if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
+
+      //   console.log(this.tileGraphicTimeline);
+      //   this.tileGraphicTimeline = this.scene.tweens
+      //     .createTimeline()
+      //     .add({
+      //       targets: this.frontTile.getAt(1),
+      //       ease: Phaser.Math.Easing.Quadratic.InOut,
+      //       loop: -1,
+      //       duration: 100,
+      //       tweens: [
+      //         { x: -1, y: -1, angle: 1 },
+      //         { x: 1, y: 1.5, angle: -1.5 },
+      //         { x: 0.5, y: 1, angle: 0.5 },
+      //         { x: -1.5, y: -0.5, angle: -0.5 }
+      //       ]
+      //     })
+      //     .add({
+      //       targets: this.frontTile.getAt(1),
+      //       duration: 150,
+      //       loop: 1,
+      //       ease: "Quad.Out",
+      //       tweens: [{ opacity: 0 }]
+      //     })
+      //     .play();
+
+      console.log(this.tileGraphicTimeline);
+    }
+  }
+
   setGridPosition(x, y) {
     this.gridX = x;
     this.gridY = y;

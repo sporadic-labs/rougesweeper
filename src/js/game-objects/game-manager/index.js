@@ -15,11 +15,19 @@ export default class GameManager {
   startMoveFlow() {
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
-      if (this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos)) {
+      if (
+        this.level.isTileInPlayerRange(
+          this.player.getGridPosition(),
+          tileGridPos
+        )
+      ) {
         this.level.disableAllTiles();
-        if (!tile.isRevealed()) await tile.flipToFront();
+        if (!tile.isRevealed()) {
+          await tile.flipToFront();
+          await tile.playTileGraphicAnimation();
+          this.applyTileEffect(tile);
+        }
 
-        this.applyTileEffect(tile);
         if (tile.type === TILE_TYPES.EXIT) {
           this.startNewLevel();
           return;
@@ -27,7 +35,10 @@ export default class GameManager {
 
         this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
 
-        const enemyCount = this.level.countNeighboringEnemies(tileGridPos.x, tileGridPos.y);
+        const enemyCount = this.level.countNeighboringEnemies(
+          tileGridPos.x,
+          tileGridPos.y
+        );
         store.setDangerCount(enemyCount);
 
         this.level.enableAllTiles();
@@ -52,6 +63,8 @@ export default class GameManager {
       case TILE_TYPES.GOLD:
         this.player.addGold();
         break;
+      default:
+        console.log("no tile effect!");
     }
   }
 
