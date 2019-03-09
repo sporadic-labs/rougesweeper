@@ -1,3 +1,4 @@
+import "@babel/polyfill";
 import "../css/main.scss";
 import Phaser from "phaser";
 import { SCENE_NAME, installScenes } from "./scenes";

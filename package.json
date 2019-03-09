@@ -67,5 +67,7 @@
   "bugs": {
     "url": "https://github.com/sporadic-labs/phaser-3-sandbox.git/issues"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@babel/polyfill": "^7.2.5"
+  }
 }
