@@ -1,19 +1,15 @@
 import LEVEL_EVENTS from "../level/events";
 import TILE_TYPES from "../level/tile-types";
 import store from "../../store/index";
+import Level from "../level/level";
 
 export default class GameManager {
-  constructor(scene, player, level) {
+  constructor(scene, player) {
     this.scene = scene;
-    this.level = level;
+    this.level = null;
     this.player = player;
 
-    const gridPos = level.getStartingGridPosition();
-    this.movePlayerToTile(gridPos.x, gridPos.y);
-    const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
-    store.setDangerCount(enemyCount);
-
-    this.startMoveFlow();
+    this.startNewLevel();
   }
 
   startMoveFlow() {
@@ -24,8 +20,8 @@ export default class GameManager {
         if (!tile.isRevealed()) await tile.flipToFront();
 
         this.applyTileEffect(tile);
-        if (tile === TILE_TYPES.EXIT) {
-          this.startNewLevel(tile);
+        if (tile.type === TILE_TYPES.EXIT) {
+          this.startNewLevel();
           return;
         }
 
@@ -60,5 +56,13 @@ export default class GameManager {
   }
 
   startNewLevel() {
+    console.log("starting");
+    if (this.level) this.level.destroy();
+    this.level = new Level(this.scene);
+    const gridPos = this.level.getStartingGridPosition();
+    this.movePlayerToTile(gridPos.x, gridPos.y);
+    const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
+    store.setDangerCount(enemyCount);
+    this.startMoveFlow();
   }
 }
