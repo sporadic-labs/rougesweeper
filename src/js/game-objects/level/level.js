@@ -77,6 +77,10 @@ export default class Level {
     return 50 + y * 80;
   }
 
+  hasTileAt(x, y) {
+    return this.tiles[y] && this.tiles[y][x];
+  }
+
   getTileFromGrid(x, y) {
     if (this.tiles[y] && this.tiles[y][x]) {
       return this.tiles[y][x];
