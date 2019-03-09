@@ -2,7 +2,6 @@ import "@babel/polyfill";
 import "../css/main.scss";
 import Phaser from "phaser";
 import { SCENE_NAME, installScenes } from "./scenes";
-import "./ui-app/";
 import disableRightClickMenu from "./helpers/disable-right-click-menu";
 
 if (PRODUCTION) disableRightClickMenu("body");
