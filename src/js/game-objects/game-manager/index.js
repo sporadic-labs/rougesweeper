@@ -22,21 +22,11 @@ export default class GameManager {
       if (this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos)) {
         this.level.disableAllTiles();
         if (!tile.isRevealed()) await tile.flipToFront();
-        //  apply tile effect
-        switch (tile.type) {
-          case TILE_TYPES.ENEMY:
-            this.player.removeHealth();
-            break;
-          case TILE_TYPES.EXIT:
-            console.log("Get outta here!");
-            // TODO(rex): New level;
-            break;
-          case TILE_TYPES.GOLD:
-            this.player.addGold();
-            break;
-          case TILE_TYPES.BLANK:
-          default:
-            break;
+
+        this.applyTileEffect(tile);
+        if (tile === TILE_TYPES.EXIT) {
+          this.startNewLevel(tile);
+          return;
         }
 
         this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
@@ -56,5 +46,19 @@ export default class GameManager {
     const worldY = this.level.gridYToWorldY(gridY);
     this.player.setPosition(worldX, worldY - 15);
     this.player.setGridPosition(gridX, gridY);
+  }
+
+  applyTileEffect(tile) {
+    switch (tile.type) {
+      case TILE_TYPES.ENEMY:
+        this.player.removeHealth();
+        break;
+      case TILE_TYPES.GOLD:
+        this.player.addGold();
+        break;
+    }
+  }
+
+  startNewLevel() {
   }
 }
