@@ -106,12 +106,8 @@ export default class Level {
 
   isTileInPlayerRange(playerPos, tilePos) {
     return (
-      (tilePos.x <= playerPos.x + 1 &&
-        tilePos.x >= playerPos.x - 1 &&
-        tilePos.y === playerPos.y) ||
-      (tilePos.y <= playerPos.y + 1 &&
-        tilePos.y >= playerPos.y - 1 &&
-        tilePos.x === playerPos.x)
+      (tilePos.x <= playerPos.x + 1 && tilePos.x >= playerPos.x - 1 && tilePos.y === playerPos.y) ||
+      (tilePos.y <= playerPos.y + 1 && tilePos.y >= playerPos.y - 1 && tilePos.x === playerPos.x)
     );
   }
 }
