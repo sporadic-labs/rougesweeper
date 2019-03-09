@@ -8,10 +8,8 @@ export default class GameManager {
     this.level = level;
     this.player = player;
 
-    const worldPos = level.getStartingWorldPosition();
-    player.setPosition(worldPos.x, worldPos.y);
     const gridPos = level.getStartingGridPosition();
-    player.setGridPosition(gridPos.x, gridPos.y);
+    this.movePlayerToTile(gridPos.x, gridPos.y);
     const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
     store.setDangerCount(enemyCount);
 
@@ -20,10 +18,8 @@ export default class GameManager {
 
   startMoveFlow() {
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
-      // Check if tile is in range of player
       const tileGridPos = tile.getGridPosition();
       if (this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos)) {
-        //  disable tile interactivity
         this.level.disableAllTiles();
         if (!tile.isRevealed()) await tile.flipToFront();
         //  apply tile effect
@@ -42,21 +38,23 @@ export default class GameManager {
           default:
             break;
         }
-        //  move player
-        console.log(`Moving to tile ${tile.type.toString()}`);
-        const worldY = this.level.gridXToWorldX(tileGridPos.x);
-        const worldX = this.level.gridYToWorldY(tileGridPos.y);
-        this.player.setPosition(worldY, worldX);
-        this.player.setGridPosition(tileGridPos.x, tileGridPos.y);
+
+        this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
 
         const enemyCount = this.level.countNeighboringEnemies(tileGridPos.x, tileGridPos.y);
         store.setDangerCount(enemyCount);
 
-        //  re-enable tile interactivity
         this.level.enableAllTiles();
       } else {
         console.log("Tile is out of range...");
       }
     });
+  }
+
+  movePlayerToTile(gridX, gridY) {
+    const worldX = this.level.gridXToWorldX(gridX);
+    const worldY = this.level.gridYToWorldY(gridY);
+    this.player.setPosition(worldX, worldY - 15);
+    this.player.setGridPosition(gridX, gridY);
   }
 }
