@@ -4,9 +4,9 @@ import FlipEffect from "./flip-effect";
 
 const TYPE_TO_KEY = {
   [TILE_TYPES.BLANK]: "tile-blank",
-  [TILE_TYPES.GOLD]: "tile-gold",
-  [TILE_TYPES.ENEMY]: "tile-enemy",
-  [TILE_TYPES.EXIT]: "tile-exit"
+  [TILE_TYPES.GOLD]: "gold",
+  [TILE_TYPES.ENEMY]: "enemy",
+  [TILE_TYPES.EXIT]: "exit"
 };
 
 export default class Tile {
@@ -20,10 +20,26 @@ export default class Tile {
     this.gridY = 0;
 
     this.backSprite = scene.add.sprite(0, 0, "assets", `tiles/tile-back`);
-    this.frontSprite = scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`);
-    this.container = scene.add.container(x, y, [this.backSprite, this.frontSprite]);
 
-    this.flipEffect = new FlipEffect(scene, this.frontSprite, this.backSprite);
+    // Construct the Front Tile based on it's type.
+    // It always gets a background title, with an optional top graphic.
+    const frontTileSprites = [
+      scene.add.sprite(0, 0, "assets", "tiles/tile-blank")
+    ];
+    if (type !== TILE_TYPES.BLANK) {
+      frontTileSprites.push(
+        scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`)
+      );
+    }
+    this.frontTile = scene.add.container(0, 0, frontTileSprites);
+
+    // Add the front and back tile to a container for easy access.
+    this.container = scene.add.container(x, y, [
+      this.backSprite,
+      this.frontTile
+    ]);
+
+    this.flipEffect = new FlipEffect(scene, this.frontTile, this.backSprite);
     this.flipEffect.setToBack();
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
