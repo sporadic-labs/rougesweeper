@@ -2,6 +2,8 @@ import Phaser from "phaser";
 import Level from "../game-objects/level/level";
 import Player from "../game-objects/player/index";
 import GameManager from "../game-objects/game-manager/index";
+import DangerIndicator from "../game-objects/danger-indicator";
+import store from "../store/index";
 
 export default class Scene extends Phaser.Scene {
   create() {
@@ -12,5 +14,7 @@ export default class Scene extends Phaser.Scene {
     const level = new Level(this);
     const player = new Player(this, 0, 0);
     const gameManager = new GameManager(this, player, level);
+
+    new DangerIndicator(this, store);
   }
 }

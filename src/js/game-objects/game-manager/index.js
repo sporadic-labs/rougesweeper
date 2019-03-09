@@ -1,5 +1,6 @@
 import LEVEL_EVENTS from "../level/events";
 import TILE_TYPES from "../level/tile-types";
+import store from "../../store/index";
 
 export default class GameManager {
   constructor(scene, player, level) {
@@ -11,6 +12,8 @@ export default class GameManager {
     player.setPosition(worldPos.x, worldPos.y);
     const gridPos = level.getStartingGridPosition();
     player.setGridPosition(gridPos.x, gridPos.y);
+    const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
+    store.setDangerCount(enemyCount);
 
     this.startMoveFlow();
   }
@@ -45,6 +48,10 @@ export default class GameManager {
         const worldX = this.level.gridYToWorldY(tileGridPos.y);
         this.player.setPosition(worldY, worldX);
         this.player.setGridPosition(tileGridPos.x, tileGridPos.y);
+
+        const enemyCount = this.level.countNeighboringEnemies(tileGridPos.x, tileGridPos.y);
+        store.setDangerCount(enemyCount);
+
         //  re-enable tile interactivity
         this.level.enableAllTiles();
       } else {

@@ -2,17 +2,17 @@ import { observable, action, decorate } from "mobx";
 
 class GameStore {
   constructor() {
-    this.playerName = "";
+    this.dangerCount = 0;
   }
 
-  setPlayerName(name) {
-    this.playerName = name;
+  setDangerCount(count) {
+    this.dangerCount = count;
   }
 }
 
 decorate(GameStore, {
-  playerName: observable,
-  setPlayerName: action
+  dangerCount: observable,
+  setDangerCount: action
 });
 
 const store = new GameStore();
