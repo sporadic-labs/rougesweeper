@@ -108,4 +108,10 @@ export default class Tile {
   getPosition() {
     return { x: this.container.x, y: this.container.y };
   }
+
+  destroy() {
+    this.disableInteractive();
+    this.scene = undefined;
+    this.container.destroy();
+  }
 }

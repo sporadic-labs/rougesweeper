@@ -110,4 +110,11 @@ export default class Level {
       (tilePos.y <= playerPos.y + 1 && tilePos.y >= playerPos.y - 1 && tilePos.x === playerPos.x)
     );
   }
+
+  destroy() {
+    this.tiles.forEach(row => row.forEach(tile => tile.destroy()));
+    this.events.destroy();
+    this.scene = undefined;
+    this.data = undefined;
+  }
 }
