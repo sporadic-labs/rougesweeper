@@ -3,6 +3,8 @@ import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
 
+const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
+
 export default class Level {
   constructor(scene) {
     this.scene = scene;
@@ -35,6 +37,26 @@ export default class Level {
     );
 
     this.tiles[playerPos.y][playerPos.x].flipToFront();
+  }
+
+  countNeighboringEnemies(x, y) {
+    const enemyCount = this.getNeighboringTiles(x, y).reduce((count, tile) => {
+      count += tile.type === TILE_TYPES.ENEMY;
+      return count;
+    }, 0);
+    return enemyCount;
+  }
+
+  getNeighboringTiles(x, y) {
+    const tiles = [];
+    neighborOffsets.forEach(([dx, dy]) => {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (this.hasTileAt(nx, ny)) {
+        tiles.push(this.getTileFromGrid(nx, ny));
+      }
+    });
+    return tiles;
   }
 
   getStartingWorldPosition() {
