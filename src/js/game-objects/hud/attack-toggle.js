@@ -1,7 +1,7 @@
 import { autorun } from "mobx";
-import EventProxy from "../helpers/event-proxy";
-import store from "../store";
-import GAME_MODES from "../game-objects/game-manager/events";
+import EventProxy from "../../helpers/event-proxy";
+import store from "../../store";
+import GAME_MODES from "../../game-objects/game-manager/events";
 
 const TOGGLE_STATES = {
   UP: "UP",

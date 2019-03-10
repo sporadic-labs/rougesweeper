@@ -1,27 +1,27 @@
 import { autorun } from "mobx";
-import EventProxy from "../helpers/event-proxy";
+import EventProxy from "../../helpers/event-proxy";
 
-export default class PurseIndicator {
+export default class HealthIndicator {
   /**
    * @param {Phaser.Scene} scene
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    const x = this.scene.game.config.width - 100;
+    const x = 100;
     this.text = scene.add
       .text(x, 525, "", { fontSize: 25 })
       .setOrigin(0.5, 0.5);
 
-    this.updateText(gameStore.goldCount, true);
-    this.dispose = autorun(() => this.updateText(gameStore.goldCount));
+    this.updateText(gameStore.playerHealth, true);
+    this.dispose = autorun(() => this.updateText(gameStore.playerHealth));
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
-  updateText(goldCount) {
-    this.text.setText(`Gold: ${goldCount}`);
+  updateText(playerHealth) {
+    this.text.setText(`Health: ${playerHealth}`);
   }
 
   destroy() {

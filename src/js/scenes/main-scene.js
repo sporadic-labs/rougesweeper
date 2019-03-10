@@ -1,11 +1,11 @@
 import Phaser from "phaser";
 import Player from "../game-objects/player/index";
 import GameManager from "../game-objects/game-manager/index";
-import DangerIndicator from "../game-objects/danger-indicator";
-import PurseIndicator from "../game-objects/purse-indicator";
-import HealthIndicator from "../game-objects/health-indicator";
-import AttackToggle from "../game-objects/attack-toggle";
-import LevelIndicator from "../game-objects/level-indicator";
+import DangerIndicator from "../game-objects/hud/danger-indicator";
+import PurseIndicator from "../game-objects/hud/purse-indicator";
+import HealthIndicator from "../game-objects/hud/health-indicator";
+import AttackToggle from "../game-objects/hud/attack-toggle";
+import LevelIndicator from "../game-objects/hud/level-indicator";
 import store from "../store/index";
 
 export default class Scene extends Phaser.Scene {
