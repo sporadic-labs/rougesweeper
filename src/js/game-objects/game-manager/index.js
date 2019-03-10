@@ -4,6 +4,7 @@ import TILE_TYPES from "../level/tile-types";
 import Level from "../level/level";
 import store from "../../store";
 import GAME_MODES from "./events";
+import PlayerAttackAnimation from "../player/attack-animation";
 
 export default class GameManager {
   constructor(scene, player) {
@@ -79,7 +80,17 @@ export default class GameManager {
         if (!tile.isRevealed()) {
           await tile.flipToFront();
           store.removeAttack();
-          await tile.playTileGraphicAnimation();
+          // Player Attack Animation
+          const tilePos = tile.getPosition();
+          const attackAnim = new PlayerAttackAnimation(
+            this.scene,
+            tilePos.x - 10,
+            tilePos.y
+          );
+          await Promise.all([
+            attackAnim.fadeout().then(() => attackAnim.destroy()),
+            tile.playTileGraphicAnimation()
+          ]);
         }
 
         this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
