@@ -45,7 +45,7 @@ export default class GameManager {
         if (!tile.isRevealed()) {
           await tile.flipToFront();
           this.applyTileEffect(tile);
-          await tile.playTileGraphicAnimation();
+          await tile.playTileEffectAnimation();
         }
 
         if (tile.type === TILE_TYPES.EXIT) {
@@ -84,12 +84,12 @@ export default class GameManager {
           const tilePos = tile.getPosition();
           const attackAnim = new PlayerAttackAnimation(
             this.scene,
-            tilePos.x - 10,
+            tilePos.x - 12,
             tilePos.y
           );
           await Promise.all([
             attackAnim.fadeout().then(() => attackAnim.destroy()),
-            tile.playTileGraphicAnimation()
+            tile.playTileDestructionAnimation()
           ]);
         }
 

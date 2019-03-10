@@ -49,7 +49,7 @@ export default class Tile {
     return this.flipEffect.flipProgress === 1;
   }
 
-  playTileGraphicAnimation() {
+  playTileEffectAnimation() {
     return new Promise(resolve => {
       if (this.type === TILE_TYPES.BLANK) {
         return resolve();
@@ -107,6 +107,37 @@ export default class Tile {
         }
 
         this.tileGraphicTimeline
+          .on("complete", () => {
+            tileGraphic.destroy();
+            // Convert this tile to a blank to prevent player interaction.
+            this.type = TILE_TYPES.BLANK;
+            return resolve();
+          })
+          .play();
+      }
+    });
+  }
+
+  playTileDestructionAnimation() {
+    return new Promise(resolve => {
+      if (this.type === TILE_TYPES.BLANK) {
+        return resolve();
+      } else {
+        if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
+
+        this.tileGraphicTimeline = this.scene.tweens.createTimeline();
+
+        const tileGraphic = this.frontTile.getAt(1);
+
+        this.tileGraphicTimeline
+          .add({
+            targets: tileGraphic,
+            duration: 400,
+            ease: Phaser.Math.Easing.Quadratic.In,
+            scaleX: 0.25,
+            scaleY: 0.25,
+            angle: 720
+          })
           .on("complete", () => {
             tileGraphic.destroy();
             // Convert this tile to a blank to prevent player interaction.
