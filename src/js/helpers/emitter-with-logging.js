@@ -11,7 +11,15 @@ export default class EmitterWithLogging extends Events.EventEmitter {
   }
 
   emit(event, ...args) {
-    Logger.log(`${this.key} Event emitted: ${event}`);
+    let strEvt = typeof event !== "string" ? event.toString() : event;
+    if (typeof event !== "string" && event.toString) {
+      strEvt = event.toString();
+    } else if (typeof event === "string") {
+      strEvt = event;
+    } else {
+      strEvt = "Invalid Event Key";
+    }
+    Logger.log(`${this.key} Event emitted: ${strEvt}`);
     super.emit(event, ...args);
   }
 }
