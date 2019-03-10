@@ -22,21 +22,23 @@ class GameStore {
     if (this.goldCount >= 0) this.goldCount += amt;
   }
   removeGold(amt = 1) {
-    this.addGold(-1 * amt);
+    if (this.goldCount > 0) this.goldCount -= amt;
   }
   addHealth(amt = 1) {
-    if (this.playerHealth <= this.maxPlayerHealth && this.playerHealth >= 0)
-      this.playerHealth += amt;
+    if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
   }
   removeHealth(amt = 1) {
-    this.addHealth(-1 * amt);
+    if (this.playerHealth > 0) {
+      this.playerHealth -= amt;
+    } else {
+      console.log("Game Over, Man...");
+    }
   }
   addAttack(amt = 1) {
-    if (this.attackCount <= this.maxAttackCount && this.attackCount >= 0)
-      this.attackCount += amt;
+    if (this.attackCount <= this.maxAttackCount) this.attackCount += amt;
   }
   removeAttack(amt = 1) {
-    this.addAttack(-1 * amt);
+    if (this.attackCount > 0) this.attackCount -= amt;
   }
 }
 
