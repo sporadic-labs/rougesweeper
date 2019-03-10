@@ -109,6 +109,8 @@ export default class Tile {
         this.tileGraphicTimeline
           .on("complete", () => {
             tileGraphic.destroy();
+            // Convert this tile to a blank to prevent player interaction.
+            this.type = TILE_TYPES.BLANK;
             return resolve();
           })
           .play();

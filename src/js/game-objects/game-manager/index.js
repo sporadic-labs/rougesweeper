@@ -24,8 +24,8 @@ export default class GameManager {
         this.level.disableAllTiles();
         if (!tile.isRevealed()) {
           await tile.flipToFront();
-          await tile.playTileGraphicAnimation();
           this.applyTileEffect(tile);
+          await tile.playTileGraphicAnimation();
         }
 
         if (tile.type === TILE_TYPES.EXIT) {
