@@ -1,7 +1,9 @@
+import { autorun } from "mobx";
 import LEVEL_EVENTS from "../level/events";
 import TILE_TYPES from "../level/tile-types";
-import store from "../../store/index";
 import Level from "../level/level";
+import store from "../../store";
+import GAME_MODES from "./events";
 
 export default class GameManager {
   constructor(scene, player) {
@@ -9,10 +11,27 @@ export default class GameManager {
     this.level = null;
     this.player = player;
 
+    this.dispose = autorun(() => {
+      console.log(`New Game State: ${store.gameState}`);
+      switch (store.gameState) {
+        case GAME_MODES.IDLE_MODE:
+        default:
+          // TODO(rex): Idle mode doesn't do anything right now...
+          break;
+        case GAME_MODES.ATTACK_MODE:
+          this.startAttackFlow();
+          break;
+        case GAME_MODES.MOVE_MODE:
+          this.startMoveFlow();
+          break;
+      }
+    });
+
     this.startNewLevel();
   }
 
   startMoveFlow() {
+    this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
       if (
@@ -46,6 +65,38 @@ export default class GameManager {
     });
   }
 
+  startAttackFlow() {
+    this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
+      const tileGridPos = tile.getGridPosition();
+      if (
+        this.level.isTileInPlayerRange(
+          this.player.getGridPosition(),
+          tileGridPos
+        )
+      ) {
+        this.level.disableAllTiles();
+        if (!tile.isRevealed()) {
+          await tile.flipToFront();
+          store.removeAttack();
+          await tile.playTileGraphicAnimation();
+        }
+
+        this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+
+        const enemyCount = this.level.countNeighboringEnemies(
+          tileGridPos.x,
+          tileGridPos.y
+        );
+        store.setDangerCount(enemyCount);
+
+        this.level.enableAllTiles();
+
+        store.setGameState(GAME_MODES.MOVE_MODE);
+      }
+    });
+  }
+
   movePlayerToTile(gridX, gridY) {
     const worldX = this.level.gridXToWorldX(gridX);
     const worldY = this.level.gridYToWorldY(gridY);
@@ -71,6 +122,6 @@ export default class GameManager {
     this.movePlayerToTile(gridPos.x, gridPos.y);
     const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
     store.setDangerCount(enemyCount);
-    this.startMoveFlow();
+    store.setGameState(GAME_MODES.MOVE_MODE);
   }
 }
