@@ -185,7 +185,7 @@ export default class Tile {
 
   destroy() {
     this.disableInteractive();
-    if (this.tween) this.tween.destroy();
+    if (this.tween) this.tween.stop();
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
     this.scene = undefined;
     this.container.destroy();
