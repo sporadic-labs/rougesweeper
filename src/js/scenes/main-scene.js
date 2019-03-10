@@ -7,6 +7,7 @@ import HealthIndicator from "../game-objects/hud/health-indicator";
 import AttackToggle from "../game-objects/hud/attack-toggle";
 import LevelIndicator from "../game-objects/hud/level-indicator";
 import store from "../store/index";
+import ToastManager from "../game-objects/hud/toast-manager";
 
 export default class Scene extends Phaser.Scene {
   create() {
@@ -15,7 +16,8 @@ export default class Scene extends Phaser.Scene {
       .setOrigin(0, 0);
 
     const player = new Player(this, 0, 0);
-    const gameManager = new GameManager(this, player);
+    const toastManager = new ToastManager(this);
+    const gameManager = new GameManager(this, player, toastManager);
 
     new DangerIndicator(this, store);
     new PurseIndicator(this, store);
