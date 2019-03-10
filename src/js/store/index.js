@@ -1,13 +1,20 @@
 import { observable, action, decorate } from "mobx";
+import GAME_MODES from "../game-objects/game-manager/events";
 
 class GameStore {
   constructor() {
+    this.gameState = GAME_MODES.IDLE_MODE;
     this.dangerCount = 0;
     this.goldCount = 0;
     this.maxPlayerHealth = 3;
     this.playerHealth = this.maxPlayerHealth;
+    this.maxAttackCount = 3;
+    this.attackCount = this.maxAttackCount;
   }
 
+  setGameState(state) {
+    this.gameState = state;
+  }
   setDangerCount(count) {
     this.dangerCount = count;
   }
@@ -24,9 +31,18 @@ class GameStore {
   removeHealth(amt = 1) {
     this.addHealth(-1 * amt);
   }
+  addAttack(amt = 1) {
+    if (this.attackCount <= this.maxAttackCount && this.attackCount >= 0)
+      this.attackCount += amt;
+  }
+  removeAttack(amt = 1) {
+    this.addAttack(-1 * amt);
+  }
 }
 
 decorate(GameStore, {
+  gameState: observable,
+  setGameState: action,
   dangerCount: observable,
   setDangerCount: action,
   goldCount: observable,
@@ -34,7 +50,10 @@ decorate(GameStore, {
   removeGold: action,
   playerHealth: observable,
   addHealth: action,
-  removeHealth: action
+  removeHealth: action,
+  attackCount: observable,
+  addAttack: action,
+  removeAttack: action
 });
 
 const store = new GameStore();
