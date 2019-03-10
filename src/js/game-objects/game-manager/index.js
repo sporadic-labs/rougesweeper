@@ -42,8 +42,6 @@ export default class GameManager {
         store.setDangerCount(enemyCount);
 
         this.level.enableAllTiles();
-      } else {
-        console.log("Tile is out of range...");
       }
     });
   }
@@ -58,18 +56,15 @@ export default class GameManager {
   applyTileEffect(tile) {
     switch (tile.type) {
       case TILE_TYPES.ENEMY:
-        this.player.removeHealth();
+        store.removeHealth();
         break;
       case TILE_TYPES.GOLD:
-        this.player.addGold();
+        store.addGold();
         break;
-      default:
-        console.log("no tile effect!");
     }
   }
 
   startNewLevel() {
-    console.log("starting");
     if (this.level) this.level.destroy();
     this.level = new Level(this.scene);
     const gridPos = this.level.getStartingGridPosition();
