@@ -17,7 +17,10 @@ export default class GameManager {
       switch (store.gameState) {
         case GAME_MODES.IDLE_MODE:
         default:
-          // TODO(rex): Idle mode doesn't do anything right now...
+          // Remove event listeners from the current level
+          if (this.level && this.level.events) {
+            this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
+          }
           break;
         case GAME_MODES.ATTACK_MODE:
           this.startAttackFlow();
@@ -127,6 +130,7 @@ export default class GameManager {
   }
 
   startNewLevel() {
+    store.setGameState(GAME_MODES.IDLE_MODE);
     if (this.level) this.level.destroy();
     this.level = new Level(this.scene);
     const gridPos = this.level.getStartingGridPosition();
