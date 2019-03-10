@@ -10,6 +10,7 @@ class GameStore {
     this.playerHealth = this.maxPlayerHealth;
     this.maxAttackCount = 3;
     this.attackCount = this.maxAttackCount;
+    this.level = 1;
   }
 
   setGameState(state) {
@@ -40,6 +41,9 @@ class GameStore {
   removeAttack(amt = 1) {
     if (this.attackCount > 0) this.attackCount -= amt;
   }
+  nextLevel() {
+    this.level++;
+  }
 }
 
 decorate(GameStore, {
@@ -55,7 +59,9 @@ decorate(GameStore, {
   removeHealth: action,
   attackCount: observable,
   addAttack: action,
-  removeAttack: action
+  removeAttack: action,
+  level: observable,
+  nextLevel: action
 });
 
 const store = new GameStore();

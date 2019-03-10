@@ -5,6 +5,7 @@ import DangerIndicator from "../game-objects/danger-indicator";
 import PurseIndicator from "../game-objects/purse-indicator";
 import HealthIndicator from "../game-objects/health-indicator";
 import AttackToggle from "../game-objects/attack-toggle";
+import LevelIndicator from "../game-objects/level-indicator";
 import store from "../store/index";
 
 export default class Scene extends Phaser.Scene {
@@ -20,5 +21,6 @@ export default class Scene extends Phaser.Scene {
     new PurseIndicator(this, store);
     new HealthIndicator(this, store);
     new AttackToggle(this, store);
+    new LevelIndicator(this, store);
   }
 }

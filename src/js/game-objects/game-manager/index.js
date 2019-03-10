@@ -52,6 +52,7 @@ export default class GameManager {
         }
 
         if (tile.type === TILE_TYPES.EXIT) {
+          store.nextLevel();
           this.startNewLevel();
           return;
         }
