@@ -23,14 +23,21 @@ export default class Tile {
 
     // Construct the Front Tile based on it's type.
     // It always gets a background title, with an optional top graphic.
-    const frontTileSprites = [scene.add.sprite(0, 0, "assets", "tiles/tile-blank")];
+    const frontTileSprites = [
+      scene.add.sprite(0, 0, "assets", "tiles/tile-blank")
+    ];
     if (type !== TILE_TYPES.BLANK) {
-      frontTileSprites.push(scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`));
+      frontTileSprites.push(
+        scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`)
+      );
     }
     this.frontTile = scene.add.container(0, 0, frontTileSprites);
 
     // Add the front and back tile to a container for easy access.
-    this.container = scene.add.container(x, y, [this.backSprite, this.frontTile]);
+    this.container = scene.add.container(x, y, [
+      this.backSprite,
+      this.frontTile
+    ]);
 
     this.flipEffect = new FlipEffect(scene, this.frontTile, this.backSprite);
     this.flipEffect.setToBack();
@@ -43,38 +50,70 @@ export default class Tile {
   }
 
   playTileGraphicAnimation() {
-    if (this.type !== TILE_TYPES.BLANK) {
-      this.frontTile.getAt(1).destroy();
+    return new Promise(resolve => {
+      if (this.type === TILE_TYPES.BLANK) {
+        return resolve();
+      } else {
+        if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
 
-      // TODO(rex): Add some tweens so this is a better animation.
-      //   if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
+        this.tileGraphicTimeline = this.scene.tweens.createTimeline();
 
-      //   console.log(this.tileGraphicTimeline);
-      //   this.tileGraphicTimeline = this.scene.tweens
-      //     .createTimeline()
-      //     .add({
-      //       targets: this.frontTile.getAt(1),
-      //       ease: Phaser.Math.Easing.Quadratic.InOut,
-      //       loop: -1,
-      //       duration: 100,
-      //       tweens: [
-      //         { x: -1, y: -1, angle: 1 },
-      //         { x: 1, y: 1.5, angle: -1.5 },
-      //         { x: 0.5, y: 1, angle: 0.5 },
-      //         { x: -1.5, y: -0.5, angle: -0.5 }
-      //       ]
-      //     })
-      //     .add({
-      //       targets: this.frontTile.getAt(1),
-      //       duration: 150,
-      //       loop: 1,
-      //       ease: "Quad.Out",
-      //       tweens: [{ opacity: 0 }]
-      //     })
-      //     .play();
+        const tileGraphic = this.frontTile.getAt(1);
 
-      console.log(this.tileGraphicTimeline);
-    }
+        // Setup different animations for the Gold vs. the Enemy graphics.
+        if (this.type === TILE_TYPES.GOLD) {
+          this.tileGraphicTimeline
+            .add({
+              targets: tileGraphic,
+              ease: Phaser.Math.Easing.Quadratic.Out,
+              duration: 200,
+              scaleX: 1.05,
+              scaleY: 1.05,
+              y: -30
+            })
+            .add({
+              targets: tileGraphic,
+              duration: 200,
+              ease: Phaser.Math.Easing.Quadratic.In,
+              scaleX: 0.5,
+              scaleY: 0.5,
+              y: 0
+            });
+        } else if (this.type === TILE_TYPES.ENEMY) {
+          this.tileGraphicTimeline
+            .add({
+              targets: tileGraphic,
+              ease: Phaser.Math.Easing.Quadratic.InOut,
+              duration: 200,
+              x: 10,
+              angle: 5
+            })
+            .add({
+              targets: tileGraphic,
+              duration: 150,
+              ease: Phaser.Math.Easing.Quadratic.In,
+              x: -10,
+              angle: -10
+            })
+            .add({
+              targets: tileGraphic,
+              duration: 150,
+              ease: Phaser.Math.Easing.Quadratic.Out,
+              scaleX: 0.5,
+              scaleY: 0.5,
+              x: 0,
+              angle: 0
+            });
+        }
+
+        this.tileGraphicTimeline
+          .on("complete", () => {
+            tileGraphic.destroy();
+            return resolve();
+          })
+          .play();
+      }
+    });
   }
 
   setGridPosition(x, y) {
@@ -146,6 +185,8 @@ export default class Tile {
 
   destroy() {
     this.disableInteractive();
+    if (this.tween) this.tween.destroy();
+    if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
     this.scene = undefined;
     this.container.destroy();
   }
