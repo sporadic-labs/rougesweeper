@@ -213,7 +213,7 @@ export default class Tile {
     if (this.fadeTween) this.fadeTween.stop();
     this.fadeTween = this.scene.add.tween({
       targets: this.container,
-      alpha: 0.6,
+      alpha: 1,
       duration: 100
     });
   };
@@ -222,7 +222,7 @@ export default class Tile {
     if (this.fadeTween) this.fadeTween.stop();
     this.fadeTween = this.scene.add.tween({
       targets: this.container,
-      alpha: 1,
+      alpha: 0.6,
       duration: 100
     });
   };
