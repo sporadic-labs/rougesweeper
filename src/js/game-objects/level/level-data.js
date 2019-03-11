@@ -12,15 +12,28 @@ const create2DArray = (width, height, value) =>
   [...Array(height)].map(() => Array(width).fill(value));
 
 export default class LevelData {
-  constructor(width, height, composition, playerPosition, exitPosition) {
-    this.width = width;
-    this.height = height;
-    this.composition = composition;
-    this.playerPosition = playerPosition;
-    this.exitPosition = exitPosition;
+  constructor(map, composition) {
+    const { width, height } = map;
 
-    this.tiles = create2DArray(width, height, TILE.BLANK);
-    this.setTileAt(exitPosition.x, exitPosition.y, TILE.EXIT);
+    this.composition = composition;
+
+    this.tiles = create2DArray(width, height, undefined);
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < height; y++) {
+        if (map.hasTileAt(x, y)) this.setTileAt(x, y, TILE.BLANK);
+      }
+    }
+
+    const spawnPoints = map.getObjectLayer("Spawn Points").objects.map(obj => {
+      return map.worldToTileXY(obj.x, obj.y);
+    });
+    this.playerPosition = Utils.Array.GetRandom(spawnPoints);
+
+    const exitPoints = map.getObjectLayer("Exit Points").objects.map(obj => {
+      return map.worldToTileXY(obj.x, obj.y);
+    });
+    this.exitPosition = Utils.Array.GetRandom(exitPoints);
+    this.setTileAt(this.exitPosition.x, this.exitPosition.y, TILE.EXIT);
 
     const numEnemyTiles = composition[TILE.ENEMY] || 0;
     const numGoldTiles = composition[TILE.GOLD] || 0;
@@ -32,7 +45,7 @@ export default class LevelData {
       ...Array(numGoldTiles).fill(TILE.GOLD)
     ];
     const positions = this.getAllPositionsOf(TILE.BLANK).filter(
-      pos => pos.x !== playerPosition.x && pos.y !== playerPosition.y
+      pos => pos.x !== this.playerPosition.x && pos.y !== this.playerPosition.y
     );
     Utils.Array.Shuffle(positions);
     tilesToPlace.forEach((tile, i) => this.setTileAt(positions[i].x, positions[i].y, tile));

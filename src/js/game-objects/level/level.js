@@ -14,11 +14,8 @@ export default class Level {
       [TILE_TYPES.ENEMY]: 10,
       [TILE_TYPES.GOLD]: 10
     };
-    const w = 9;
-    const h = 6;
-    const playerPos = { x: 0, y: PMath.Between(0, h - 1) };
-    const exitPos = { x: w - 1, y: PMath.Between(0, h - 1) };
-    this.data = new LevelData(w, h, composition, playerPos, exitPos);
+    this.map = scene.add.tilemap("demo-level");
+    this.data = new LevelData(this.map, composition);
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
@@ -38,7 +35,8 @@ export default class Level {
       })
     );
 
-    this.tiles[playerPos.y][playerPos.x].flipToFront();
+    const { x, y } = this.data.playerPosition;
+    this.tiles[y][x].flipToFront();
   }
 
   countNeighboringEnemies(x, y) {
@@ -123,6 +121,7 @@ export default class Level {
         if (tile) tile.destroy();
       })
     );
+    this.map.destroy();
     this.events.destroy();
     this.scene = undefined;
     this.data = undefined;

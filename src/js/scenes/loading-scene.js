@@ -13,6 +13,7 @@ export default class LoadingScene extends Phaser.Scene {
 
     this.load.setPath("resources/");
     this.load.atlas("assets", "atlases/assets.png", "atlases/assets.json");
+    this.load.tilemapTiledJSON("demo-level", "maps/demo-level.json");
   }
 
   create() {
