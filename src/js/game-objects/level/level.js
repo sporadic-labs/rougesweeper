@@ -22,6 +22,8 @@ export default class Level {
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
+        if (!type) return undefined;
+
         const tile = new Tile(
           scene,
           type,
@@ -89,17 +91,21 @@ export default class Level {
   }
 
   enableAllTiles() {
-    this.tiles.forEach(row => {
-      row.forEach(tile => {
-        tile.enableInteractive();
-      });
-    });
+    this.forEachTile(tile => tile.enableInteractive());
   }
 
   disableAllTiles() {
+    this.forEachTile(tile => tile.disableInteractive());
+  }
+
+  /**
+   * Runs the given callback for each tile that exists in the map
+   * @param {function} cb
+   */
+  forEachTile(cb) {
     this.tiles.forEach(row => {
       row.forEach(tile => {
-        tile.disableInteractive();
+        if (tile) cb(tile);
       });
     });
   }
@@ -112,7 +118,11 @@ export default class Level {
   }
 
   destroy() {
-    this.tiles.forEach(row => row.forEach(tile => tile.destroy()));
+    this.tiles.forEach(row =>
+      row.forEach(tile => {
+        if (tile) tile.destroy();
+      })
+    );
     this.events.destroy();
     this.scene = undefined;
     this.data = undefined;
