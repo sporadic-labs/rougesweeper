@@ -39,6 +39,16 @@ export default class Level {
     this.tiles[y][x].flipToFront();
   }
 
+  highlightTiles(playerPos) {
+    this.forEachTile(tile => {
+      if (tile.isRevealed() || this.isTileInPlayerRange(playerPos, tile.getGridPosition())) {
+        tile.highlight();
+      } else {
+        tile.unhighlight();
+      }
+    });
+  }
+
   countNeighboringEnemies(x, y) {
     const enemyCount = this.getNeighboringTiles(x, y).reduce((count, tile) => {
       count += tile.type === TILE_TYPES.ENEMY;

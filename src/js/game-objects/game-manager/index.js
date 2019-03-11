@@ -109,6 +109,7 @@ export default class GameManager {
     const worldY = this.level.gridYToWorldY(gridY);
     this.player.setPosition(worldX, worldY - 15);
     this.player.setGridPosition(gridX, gridY);
+    this.level.highlightTiles(this.player.getGridPosition());
   }
 
   applyTileEffect(tile) {
