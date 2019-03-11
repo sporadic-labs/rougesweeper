@@ -209,9 +209,28 @@ export default class Tile {
     return { x: this.container.x, y: this.container.y };
   }
 
+  highlight = () => {
+    if (this.fadeTween) this.fadeTween.stop();
+    this.fadeTween = this.scene.add.tween({
+      targets: this.container,
+      alpha: 0.6,
+      duration: 100
+    });
+  };
+
+  unhighlight = () => {
+    if (this.fadeTween) this.fadeTween.stop();
+    this.fadeTween = this.scene.add.tween({
+      targets: this.container,
+      alpha: 1,
+      duration: 100
+    });
+  };
+
   destroy() {
     this.disableInteractive();
     if (this.tween) this.tween.stop();
+    if (this.fadeTween) this.tween.stop();
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
     this.scene = undefined;
     this.container.destroy();
