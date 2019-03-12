@@ -37,13 +37,17 @@ export default class AttackToggle {
 
     this.updateText(gameStore.attackCount, true);
     this.mobProxy = new MobXProxy();
-    this.mobProxy.observe(gameStore, "attackCount", () => this.updateText(gameStore.attackCount));
+    this.mobProxy.observe(gameStore, "attackCount", () => {
+      this.disabled = gameStore.attackCount <= 0;
+      if (this.disabled) this.disableInteractive();
+      else this.enableInteractive();
+      this.updateText(gameStore.attackCount);
+    });
     this.mobProxy.observe(gameStore, "gameState", () => {
       if (gameStore.gameState === GAME_MODES.MOVE_MODE) {
         this.state = TOGGLE_STATES.UP;
         this.attackToggle.getAt(1).alpha = 1;
         this.attackToggle.getAt(2).alpha = 0;
-        this.attackToggle.alpha = 1.0;
       }
     });
 
@@ -53,23 +57,28 @@ export default class AttackToggle {
   }
 
   updateText(attackCount) {
-    this.text.setText(`Attack: ${attackCount}`);
+    this.text.setText(`Attacks: ${attackCount}`);
   }
 
   enableInteractive() {
+    if (this.isInteractive) return;
+    this.isInteractive = true;
     this.attackToggle.setInteractive();
     this.attackToggle.on("pointerover", this.onHoverStart);
     this.attackToggle.on("pointerout", this.onHoverEnd);
     this.attackToggle.on("pointerdown", this.onPointerDown);
     this.attackToggle.on("pointerup", this.onPointerUp);
+    this.attackToggle.setAlpha(1);
   }
 
   disableInteractive() {
+    if (!this.isInteractive) return;
     this.attackToggle.disableInteractive();
     this.attackToggle.off("pointerover", this.onHoverStart);
     this.attackToggle.off("pointerout", this.onHoverEnd);
     this.attackToggle.off("pointerdown", this.onPointerDown);
     this.attackToggle.off("pointerup", this.onPointerUp);
+    this.attackToggle.setAlpha(0.5);
   }
 
   onHoverStart = () => {

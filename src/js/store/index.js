@@ -35,11 +35,7 @@ class GameStore {
     if (this.attackCount <= this.maxAttackCount) this.attackCount += amt;
   }
   removeAttack(amt = 1) {
-    if (this.attackCount > 0) {
-      this.attackCount -= amt;
-    } else {
-      console.log("Out of attacks...");
-    }
+    if (this.attackCount > 0) this.attackCount -= amt;
   }
   nextLevel() {
     this.level++;
