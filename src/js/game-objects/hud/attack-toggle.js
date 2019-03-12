@@ -73,6 +73,7 @@ export default class AttackToggle {
 
   disableInteractive() {
     if (!this.isInteractive) return;
+    this.isInteractive = false;
     this.attackToggle.disableInteractive();
     this.attackToggle.off("pointerover", this.onHoverStart);
     this.attackToggle.off("pointerout", this.onHoverEnd);
