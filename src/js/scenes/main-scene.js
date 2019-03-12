@@ -15,6 +15,8 @@ export default class Scene extends Phaser.Scene {
       .tileSprite(0, 0, 750, 750, "assets", "subtle-pattern-ep-natural-black")
       .setOrigin(0, 0);
 
+    store.startNewGame();
+
     const player = new Player(this, 0, 0);
     const toastManager = new ToastManager(this);
     const gameManager = new GameManager(this, player, toastManager);

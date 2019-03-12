@@ -5,6 +5,9 @@ import Level from "../level/level";
 import store from "../../store";
 import GAME_MODES from "./events";
 import PlayerAttackAnimation from "../player/attack-animation";
+import MobXProxy from "../../helpers/mobx-proxy";
+import { SCENE_NAME } from "../../scenes/index";
+import EventProxy from "../../helpers/event-proxy";
 
 export default class GameManager {
   /** @param {Phaser.Scene} scene */
@@ -14,8 +17,14 @@ export default class GameManager {
     this.player = player;
     this.toastManager = toastManager;
 
-    this.dispose = autorun(() => {
-      console.log(`New Game State: ${store.gameState}`);
+    this.mobProxy = new MobXProxy();
+    this.mobProxy.observe(store, "playerHealth", () => {
+      if (store.playerHealth === 0) {
+        scene.scene.stop();
+        scene.scene.start(SCENE_NAME.GAME_OVER);
+      }
+    });
+    this.mobProxy.observe(store, "gameState", () => {
       switch (store.gameState) {
         case GAME_MODES.IDLE_MODE:
         default:
@@ -32,6 +41,10 @@ export default class GameManager {
           break;
       }
     });
+
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
 
     this.startNewLevel();
   }
@@ -132,5 +145,10 @@ export default class GameManager {
     const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
     store.setDangerCount(enemyCount);
     store.setGameState(GAME_MODES.MOVE_MODE);
+  }
+
+  destroy() {
+    this.mobProxy.destroy();
+    this.proxy.removeAll();
   }
 }

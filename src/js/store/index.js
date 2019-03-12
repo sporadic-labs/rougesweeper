@@ -29,11 +29,7 @@ class GameStore {
     if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
   }
   removeHealth(amt = 1) {
-    if (this.playerHealth > 0) {
-      this.playerHealth -= amt;
-    } else {
-      console.log("Game Over, Man...");
-    }
+    if (this.playerHealth > 0) this.playerHealth -= amt;
   }
   addAttack(amt = 1) {
     if (this.attackCount <= this.maxAttackCount) this.attackCount += amt;
@@ -47,6 +43,12 @@ class GameStore {
   }
   nextLevel() {
     this.level++;
+  }
+  startNewGame() {
+    this.playerHealth = this.maxPlayerHealth;
+    this.goldCount = 0;
+    this.attackCount = this.maxAttackCount;
+    this.level = 1;
   }
 }
 
@@ -65,7 +67,8 @@ decorate(GameStore, {
   addAttack: action,
   removeAttack: action,
   level: observable,
-  nextLevel: action
+  nextLevel: action,
+  startNewGame: action
 });
 
 const store = new GameStore();
