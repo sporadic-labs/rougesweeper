@@ -6,7 +6,7 @@ import MobXProxy from "../../helpers/mobx-proxy";
 
 const TOGGLE_STATES = {
   UP: "UP",
-  DOWN: "DONW"
+  DOWN: "DOWN"
 };
 
 export default class AttackToggle {
