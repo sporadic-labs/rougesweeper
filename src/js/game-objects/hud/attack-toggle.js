@@ -2,6 +2,7 @@ import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import store from "../../store";
 import GAME_MODES from "../../game-objects/game-manager/events";
+import MobXProxy from "../../helpers/mobx-proxy";
 
 const TOGGLE_STATES = {
   UP: "UP",
@@ -18,18 +19,14 @@ export default class AttackToggle {
 
     this.state = TOGGLE_STATES.UP;
 
-    this.text = scene.add
-      .text(x, 560, "", { fontSize: 25 })
-      .setOrigin(0.5, 0.5);
+    this.text = scene.add.text(x, 560, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
 
     // Makeshift button for mvp purposes.
     // TODO(rex): Probably replace this with a sprite.
     const buttonWidth = 160;
     const buttonHeight = 40;
     this.attackToggle = scene.add.container(x, 600, [
-      scene.add
-        .rectangle(0, 0, buttonWidth, buttonHeight, 0xbcbcbc, 1)
-        .setOrigin(0.5, 0.5),
+      scene.add.rectangle(0, 0, buttonWidth, buttonHeight, 0xbcbcbc, 1).setOrigin(0.5, 0.5),
       scene.add.text(0, 0, "Attack", { fontSize: 25 }).setOrigin(0.5, 0.5),
       scene.add.text(0, 0, "Cancel", { fontSize: 25 }).setOrigin(0.5, 0.5)
     ]);
@@ -39,8 +36,9 @@ export default class AttackToggle {
     this.enableInteractive();
 
     this.updateText(gameStore.attackCount, true);
-    this.dispose = autorun(() => this.updateText(gameStore.attackCount));
-    this.dispose = autorun(() => {
+    this.mobProxy = new MobXProxy();
+    this.mobProxy.observe(gameStore, "attackCount", () => this.updateText(gameStore.attackCount));
+    this.mobProxy.observe(gameStore, "gameState", () => {
       if (gameStore.gameState === GAME_MODES.MOVE_MODE) {
         this.state = TOGGLE_STATES.UP;
         this.attackToggle.getAt(1).alpha = 1;
@@ -140,7 +138,7 @@ export default class AttackToggle {
   }
 
   destroy() {
-    this.dispose();
+    this.mobProxy.destroy();
     if (this.tween) this.tween.stop();
     this.text.destroy();
     this.attackToggle.destroy();
