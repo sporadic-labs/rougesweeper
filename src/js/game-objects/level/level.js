@@ -2,6 +2,7 @@ import { Math as PMath, Events } from "phaser";
 import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
+import PathFinder from "./path-finder";
 
 const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 
@@ -16,6 +17,14 @@ export default class Level {
     };
     this.map = scene.add.tilemap("demo-level");
     this.data = new LevelData(this.map, composition);
+
+    const pathGrid = this.data.tiles.map(row =>
+      row.map(tile => {
+        return tile === undefined ? 1 : 0;
+      })
+    );
+    this.pathFinder = new PathFinder(pathGrid, [0]);
+    console.log(this.pathFinder.findPath({ x: 0, y: 1 }, { x: 4, y: 0 }));
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
