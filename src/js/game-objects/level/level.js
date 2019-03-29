@@ -30,7 +30,6 @@ export default class Level {
         );
         tile.setGridPosition(x, y);
         tile.enableInteractive();
-        if (type === TILE_TYPES.EXIT) tile.flipToFront();
         return tile;
       })
     );
