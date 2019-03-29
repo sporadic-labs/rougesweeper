@@ -106,6 +106,12 @@ export default class GameManager {
         ]);
       }
 
+      if (tile.type === TILE_TYPES.EXIT) {
+        store.nextLevel();
+        this.startNewLevel();
+        return;
+      }
+
       this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
 
       const enemyCount = this.level.countNeighboringEnemies(tileGridPos.x, tileGridPos.y);
