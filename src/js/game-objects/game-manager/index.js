@@ -8,6 +8,7 @@ import PlayerAttackAnimation from "../player/attack-animation";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { SCENE_NAME } from "../../scenes/index";
 import EventProxy from "../../helpers/event-proxy";
+import Compass from "../hud/compass";
 
 export default class GameManager {
   /** @param {Phaser.Scene} scene */
@@ -143,14 +144,16 @@ export default class GameManager {
   }
 
   startNewLevel() {
-    store.setGameState(GAME_MODES.IDLE_MODE);
+    if (this.compass) this.compass.destroy();
     if (this.level) this.level.destroy();
+    store.setGameState(GAME_MODES.IDLE_MODE);
     this.level = new Level(this.scene);
     const gridPos = this.level.getStartingGridPosition();
     this.movePlayerToTile(gridPos.x, gridPos.y);
     const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
     store.setDangerCount(enemyCount);
     store.setGameState(GAME_MODES.MOVE_MODE);
+    this.compass = new Compass(this.scene, this.player, this.level);
   }
 
   destroy() {

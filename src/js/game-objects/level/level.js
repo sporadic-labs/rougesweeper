@@ -78,6 +78,20 @@ export default class Level {
     return { x: pos.x, y: pos.y };
   }
 
+  getExitWorldPosition() {
+    return {
+      x: this.gridXToWorldX(this.data.exitPosition.x),
+      y: this.gridXToWorldX(this.data.exitPosition.y)
+    };
+  }
+
+  gridXYToWorldXY(pos) {
+    return {
+      x: this.gridXToWorldX(pos.x),
+      y: this.gridYToWorldY(pos.y)
+    };
+  }
+
   gridXToWorldX(x) {
     return 50 + x * 80;
   }
