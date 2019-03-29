@@ -44,7 +44,7 @@ export default class Tile {
 
   playTileEffectAnimation() {
     return new Promise(resolve => {
-      if (this.type === TILE_TYPES.BLANK) {
+      if (this.type === TILE_TYPES.BLANK || this.type === TILE_TYPES.EXIT) {
         return resolve();
       } else {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
@@ -113,7 +113,7 @@ export default class Tile {
 
   playTileDestructionAnimation() {
     return new Promise(resolve => {
-      if (this.type === TILE_TYPES.BLANK) {
+      if (this.type === TILE_TYPES.BLANK || this.type === TILE_TYPES.EXIT) {
         return resolve();
       } else {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
