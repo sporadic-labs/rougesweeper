@@ -1,6 +1,7 @@
-import { Utils } from "phaser";
+import { Utils, Math as PMath } from "phaser";
 import { default as TILE } from "./tile-types";
 
+const noopTrue = () => true;
 const debugTileMap = {
   [TILE.ENEMY]: "e",
   [TILE.GOLD]: "g",
@@ -14,6 +15,8 @@ const create2DArray = (width, height, value) =>
 export default class LevelData {
   constructor(map, composition) {
     const { width, height } = map;
+    this.width = width;
+    this.height = height;
 
     this.composition = composition;
 
@@ -24,15 +27,11 @@ export default class LevelData {
       }
     }
 
-    const spawnPoints = map.getObjectLayer("Spawn Points").objects.map(obj => {
-      return map.worldToTileXY(obj.x, obj.y);
-    });
-    this.playerPosition = Utils.Array.GetRandom(spawnPoints);
+    this.playerPosition = this.getRandomBlankPosition();
 
-    const exitPoints = map.getObjectLayer("Exit Points").objects.map(obj => {
-      return map.worldToTileXY(obj.x, obj.y);
-    });
-    this.exitPosition = Utils.Array.GetRandom(exitPoints);
+    this.exitPosition = this.getRandomBlankPosition(
+      pos => pos.x !== this.playerPosition.x && pos.y !== this.playerPosition.y
+    );
     this.setTileAt(this.exitPosition.x, this.exitPosition.y, TILE.EXIT);
 
     const numEnemyTiles = composition[TILE.ENEMY] || 0;
@@ -49,6 +48,17 @@ export default class LevelData {
     );
     Utils.Array.Shuffle(positions);
     tilesToPlace.forEach((tile, i) => this.setTileAt(positions[i].x, positions[i].y, tile));
+  }
+
+  getRandomBlankPosition(test = noopTrue) {
+    const pos = { x: 0, y: 0 };
+    while (true) {
+      pos.x = PMath.Between(0, this.width - 1);
+      pos.y = PMath.Between(0, this.height - 1);
+      const tile = this.getTileAt(pos.x, pos.y);
+      if (tile === TILE.BLANK && test(pos.x, pos.y)) break;
+    }
+    return pos;
   }
 
   setTileAt(x, y, tile) {
