@@ -9,6 +9,7 @@ export default class AttackAnimation {
     this.scene = scene;
 
     this.sprite = scene.add.sprite(0, 0, "assets", key).setOrigin(0.5, 0.5);
+    this.sprite.setDepth(12);
     this.sprite.setVisible(false);
 
     this.setPosition(x, y);
