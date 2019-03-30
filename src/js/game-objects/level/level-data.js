@@ -5,6 +5,7 @@ import { create2DArray } from "../../helpers/array-utils";
 const noopTrue = () => true;
 const debugTileMap = {
   [TILE.START]: "S",
+  [TILE.SHOP]: "s",
   [TILE.ENEMY]: "e",
   [TILE.GOLD]: "g",
   [TILE.EXIT]: "X",
@@ -40,6 +41,10 @@ export default class LevelData {
     const exitSpots = this.getAllPositionsOf(TILE.BLANK).filter(p => !isNextToPlayer(p));
     this.exitPosition = Utils.Array.GetRandom(exitSpots);
     this.setTileAt(this.exitPosition.x, this.exitPosition.y, TILE.EXIT);
+
+    const shopSpots = this.getAllPositionsOf(TILE.BLANK);
+    this.shopPosition = Utils.Array.GetRandom(shopSpots);
+    this.setTileAt(this.shopPosition.x, this.shopPosition.y, TILE.SHOP);
 
     const enemySpots = this.getAllPositionsOf(TILE.BLANK).filter(p => !isNextToPlayer(p));
     Utils.Array.Shuffle(enemySpots);

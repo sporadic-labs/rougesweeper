@@ -4,6 +4,7 @@ import FlipEffect from "./flip-effect";
 
 const TYPE_TO_KEY = {
   [TILE_TYPES.START]: "tile-blank",
+  [TILE_TYPES.SHOP]: "tile-blank",
   [TILE_TYPES.BLANK]: "tile-blank",
   [TILE_TYPES.GOLD]: "gold",
   [TILE_TYPES.ENEMY]: "enemy",

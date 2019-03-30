@@ -3,7 +3,8 @@ const TILE_TYPES = Object.freeze({
   EXIT: Symbol("EXIT"),
   BLANK: Symbol("BLANK"),
   GOLD: Symbol("GOLD"),
-  START: Symbol("START")
+  START: Symbol("START"),
+  SHOP: Symbol("SHOP")
 });
 
 export default TILE_TYPES;
