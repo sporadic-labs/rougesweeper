@@ -3,6 +3,7 @@ import LEVEL_EVENTS from "./events";
 import FlipEffect from "./flip-effect";
 
 const TYPE_TO_KEY = {
+  [TILE_TYPES.START]: "tile-blank",
   [TILE_TYPES.BLANK]: "tile-blank",
   [TILE_TYPES.GOLD]: "gold",
   [TILE_TYPES.ENEMY]: "enemy",
@@ -44,9 +45,7 @@ export default class Tile {
 
   playTileEffectAnimation() {
     return new Promise(resolve => {
-      if (this.type === TILE_TYPES.BLANK || this.type === TILE_TYPES.EXIT) {
-        return resolve();
-      } else {
+      if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.ENEMY) {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
 
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();
@@ -107,15 +106,15 @@ export default class Tile {
             return resolve();
           })
           .play();
+      } else {
+        resolve();
       }
     });
   }
 
   playTileDestructionAnimation() {
     return new Promise(resolve => {
-      if (this.type === TILE_TYPES.BLANK || this.type === TILE_TYPES.EXIT) {
-        return resolve();
-      } else {
+      if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.ENEMY) {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
 
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();
@@ -138,6 +137,8 @@ export default class Tile {
             return resolve();
           })
           .play();
+      } else {
+        resolve();
       }
     });
   }
