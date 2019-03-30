@@ -4,8 +4,8 @@ import FlipEffect from "./flip-effect";
 import AttackAnimation from "../player/attack-animation";
 
 const TYPE_TO_KEY = {
-  [TILE_TYPES.START]: "tile-blank",
-  [TILE_TYPES.SHOP]: "tile-blank",
+  [TILE_TYPES.START]: "exit-up",
+  [TILE_TYPES.SHOP]: "shop",
   [TILE_TYPES.BLANK]: "tile-blank",
   [TILE_TYPES.GOLD]: "gold",
   [TILE_TYPES.ENEMY]: "enemy",
