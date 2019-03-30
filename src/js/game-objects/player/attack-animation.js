@@ -1,16 +1,14 @@
-export default class PlayerAttackAnimation {
+export default class AttackAnimation {
   /**
    * @param {Phaser.Scene} scene
+   * @param {string} key
    * @param {number} x
    * @param {number} y
-   * @param {Function} cb
    */
-  constructor(scene, x, y) {
+  constructor(scene, key, x, y) {
     this.scene = scene;
 
-    this.sprite = scene.add
-      .sprite(0, 0, "assets", "attack")
-      .setOrigin(0.5, 0.5);
+    this.sprite = scene.add.sprite(0, 0, "assets", key).setOrigin(0.5, 0.5);
     this.sprite.setVisible(false);
 
     this.setPosition(x, y);

@@ -4,7 +4,7 @@ import TILE_TYPES from "../level/tile-types";
 import Level from "../level/level";
 import store from "../../store";
 import GAME_MODES from "./events";
-import PlayerAttackAnimation from "../player/attack-animation";
+import AttackAnimation from "../player/attack-animation";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { SCENE_NAME } from "../../scenes/index";
 import EventProxy from "../../helpers/event-proxy";
@@ -101,7 +101,12 @@ export default class GameManager {
         store.removeAttack();
         // Player Attack Animation
         const tilePos = tile.getPosition();
-        const attackAnim = new PlayerAttackAnimation(this.scene, tilePos.x - 12, tilePos.y);
+        const attackAnim = new AttackAnimation(
+          this.scene,
+          "player-attack",
+          tilePos.x - 12,
+          tilePos.y
+        );
         await Promise.all([
           attackAnim.fadeout().then(() => attackAnim.destroy()),
           tile.playTileDestructionAnimation()
