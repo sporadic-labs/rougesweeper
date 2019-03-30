@@ -6,6 +6,7 @@ export default class PathFinder {
     this.easyStar.setGrid(grid);
     this.easyStar.setAcceptableTiles(acceptableTiles);
     this.easyStar.enableSync();
+    this.easyStar.enableDiagonals();
   }
 
   setGrid(grid) {
