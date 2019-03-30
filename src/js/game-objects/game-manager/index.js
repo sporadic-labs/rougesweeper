@@ -54,7 +54,8 @@ export default class GameManager {
     this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
-      const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
+      // const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
+      const inRange = this.level.canPlayerMoveTo(this.player.getGridPosition(), tileGridPos);
 
       if (!inRange) {
         this.toastManager.setMessage("Tile is too far away to move there.");

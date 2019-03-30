@@ -3,6 +3,7 @@ import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
+import { create2DArray } from "../../helpers/array-utils";
 
 const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 
@@ -24,7 +25,6 @@ export default class Level {
       })
     );
     this.pathFinder = new PathFinder(pathGrid, [0]);
-    console.log(this.pathFinder.findPath({ x: 0, y: 1 }, { x: 4, y: 0 }));
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
@@ -109,6 +109,11 @@ export default class Level {
     return 50 + y * 80;
   }
 
+  findPathBetween(gridStart, gridStop) {
+    const path = this.pathFinder.findPath(gridStart, gridStop);
+    return path;
+  }
+
   hasTileAt(x, y) {
     return this.tiles[y] && this.tiles[y][x];
   }
@@ -144,6 +149,29 @@ export default class Level {
     const dx = playerPos.x - tilePos.x;
     const dy = playerPos.y - tilePos.y;
     return dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1;
+  }
+
+  canPlayerMoveTo(playerPos, tilePos) {
+    // WIP: inefficient, testing out the moving mechanics
+    const grid = create2DArray(this.data.width, this.data.height, 1);
+    this.tiles.map((row, y) =>
+      row.map((tile, x) => {
+        if (tile && tile.isRevealed()) {
+          grid[y][x] = 0;
+        }
+      })
+    );
+    const { x, y } = playerPos;
+    if (this.hasTileAt(x + 1, y + 0)) grid[y + 0][x + 1] = 0;
+    if (this.hasTileAt(x + 1, y + 1)) grid[y + 1][x + 1] = 0;
+    if (this.hasTileAt(x + 0, y + 1)) grid[y + 1][x + 0] = 0;
+    if (this.hasTileAt(x - 1, y + 1)) grid[y + 1][x - 1] = 0;
+    if (this.hasTileAt(x - 1, y + 0)) grid[y + 0][x - 1] = 0;
+    if (this.hasTileAt(x - 1, y - 1)) grid[y - 1][x - 1] = 0;
+    if (this.hasTileAt(x - 0, y - 1)) grid[y - 1][x - 0] = 0;
+    if (this.hasTileAt(x + 1, y - 1)) grid[y - 1][x + 1] = 0;
+    this.pathFinder.setGrid(grid);
+    return this.findPathBetween(playerPos, tilePos);
   }
 
   destroy() {

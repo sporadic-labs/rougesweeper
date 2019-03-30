@@ -8,6 +8,10 @@ export default class PathFinder {
     this.easyStar.enableSync();
   }
 
+  setGrid(grid) {
+    this.easyStar.setGrid(grid);
+  }
+
   findPath(start, end) {
     let path = null;
     this.easyStar.findPath(start.x, start.y, end.x, end.y, p => (path = p));
