@@ -62,27 +62,27 @@ export default class GameManager {
         return;
       }
 
+      const isRevealed = tile.isRevealed();
+      const shouldMoveToTile = tile.type !== TILE_TYPES.EXIT || isRevealed;
+
       this.level.disableAllTiles();
-      if (!tile.isRevealed()) {
+      if (!isRevealed) {
         await tile.flipToFront();
         await tile.playTileEffectAnimation(
           this.player.getPosition().x,
           this.player.getPosition().y
         );
         this.applyTileEffect(tile);
+      } else {
+        if (tile.type === TILE_TYPES.EXIT) {
+          store.nextLevel();
+          this.startNewLevel();
+          return;
+        }
       }
 
-      if (tile.type === TILE_TYPES.EXIT) {
-        store.nextLevel();
-        this.startNewLevel();
-        return;
-      }
-
-      this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
-
-      const enemyCount = this.level.countNeighboringEnemies(tileGridPos.x, tileGridPos.y);
-      store.setDangerCount(enemyCount);
-
+      if (shouldMoveToTile) this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+      this.updateEnemyCount();
       this.level.enableAllTiles();
     });
   }
@@ -123,14 +123,17 @@ export default class GameManager {
       }
 
       this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
-
-      const enemyCount = this.level.countNeighboringEnemies(tileGridPos.x, tileGridPos.y);
-      store.setDangerCount(enemyCount);
-
+      this.updateEnemyCount();
       this.level.enableAllTiles();
 
       store.setGameState(GAME_MODES.MOVE_MODE);
     });
+  }
+
+  updateEnemyCount() {
+    const pos = this.player.getGridPosition();
+    const enemyCount = this.level.countNeighboringEnemies(pos.x, pos.y);
+    store.setDangerCount(enemyCount);
   }
 
   movePlayerToTile(gridX, gridY) {
