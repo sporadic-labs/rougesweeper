@@ -80,7 +80,7 @@ export default class LevelData {
   }
 
   debugDump() {
-    const debugTiles = this.tiles.map(row => row.map(tile => debugTileMap[tile]));
+    const debugTiles = this.tiles.map(row => row.map(tile => (tile ? debugTileMap[tile] : " ")));
     const string = debugTiles.map(row => row.join(" ")).join("\n");
     console.log(string);
   }
