@@ -65,11 +65,11 @@ export default class GameManager {
       this.level.disableAllTiles();
       if (!tile.isRevealed()) {
         await tile.flipToFront();
+        this.applyTileEffect(tile);
         await tile.playTileEffectAnimation(
           this.player.getPosition().x,
           this.player.getPosition().y
         );
-        this.applyTileEffect(tile);
       }
 
       if (tile.type === TILE_TYPES.EXIT) {
