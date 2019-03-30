@@ -16,7 +16,8 @@ export default class Compass {
     this.sprite = scene.add
       .sprite(0, 0, "assets", "ui/arrow")
       .setDepth(100)
-      .setAlpha(0.95);
+      .setAlpha(0.95)
+      .setVisible(false);
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "update", this.update, this);
