@@ -55,15 +55,21 @@ export default class GameManager {
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
       // const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
-      const inRange = this.level.canPlayerMoveTo(this.player.getGridPosition(), tileGridPos);
+      const inRange = this.level.canPlayerMoveTo(
+        this.player.getGridPosition(),
+        tileGridPos
+      );
 
       if (!inRange) {
         this.toastManager.setMessage("Tile is too far away to move there.");
         return;
       }
 
+      const isRevealed = tile.isRevealed();
+      const shouldMoveToTile = tile.type !== TILE_TYPES.EXIT || isRevealed;
+
       this.level.disableAllTiles();
-      if (!tile.isRevealed()) {
+      if (!isRevealed) {
         await tile.flipToFront();
         this.applyTileEffect(tile);
         await tile.playTileEffectAnimation(
@@ -72,17 +78,8 @@ export default class GameManager {
         );
       }
 
-      if (tile.type === TILE_TYPES.EXIT) {
-        store.nextLevel();
-        this.startNewLevel();
-        return;
-      }
-
-      this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
-
-      const enemyCount = this.level.countNeighboringEnemies(tileGridPos.x, tileGridPos.y);
-      store.setDangerCount(enemyCount);
-
+      if (shouldMoveToTile) this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+      this.updateEnemyCount();
       this.level.enableAllTiles();
     });
   }
@@ -91,7 +88,10 @@ export default class GameManager {
     this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
-      const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
+      const inRange = this.level.isTileInPlayerRange(
+        this.player.getGridPosition(),
+        tileGridPos
+      );
 
       if (!inRange) {
         this.toastManager.setMessage("Tile is too far away to attack.");
@@ -123,14 +123,17 @@ export default class GameManager {
       }
 
       this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
-
-      const enemyCount = this.level.countNeighboringEnemies(tileGridPos.x, tileGridPos.y);
-      store.setDangerCount(enemyCount);
-
+      this.updateEnemyCount();
       this.level.enableAllTiles();
 
       store.setGameState(GAME_MODES.MOVE_MODE);
     });
+  }
+
+  updateEnemyCount() {
+    const pos = this.player.getGridPosition();
+    const enemyCount = this.level.countNeighboringEnemies(pos.x, pos.y);
+    store.setDangerCount(enemyCount);
   }
 
   movePlayerToTile(gridX, gridY) {

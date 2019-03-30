@@ -53,6 +53,8 @@ export default class LevelData {
     const goldSpots = this.getAllPositionsOf(TILE.BLANK);
     Utils.Array.Shuffle(goldSpots);
     goldSpots.slice(0, numGoldTiles).forEach(p => this.setTileAt(p.x, p.y, TILE.GOLD));
+
+    this.debugDump();
   }
 
   getRandomBlankPosition(test = noopTrue) {
