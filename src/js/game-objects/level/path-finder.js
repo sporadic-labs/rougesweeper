@@ -1,16 +1,41 @@
 import { js as EasyStar } from "easystarjs";
+import { create2DArray } from "../../helpers/array-utils";
+
+const LOCATION = {
+  WALKABLE: 0,
+  UNWALKABLE: 1
+};
 
 export default class PathFinder {
-  constructor(grid, acceptableTiles) {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+    this.grid = create2DArray(width, height);
     this.easyStar = new EasyStar();
-    this.easyStar.setGrid(grid);
-    this.easyStar.setAcceptableTiles(acceptableTiles);
+    this.easyStar.setGrid(this.grid);
+    this.easyStar.setAcceptableTiles([LOCATION.WALKABLE]);
     this.easyStar.enableSync();
     this.easyStar.enableDiagonals();
   }
 
-  setGrid(grid) {
-    this.easyStar.setGrid(grid);
+  setAllUnwalkable() {
+    this.grid.forEach((row, y) =>
+      row.forEach((col, x) => {
+        this.grid[y][x] = LOCATION.UNWALKABLE;
+      })
+    );
+  }
+
+  setWalkableAt(x, y) {
+    this.grid[y][x] = LOCATION.WALKABLE;
+  }
+
+  setUnwalkableAt(x, y) {
+    this.grid[y][x] = LOCATION.UNWALKABLE;
+  }
+
+  update() {
+    this.easyStar.setGrid(this.grid);
   }
 
   findPath(start, end) {

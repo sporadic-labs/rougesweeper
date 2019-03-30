@@ -18,13 +18,7 @@ export default class Level {
     };
     this.map = scene.add.tilemap("demo-level");
     this.data = new LevelData(this.map, composition);
-
-    const pathGrid = this.data.tiles.map(row =>
-      row.map(tile => {
-        return tile === undefined ? 1 : 0;
-      })
-    );
-    this.pathFinder = new PathFinder(pathGrid, [0]);
+    this.pathFinder = new PathFinder(this.data.width, this.data.height);
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
@@ -153,24 +147,24 @@ export default class Level {
 
   canPlayerMoveTo(playerPos, tilePos) {
     // WIP: inefficient, testing out the moving mechanics
-    const grid = create2DArray(this.data.width, this.data.height, 1);
+    this.pathFinder.setAllUnwalkable();
     this.tiles.map((row, y) =>
       row.map((tile, x) => {
         if (tile && tile.isRevealed()) {
-          grid[y][x] = 0;
+          this.pathFinder.setWalkableAt(x, y);
         }
       })
     );
     const { x, y } = playerPos;
-    if (this.hasTileAt(x + 1, y + 0)) grid[y + 0][x + 1] = 0;
-    if (this.hasTileAt(x + 1, y + 1)) grid[y + 1][x + 1] = 0;
-    if (this.hasTileAt(x + 0, y + 1)) grid[y + 1][x + 0] = 0;
-    if (this.hasTileAt(x - 1, y + 1)) grid[y + 1][x - 1] = 0;
-    if (this.hasTileAt(x - 1, y + 0)) grid[y + 0][x - 1] = 0;
-    if (this.hasTileAt(x - 1, y - 1)) grid[y - 1][x - 1] = 0;
-    if (this.hasTileAt(x - 0, y - 1)) grid[y - 1][x - 0] = 0;
-    if (this.hasTileAt(x + 1, y - 1)) grid[y - 1][x + 1] = 0;
-    this.pathFinder.setGrid(grid);
+    if (this.hasTileAt(x + 1, y + 0)) this.pathFinder.setWalkableAt(x + 1, y + 0);
+    if (this.hasTileAt(x + 1, y + 1)) this.pathFinder.setWalkableAt(x + 1, y + 1);
+    if (this.hasTileAt(x + 0, y + 1)) this.pathFinder.setWalkableAt(x + 0, y + 1);
+    if (this.hasTileAt(x - 1, y + 1)) this.pathFinder.setWalkableAt(x - 1, y + 1);
+    if (this.hasTileAt(x - 1, y + 0)) this.pathFinder.setWalkableAt(x - 1, y + 0);
+    if (this.hasTileAt(x - 1, y - 1)) this.pathFinder.setWalkableAt(x - 1, y - 1);
+    if (this.hasTileAt(x - 0, y - 1)) this.pathFinder.setWalkableAt(x - 0, y - 1);
+    if (this.hasTileAt(x + 1, y - 1)) this.pathFinder.setWalkableAt(x + 1, y - 1);
+    this.pathFinder.update();
     return this.findPathBetween(playerPos, tilePos);
   }
 
