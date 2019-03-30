@@ -52,7 +52,7 @@ export default class Tile {
     return this.flipEffect.flipProgress === 1;
   }
 
-  playTileEffectAnimation() {
+  playTileEffectAnimation(playerX, playerY) {
     return new Promise(resolve => {
       if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.ENEMY) {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
@@ -108,8 +108,8 @@ export default class Tile {
                 const attackAnim = new AttackAnimation(
                   this.scene,
                   "enemy-attack",
-                  this.container.x - 12,
-                  this.container.y
+                  playerX - 24,
+                  playerY
                 );
                 attackAnim.fadeout().then(() => attackAnim.destroy());
               }
