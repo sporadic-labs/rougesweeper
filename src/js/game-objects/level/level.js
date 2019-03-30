@@ -3,7 +3,6 @@ import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
-import { create2DArray } from "../../helpers/array-utils";
 
 const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 
@@ -146,7 +145,8 @@ export default class Level {
   }
 
   canPlayerMoveTo(playerPos, tilePos) {
-    // WIP: inefficient, testing out the moving mechanics
+    // Note: this is inefficient, but ensures the pathfinder is up-to-date. To optimize, level needs
+    // to know when tiles are highlighted/unhighlighted and revealed/hidden.
     this.pathFinder.setAllUnwalkable();
     this.tiles.map((row, y) =>
       row.map((tile, x) => {
@@ -155,15 +155,11 @@ export default class Level {
         }
       })
     );
-    const { x, y } = playerPos;
-    if (this.hasTileAt(x + 1, y + 0)) this.pathFinder.setWalkableAt(x + 1, y + 0);
-    if (this.hasTileAt(x + 1, y + 1)) this.pathFinder.setWalkableAt(x + 1, y + 1);
-    if (this.hasTileAt(x + 0, y + 1)) this.pathFinder.setWalkableAt(x + 0, y + 1);
-    if (this.hasTileAt(x - 1, y + 1)) this.pathFinder.setWalkableAt(x - 1, y + 1);
-    if (this.hasTileAt(x - 1, y + 0)) this.pathFinder.setWalkableAt(x - 1, y + 0);
-    if (this.hasTileAt(x - 1, y - 1)) this.pathFinder.setWalkableAt(x - 1, y - 1);
-    if (this.hasTileAt(x - 0, y - 1)) this.pathFinder.setWalkableAt(x - 0, y - 1);
-    if (this.hasTileAt(x + 1, y - 1)) this.pathFinder.setWalkableAt(x + 1, y - 1);
+    neighborOffsets.forEach(([dx, dy]) => {
+      const nx = playerPos.x + dx;
+      const ny = playerPos.y + dy;
+      if (this.hasTileAt(nx, ny)) this.pathFinder.setWalkableAt(nx, ny);
+    });
     this.pathFinder.update();
     return this.findPathBetween(playerPos, tilePos);
   }
