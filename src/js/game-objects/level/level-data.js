@@ -18,6 +18,11 @@ export default class LevelData {
     this.height = height;
 
     this.composition = composition;
+    const numEnemyTiles = composition[TILE.ENEMY] || 0;
+    const numGoldTiles = composition[TILE.GOLD] || 0;
+    if (numEnemyTiles + numGoldTiles + 2 > width * height) {
+      throw Error("The specified composition doesn't fit in the given width & height!");
+    }
 
     this.tiles = create2DArray(width, height, undefined);
     for (let x = 0; x < width; x++) {
@@ -32,25 +37,17 @@ export default class LevelData {
     const isNextToPlayer = p =>
       PMath.Distance.Between(p.x, p.y, this.playerPosition.x, this.playerPosition.y) < 2;
 
-    this.exitPosition = this.getRandomBlankPosition(
-      pos => pos.x !== this.playerPosition.x && pos.y !== this.playerPosition.y
-    );
+    const exitSpots = this.getAllPositionsOf(TILE.BLANK).filter(p => !isNextToPlayer(p));
+    this.exitPosition = Utils.Array.GetRandom(exitSpots);
     this.setTileAt(this.exitPosition.x, this.exitPosition.y, TILE.EXIT);
 
-    const numEnemyTiles = composition[TILE.ENEMY] || 0;
-    const numGoldTiles = composition[TILE.GOLD] || 0;
-    if (numEnemyTiles + numGoldTiles + 2 > width * height) {
-      throw Error("The specified composition doesn't fit in the given width & height!");
-    }
-    const tilesToPlace = [
-      ...Array(numEnemyTiles).fill(TILE.ENEMY),
-      ...Array(numGoldTiles).fill(TILE.GOLD)
-    ];
-    const positions = this.getAllPositionsOf(TILE.BLANK).filter(
-      pos => pos.x !== this.playerPosition.x && pos.y !== this.playerPosition.y
-    );
-    Utils.Array.Shuffle(positions);
-    tilesToPlace.forEach((tile, i) => this.setTileAt(positions[i].x, positions[i].y, tile));
+    const enemySpots = this.getAllPositionsOf(TILE.BLANK).filter(p => !isNextToPlayer(p));
+    Utils.Array.Shuffle(enemySpots);
+    enemySpots.slice(0, numEnemyTiles).forEach(p => this.setTileAt(p.x, p.y, TILE.ENEMY));
+
+    const goldSpots = this.getAllPositionsOf(TILE.BLANK);
+    Utils.Array.Shuffle(goldSpots);
+    goldSpots.slice(0, numGoldTiles).forEach(p => this.setTileAt(p.x, p.y, TILE.GOLD));
   }
 
   getRandomBlankPosition(test = noopTrue) {
