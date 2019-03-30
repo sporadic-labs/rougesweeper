@@ -1,5 +1,6 @@
 import { Utils, Math as PMath } from "phaser";
 import { default as TILE } from "./tile-types";
+import { create2DArray } from "../../helpers/array-utils";
 
 const noopTrue = () => true;
 const debugTileMap = {
@@ -8,9 +9,6 @@ const debugTileMap = {
   [TILE.EXIT]: "X",
   [TILE.BLANK]: "."
 };
-
-const create2DArray = (width, height, value) =>
-  [...Array(height)].map(() => Array(width).fill(value));
 
 export default class LevelData {
   constructor(map, composition) {
