@@ -69,10 +69,13 @@ export default class GameManager {
       if (!isRevealed) {
         await tile.flipToFront();
         this.applyTileEffect(tile);
-        await tile.playTileEffectAnimation(
-          this.player.getPosition().x,
-          this.player.getPosition().y
-        );
+        const { x, y } = this.player.getPosition();
+        await tile.playTileEffectAnimation(x, y);
+      } else {
+        if (tile.type === TILE_TYPES.EXIT) {
+          this.startNewLevel();
+          return;
+        }
       }
 
       if (shouldMoveToTile) this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
@@ -153,6 +156,7 @@ export default class GameManager {
   }
 
   startNewLevel() {
+    store.nextLevel();
     if (this.compass) this.compass.destroy();
     if (this.level) this.level.destroy();
     store.setGameState(GAME_MODES.IDLE_MODE);
