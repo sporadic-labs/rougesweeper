@@ -8,9 +8,7 @@ export default class LevelIndicator {
   constructor(scene, gameStore) {
     this.scene = scene;
     const x = this.scene.game.config.width - 106;
-    this.text = scene.add
-      .text(x, 560, "", { fontSize: 25 })
-      .setOrigin(0.5, 0.5);
+    this.text = scene.add.text(x, 560, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
 
     this.updateText(gameStore.level, true);
     this.dispose = autorun(() => this.updateText(gameStore.level));

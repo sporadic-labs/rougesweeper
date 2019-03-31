@@ -8,9 +8,7 @@ export default class DangerIndicator {
   constructor(scene, gameStore) {
     this.scene = scene;
     const x = this.scene.game.config.width / 2;
-    this.text = scene.add
-      .text(x, 525, "", { fontSize: 25 })
-      .setOrigin(0.5, 0.5);
+    this.text = scene.add.text(x, 525, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
 
     this.updateText(gameStore.dangerCount, true);
     this.dispose = autorun(() => this.updateText(gameStore.dangerCount));
