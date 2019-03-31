@@ -55,10 +55,7 @@ export default class GameManager {
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
       // const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
-      const inRange = this.level.canPlayerMoveTo(
-        this.player.getGridPosition(),
-        tileGridPos
-      );
+      const inRange = this.level.canPlayerMoveTo(this.player.getGridPosition(), tileGridPos);
 
       if (!inRange) {
         this.toastManager.setMessage("Tile is too far away to move there.");
@@ -88,33 +85,33 @@ export default class GameManager {
     this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
-      const inRange = this.level.isTileInPlayerRange(
-        this.player.getGridPosition(),
-        tileGridPos
-      );
+      const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
 
       if (!inRange) {
-        this.toastManager.setMessage("Tile is too far away to attack.");
+        this.toastManager.setMessage("That tile is too far away to attack.");
+        return;
+      }
+
+      if (tile.isRevealed()) {
+        this.toastManager.setMessage("You can't attack a face up tile.");
         return;
       }
 
       this.level.disableAllTiles();
-      if (!tile.isRevealed()) {
-        await tile.flipToFront();
-        store.removeAttack();
-        // Player Attack Animation
-        const tilePos = tile.getPosition();
-        const attackAnim = new AttackAnimation(
-          this.scene,
-          "player-attack",
-          tilePos.x - 12,
-          tilePos.y
-        );
-        await Promise.all([
-          attackAnim.fadeout().then(() => attackAnim.destroy()),
-          tile.playTileDestructionAnimation()
-        ]);
-      }
+      await tile.flipToFront();
+      store.removeAttack();
+      // Player Attack Animation
+      const tilePos = tile.getPosition();
+      const attackAnim = new AttackAnimation(
+        this.scene,
+        "player-attack",
+        tilePos.x - 12,
+        tilePos.y
+      );
+      await Promise.all([
+        attackAnim.fadeout().then(() => attackAnim.destroy()),
+        tile.playTileDestructionAnimation()
+      ]);
 
       if (tile.type === TILE_TYPES.EXIT) {
         store.nextLevel();
