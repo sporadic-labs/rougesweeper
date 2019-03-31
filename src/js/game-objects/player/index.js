@@ -1,6 +1,7 @@
 export default class Player {
   /** @param {Phaser.Scene} scene */
   constructor(scene, x, y) {
+    this.scene = scene;
     this.sprite = scene.add
       .sprite(x, y, "assets", "player")
       .setScale(1.25, 1.25)
@@ -12,6 +13,20 @@ export default class Player {
 
   setPosition(x, y) {
     this.sprite.setPosition(x, y);
+  }
+
+  movePlayerTo(x, y, duration = 200) {
+    return new Promise(resolve => {
+      if (this.moveTween) this.moveTween.stop();
+      this.moveTween = this.scene.tweens.add({
+        targets: this.sprite,
+        x,
+        y,
+        duration,
+        ease: "Quad.easeOut",
+        onComplete: resolve
+      });
+    });
   }
 
   getPosition() {
@@ -28,6 +43,7 @@ export default class Player {
   }
 
   destroy() {
+    if (this.moveTween) this.moveTween.stop();
     this.sprite.destroy();
   }
 }
