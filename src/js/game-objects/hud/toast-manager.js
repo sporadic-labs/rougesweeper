@@ -3,7 +3,7 @@ import EventProxy from "../../helpers/event-proxy";
 
 const style = {
   fontSize: 20,
-  fontWeigth: 600,
+  fontWeight: 600,
   backgroundColor: "#E5E0D6",
   fill: "#3C3E42",
   padding: { left: 20, right: 20, top: 10, bottom: 10 }
