@@ -103,26 +103,14 @@ export default class GameManager {
       this.level.disableAllTiles();
       await tile.flipToFront();
       store.removeAttack();
-      // Player Attack Animation
-      const tilePos = tile.getPosition();
-      const attackAnim = new AttackAnimation(
-        this.scene,
-        "player-attack",
-        tilePos.x - 12,
-        tilePos.y
-      );
+      const { x, y } = tile.getPosition();
+      const attackAnim = new AttackAnimation(this.scene, "player-attack", x - 12, y);
       await Promise.all([
         attackAnim.fadeout().then(() => attackAnim.destroy()),
         tile.playTileDestructionAnimation()
       ]);
 
-      if (tile.type === TILE_TYPES.EXIT) {
-        store.nextLevel();
-        this.startNewLevel();
-        return;
-      }
-
-      this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+      if (tile.type !== TILE_TYPES.EXIT) this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
       this.updateEnemyCount();
       this.level.enableAllTiles();
 
