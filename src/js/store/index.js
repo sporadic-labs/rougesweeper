@@ -10,6 +10,7 @@ class GameStore {
     this.playerHealth = this.maxPlayerHealth;
     this.maxAttackCount = 3;
     this.attackCount = this.maxAttackCount;
+    this.isShopOpen = false;
     this.level = 1;
   }
 
@@ -37,6 +38,9 @@ class GameStore {
   removeAttack(amt = 1) {
     if (this.attackCount > 0) this.attackCount -= amt;
   }
+  setShopOpen(isShopOpen) {
+    this.isShopOpen = isShopOpen;
+  }
   nextLevel() {
     this.level++;
   }
@@ -62,6 +66,8 @@ decorate(GameStore, {
   attackCount: observable,
   addAttack: action,
   removeAttack: action,
+  isShopOpen: observable,
+  setShopOpen: action,
   level: observable,
   nextLevel: action,
   startNewGame: action

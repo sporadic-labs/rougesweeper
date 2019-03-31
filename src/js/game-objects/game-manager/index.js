@@ -141,6 +141,9 @@ export default class GameManager {
       case TILE_TYPES.GOLD:
         store.addGold();
         break;
+      case TILE_TYPES.SHOP:
+        store.setShopOpen(true);
+        break;
     }
   }
 
