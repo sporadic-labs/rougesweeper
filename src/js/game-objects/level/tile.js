@@ -4,7 +4,7 @@ import FlipEffect from "./flip-effect";
 import AttackAnimation from "../player/attack-animation";
 
 const TYPE_TO_KEY = {
-  [TILE_TYPES.START]: "exit-up",
+  [TILE_TYPES.START]: "tile-blank",
   [TILE_TYPES.SHOP]: "shop",
   [TILE_TYPES.BLANK]: "tile-blank",
   [TILE_TYPES.GOLD]: "gold",
@@ -26,21 +26,14 @@ export default class Tile {
 
     // Construct the Front Tile based on it's type.
     // It always gets a background title, with an optional top graphic.
-    const frontTileSprites = [
-      scene.add.sprite(0, 0, "assets", "tiles/tile-blank")
-    ];
+    const frontTileSprites = [scene.add.sprite(0, 0, "assets", "tiles/tile-blank")];
     if (type !== TILE_TYPES.BLANK) {
-      frontTileSprites.push(
-        scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`)
-      );
+      frontTileSprites.push(scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`));
     }
     this.frontTile = scene.add.container(0, 0, frontTileSprites);
 
     // Add the front and back tile to a container for easy access.
-    this.container = scene.add.container(x, y, [
-      this.backSprite,
-      this.frontTile
-    ]);
+    this.container = scene.add.container(x, y, [this.backSprite, this.frontTile]);
 
     this.flipEffect = new FlipEffect(scene, this.frontTile, this.backSprite);
     this.flipEffect.setToBack();
