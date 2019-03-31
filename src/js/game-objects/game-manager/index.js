@@ -73,6 +73,7 @@ export default class GameManager {
         await tile.playTileEffectAnimation(x, y);
       } else {
         if (tile.type === TILE_TYPES.EXIT) {
+          await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
           this.startNewLevel();
           return;
         }
@@ -124,10 +125,10 @@ export default class GameManager {
     store.setDangerCount(enemyCount);
   }
 
-  async movePlayerToTile(gridX, gridY) {
+  async movePlayerToTile(gridX, gridY, duration = 200) {
     const worldX = this.level.gridXToWorldX(gridX);
     const worldY = this.level.gridYToWorldY(gridY);
-    await this.player.movePlayerTo(worldX, worldY - 15);
+    await this.player.movePlayerTo(worldX, worldY - 15, duration);
     this.player.setGridPosition(gridX, gridY);
     this.level.highlightTiles(this.player.getGridPosition());
   }
@@ -150,7 +151,7 @@ export default class GameManager {
     store.setGameState(GAME_MODES.IDLE_MODE);
     this.level = new Level(this.scene);
     const gridPos = this.level.getStartingGridPosition();
-    this.movePlayerToTile(gridPos.x, gridPos.y);
+    this.movePlayerToTile(gridPos.x, gridPos.y, 0);
     const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
     store.setDangerCount(enemyCount);
     store.setGameState(GAME_MODES.MOVE_MODE);

@@ -18,14 +18,19 @@ export default class Player {
   movePlayerTo(x, y, duration = 200) {
     return new Promise(resolve => {
       if (this.moveTween) this.moveTween.stop();
-      this.moveTween = this.scene.tweens.add({
-        targets: this.sprite,
-        x,
-        y,
-        duration,
-        ease: "Quad.easeOut",
-        onComplete: resolve
-      });
+      if (duration === 0) {
+        this.setPosition(x, y); // Phaser tween bug
+        resolve();
+      } else {
+        this.moveTween = this.scene.tweens.add({
+          targets: this.sprite,
+          x,
+          y,
+          duration,
+          ease: "Quad.easeOut",
+          onComplete: resolve
+        });
+      }
     });
   }
 
