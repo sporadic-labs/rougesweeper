@@ -42,6 +42,10 @@ export default class GameManager {
           break;
       }
     });
+    this.mobProxy.observe(store, "hasCompass", () => {
+      if (this.compass) this.compass.destroy();
+      if (store.hasCompass) this.compass = new Compass(this.scene, this.player, this.level);
+    });
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
@@ -71,6 +75,8 @@ export default class GameManager {
         this.applyTileEffect(tile);
         const { x, y } = this.player.getPosition();
         await tile.playTileEffectAnimation(x, y);
+
+        if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
       } else {
         if (tile.type === TILE_TYPES.EXIT) {
           await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
@@ -152,16 +158,15 @@ export default class GameManager {
 
   startNewLevel() {
     store.nextLevel();
-    if (this.compass) this.compass.destroy();
     if (this.level) this.level.destroy();
     store.setGameState(GAME_MODES.IDLE_MODE);
+    store.setHasCompass(false);
     this.level = new Level(this.scene);
     const gridPos = this.level.getStartingGridPosition();
     this.movePlayerToTile(gridPos.x, gridPos.y, 0);
     const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
     store.setDangerCount(enemyCount);
     store.setGameState(GAME_MODES.MOVE_MODE);
-    this.compass = new Compass(this.scene, this.player, this.level);
   }
 
   destroy() {

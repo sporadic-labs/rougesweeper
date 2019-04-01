@@ -103,10 +103,17 @@ export default class Shop {
 
   updateButtons() {
     const { gameStore, costs, buyHeartButton, buyAttackButton, buyCompassButton } = this;
-    const { goldCount, playerHealth, maxPlayerHealth, attackCount, maxAttackCount } = gameStore;
+    const {
+      goldCount,
+      playerHealth,
+      maxPlayerHealth,
+      attackCount,
+      maxAttackCount,
+      hasCompass
+    } = gameStore;
     const canBuyHeart = playerHealth < maxPlayerHealth && goldCount >= costs.heart;
     const canBuyAttack = attackCount < maxAttackCount && goldCount >= costs.attack;
-    const canBuyCompass = true && goldCount >= costs.compass;
+    const canBuyCompass = !hasCompass && goldCount >= costs.compass;
     buyHeartButton.setVisible(canBuyHeart);
     buyAttackButton.setVisible(canBuyAttack);
     buyCompassButton.setVisible(canBuyCompass);
@@ -118,20 +125,18 @@ export default class Shop {
     const { gameStore, costs } = this;
     gameStore.removeGold(costs.attack);
     gameStore.addAttack(1);
-    console.log("Buying an attack");
   };
 
   buyHealth = () => {
     const { gameStore, costs } = this;
     gameStore.removeGold(costs.heart);
     gameStore.addHealth(1);
-    console.log("Buying a heart");
   };
 
   buyCompass = () => {
     const { gameStore, costs } = this;
     gameStore.removeGold(costs.compass);
-    console.log("Buying a compass - sorry, not implemented!");
+    gameStore.setHasCompass(true);
   };
 
   destroy() {

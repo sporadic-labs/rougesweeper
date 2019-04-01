@@ -12,6 +12,7 @@ class GameStore {
     this.attackCount = this.maxAttackCount;
     this.isShopOpen = false;
     this.level = 1;
+    this.hasCompass = false;
   }
 
   setGameState(state) {
@@ -41,6 +42,9 @@ class GameStore {
   setShopOpen(isShopOpen) {
     this.isShopOpen = isShopOpen;
   }
+  setHasCompass(hasCompass) {
+    this.hasCompass = hasCompass;
+  }
   nextLevel() {
     this.level++;
   }
@@ -68,6 +72,8 @@ decorate(GameStore, {
   removeAttack: action,
   isShopOpen: observable,
   setShopOpen: action,
+  hasCompass: observable,
+  setHasCompass: action,
   level: observable,
   nextLevel: action,
   startNewGame: action
