@@ -76,6 +76,9 @@ export default class GameManager {
           await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
           this.startNewLevel();
           return;
+        } else if (tile.type === TILE_TYPES.SHOP) {
+          await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+          this.applyTileEffect(tile);
         }
       }
 
