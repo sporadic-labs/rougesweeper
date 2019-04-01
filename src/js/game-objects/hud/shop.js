@@ -4,10 +4,19 @@ import GAME_MODES from "../game-manager/events";
 import MobXProxy from "../../helpers/mobx-proxy";
 import TextButton from "./text-button";
 
-const titleStyle = {
-  fontSize: 20,
-  fontWeight: 600,
+const baseTextStyle = {
+  align: "center",
   fill: "#ffffff"
+};
+const titleStyle = {
+  ...baseTextStyle,
+  fontSize: 30,
+  fontStyle: "bold"
+};
+const itemTextStyle = {
+  ...baseTextStyle,
+  lineSpacing: 8,
+  fontSize: 22
 };
 
 export default class Shop {
@@ -15,10 +24,15 @@ export default class Shop {
   constructor(scene, gameStore) {
     this.scene = scene;
     this.gameStore = gameStore;
+    this.costs = {
+      heart: 3,
+      attack: 4,
+      compass: 5
+    };
 
     const { width, height } = scene.game.config;
 
-    const pad = 100;
+    const pad = 50;
     const background = scene.add.graphics();
     background.fillStyle(0x000000, 0.5);
     background.fillRect(0, 0, width, height);
@@ -29,19 +43,57 @@ export default class Shop {
       .text(width / 2, pad + 25, "What would you like to buy?", titleStyle)
       .setOrigin(0.5, 0);
 
-    const textButton = new TextButton(scene, width / 2, height - pad - 25, "Leave Shop", {
+    const leaveButton = new TextButton(scene, width / 2, height - pad - 25, "Leave Shop", {
       origin: { x: 0.5, y: 1 }
     });
-    textButton.events.on("DOWN", this.closeShop);
+    leaveButton.events.on("DOWN", this.closeShop);
+
+    const w = width - 2 * pad;
+    const y = height / 2;
+    const x1 = pad + w * (1 / 6);
+    const x2 = pad + w * (3 / 6);
+    const x3 = pad + w * (5 / 6);
+    const buyHeartText = scene.add
+      .text(x1, y - 40, `Buy heart\n(max 3)\nCost: ${this.costs.heart} gold`, itemTextStyle)
+      .setOrigin(0.5, 0.5);
+    const buyHeartButton = new TextButton(scene, x1, y + 40, "Buy");
+    buyHeartButton.events.on("DOWN", this.buyHealth);
+    this.buyHeartButton = buyHeartButton;
+    const buyAttackText = scene.add
+      .text(x2, y - 40, `Buy attack\n(max 3)\nCost: ${this.costs.attack} gold`, itemTextStyle)
+      .setOrigin(0.5, 0.5);
+    const buyAttackButton = new TextButton(scene, x2, y + 40, "Buy");
+    buyAttackButton.events.on("DOWN", this.buyAttack);
+    this.buyAttackButton = buyAttackButton;
+    const buyCompassText = scene.add
+      .text(x3, y - 40, `Buy compass\nfor level\nCost: ${this.costs.compass} gold`, itemTextStyle)
+      .setOrigin(0.5, 0.5);
+    const buyCompassButton = new TextButton(scene, x3, y + 40, "Buy");
+    buyCompassButton.events.on("DOWN", this.buyCompass);
+    this.buyCompassButton = buyCompassButton;
 
     this.container = scene.add
-      .container(0, 0, [background, title, textButton.text])
+      .container(0, 0, [
+        background,
+        title,
+        leaveButton.text,
+        buyAttackText,
+        buyAttackButton.text,
+        buyHeartText,
+        buyHeartButton.text,
+        buyCompassText,
+        buyCompassButton.text
+      ])
       .setDepth(100)
       .setVisible(false);
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(gameStore, "isShopOpen", () => {
       this.container.setVisible(gameStore.isShopOpen);
+      this.updateButtons();
+    });
+    this.mobProxy.observe(gameStore, "goldCount", () => {
+      if (gameStore.isShopOpen) this.updateButtons();
     });
 
     this.proxy = new EventProxy();
@@ -49,7 +101,38 @@ export default class Shop {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
+  updateButtons() {
+    const { gameStore, costs, buyHeartButton, buyAttackButton, buyCompassButton } = this;
+    const { goldCount, playerHealth, maxPlayerHealth, attackCount, maxAttackCount } = gameStore;
+    const canBuyHeart = playerHealth < maxPlayerHealth && goldCount >= costs.heart;
+    const canBuyAttack = attackCount < maxAttackCount && goldCount >= costs.attack;
+    const canBuyCompass = true && goldCount >= costs.compass;
+    buyHeartButton.setVisible(canBuyHeart);
+    buyAttackButton.setVisible(canBuyAttack);
+    buyCompassButton.setVisible(canBuyCompass);
+  }
+
   closeShop = () => (this.gameStore.isShopOpen = false);
+
+  buyAttack = () => {
+    const { gameStore, costs } = this;
+    gameStore.removeGold(costs.attack);
+    gameStore.addAttack(1);
+    console.log("Buying an attack");
+  };
+
+  buyHealth = () => {
+    const { gameStore, costs } = this;
+    gameStore.removeGold(costs.heart);
+    gameStore.addHealth(1);
+    console.log("Buying a heart");
+  };
+
+  buyCompass = () => {
+    const { gameStore, costs } = this;
+    gameStore.removeGold(costs.compass);
+    console.log("Buying a compass - sorry, not implemented!");
+  };
 
   destroy() {
     this.mobProxy.destroy();

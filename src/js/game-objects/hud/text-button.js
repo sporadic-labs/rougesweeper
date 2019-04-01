@@ -48,6 +48,10 @@ export default class TextButton {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
+  setVisible(isVisible) {
+    this.text.setVisible(isVisible);
+  }
+
   setIsHovered(isHovered) {
     this.isHovered = isHovered;
     this.updateTextStyle();
