@@ -29,7 +29,9 @@ export default class Shop {
       .text(width / 2, pad + 25, "What would you like to buy?", titleStyle)
       .setOrigin(0.5, 0);
 
-    const textButton = new TextButton(scene, width / 2, height - pad, "Leave Shop");
+    const textButton = new TextButton(scene, width / 2, height - pad - 25, "Leave Shop", {
+      origin: { x: 0.5, y: 1 }
+    });
     textButton.events.on("DOWN", this.closeShop);
 
     this.container = scene.add
