@@ -8,6 +8,7 @@ const debugTileMap = {
   [TILE.SHOP]: "s",
   [TILE.ENEMY]: "e",
   [TILE.GOLD]: "g",
+  [TILE.WALL]: "W",
   [TILE.EXIT]: "X",
   [TILE.BLANK]: "."
 };
@@ -28,7 +29,14 @@ export default class LevelData {
     this.tiles = create2DArray(width, height, undefined);
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
-        if (map.hasTileAt(x, y)) this.setTileAt(x, y, TILE.BLANK);
+        const tile = map.getTileAt(x, y);
+        if (tile) {
+          let type;
+          if (tile.index === 2) type = TILE.BLANK;
+          else if (tile.index === 3) type = TILE.WALL;
+          else throw new Error("Unexpected tile index in map");
+          this.setTileAt(x, y, type);
+        }
       }
     }
 

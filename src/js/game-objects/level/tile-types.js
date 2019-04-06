@@ -4,7 +4,8 @@ const TILE_TYPES = Object.freeze({
   BLANK: Symbol("BLANK"),
   GOLD: Symbol("GOLD"),
   START: Symbol("START"),
-  SHOP: Symbol("SHOP")
+  SHOP: Symbol("SHOP"),
+  WALL: Symbol("WALL")
 });
 
 export default TILE_TYPES;

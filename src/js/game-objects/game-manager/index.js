@@ -70,7 +70,7 @@ export default class GameManager {
       }
 
       const isRevealed = tile.isRevealed();
-      const shouldMoveToTile = tile.type !== TILE_TYPES.EXIT || isRevealed;
+      const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
 
       this.level.disableAllTiles();
       if (!isRevealed) {
@@ -127,7 +127,9 @@ export default class GameManager {
         tile.playTileDestructionAnimation()
       ]);
 
-      if (tile.type !== TILE_TYPES.EXIT) await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+      if (tile.type !== TILE_TYPES.EXIT && tile.type !== TILE_TYPES.WALL) {
+        await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+      }
       this.updateEnemyCount();
       this.level.enableAllTiles();
 

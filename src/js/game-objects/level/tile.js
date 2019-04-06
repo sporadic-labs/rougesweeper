@@ -9,7 +9,8 @@ const TYPE_TO_KEY = {
   [TILE_TYPES.BLANK]: "tile-blank",
   [TILE_TYPES.GOLD]: "gold",
   [TILE_TYPES.ENEMY]: "enemy",
-  [TILE_TYPES.EXIT]: "exit-down"
+  [TILE_TYPES.EXIT]: "exit-down",
+  [TILE_TYPES.WALL]: "wall"
 };
 
 export default class Tile {

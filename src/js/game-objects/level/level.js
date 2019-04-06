@@ -15,7 +15,7 @@ export default class Level {
       [TILE_TYPES.ENEMY]: 10,
       [TILE_TYPES.GOLD]: 10
     };
-    this.map = scene.add.tilemap("demo-level");
+    this.map = scene.add.tilemap("level");
     this.data = new LevelData(this.map, composition);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
 
@@ -150,7 +150,7 @@ export default class Level {
     this.pathFinder.setAllUnwalkable();
     this.tiles.map((row, y) =>
       row.map((tile, x) => {
-        if (tile && tile.isRevealed()) {
+        if (tile && tile.isRevealed() && tile.type !== TILE_TYPES.WALL) {
           this.pathFinder.setWalkableAt(x, y);
         }
       })
