@@ -11,7 +11,7 @@ class GameStore {
     this.maxAttackCount = 3;
     this.attackCount = this.maxAttackCount;
     this.isShopOpen = false;
-    this.level = 1;
+    this.level = 0;
     this.hasCompass = false;
   }
 
@@ -52,7 +52,7 @@ class GameStore {
     this.playerHealth = this.maxPlayerHealth;
     this.goldCount = 0;
     this.attackCount = this.maxAttackCount;
-    this.level = 1;
+    this.level = 0;
   }
 }
 
