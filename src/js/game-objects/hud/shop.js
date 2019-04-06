@@ -91,7 +91,7 @@ export default class Shop {
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(gameStore, "isShopOpen", () => {
       this.container.setVisible(gameStore.isShopOpen);
-      leaveButton.reset(); // Bug: stays in pressed state, menu is closing hides button w/o up event
+      leaveButton.reset(); // Bug: stays in pressed state, menu closing hides button w/o up event
       this.updateButtons();
     });
     this.mobProxy.observe(gameStore, "goldCount", () => {
