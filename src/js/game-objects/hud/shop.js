@@ -31,28 +31,29 @@ export default class Shop {
     };
 
     const { width, height } = scene.game.config;
+    const modalWidth = width - 100;
+    const modalHeight = 0.6 * height;
 
-    const pad = 50;
+    const r = new Phaser.Geom.Rectangle((width - modalWidth) / 2, 50, modalWidth, modalHeight);
     const background = scene.add.graphics();
     background.fillStyle(0x000000, 0.5);
     background.fillRect(0, 0, width, height);
     background.fillStyle(0x000000);
-    background.fillRect(pad, pad, width - 2 * pad, height - 2 * pad);
+    background.fillRect(r.x, r.y, r.width, r.height);
 
     const title = scene.add
-      .text(width / 2, pad + 25, "What would you like to buy?", titleStyle)
+      .text(r.centerX, r.y + 25, "What would you like to buy?", titleStyle)
       .setOrigin(0.5, 0);
 
-    const leaveButton = new TextButton(scene, width / 2, height - pad - 25, "Leave Shop", {
+    const leaveButton = new TextButton(scene, r.centerX, r.bottom - 30, "Leave Shop", {
       origin: { x: 0.5, y: 1 }
     });
     leaveButton.events.on("DOWN", this.closeShop);
 
-    const w = width - 2 * pad;
-    const y = height / 2;
-    const x1 = pad + w * (1 / 6);
-    const x2 = pad + w * (3 / 6);
-    const x3 = pad + w * (5 / 6);
+    const y = r.centerY;
+    const x1 = r.x + r.width * (1 / 6);
+    const x2 = r.x + r.width * (3 / 6);
+    const x3 = r.x + r.width * (5 / 6);
     const buyHeartText = scene.add
       .text(x1, y - 40, `Buy heart\n(max 3)\nCost: ${this.costs.heart} gold`, itemTextStyle)
       .setOrigin(0.5, 0.5);
