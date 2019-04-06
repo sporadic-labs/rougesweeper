@@ -1,0 +1,36 @@
+{"frames": {
+
+"tile-back.png":
+{
+	"frame": {"x":1,"y":1,"w":74,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
+	"sourceSize": {"w":76,"h":76}
+},
+"tile-blank.png":
+{
+	"frame": {"x":77,"y":1,"w":74,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
+	"sourceSize": {"w":76,"h":76}
+},
+"wall.png":
+{
+	"frame": {"x":153,"y":1,"w":74,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
+	"sourceSize": {"w":76,"h":76}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "map-tiles.png",
+	"format": "RGBA8888",
+	"size": {"w":228,"h":76},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:b6dc7e97e2891c8b95eaf336e6ff95b9:431354fb4715e7fb257053211339ce9b:e1681c6011e5b21fafa27c079e232ca4$"
+}
+}
