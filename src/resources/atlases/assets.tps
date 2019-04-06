@@ -209,6 +209,7 @@
             <key type="filename">assets/tiles/shop.png</key>
             <key type="filename">assets/tiles/tile-back.png</key>
             <key type="filename">assets/tiles/tile-blank.png</key>
+            <key type="filename">assets/tiles/wall.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
