@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="9" height="7" tilewidth="76" tileheight="76" infinite="0" nextobjectid="17">
- <tileset firstgid="1" source="map-tiles.tsx"/>
+ <tileset firstgid="1" name="map-tiles" tilewidth="76" tileheight="76" tilecount="3" columns="3">
+  <image source="map-tiles.png" width="228" height="76"/>
+ </tileset>
  <layer name="Tiles" width="9" height="7">
   <data encoding="csv">
-1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1
+0,2,2,3,3,3,2,2,0,
+2,2,3,3,2,2,2,2,2,
+2,2,3,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,3,2,2,3,
+3,2,2,2,2,3,2,2,3,
+0,3,2,2,3,3,2,2,0
 </data>
  </layer>
 </map>
