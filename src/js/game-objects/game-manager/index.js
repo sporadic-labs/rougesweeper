@@ -57,6 +57,14 @@ export default class GameManager {
   startMoveFlow() {
     this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
+      if (
+        this.player.getGridPosition().x === tile.getGridPosition().x &&
+        this.player.getGridPosition().y === tile.getGridPosition().y
+      ) {
+        // Don't go to tile you are already at!
+        return;
+      }
+
       const tileGridPos = tile.getGridPosition();
       const path = this.level.findPathBetween(this.player.getGridPosition(), tileGridPos);
 
