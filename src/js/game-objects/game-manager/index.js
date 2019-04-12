@@ -123,7 +123,12 @@ export default class GameManager {
       await tile.flipToFront();
       store.removeAttack();
       const { x, y } = tile.getPosition();
-      const attackAnim = new AttackAnimation(this.scene, "player-attack", x - 12, y);
+      const attackAnim = new AttackAnimation(
+        this.scene,
+        "player-attack",
+        x - 40,
+        y - 10
+      );
       await Promise.all([
         attackAnim.fadeout().then(() => attackAnim.destroy()),
         tile.playTileDestructionAnimation()

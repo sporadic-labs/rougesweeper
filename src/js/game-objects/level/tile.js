@@ -102,8 +102,8 @@ export default class Tile {
                 const attackAnim = new AttackAnimation(
                   this.scene,
                   "enemy-attack",
-                  playerX - 24,
-                  playerY
+                  playerX - 40,
+                  playerY - 28
                 );
                 attackAnim.fadeout().then(() => attackAnim.destroy());
               }
