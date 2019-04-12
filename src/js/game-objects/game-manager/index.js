@@ -1,4 +1,3 @@
-import { autorun } from "mobx";
 import LEVEL_EVENTS from "../level/events";
 import TILE_TYPES from "../level/tile-types";
 import Level from "../level/level";
