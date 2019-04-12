@@ -7,8 +7,10 @@ export default class HealthIndicator {
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    const x = 100;
-    this.text = scene.add.text(x, 525, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
+    const x = 124;
+    this.text = scene.add
+      .text(x, 600, "", { fontSize: 25 })
+      .setOrigin(0.5, 0.5);
 
     this.updateText(gameStore.playerHealth, true);
     this.dispose = autorun(() => this.updateText(gameStore.playerHealth));
