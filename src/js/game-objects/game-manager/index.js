@@ -46,8 +46,7 @@ export default class GameManager {
     });
     this.mobProxy.observe(store, "hasCompass", () => {
       if (this.compass) this.compass.destroy();
-      if (store.hasCompass)
-        this.compass = new Compass(this.scene, this.player, this.level);
+      if (store.hasCompass) this.compass = new Compass(this.scene, this.player, this.level);
     });
 
     this.proxy = new EventProxy();
@@ -91,8 +90,7 @@ export default class GameManager {
         }
       }
 
-      if (shouldMoveToTile)
-        await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+      if (shouldMoveToTile) await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
       this.updateEnemyCount();
       this.level.enableAllTiles();
 
