@@ -21,7 +21,7 @@ export default class PurseIndicator {
   }
 
   updateText(goldCount) {
-    this.text.setText(`Gold: ${goldCount}`);
+    this.text.setText(`Tech: ${goldCount}`);
   }
 
   destroy() {

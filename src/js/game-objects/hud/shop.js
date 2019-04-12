@@ -55,19 +55,34 @@ export default class Shop {
     const x2 = r.x + r.width * (3 / 6);
     const x3 = r.x + r.width * (5 / 6);
     const buyHeartText = scene.add
-      .text(x1, y - 40, `Buy heart\n(max 3)\nCost: ${this.costs.heart} gold`, itemTextStyle)
+      .text(
+        x1,
+        y - 40,
+        `Reduce alert\n(max 3)\nCost: ${this.costs.heart} tech`,
+        itemTextStyle
+      )
       .setOrigin(0.5, 0.5);
     const buyHeartButton = new TextButton(scene, x1, y + 40, "Buy");
     buyHeartButton.events.on("DOWN", this.buyHealth);
     this.buyHeartButton = buyHeartButton;
     const buyAttackText = scene.add
-      .text(x2, y - 40, `Buy attack\n(max 3)\nCost: ${this.costs.attack} gold`, itemTextStyle)
+      .text(
+        x2,
+        y - 40,
+        `Buy attack\n(max 3)\nCost: ${this.costs.attack} tech`,
+        itemTextStyle
+      )
       .setOrigin(0.5, 0.5);
     const buyAttackButton = new TextButton(scene, x2, y + 40, "Buy");
     buyAttackButton.events.on("DOWN", this.buyAttack);
     this.buyAttackButton = buyAttackButton;
     const buyCompassText = scene.add
-      .text(x3, y - 40, `Buy compass\nfor level\nCost: ${this.costs.compass} gold`, itemTextStyle)
+      .text(
+        x3,
+        y - 40,
+        `Buy compass\nfor level\nCost: ${this.costs.compass} tech`,
+        itemTextStyle
+      )
       .setOrigin(0.5, 0.5);
     const buyCompassButton = new TextButton(scene, x3, y + 40, "Buy");
     buyCompassButton.events.on("DOWN", this.buyCompass);

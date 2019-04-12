@@ -21,7 +21,7 @@ export default class HealthIndicator {
   }
 
   updateText(playerHealth) {
-    this.text.setText(`Health: ${playerHealth}`);
+    this.text.setText(`Alert: ${3 - playerHealth}/3`);
   }
 
   destroy() {
