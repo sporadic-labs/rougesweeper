@@ -175,7 +175,7 @@ export default class GameManager {
     if (this.level) this.level.destroy();
     store.setGameState(GAME_MODES.IDLE_MODE);
     store.setHasCompass(false);
-    this.level = new Level(this.scene);
+    this.level = new Level(this.scene, `level-${store.level}`);
     const gridPos = this.level.getStartingGridPosition();
     this.movePlayerToTile(gridPos.x, gridPos.y, 0);
     const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);

@@ -7,7 +7,7 @@ import PathFinder from "./path-finder";
 const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 
 export default class Level {
-  constructor(scene) {
+  constructor(scene, levelKey) {
     this.scene = scene;
     this.events = new Events.EventEmitter();
 
@@ -15,7 +15,7 @@ export default class Level {
       [TILE_TYPES.ENEMY]: 10,
       [TILE_TYPES.GOLD]: 10
     };
-    this.map = scene.add.tilemap("level");
+    this.map = scene.add.tilemap(levelKey);
     this.data = new LevelData(this.map, composition);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
 
