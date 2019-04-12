@@ -5,6 +5,7 @@ export default class Player {
     this.sprite = scene.add
       .sprite(x, y, "assets", "player")
       .setScale(1.25, 1.25)
+      .setOrigin(0.5, 0.7)
       .setDepth(10);
 
     this.gridX = 0;

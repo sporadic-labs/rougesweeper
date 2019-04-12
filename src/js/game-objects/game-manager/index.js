@@ -144,7 +144,7 @@ export default class GameManager {
   async movePlayerToTile(gridX, gridY, duration = 200) {
     const worldX = this.level.gridXToWorldX(gridX);
     const worldY = this.level.gridYToWorldY(gridY);
-    await this.player.movePlayerTo(worldX, worldY - 15, duration);
+    await this.player.movePlayerTo(worldX, worldY, duration);
     this.player.setGridPosition(gridX, gridY);
     this.level.highlightTiles(this.player.getGridPosition());
   }
