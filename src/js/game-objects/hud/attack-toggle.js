@@ -39,13 +39,13 @@ export default class AttackToggle {
     this.attackToggle.setSize(buttonWidth, buttonHeight);
     this.enableInteractive();
 
-    this.updateText(gameStore.attackCount, true);
+    this.updateAttackCountText(gameStore.attackCount, true);
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(gameStore, "attackCount", () => {
       this.disabled = gameStore.attackCount <= 0;
       if (this.disabled) this.disableInteractive();
       else this.enableInteractive();
-      this.updateText(gameStore.attackCount);
+      this.updateAttackCountText(gameStore.attackCount);
     });
     this.mobProxy.observe(gameStore, "gameState", () => {
       if (gameStore.gameState === GAME_MODES.MOVE_MODE) {
@@ -60,8 +60,8 @@ export default class AttackToggle {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
-  updateText(attackCount) {
-    this.text.setText(`Attacks: ${attackCount}`);
+  updateAttackCountText(attackCount) {
+    this.attackCountText.setText(`Attack: ${attackCount}/3`);
   }
 
   enableInteractive() {
@@ -154,7 +154,7 @@ export default class AttackToggle {
   destroy() {
     this.mobProxy.destroy();
     if (this.tween) this.tween.stop();
-    this.text.destroy();
+    this.attackCountText.destroy();
     this.attackToggle.destroy();
     this.proxy.removeAll();
   }
