@@ -22,7 +22,7 @@ export default class GameManager {
     this.mobProxy.observe(store, "playerHealth", () => {
       if (store.playerHealth === 0) {
         scene.scene.stop();
-        scene.scene.start(SCENE_NAME.GAME_OVER);
+        scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: false });
       }
     });
     this.mobProxy.observe(store, "gameState", () => {
@@ -78,9 +78,17 @@ export default class GameManager {
         if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
       } else {
         if (tile.type === TILE_TYPES.EXIT) {
-          await this.movePlayerAlongPath(path);
-          this.startNewLevel();
-          return;
+          if (store.level >= 5) {
+            this.scene.scene.stop();
+            this.scene.scene.start(SCENE_NAME.GAME_OVER, {
+              didPlayerWin: true
+            });
+            return;
+          } else {
+            await this.movePlayerAlongPath(path);
+            this.startNewLevel();
+            return;
+          }
         } else if (tile.type === TILE_TYPES.SHOP) {
           await this.movePlayerAlongPath(path);
           this.applyTileEffect(tile);
