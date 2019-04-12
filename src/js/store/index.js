@@ -12,6 +12,7 @@ class GameStore {
     this.attackCount = this.maxAttackCount;
     this.isShopOpen = false;
     this.level = 0;
+    this.moveCount = 0;
     this.hasCompass = false;
   }
 
@@ -45,6 +46,9 @@ class GameStore {
   setHasCompass(hasCompass) {
     this.hasCompass = hasCompass;
   }
+  addMove(amt = 1) {
+    if (this.moveCount >= 0) this.moveCount += amt;
+  }
   nextLevel() {
     this.level++;
   }
@@ -53,6 +57,7 @@ class GameStore {
     this.goldCount = 0;
     this.attackCount = this.maxAttackCount;
     this.level = 0;
+    this.moveCount = 0;
   }
 }
 
@@ -74,6 +79,8 @@ decorate(GameStore, {
   setShopOpen: action,
   hasCompass: observable,
   setHasCompass: action,
+  moveCount: observable,
+  addMove: action,
   level: observable,
   nextLevel: action,
   startNewGame: action
