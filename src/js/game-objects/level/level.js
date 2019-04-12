@@ -102,11 +102,6 @@ export default class Level {
     return 50 + y * 80;
   }
 
-  findPathBetween(gridStart, gridStop) {
-    const path = this.pathFinder.findPath(gridStart, gridStop);
-    return path;
-  }
-
   hasTileAt(x, y) {
     return this.tiles[y] && this.tiles[y][x];
   }
@@ -144,7 +139,7 @@ export default class Level {
     return dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1;
   }
 
-  canPlayerMoveTo(playerPos, tilePos) {
+  findPathBetween(playerPos, tilePos) {
     // Note: this is inefficient, but ensures the pathfinder is up-to-date. To optimize, level needs
     // to know when tiles are highlighted/unhighlighted and revealed/hidden.
     this.pathFinder.setAllUnwalkable();
@@ -161,7 +156,7 @@ export default class Level {
       if (this.hasTileAt(nx, ny)) this.pathFinder.setWalkableAt(nx, ny);
     });
     this.pathFinder.update();
-    return this.findPathBetween(playerPos, tilePos);
+    return this.pathFinder.findPath(playerPos, tilePos);
   }
 
   destroy() {

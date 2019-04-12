@@ -1,3 +1,5 @@
+import PathTween from "./path-tween";
+
 export default class Player {
   /** @param {Phaser.Scene} scene */
   constructor(scene, x, y) {
@@ -14,6 +16,16 @@ export default class Player {
 
   setPosition(x, y) {
     this.sprite.setPosition(x, y);
+  }
+
+  async movePlayerAlongPath(points, duration = 200) {
+    const pathTween = new PathTween(
+      this.scene,
+      points,
+      ({ x, y }) => this.sprite.setPosition(x, y),
+      { duration, ease: "Quad.easeOut" }
+    );
+    return pathTween.play();
   }
 
   movePlayerTo(x, y, duration = 200) {

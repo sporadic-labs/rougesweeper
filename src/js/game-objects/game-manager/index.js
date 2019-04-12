@@ -60,10 +60,9 @@ export default class GameManager {
     this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
-      // const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
-      const inRange = this.level.canPlayerMoveTo(this.player.getGridPosition(), tileGridPos);
+      const path = this.level.findPathBetween(this.player.getGridPosition(), tileGridPos);
 
-      if (!inRange) {
+      if (!path) {
         this.toastManager.setMessage("Tile is too far away to move there.");
         return;
       }
@@ -81,16 +80,16 @@ export default class GameManager {
         if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
       } else {
         if (tile.type === TILE_TYPES.EXIT) {
-          await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+          await this.movePlayerAlongPath(path);
           this.startNewLevel();
           return;
         } else if (tile.type === TILE_TYPES.SHOP) {
-          await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+          await this.movePlayerAlongPath(path);
           this.applyTileEffect(tile);
         }
       }
 
-      if (shouldMoveToTile) await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+      if (shouldMoveToTile) await this.movePlayerAlongPath(path);
       this.updateEnemyCount();
       this.level.enableAllTiles();
 
@@ -139,6 +138,14 @@ export default class GameManager {
     const pos = this.player.getGridPosition();
     const enemyCount = this.level.countNeighboringEnemies(pos.x, pos.y);
     store.setDangerCount(enemyCount);
+  }
+
+  async movePlayerAlongPath(path, duration = 200) {
+    const lastPoint = path[path.length - 1];
+    const worldPath = path.map(p => this.level.gridXYToWorldXY(p));
+    await this.player.movePlayerAlongPath(worldPath, duration);
+    this.player.setGridPosition(lastPoint.x, lastPoint.y);
+    this.level.highlightTiles(this.player.getGridPosition());
   }
 
   async movePlayerToTile(gridX, gridY, duration = 200) {
