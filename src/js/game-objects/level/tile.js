@@ -229,7 +229,14 @@ export default class Tile {
     this.container.on("pointerdown", this.onPointerDown);
   }
 
+  /**
+   * Disable user interactivity for the tile.
+   */
   disableInteractive() {
+    /* NOTE(rex): This handles the edge case of onHoverEnd never triggering,
+     * since the gameManager disables interactivity when the move action kicks off.
+     */
+    this.onHoverEnd();
     this.container.disableInteractive();
     this.container.off("pointerover", this.onHoverStart);
     this.container.off("pointerout", this.onHoverEnd);
