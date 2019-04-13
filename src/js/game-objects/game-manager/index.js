@@ -65,15 +65,18 @@ export default class GameManager {
       }
 
       const tileGridPos = tile.getGridPosition();
-      const path = this.level.findPathBetween(this.player.getGridPosition(), tileGridPos);
+      const isRevealed = tile.isRevealed();
+      const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
+      const path = this.level.findPathBetween(
+        this.player.getGridPosition(),
+        tileGridPos,
+        !isRevealed
+      );
 
       if (!path) {
         this.toastManager.setMessage("Tile is too far away to move there.");
         return;
       }
-
-      const isRevealed = tile.isRevealed();
-      const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
 
       this.level.disableAllTiles();
       if (!isRevealed) {
@@ -130,12 +133,7 @@ export default class GameManager {
       await tile.flipToFront();
       store.removeAttack();
       const { x, y } = tile.getPosition();
-      const attackAnim = new AttackAnimation(
-        this.scene,
-        "player-attack",
-        x - 40,
-        y - 10
-      );
+      const attackAnim = new AttackAnimation(this.scene, "player-attack", x - 40, y - 10);
       await Promise.all([
         attackAnim.fadeout().then(() => attackAnim.destroy()),
         tile.playTileDestructionAnimation()
