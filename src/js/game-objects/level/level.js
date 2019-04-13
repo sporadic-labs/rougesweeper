@@ -168,6 +168,30 @@ export default class Level {
     return this.pathFinder.findPath(playerPos, tilePos);
   }
 
+  fadeLevelOut() {
+    const tilePromises = this.tiles
+      .flat()
+      .filter(tile => tile)
+      .map(tile => {
+        if (tile) {
+          return tile.fadeTileOut();
+        }
+      });
+    return Promise.all(tilePromises);
+  }
+
+  fadeLevelIn() {
+    const tilePromises = this.tiles
+      .flat()
+      .filter(tile => tile)
+      .map(tile => {
+        if (tile) {
+          return tile.fadeTileIn();
+        }
+      });
+    return Promise.all(tilePromises);
+  }
+
   destroy() {
     this.tiles.forEach(row =>
       row.forEach(tile => {

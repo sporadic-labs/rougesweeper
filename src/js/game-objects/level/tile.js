@@ -27,14 +27,23 @@ export default class Tile {
 
     // Construct the Front Tile based on it's type.
     // It always gets a background title, with an optional top graphic.
-    const frontTileSprites = [scene.add.sprite(0, 0, "assets", "tiles/tile-blank")];
+    const frontTileSprites = [
+      scene.add.sprite(0, 0, "assets", "tiles/tile-blank")
+    ];
     if (type !== TILE_TYPES.BLANK) {
-      frontTileSprites.push(scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`));
+      frontTileSprites.push(
+        scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`)
+      );
     }
     this.frontTile = scene.add.container(0, 0, frontTileSprites);
 
     // Add the front and back tile to a container for easy access.
-    this.container = scene.add.container(x, y, [this.backSprite, this.frontTile]);
+    this.container = scene.add.container(x, y, [
+      this.backSprite,
+      this.frontTile
+    ]);
+
+    this.container.alpha = 0;
 
     this.flipEffect = new FlipEffect(scene, this.frontTile, this.backSprite);
     this.flipEffect.setToBack();
@@ -155,15 +164,64 @@ export default class Tile {
     });
   }
 
+  /**
+   * Fade the tile out, destroy it, and resolve a promise when the whole mess is done!
+   */
+  fadeTileOut() {
+    const fadetime = Phaser.Math.Between(150, 300);
+    return new Promise(resolve => {
+      if (this.fadeTween) this.fadeTween.stop();
+      this.fadeTween = this.scene.add.tween({
+        targets: this.container,
+        alpha: 0,
+        scaleX: 0.9,
+        scaleY: 0.9,
+        duration: fadetime,
+        onComplete: () => {
+          return resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   * Fade the tile in, and return a promise when it's done!
+   */
+  fadeTileIn() {
+    const fadetime = Phaser.Math.Between(150, 300);
+    return new Promise(resolve => {
+      if (this.fadeTween) this.fadeTween.stop();
+      this.fadeTween = this.scene.add.tween({
+        targets: this.container,
+        alpha: 0.6,
+        duration: fadetime,
+        onComplete: () => {
+          return resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   * Set the position of the tile based on the Map Grid.
+   * @param {Number} x
+   * @param {Number} y
+   */
   setGridPosition(x, y) {
     this.gridX = x;
     this.gridY = y;
   }
 
+  /**
+   * Get the position of the tile in the Map Grid.
+   */
   getGridPosition() {
     return { x: this.gridX, y: this.gridY };
   }
 
+  /**
+   * Enable user interactivity for the tile.
+   */
   enableInteractive() {
     this.container.setInteractive();
     this.container.on("pointerover", this.onHoverStart);

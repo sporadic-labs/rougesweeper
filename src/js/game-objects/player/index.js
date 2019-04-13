@@ -9,6 +9,7 @@ export default class Player {
       .sprite(x, y, "assets", "player")
       .setScale(1.25, 1.25)
       .setOrigin(0.5, 0.7)
+      .setAlpha(0)
       .setDepth(10);
 
     this.moveSpeedMs = 80 / 150; // px/ms, where moving 1 tile = 80px
@@ -25,13 +26,13 @@ export default class Player {
     const end = points[points.length - 1];
     const dist = PMath.Distance.Between(start.x, start.y, end.x, end.y);
     const duration = dist / this.moveSpeedMs;
-    const pathTween = new PathTween(
+    this.pathTween = new PathTween(
       this.scene,
       points,
       ({ x, y }) => this.sprite.setPosition(x, y),
       { duration, ease: "Quad.easeOut" }
     );
-    return pathTween.play();
+    return this.pathTween.play();
   }
 
   movePlayerTo(x, y, moveInstantly = false) {
@@ -68,8 +69,47 @@ export default class Player {
     return { x: this.gridX, y: this.gridY };
   }
 
+  /**
+   * Fade the Player out, destroy it, and resolve a promise when the whole mess is done!
+   */
+  fadePlayerOut() {
+    return new Promise(resolve => {
+      if (this.fadeTween) this.fadeTween.stop();
+      this.fadeTween = this.scene.add.tween({
+        targets: this.sprite,
+        alpha: 0,
+        y: "-=50",
+        ease: Phaser.Math.Easing.Quadratic.In,
+        duration: 400,
+        onComplete: () => {
+          return resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   * Fade the Player out, destroy it, and resolve a promise when the whole mess is done!
+   */
+  fadePlayerIn() {
+    return new Promise(resolve => {
+      if (this.fadeTween) this.fadeTween.stop();
+      this.fadeTween = this.scene.add.tween({
+        targets: this.sprite,
+        alpha: 1,
+        ease: Phaser.Math.Easing.Quadratic.In,
+        duration: 400,
+        onComplete: () => {
+          return resolve();
+        }
+      });
+    });
+  }
+
   destroy() {
     if (this.moveTween) this.moveTween.stop();
+    if (this.pathTween) this.pathTween.stop();
+    if (this.fadeTween) this.fadeTween.stop();
     this.sprite.destroy();
   }
 }
