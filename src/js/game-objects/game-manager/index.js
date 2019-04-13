@@ -8,6 +8,7 @@ import MobXProxy from "../../helpers/mobx-proxy";
 import { SCENE_NAME } from "../../scenes/index";
 import EventProxy from "../../helpers/event-proxy";
 import Compass from "../hud/compass";
+import CoinCollectAnimation from "../player/coin-collect-animation";
 
 export default class GameManager {
   /** @param {Phaser.Scene} scene */
@@ -132,12 +133,19 @@ export default class GameManager {
       this.level.disableAllTiles();
       await tile.flipToFront();
       store.removeAttack();
+      const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
       const { x, y } = tile.getPosition();
       const attackAnim = new AttackAnimation(this.scene, "player-attack", x - 40, y - 10);
       await Promise.all([
         attackAnim.fadeout().then(() => attackAnim.destroy()),
         tile.playTileDestructionAnimation()
       ]);
+      if (shouldGetCoin) {
+        const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
+        await coinAnim.play();
+        coinAnim.destroy();
+        store.addGold();
+      }
 
       if (tile.type !== TILE_TYPES.EXIT && tile.type !== TILE_TYPES.WALL) {
         await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
