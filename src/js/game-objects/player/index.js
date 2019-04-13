@@ -35,14 +35,14 @@ export default class Player {
   }
 
   movePlayerTo(x, y, moveInstantly = false) {
-    const dist = PMath.Distance.Between(this.x, this.y, x, y);
-    const duration = dist / this.moveSpeedMs;
     return new Promise(resolve => {
       if (this.moveTween) this.moveTween.stop();
       if (moveInstantly) {
         this.setPosition(x, y);
         resolve();
       } else {
+        const dist = PMath.Distance.Between(this.sprite.x, this.sprite.y, x, y);
+        const duration = dist / this.moveSpeedMs;
         this.moveTween = this.scene.tweens.add({
           targets: this.sprite,
           x,
