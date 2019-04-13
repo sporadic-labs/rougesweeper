@@ -1,3 +1,4 @@
+import { Math as PMath } from "phaser";
 import PathTween from "./path-tween";
 
 export default class Player {
@@ -10,6 +11,7 @@ export default class Player {
       .setOrigin(0.5, 0.7)
       .setDepth(10);
 
+    this.moveSpeedMs = 80 / 150; // px/ms, where moving 1 tile = 80px
     this.gridX = 0;
     this.gridY = 0;
   }
@@ -18,7 +20,11 @@ export default class Player {
     this.sprite.setPosition(x, y);
   }
 
-  async movePlayerAlongPath(points, duration = 200) {
+  async movePlayerAlongPath(points) {
+    const start = points[0];
+    const end = points[points.length - 1];
+    const dist = PMath.Distance.Between(start.x, start.y, end.x, end.y);
+    const duration = dist / this.moveSpeedMs;
     const pathTween = new PathTween(
       this.scene,
       points,
@@ -28,11 +34,13 @@ export default class Player {
     return pathTween.play();
   }
 
-  movePlayerTo(x, y, duration = 200) {
+  movePlayerTo(x, y, moveInstantly = false) {
+    const dist = PMath.Distance.Between(this.x, this.y, x, y);
+    const duration = dist / this.moveSpeedMs;
     return new Promise(resolve => {
       if (this.moveTween) this.moveTween.stop();
-      if (duration === 0) {
-        this.setPosition(x, y); // Phaser tween bug
+      if (moveInstantly) {
+        this.setPosition(x, y);
         resolve();
       } else {
         this.moveTween = this.scene.tweens.add({

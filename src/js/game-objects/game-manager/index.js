@@ -163,10 +163,10 @@ export default class GameManager {
     this.level.highlightTiles(this.player.getGridPosition());
   }
 
-  async movePlayerToTile(gridX, gridY, duration = 200) {
+  async movePlayerToTile(gridX, gridY, moveInstantly = false) {
     const worldX = this.level.gridXToWorldX(gridX);
     const worldY = this.level.gridYToWorldY(gridY);
-    await this.player.movePlayerTo(worldX, worldY, duration);
+    await this.player.movePlayerTo(worldX, worldY, moveInstantly);
     this.player.setGridPosition(gridX, gridY);
     this.level.highlightTiles(this.player.getGridPosition());
   }
@@ -192,7 +192,7 @@ export default class GameManager {
     store.setHasCompass(false);
     this.level = new Level(this.scene, `level-${store.level}`);
     const gridPos = this.level.getStartingGridPosition();
-    this.movePlayerToTile(gridPos.x, gridPos.y, 0);
+    this.movePlayerToTile(gridPos.x, gridPos.y, true);
     const enemyCount = this.level.countNeighboringEnemies(gridPos.x, gridPos.y);
     store.setDangerCount(enemyCount);
     store.setGameState(GAME_MODES.MOVE_MODE);
