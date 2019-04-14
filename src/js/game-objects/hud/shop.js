@@ -94,7 +94,7 @@ export default class Shop {
       leaveButton.reset(); // Bug: stays in pressed state, menu closing hides button w/o up event
       this.updateButtons();
     });
-    this.mobProxy.observe(gameStore, "goldCount", () => {
+    this.mobProxy.observe(gameStore, () => {
       if (gameStore.isShopOpen) this.updateButtons();
     });
 
