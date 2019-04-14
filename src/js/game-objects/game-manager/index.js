@@ -44,8 +44,7 @@ export default class GameManager {
     });
     this.mobProxy.observe(store, "hasCompass", () => {
       if (this.compass) this.compass.destroy();
-      if (store.hasCompass)
-        this.compass = new Compass(this.scene, this.player, this.level);
+      if (store.hasCompass) this.compass = new Compass(this.scene, this.player, this.level);
     });
 
     this.proxy = new EventProxy();
@@ -68,8 +67,7 @@ export default class GameManager {
 
       const tileGridPos = tile.getGridPosition();
       const isRevealed = tile.isRevealed();
-      const shouldMoveToTile =
-        tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
+      const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
       const path = this.level.findPathBetween(
         this.player.getGridPosition(),
         tileGridPos,
@@ -120,10 +118,7 @@ export default class GameManager {
     this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
       const tileGridPos = tile.getGridPosition();
-      const inRange = this.level.isTileInPlayerRange(
-        this.player.getGridPosition(),
-        tileGridPos
-      );
+      const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
 
       if (!inRange) {
         this.toastManager.setMessage("That tile is too far away to attack.");
@@ -140,12 +135,7 @@ export default class GameManager {
       store.removeAttack();
       const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
       const { x, y } = tile.getPosition();
-      const attackAnim = new AttackAnimation(
-        this.scene,
-        "player-attack",
-        x - 40,
-        y - 10
-      );
+      const attackAnim = new AttackAnimation(this.scene, "player-attack", x - 40, y - 10);
       await Promise.all([
         attackAnim.fadeout().then(() => attackAnim.destroy()),
         tile.playTileDestructionAnimation()

@@ -18,18 +18,14 @@ export default class AttackToggle {
 
     this.state = TOGGLE_STATES.UP;
 
-    this.attackCountText = scene.add
-      .text(x, 635, "", { fontSize: 25 })
-      .setOrigin(0.5, 0.5);
+    this.attackCountText = scene.add.text(x, 635, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
 
     // Makeshift button for mvp purposes.
     // TODO(rex): Probably replace this with a sprite.
     const buttonWidth = 160;
     const buttonHeight = 40;
     this.attackToggle = scene.add.container(x, 680, [
-      scene.add
-        .rectangle(0, 0, buttonWidth, buttonHeight, 0xbcbcbc, 1)
-        .setOrigin(0.5, 0.5),
+      scene.add.rectangle(0, 0, buttonWidth, buttonHeight, 0xbcbcbc, 1).setOrigin(0.5, 0.5),
       scene.add.text(0, 0, "Attack", { fontSize: 25 }).setOrigin(0.5, 0.5),
       scene.add.text(0, 0, "Cancel", { fontSize: 25 }).setOrigin(0.5, 0.5)
     ]);
