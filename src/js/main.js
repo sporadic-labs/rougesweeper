@@ -27,4 +27,6 @@ const game = new Phaser.Game({
 installScenes(game);
 game.scene.start(SCENE_NAME.LOADING);
 
+// Phaser issue: if no scaleMode is specified in the config, Phaser doesn't watch the browser size
+// and update coordinate system when size changes.
 window.addEventListener("resize", () => game.scale.updateBounds());
