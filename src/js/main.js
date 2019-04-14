@@ -26,3 +26,5 @@ const game = new Phaser.Game({
 
 installScenes(game);
 game.scene.start(SCENE_NAME.LOADING);
+
+window.addEventListener("resize", () => game.scale.updateBounds());
