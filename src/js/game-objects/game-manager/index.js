@@ -51,7 +51,7 @@ export default class GameManager {
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
 
-    this.startNewLevel();
+    this.startLevel();
   }
 
   startMoveFlow() {
@@ -97,7 +97,8 @@ export default class GameManager {
             return;
           } else {
             await this.movePlayerAlongPath(path);
-            this.startNewLevel();
+            store.nextLevel();
+            this.startLevel();
             return;
           }
         } else if (tile.type === TILE_TYPES.SHOP) {
@@ -196,7 +197,7 @@ export default class GameManager {
   /**
    * Fade out the player, fade out the previous level, set up the next level, and start things off!
    */
-  async startNewLevel() {
+  async startLevel() {
     await this.player.fadePlayerOut();
 
     if (this.level) {
@@ -205,11 +206,10 @@ export default class GameManager {
       this.level.destroy();
     }
 
-    store.nextLevel();
     store.setGameState(GAME_MODES.IDLE_MODE);
     store.setHasCompass(false);
 
-    this.level = new Level(this.scene, `level-${store.level}`);
+    this.level = new Level(this.scene, store.level);
     const playerStartGridPos = this.level.getStartingGridPosition();
 
     const enemyCount = this.level.countNeighboringEnemies(

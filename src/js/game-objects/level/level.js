@@ -3,19 +3,17 @@ import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
+import compositions from "./compositions";
 
 const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 
 export default class Level {
-  constructor(scene, levelKey) {
+  constructor(scene, levelNumber) {
     this.scene = scene;
     this.events = new Events.EventEmitter();
 
-    const composition = {
-      [TILE_TYPES.ENEMY]: 10,
-      [TILE_TYPES.GOLD]: 10
-    };
-    this.map = scene.add.tilemap(levelKey);
+    const composition = compositions[levelNumber - 1];
+    this.map = scene.add.tilemap(`level-${levelNumber}`);
     this.data = new LevelData(this.map, composition);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
 

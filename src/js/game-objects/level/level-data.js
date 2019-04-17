@@ -96,7 +96,19 @@ export default class LevelData {
 
   debugDump() {
     const debugTiles = this.tiles.map(row => row.map(tile => (tile ? debugTileMap[tile] : " ")));
-    const string = debugTiles.map(row => row.join(" ")).join("\n");
-    console.log(string);
+    const grid = debugTiles.map(row => row.join(" ")).join("\n");
+    const flatTiles = this.tiles.flat(1);
+    const numTiles = flatTiles.filter(t => t !== undefined).length;
+    const numEnemy = flatTiles.filter(t => t === TILE.ENEMY).length;
+    const numBlank = flatTiles.filter(t => t === TILE.BLANK).length;
+    const numGold = flatTiles.filter(t => t === TILE.GOLD).length;
+    const numWall = flatTiles.filter(t => t === TILE.WALL).length;
+    const stats =
+      `Num tiles: ${numTiles}\n` +
+      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(2)}%)\n` +
+      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(2)}%)\n` +
+      `Gold tiles: ${numGold} (${((numGold / numTiles) * 100).toFixed(2)}%)\n` +
+      `Wall tiles: ${numWall} (${((numWall / numTiles) * 100).toFixed(2)}%)`;
+    console.log(`${grid}\n${stats}`);
   }
 }
