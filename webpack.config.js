@@ -20,6 +20,8 @@ module.exports = function(env, argv) {
     },
     module: {
       rules: [
+        { test: /\.(ts|tsx)$/, use: "ts-loader", exclude: /node_modules/ },
+
         { test: /\.(js|jsx)$/, use: "babel-loader", exclude: /node_modules/ },
 
         {
@@ -46,6 +48,9 @@ module.exports = function(env, argv) {
         // Allow shaders to be loaded via glslify
         { test: /\.(glsl|frag|vert)$/, use: ["raw-loader", "glslify"] }
       ]
+    },
+    resolve: {
+      extensions: [".tsx", ".ts", ".js"]
     },
     plugins: [
       new HTMLWebpackPlugin({ template: "./index.html" }),
