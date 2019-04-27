@@ -1,17 +1,16 @@
-const noop = () => {};
-const LOG_LEVEL = {
-  ALL: 3,
-  WARN: 2,
-  ERROR: 1,
-  OFF: 0
-};
+import noop from "./noop";
+
+enum LOG_LEVEL {
+  ALL = 3,
+  WARN = 2,
+  ERROR = 1,
+  OFF = 0
+}
 
 class Logger {
-  constructor(logLevel = LOG_LEVEL.ALL) {
-    this.logLevel = logLevel;
-  }
+  constructor(private logLevel: LOG_LEVEL = LOG_LEVEL.ALL) {}
 
-  setLevel(logLevel) {
+  setLevel(logLevel: LOG_LEVEL): void {
     this.logLevel = logLevel;
   }
 
