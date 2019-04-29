@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { SCENE_NAME } from "./index.js";
+import { SCENE_NAME } from "./index";
 
 export default class LoadingScene extends Phaser.Scene {
   preload() {
@@ -21,6 +21,6 @@ export default class LoadingScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start(SCENE_NAME.MAIN);
+    this.scene.start(SCENE_NAME.ISO);
   }
 }

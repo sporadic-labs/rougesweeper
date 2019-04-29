@@ -70,6 +70,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
-    "easystarjs": "^0.4.3"
+    "easystarjs": "^0.4.3",
+    "phaser3-plugin-isometric": "0.0.7"
   }
 }
