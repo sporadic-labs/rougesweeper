@@ -1,7 +1,7 @@
 /**
  * Check if two arrays are equal by doing a shallow element-by-element comparison.
  */
-export function arrayEqual(array1: any[], array2: any[]): Boolean {
+export function arrayEqual(array1: any[], array2: any[]): boolean {
   return array1.length === array2.length && array1.every((elem, index) => elem === array2[index]);
 }
 
