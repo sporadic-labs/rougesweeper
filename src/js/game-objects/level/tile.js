@@ -7,9 +7,9 @@ const TYPE_TO_KEY = {
   [TILE_TYPES.START]: "tile-blank",
   [TILE_TYPES.SHOP]: "shop",
   [TILE_TYPES.BLANK]: "tile-blank",
-  [TILE_TYPES.GOLD]: "gold",
+  [TILE_TYPES.GOLD]: "tech",
   [TILE_TYPES.ENEMY]: "enemy",
-  [TILE_TYPES.EXIT]: "exit-down",
+  [TILE_TYPES.EXIT]: "stairs-down",
   [TILE_TYPES.WALL]: "wall"
 };
 

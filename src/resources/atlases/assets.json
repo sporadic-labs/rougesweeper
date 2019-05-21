@@ -2,15 +2,15 @@
 
 "enemy-attack":
 {
-	"frame": {"x":229,"y":403,"w":72,"h":73},
+	"frame": {"x":1,"y":403,"w":66,"h":59},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":2,"y":2,"w":72,"h":73},
+	"spriteSourceSize": {"x":6,"y":8,"w":66,"h":59},
 	"sourceSize": {"w":76,"h":75}
 },
 "marker":
 {
-	"frame": {"x":403,"y":220,"w":50,"h":50},
+	"frame": {"x":241,"y":403,"w":50,"h":50},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":13,"y":13,"w":50,"h":50},
@@ -18,19 +18,19 @@
 },
 "player-attack":
 {
-	"frame": {"x":338,"y":403,"w":71,"h":63},
+	"frame": {"x":426,"y":1,"w":67,"h":69},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":1,"y":8,"w":71,"h":63},
-	"sourceSize": {"w":75,"h":75}
+	"spriteSourceSize": {"x":5,"y":3,"w":67,"h":69},
+	"sourceSize": {"w":76,"h":75}
 },
 "player":
 {
-	"frame": {"x":303,"y":403,"w":33,"h":65},
+	"frame": {"x":426,"y":72,"w":52,"h":75},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":21,"y":3,"w":33,"h":65},
-	"sourceSize": {"w":75,"h":75}
+	"spriteSourceSize": {"x":12,"y":0,"w":52,"h":75},
+	"sourceSize": {"w":76,"h":75}
 },
 "subtle-pattern-ep-natural-black":
 {
@@ -42,47 +42,47 @@
 },
 "tiles/enemy":
 {
-	"frame": {"x":403,"y":119,"w":55,"h":52},
+	"frame": {"x":129,"y":403,"w":54,"h":54},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":10,"y":12,"w":55,"h":52},
-	"sourceSize": {"w":76,"h":76}
-},
-"tiles/exit-down":
-{
-	"frame": {"x":403,"y":61,"w":56,"h":56},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":10,"y":10,"w":56,"h":56},
-	"sourceSize": {"w":76,"h":76}
-},
-"tiles/exit-up":
-{
-	"frame": {"x":403,"y":1,"w":56,"h":58},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":10,"y":9,"w":56,"h":58},
-	"sourceSize": {"w":76,"h":76}
-},
-"tiles/gold":
-{
-	"frame": {"x":403,"y":272,"w":50,"h":50},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":13,"y":13,"w":50,"h":50},
+	"spriteSourceSize": {"x":11,"y":11,"w":54,"h":54},
 	"sourceSize": {"w":76,"h":76}
 },
 "tiles/shop":
 {
-	"frame": {"x":403,"y":173,"w":53,"h":45},
+	"frame": {"x":293,"y":403,"w":53,"h":45},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":11,"y":15,"w":53,"h":45},
 	"sourceSize": {"w":75,"h":75}
 },
+"tiles/stairs-down":
+{
+	"frame": {"x":69,"y":403,"w":58,"h":57},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":9,"w":58,"h":57},
+	"sourceSize": {"w":76,"h":75}
+},
+"tiles/stairs-up":
+{
+	"frame": {"x":426,"y":377,"w":58,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":7,"w":58,"h":61},
+	"sourceSize": {"w":76,"h":75}
+},
+"tiles/tech":
+{
+	"frame": {"x":185,"y":403,"w":54,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":14,"w":54,"h":48},
+	"sourceSize": {"w":76,"h":76}
+},
 "tiles/tile-back":
 {
-	"frame": {"x":1,"y":403,"w":74,"h":74},
+	"frame": {"x":403,"y":149,"w":74,"h":74},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
@@ -90,7 +90,7 @@
 },
 "tiles/tile-blank":
 {
-	"frame": {"x":77,"y":403,"w":74,"h":74},
+	"frame": {"x":403,"y":225,"w":74,"h":74},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
@@ -98,7 +98,7 @@
 },
 "tiles/wall":
 {
-	"frame": {"x":153,"y":403,"w":74,"h":74},
+	"frame": {"x":403,"y":301,"w":74,"h":74},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":2,"w":74,"h":74},
@@ -106,7 +106,7 @@
 },
 "ui/arrow-shadow":
 {
-	"frame": {"x":411,"y":324,"w":37,"h":50},
+	"frame": {"x":348,"y":403,"w":37,"h":50},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":1,"w":37,"h":50},
@@ -114,19 +114,19 @@
 },
 "ui/arrow":
 {
-	"frame": {"x":411,"y":376,"w":37,"h":50},
+	"frame": {"x":387,"y":403,"w":37,"h":50},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":1,"w":37,"h":50},
 	"sourceSize": {"w":41,"h":52}
 }},
 "meta": {
-	"app": "http://www.codeandweb.com/texturepacker",
+	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "assets.png",
 	"format": "RGBA8888",
-	"size": {"w":460,"h":478},
+	"size": {"w":494,"h":463},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:0416b717e4a761daf2cad0c3af168948:7f8e990712f901482ce615d0fe202182:a759b6bbc8381ac9c472b28f589ad0d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:3db9eabd818016dd8fcb567f4e74e97c:33b2465ce6a470caf3b2df3e151d82dd:a759b6bbc8381ac9c472b28f589ad0d6$"
 }
 }

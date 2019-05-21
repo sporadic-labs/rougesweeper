@@ -4,9 +4,7 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.5.0</string>
-        <key>fileName</key>
-        <string>C:/Users/rex/Documents/GitHub/rougesweeper/src/resources/atlases/assets.tps</string>
+        <string>5.0.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -129,22 +127,6 @@
                 <uint>1</uint>
             </struct>
         </struct>
-        <key>andEngine</key>
-        <struct type="AndEngine">
-            <key>minFilter</key>
-            <enum type="AndEngine::MinFilter">Linear</enum>
-            <key>packageName</key>
-            <string>Texture</string>
-            <key>wrap</key>
-            <struct type="AndEngineWrap">
-                <key>s</key>
-                <enum type="AndEngineWrap::Wrap">Clamp</enum>
-                <key>t</key>
-                <enum type="AndEngineWrap::Wrap">Clamp</enum>
-            </struct>
-            <key>magFilter</key>
-            <enum type="AndEngine::MagFilter">MagLinear</enum>
-        </struct>
         <key>dataFileNames</key>
         <map type="GFileNameMap">
             <key>data</key>
@@ -203,10 +185,8 @@
             <key type="filename">assets/marker.png</key>
             <key type="filename">assets/player-attack.png</key>
             <key type="filename">assets/tiles/enemy.png</key>
-            <key type="filename">assets/tiles/exit-down.png</key>
-            <key type="filename">assets/tiles/exit-up.png</key>
-            <key type="filename">assets/tiles/gold.png</key>
             <key type="filename">assets/tiles/shop.png</key>
+            <key type="filename">assets/tiles/tech.png</key>
             <key type="filename">assets/tiles/tile-back.png</key>
             <key type="filename">assets/tiles/tile-blank.png</key>
             <key type="filename">assets/tiles/wall.png</key>
@@ -245,6 +225,20 @@
                 <rect>100,100,200,200</rect>
                 <key>scale9Paddings</key>
                 <rect>100,100,200,200</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">assets/tiles/stairs-down.png</key>
+            <key type="filename">assets/tiles/stairs-up.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>19,19,38,37</rect>
+                <key>scale9Paddings</key>
+                <rect>19,19,38,37</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
