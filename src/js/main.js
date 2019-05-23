@@ -6,14 +6,13 @@ import disableRightClickMenu from "./helpers/disable-right-click-menu";
 
 if (PRODUCTION) disableRightClickMenu("body");
 
-const gameDimensions = 750;
 const containerId = "game-container";
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: containerId,
-  width: gameDimensions,
-  height: gameDimensions,
+  width: 1000,
+  height: 800,
   backgroundColor: "#000",
   pixelArt: false,
   physics: {
