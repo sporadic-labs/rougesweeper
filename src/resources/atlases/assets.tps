@@ -228,6 +228,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">assets/temple-demo.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>245,188,489,377</rect>
+                <key>scale9Paddings</key>
+                <rect>245,188,489,377</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">assets/tiles/stairs-down.png</key>
             <key type="filename">assets/tiles/stairs-up.png</key>
             <struct type="IndividualSpriteSettings">
