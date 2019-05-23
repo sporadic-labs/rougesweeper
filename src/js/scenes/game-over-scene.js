@@ -9,11 +9,11 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   create() {
+    const { width, height } = this.game.config;
     this.add
-      .tileSprite(0, 0, 750, 750, "assets", "subtle-pattern-ep-natural-black")
+      .tileSprite(0, 0, width, height, "assets", "subtle-pattern-ep-natural-black")
       .setOrigin(0, 0);
 
-    const { width, height } = this.game.config;
     let y = height / 2;
     const gameOverText = this.add
       .text(width / 2, y - 90, this.didPlayerWin ? "You Win!" : "Game Over!", {
