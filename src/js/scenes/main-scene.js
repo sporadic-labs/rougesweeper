@@ -13,9 +13,8 @@ import Shop from "../game-objects/hud/shop";
 
 export default class Scene extends Phaser.Scene {
   create() {
-    this.add
-      .tileSprite(0, 0, 750, 750, "assets", "subtle-pattern-ep-natural-black")
-      .setOrigin(0, 0);
+    const { width, height } = this.game.config;
+    this.add.image(width / 2, height / 2, "assets", "temple-demo");
 
     store.startNewGame();
 

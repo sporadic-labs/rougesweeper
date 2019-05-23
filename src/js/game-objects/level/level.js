@@ -8,6 +8,7 @@ import compositions from "./compositions";
 const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 
 export default class Level {
+  /** @param {Phaser.Scene} scene */
   constructor(scene, levelNumber) {
     this.scene = scene;
     this.events = new Events.EventEmitter();
@@ -16,6 +17,13 @@ export default class Level {
     this.map = scene.add.tilemap(`level-${levelNumber}`);
     this.data = new LevelData(this.map, composition);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
+
+    this.tileWidth = 75;
+    this.tileHeight = 75;
+    this.centerX = this.scene.game.config.width / 2;
+    this.centerY = this.scene.game.config.height / 2;
+    this.left = this.centerX - (this.data.width * this.tileWidth) / 2;
+    this.top = this.centerY - (this.data.height * this.tileHeight) / 2;
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
@@ -93,11 +101,11 @@ export default class Level {
   }
 
   gridXToWorldX(x) {
-    return 50 + x * 80;
+    return this.left + x * this.tileWidth + this.tileWidth / 2;
   }
 
   gridYToWorldY(y) {
-    return 50 + y * 80;
+    return this.top + y * this.tileHeight + this.tileHeight / 2;
   }
 
   hasTileAt(x, y) {
