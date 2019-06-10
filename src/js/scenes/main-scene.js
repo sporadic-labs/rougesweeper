@@ -14,7 +14,7 @@ import Shop from "../game-objects/hud/shop";
 export default class Scene extends Phaser.Scene {
   create() {
     const { width, height } = this.game.config;
-    this.add.image(width / 2, height / 2, "assets", "temple-demo");
+    this.add.image(width / 2, height / 2, "assets", "temple-demo-2");
 
     store.startNewGame();
 

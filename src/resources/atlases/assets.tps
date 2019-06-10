@@ -228,6 +228,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">assets/temple-demo-2.png</key>
             <key type="filename">assets/temple-demo.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
