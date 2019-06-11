@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { SCENE_NAME } from "./index.js";
+import { loadLevels } from "../store/levels.ts";
 
 export default class LoadingScene extends Phaser.Scene {
   preload() {
@@ -13,11 +14,7 @@ export default class LoadingScene extends Phaser.Scene {
 
     this.load.setPath("resources/");
     this.load.atlas("assets", "atlases/assets.png", "atlases/assets.json");
-    this.load.tilemapTiledJSON("level-1", "maps/lvl-1.json");
-    this.load.tilemapTiledJSON("level-2", "maps/lvl-2.json");
-    this.load.tilemapTiledJSON("level-3", "maps/lvl-3.json");
-    this.load.tilemapTiledJSON("level-4", "maps/lvl-4.json");
-    this.load.tilemapTiledJSON("level-5", "maps/lvl-5.json");
+    loadLevels(this);
   }
 
   create() {

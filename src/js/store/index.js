@@ -1,5 +1,6 @@
 import { observable, action, decorate } from "mobx";
 import GAME_MODES from "../game-objects/game-manager/events";
+import { levelKeys } from "./levels";
 
 class GameStore {
   constructor() {
@@ -11,9 +12,9 @@ class GameStore {
     this.maxAttackCount = 3;
     this.attackCount = this.maxAttackCount;
     this.isShopOpen = false;
-    this.level = 1;
     this.moveCount = 0;
     this.hasCompass = false;
+    this.levelIndex = 0;
   }
 
   setGameState(state) {
@@ -49,14 +50,17 @@ class GameStore {
   addMove(amt = 1) {
     if (this.moveCount >= 0) this.moveCount += amt;
   }
+  getLevel() {
+    return levelKeys[this.levelIndex];
+  }
   nextLevel() {
-    this.level++;
+    if (this.levelIndex < levelKeys.length) this.levelIndex += 1;
   }
   startNewGame() {
     this.playerHealth = this.maxPlayerHealth;
     this.goldCount = 0;
     this.attackCount = this.maxAttackCount;
-    this.level = 1;
+    this.levelIndex = 0;
     this.moveCount = 0;
   }
 }

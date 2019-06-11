@@ -11,7 +11,7 @@ export default class LevelIndicator {
     this.text = scene.add.text(x, 635, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
 
     this.updateText(gameStore.level, true);
-    this.dispose = autorun(() => this.updateText(gameStore.level));
+    this.dispose = autorun(() => this.updateText(gameStore.getLevel()));
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);

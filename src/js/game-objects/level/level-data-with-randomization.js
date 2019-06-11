@@ -1,7 +1,6 @@
-import { Math as PMath } from "phaser";
+import { Utils, Math as PMath } from "phaser";
 import { default as TILE } from "./tile-types";
 import { create2DArray } from "../../helpers/array-utils";
-import logger from "../../helpers/logger";
 
 const noopTrue = () => true;
 const debugTileMap = {
@@ -13,46 +12,57 @@ const debugTileMap = {
   [TILE.EXIT]: "X",
   [TILE.BLANK]: "."
 };
-const tilesetIDToEnum = {
-  6: TILE.BLANK,
-  1: TILE.WALL,
-  2: TILE.EXIT,
-  3: TILE.SHOP,
-  7: TILE.ENEMY,
-  8: TILE.START
-};
 
 export default class LevelData {
-  /** @param {Phaser.Tilemaps.Tilemap} map */
-  constructor(map) {
+  constructor(map, composition) {
     const { width, height } = map;
     this.width = width;
     this.height = height;
 
-    this.tiles = create2DArray(width, height, undefined);
-
-    // Loop over the ground layer, filling in all blanks
-    map.setLayer("Ground");
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        if (map.getTileAt(x, y)) this.setTileAt(x, y, TILE.BLANK);
-      }
+    this.composition = composition;
+    const numEnemyTiles = composition[TILE.ENEMY] || 0;
+    const numGoldTiles = composition[TILE.GOLD] || 0;
+    if (numEnemyTiles + numGoldTiles + 2 > width * height) {
+      throw Error("The specified composition doesn't fit in the given width & height!");
     }
 
-    // Loop over the foreground to place any non-blank tiles
-    map.setLayer("Foreground");
+    this.tiles = create2DArray(width, height, undefined);
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         const tile = map.getTileAt(x, y);
         if (tile) {
-          const type = tilesetIDToEnum[tile.index];
-          if (type !== undefined) this.setTileAt(x, y, type);
-          else logger.warn("Unexpected tile index in map");
+          let type;
+          if (tile.index === 2) type = TILE.BLANK;
+          else if (tile.index === 3) type = TILE.WALL;
+          else throw new Error("Unexpected tile index in map");
+          this.setTileAt(x, y, type);
         }
       }
     }
 
-    this.playerPosition = this.getPositionOf(TILE.START);
+    const playerSpots = this.getAllPositionsOf(TILE.BLANK);
+    this.playerPosition = Utils.Array.GetRandom(playerSpots);
+    this.setTileAt(this.playerPosition.x, this.playerPosition.y, TILE.START);
+    const isNextToPlayer = p =>
+      PMath.Distance.Between(p.x, p.y, this.playerPosition.x, this.playerPosition.y) < 2;
+
+    const exitSpots = this.getAllPositionsOf(TILE.BLANK).filter(p => !isNextToPlayer(p));
+    this.exitPosition = Utils.Array.GetRandom(exitSpots);
+    this.setTileAt(this.exitPosition.x, this.exitPosition.y, TILE.EXIT);
+
+    const shopSpots = this.getAllPositionsOf(TILE.BLANK);
+    this.shopPosition = Utils.Array.GetRandom(shopSpots);
+    this.setTileAt(this.shopPosition.x, this.shopPosition.y, TILE.SHOP);
+
+    const enemySpots = this.getAllPositionsOf(TILE.BLANK).filter(p => !isNextToPlayer(p));
+    Utils.Array.Shuffle(enemySpots);
+    enemySpots.slice(0, numEnemyTiles).forEach(p => this.setTileAt(p.x, p.y, TILE.ENEMY));
+
+    const goldSpots = this.getAllPositionsOf(TILE.BLANK);
+    Utils.Array.Shuffle(goldSpots);
+    goldSpots.slice(0, numGoldTiles).forEach(p => this.setTileAt(p.x, p.y, TILE.GOLD));
+
+    this.debugDump();
   }
 
   getRandomBlankPosition(test = noopTrue) {
@@ -72,14 +82,6 @@ export default class LevelData {
 
   getTileAt(x, y) {
     return this.tiles[y][x];
-  }
-
-  getPositionOf(tileType) {
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        if (this.tiles[y][x] === tileType) return { x, y };
-      }
-    }
   }
 
   getAllPositionsOf(tileType) {
