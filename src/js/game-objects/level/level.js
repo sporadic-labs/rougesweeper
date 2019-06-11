@@ -168,26 +168,31 @@ export default class Level {
   }
 
   fadeLevelOut() {
-    const tilePromises = this.tiles
-      .flat()
-      .filter(tile => tile)
-      .map(tile => {
+    const tilePromises = [];
+    // Flip all to the front, then half a second later, kick off the fade out from left to right
+    this.tiles.forEach((row, y) =>
+      row.forEach((tile, x) => {
         if (tile) {
-          return tile.fadeTileOut();
+          tile.flipToFront();
+          const p = tile.fadeTileOut(250, 500 + x * 50);
+          tilePromises.push(p);
         }
-      });
+      })
+    );
     return Promise.all(tilePromises);
   }
 
   fadeLevelIn() {
-    const tilePromises = this.tiles
-      .flat()
-      .filter(tile => tile)
-      .map(tile => {
+    const tilePromises = [];
+    // Staggered fade in from left to right of floor
+    this.tiles.forEach((row, y) =>
+      row.forEach((tile, x) => {
         if (tile) {
-          return tile.fadeTileIn();
+          const p = tile.fadeTileIn(250, x * 50);
+          tilePromises.push(p);
         }
-      });
+      })
+    );
     return Promise.all(tilePromises);
   }
 

@@ -160,8 +160,7 @@ export default class Tile {
   /**
    * Fade the tile out, destroy it, and resolve a promise when the whole mess is done!
    */
-  fadeTileOut() {
-    const fadetime = Phaser.Math.Between(150, 300);
+  fadeTileOut(duration = Phaser.Math.Between(150, 300), delay = 0) {
     return new Promise(resolve => {
       if (this.fadeTween) this.fadeTween.stop();
       this.fadeTween = this.scene.add.tween({
@@ -169,7 +168,8 @@ export default class Tile {
         alpha: 0,
         scaleX: 0.9,
         scaleY: 0.9,
-        duration: fadetime,
+        delay,
+        duration,
         onComplete: () => {
           return resolve();
         }
@@ -180,14 +180,14 @@ export default class Tile {
   /**
    * Fade the tile in, and return a promise when it's done!
    */
-  fadeTileIn() {
-    const fadetime = Phaser.Math.Between(150, 300);
+  fadeTileIn(duration = Phaser.Math.Between(150, 300), delay = 0) {
     return new Promise(resolve => {
       if (this.fadeTween) this.fadeTween.stop();
       this.fadeTween = this.scene.add.tween({
         targets: this.container,
         alpha: 0.6,
-        duration: fadetime,
+        delay,
+        duration: duration,
         onComplete: () => {
           return resolve();
         }
