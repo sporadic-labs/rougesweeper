@@ -53,6 +53,7 @@ export default class LevelData {
     }
 
     this.playerPosition = this.getPositionOf(TILE.START);
+    this.exitPosition = this.getPositionOf(TILE.EXIT);
   }
 
   getRandomBlankPosition(test = noopTrue) {

@@ -32,8 +32,11 @@ export default class Level {
       })
     );
 
-    const { x, y } = this.data.playerPosition;
-    this.tiles[y][x].flipToFront();
+    const start = this.data.playerPosition;
+    this.tiles[start.y][start.x].flipToFront();
+
+    const exit = this.data.exitPosition;
+    this.tiles[exit.y][exit.x].flipToFront();
   }
 
   highlightTiles(playerPos) {
