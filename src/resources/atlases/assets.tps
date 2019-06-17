@@ -228,6 +228,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">assets/tiles/key.png</key>
             <key type="filename">assets/tiles/stairs-down.png</key>
             <key type="filename">assets/tiles/stairs-up.png</key>
             <struct type="IndividualSpriteSettings">
