@@ -14,12 +14,14 @@ const debugTileMap = {
   [TILE.BLANK]: "."
 };
 const tilesetIDToEnum = {
-  6: TILE.BLANK,
   1: TILE.WALL,
   2: TILE.EXIT,
   3: TILE.SHOP,
+  6: TILE.BLANK,
   7: TILE.ENEMY,
-  8: TILE.START
+  8: TILE.START,
+  9: TILE.EXIT,
+  10: TILE.KEY
 };
 
 export default class LevelData {
@@ -52,7 +54,8 @@ export default class LevelData {
       }
     }
 
-    this.playerPosition = this.getPositionOf(TILE.START);
+    this.isExitLocked = map.findTile(tile => tile.index === 10);
+    this.startPosition = this.getPositionOf(TILE.START);
     this.exitPosition = this.getPositionOf(TILE.EXIT);
   }
 

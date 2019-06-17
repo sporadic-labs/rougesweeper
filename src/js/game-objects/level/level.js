@@ -32,7 +32,7 @@ export default class Level {
       })
     );
 
-    const start = this.data.playerPosition;
+    const start = this.data.startPosition;
     this.tiles[start.y][start.x].flipToFront();
 
     const exit = this.data.exitPosition;
@@ -69,14 +69,18 @@ export default class Level {
     return tiles;
   }
 
+  isExitLocked() {
+    return this.data.isExitLocked;
+  }
+
   getStartingWorldPosition() {
-    const pos = this.data.playerPosition;
-    return { x: this.gridXToWorldX(pos.x), y: this.gridYToWorldY(pos.y) };
+    const { x, y } = this.data.startPosition;
+    return { x: this.gridXToWorldX(x), y: this.gridYToWorldY(y) };
   }
 
   getStartingGridPosition() {
-    const pos = this.data.playerPosition;
-    return { x: pos.x, y: pos.y };
+    const { x, y } = this.data.startPosition;
+    return { x, y };
   }
 
   getExitWorldPosition() {

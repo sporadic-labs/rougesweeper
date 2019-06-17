@@ -89,11 +89,11 @@ export default class GameManager {
         if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
       } else {
         if (tile.type === TILE_TYPES.EXIT) {
-          if (store.levelIndex >= 7) {
+          if (this.level.isExitLocked() && !store.hasKey) {
+            this.toastManager.setMessage("Door is locked - you need a key.");
+          } else if (store.levelIndex >= 7) {
             this.scene.scene.stop();
-            this.scene.scene.start(SCENE_NAME.GAME_OVER, {
-              didPlayerWin: true
-            });
+            this.scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: true });
             return;
           } else {
             await this.movePlayerAlongPath(path);
@@ -108,6 +108,7 @@ export default class GameManager {
       }
 
       if (shouldMoveToTile) await this.movePlayerAlongPath(path);
+      if (tile.type === TILE_TYPES.KEY) store.setHasKey(true);
       this.updateEnemyCount();
       this.level.enableAllTiles();
 
@@ -208,6 +209,7 @@ export default class GameManager {
 
     store.setGameState(GAME_MODES.IDLE_MODE);
     store.setHasCompass(false);
+    store.setHasKey(false);
 
     this.level = new Level(this.scene, store.getLevel());
     const playerStartGridPos = this.level.getStartingGridPosition();
