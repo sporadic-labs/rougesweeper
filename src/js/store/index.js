@@ -64,10 +64,9 @@ class GameStore {
     this.playerHealth = this.maxPlayerHealth;
     this.goldCount = 0;
     this.attackCount = this.maxAttackCount;
-    this.levelIndex = 0;
+    this.levelIndex = 7;
     this.moveCount = 0;
     this.hasKey = false;
-    this.levelIndex = 7;
   }
 }
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="9" height="7" tilewidth="76" tileheight="76" infinite="0" nextlayerid="30" nextobjectid="44">
+ <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
+  <image source="tiles.png" width="300" height="225"/>
+ </tileset>
+ <layer id="23" name="Ground" width="9" height="7">
+  <data encoding="csv">
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6
+</data>
+ </layer>
+ <layer id="24" name="Foreground" width="9" height="7">
+  <data encoding="csv">
+1,1,0,0,0,0,0,1,1,
+1,1,0,0,0,0,0,1,1,
+0,0,0,0,0,0,0,0,0,
+8,0,0,0,0,0,0,0,9,
+0,0,0,0,0,0,0,0,0,
+1,1,0,0,0,0,0,1,1,
+1,1,0,0,0,0,0,1,1
+</data>
+ </layer>
+ <objectgroup color="#0000ff" id="25" name="Key" opacity="0.5">
+  <object id="29" x="152" y="0">
+   <polygon points="0,0 380,0 380,532 0,532"/>
+  </object>
+  <object id="40" gid="10" x="228" y="76" width="75" height="75"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" id="26" name="Enemies" opacity="0.5">
+  <object id="30" x="152" y="380">
+   <polygon points="0,0 0,-228 76,-228 76,0"/>
+  </object>
+  <object id="31" x="532" y="380">
+   <polygon points="0,0 -76,0 -76,-228 0,-228"/>
+  </object>
+  <object id="33" gid="7" x="152" y="228" width="75" height="75"/>
+  <object id="34" gid="7" x="152" y="304" width="75" height="75"/>
+  <object id="35" gid="7" x="456" y="228" width="75" height="75"/>
+  <object id="36" gid="7" x="456" y="304" width="75" height="75"/>
+  <object id="37" gid="7" x="304" y="152" width="75" height="75"/>
+  <object id="38" gid="7" x="304" y="304" width="75" height="75"/>
+  <object id="39" gid="7" x="304" y="456" width="75" height="75"/>
+  <object id="43" x="228" y="0">
+   <polygon points="0,0 228,0 228,532 0,532"/>
+  </object>
+ </objectgroup>
+</map>

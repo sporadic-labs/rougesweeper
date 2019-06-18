@@ -23,6 +23,13 @@ const tilesetIDToEnum = {
   9: TILE.EXIT,
   10: TILE.KEY
 };
+const tiledPolygonToPhaser = (tileWidth, tileHeight, tiledPolygon) =>
+  new Phaser.Geom.Polygon(
+    tiledPolygon.polygon.map(({ x, y }) => [
+      (tiledPolygon.x + x) / tileWidth,
+      (tiledPolygon.y + y) / tileHeight
+    ])
+  );
 
 export default class LevelData {
   /** @param {Phaser.Tilemaps.Tilemap} map */
@@ -30,6 +37,8 @@ export default class LevelData {
     const { width, height } = map;
     this.width = width;
     this.height = height;
+    this.tileWidth = map.tileWidth;
+    this.tileHeight = map.tileHeight;
 
     this.tiles = create2DArray(width, height, undefined);
 
@@ -54,9 +63,94 @@ export default class LevelData {
       }
     }
 
+    const keyLayer = map.getObjectLayer("Key");
+    if (keyLayer) {
+      const keyPosition = this.generateKeyPosition(keyLayer);
+      this.setTileAt(keyPosition.x, keyPosition.y, TILE.KEY);
+    }
+
+    const enemiesLayer = map.getObjectLayer("Enemies");
+    if (enemiesLayer) {
+      const enemyPositions = this.generateEnemyPositions(enemiesLayer);
+      enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
+    }
+
     this.isExitLocked = map.findTile(tile => tile.index === 10);
     this.startPosition = this.getPositionOf(TILE.START);
     this.exitPosition = this.getPositionOf(TILE.EXIT);
+  }
+
+  /**
+   * Generate a location for the exit key based on the given object layer from Tiled. This expects
+   * there to be a single polygon object within the layer which defines the region in which the key
+   * can spawn.
+   *
+   * @param {Phaser.Tilemaps.ObjectLayer} objectLayer
+   * @returns {{x,y}|undefined}
+   * @memberof LevelData
+   */
+  generateKeyPosition(objectLayer) {
+    const obj = objectLayer.objects.find(obj => obj.polygon !== undefined);
+    const polygon = tiledPolygonToPhaser(this.tileWidth, this.tileHeight, obj);
+    const blanks = this.getBlanksWithin(polygon);
+    const keyPosition = Phaser.Math.RND.pick(blanks);
+    if (!keyPosition) throw new Error("Could not find a valid place to put a key.");
+    return keyPosition;
+  }
+
+  /**
+   * Generate an array of locations for the enemy positions based on the given object layer from
+   * Tiled. This expects there to be one or more polygon objects within the layer which defines the
+   * spawning regions. This also expects there to be tile objects placed within the bounds of each
+   * spawn region, where the number of tile objects indicates how many enemies should be spawned in
+   * that region.
+   *
+   * @param {Phaser.Tilemaps.ObjectLayer} objectLayer
+   * @returns {{x,y}|undefined}
+   * @memberof LevelData
+   */
+  generateEnemyPositions(objectLayer) {
+    // Find the spawning polygons
+    const spawnRegions = objectLayer.objects.filter(obj => obj.polygon !== undefined);
+    const spawnPolygons = spawnRegions.map(obj =>
+      tiledPolygonToPhaser(this.tileWidth, this.tileHeight, obj)
+    );
+
+    // Count enemy tile objects within each region
+    const enemyTiles = objectLayer.objects.filter(obj => obj.gid !== undefined);
+    const enemyCounts = Array(spawnRegions.length).fill(0);
+    enemyTiles.map(enemyTile => {
+      const x = enemyTile.x / this.tileWidth;
+      const y = enemyTile.y / this.tileHeight;
+      let enemyPlaced = false;
+      for (let i = 0; i < spawnPolygons.length; i++) {
+        if (spawnPolygons[i].contains(x, y)) {
+          enemyPlaced = true;
+          enemyCounts[i] += 1;
+        }
+      }
+      if (!enemyPlaced) {
+        throw new Error("Enemy does not fit within any of the spawn polygons.");
+      }
+    });
+
+    // Attempt to find random places for all enemy tiles - inefficient!
+    const enemyPositions = [];
+    spawnPolygons.forEach((polygon, i) => {
+      const blanks = this.getBlanksWithin(polygon);
+      Phaser.Utils.Array.Shuffle(blanks);
+      const count = enemyCounts[i];
+      if (blanks.length < count) {
+        throw new Error("Not enough blanks to spawn an enemy in the region.");
+      }
+      enemyPositions.push(...blanks.slice(0, count));
+    });
+    return enemyPositions;
+  }
+
+  getBlanksWithin(polygon) {
+    const blanks = this.getAllPositionsOf(TILE.BLANK);
+    return blanks.filter(p => polygon.contains(p.x, p.y));
   }
 
   getRandomBlankPosition(test = noopTrue) {

@@ -91,7 +91,7 @@ export default class GameManager {
         if (tile.type === TILE_TYPES.EXIT) {
           if (this.level.isExitLocked() && !store.hasKey) {
             this.toastManager.setMessage("Door is locked - you need a key.");
-          } else if (store.levelIndex >= 7) {
+          } else if (store.levelIndex >= 8) {
             this.scene.scene.stop();
             this.scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: true });
             return;
