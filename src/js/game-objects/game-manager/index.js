@@ -110,6 +110,14 @@ export default class GameManager {
       if (shouldMoveToTile) await this.movePlayerAlongPath(path);
       if (tile.type === TILE_TYPES.KEY) store.setHasKey(true);
       this.updateEnemyCount();
+
+      if (store.dangerCount === 0) {
+        const pos = this.player.getGridPosition();
+        this.level.getNeighboringTiles(pos.x, pos.y).map(tile => {
+          tile.flipToFront();
+        });
+      }
+
       this.level.enableAllTiles();
 
       store.addMove();
@@ -154,6 +162,13 @@ export default class GameManager {
       }
       this.updateEnemyCount();
       this.level.enableAllTiles();
+
+      if (store.dangerCount === 0) {
+        const pos = this.player.getGridPosition();
+        this.level.getNeighboringTiles(pos.x, pos.y).map(tile => {
+          tile.flipToFront();
+        });
+      }
 
       store.setGameState(GAME_MODES.MOVE_MODE);
     });

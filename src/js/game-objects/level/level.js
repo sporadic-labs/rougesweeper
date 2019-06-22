@@ -34,6 +34,9 @@ export default class Level {
 
     const start = this.data.startPosition;
     this.tiles[start.y][start.x].flipToFront();
+    this.getNeighboringTiles(start.x, start.y).map(tile => {
+      tile.flipToFront();
+    });
 
     const exit = this.data.exitPosition;
     this.tiles[exit.y][exit.x].flipToFront();
