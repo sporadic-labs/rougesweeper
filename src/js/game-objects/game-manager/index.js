@@ -9,14 +9,22 @@ import { SCENE_NAME } from "../../scenes/index";
 import EventProxy from "../../helpers/event-proxy";
 import Compass from "../hud/compass";
 import CoinCollectAnimation from "../player/coin-collect-animation";
+import Radar from "../hud/radar";
 
 export default class GameManager {
-  /** @param {Phaser.Scene} scene */
+  /**
+   * @param {Phaser.Scene} scene
+   * @param {Player} player
+   * @param {ToastManager} toastManager
+   * @memberof GameManager
+   */
   constructor(scene, player, toastManager) {
     this.scene = scene;
     this.level = null;
     this.player = player;
     this.toastManager = toastManager;
+    this.radar = new Radar(scene, store);
+    this.radar.setVisible(false);
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -178,6 +186,7 @@ export default class GameManager {
     const pos = this.player.getGridPosition();
     const enemyCount = this.level.countNeighboringEnemies(pos.x, pos.y);
     store.setDangerCount(enemyCount);
+    this.updateRadar();
   }
 
   async movePlayerAlongPath(path, duration = 200) {
@@ -186,6 +195,7 @@ export default class GameManager {
     await this.player.movePlayerAlongPath(worldPath, duration);
     this.player.setGridPosition(lastPoint.x, lastPoint.y);
     this.level.highlightTiles(this.player.getGridPosition());
+    this.updateRadar();
   }
 
   async movePlayerToTile(gridX, gridY, moveInstantly = false) {
@@ -194,6 +204,7 @@ export default class GameManager {
     await this.player.movePlayerTo(worldX, worldY, moveInstantly);
     this.player.setGridPosition(gridX, gridY);
     this.level.highlightTiles(this.player.getGridPosition());
+    this.updateRadar();
   }
 
   applyTileEffect(tile) {
@@ -214,6 +225,7 @@ export default class GameManager {
    * Fade out the player, fade out the previous level, set up the next level, and start things off!
    */
   async startLevel() {
+    this.radar.setVisible(false);
     await this.player.fadePlayerOut();
 
     if (this.level) {
@@ -246,8 +258,16 @@ export default class GameManager {
 
     await this.level.fadeLevelIn();
     this.level.highlightTiles(playerStartGridPos);
+    this.radar.setVisible(true);
+    this.updateRadar();
 
     store.setGameState(GAME_MODES.MOVE_MODE);
+  }
+
+  updateRadar() {
+    const { x, y } = this.player.getGridPosition();
+    const tiles = this.level.getNeighboringTiles(x, y);
+    this.radar.setTiles(tiles);
   }
 
   destroy() {

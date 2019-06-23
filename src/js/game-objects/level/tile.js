@@ -281,6 +281,18 @@ export default class Tile {
     return { x: this.container.x, y: this.container.y };
   }
 
+  /**
+   * Returns the world bounds of the tile as a rect.
+   * @param {Phaser.Geom.Rectangle} [rect=new Phaser.Geom.Rectangle()] Optional rectangle object to use.
+   * @returns {Phaser.Geom.Rectangle}
+   * @memberof Tile
+   */
+  getBounds(rect = new Phaser.Geom.Rectangle()) {
+    const { x, y, displayWidth, displayHeight } = this.container;
+    rect.setTo(x - displayWidth / 2, y - displayHeight / 2, displayWidth, displayHeight);
+    return rect;
+  }
+
   highlight = () => {
     if (this.fadeTween) this.fadeTween.stop();
     this.fadeTween = this.scene.add.tween({

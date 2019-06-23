@@ -1,7 +1,6 @@
 import Phaser from "phaser";
 import Player from "../game-objects/player/index";
 import GameManager from "../game-objects/game-manager/index";
-import DangerIndicator from "../game-objects/hud/danger-indicator";
 import PurseIndicator from "../game-objects/hud/purse-indicator";
 import HealthIndicator from "../game-objects/hud/health-indicator";
 import AttackToggle from "../game-objects/hud/attack-toggle";
@@ -24,7 +23,6 @@ export default class Scene extends Phaser.Scene {
     const gameManager = new GameManager(this, player, toastManager);
 
     new Shop(this, store);
-    new DangerIndicator(this, store);
     new PurseIndicator(this, store);
     new HealthIndicator(this, store);
     new AttackToggle(this, store);
