@@ -100,3 +100,4 @@ decorate(GameStore, {
 const store = new GameStore();
 
 export default store;
+export { GameStore };
