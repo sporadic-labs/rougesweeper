@@ -4,6 +4,7 @@ import { GameStore } from "../../store/index";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
+import globalLogger from "../../helpers/logger";
 
 class Radar {
   private scene: Phaser.Scene;
@@ -48,6 +49,10 @@ class Radar {
 
   updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true) {
     if (tiles.length === 0) return;
+      if (tiles.length === 0) {
+        globalLogger.error("Attempted to set the radar shape from an empty array of tiles.");
+        return;
+      }
 
     // Calculate the bounds of the set of tiles in world space
     let minX: number = Number.MAX_SAFE_INTEGER;
