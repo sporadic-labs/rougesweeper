@@ -3,6 +3,7 @@ import Tile from "../level/tile";
 import { GameStore } from "../../store/index";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
+import DEPTHS from "../depths";
 
 class Radar {
   private scene: Phaser.Scene;
@@ -19,7 +20,7 @@ class Radar {
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
-    this.graphics = scene.add.graphics().setDepth(100);
+    this.graphics = scene.add.graphics().setDepth(DEPTHS.ABOVE_GROUND);
     this.text = scene.add
       .text(0, 0, "0", {
         fontSize: 25,
@@ -27,7 +28,7 @@ class Radar {
         color: "#fff"
       })
       .setOrigin(0.5)
-      .setDepth(100);
+      .setDepth(DEPTHS.ABOVE_GROUND);
 
     this.mobProxy.observe(gameStore, "dangerCount", () =>
       this.setDangerCount(gameStore.dangerCount)

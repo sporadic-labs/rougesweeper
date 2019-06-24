@@ -1,5 +1,6 @@
 import { Math as PMath } from "phaser";
 import PathTween from "./path-tween";
+import DEPTHS from "../depths";
 
 export default class Player {
   /** @param {Phaser.Scene} scene */
@@ -10,7 +11,7 @@ export default class Player {
       .setScale(1.25, 1.25)
       .setOrigin(0.5, 0.7)
       .setAlpha(0)
-      .setDepth(10);
+      .setDepth(DEPTHS.PLAYER);
 
     this.moveSpeedMs = 80 / 150; // px/ms, where moving 1 tile = 80px
     this.gridX = 0;

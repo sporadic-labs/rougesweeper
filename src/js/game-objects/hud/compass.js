@@ -1,6 +1,7 @@
 import { autorun } from "mobx";
 import { Math as PMath } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
+import DEPTHS from "../depths";
 
 export default class Compass {
   /**
@@ -15,7 +16,7 @@ export default class Compass {
 
     this.sprite = scene.add
       .sprite(0, 0, "assets", "ui/arrow")
-      .setDepth(99)
+      .setDepth(DEPTHS.ABOVE_PLAYER)
       .setAlpha(0.95);
 
     this.proxy = new EventProxy();

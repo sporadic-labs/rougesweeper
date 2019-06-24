@@ -2,6 +2,7 @@ import TILE_TYPES from "./tile-types";
 import LEVEL_EVENTS from "./events";
 import FlipEffect from "./flip-effect";
 import AttackAnimation from "../player/attack-animation";
+import DEPTHS from "../depths";
 
 const TYPE_TO_KEY = {
   [TILE_TYPES.START]: "tile-blank",
@@ -43,6 +44,7 @@ export default class Tile {
     this.flipEffect.setToBack();
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
+    this.container.setDepth(DEPTHS.GROUND);
   }
 
   isRevealed() {

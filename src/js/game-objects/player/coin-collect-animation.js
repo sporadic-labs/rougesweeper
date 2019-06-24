@@ -1,3 +1,5 @@
+import DEPTHS from "../depths";
+
 export default class CoinCollectAnimation {
   /**
    * @param {Phaser.Scene} scene
@@ -11,7 +13,7 @@ export default class CoinCollectAnimation {
       .sprite(0, 0, "assets", "tiles/gold")
       .setOrigin(0.5, 0.5)
       .setScale(0.5);
-    this.sprite.setDepth(12);
+    this.sprite.setDepth(DEPTHS.ABOVE_PLAYER);
     this.sprite.setVisible(false);
 
     this.setPosition(x, y);

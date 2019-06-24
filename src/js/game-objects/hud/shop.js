@@ -3,6 +3,7 @@ import store from "../../store";
 import GAME_MODES from "../game-manager/events";
 import MobXProxy from "../../helpers/mobx-proxy";
 import TextButton from "./text-button";
+import DEPTHS from "../depths";
 
 const baseTextStyle = {
   align: "center",
@@ -85,7 +86,7 @@ export default class Shop {
         buyCompassText,
         buyCompassButton.text
       ])
-      .setDepth(100)
+      .setDepth(DEPTHS.HUD)
       .setVisible(false);
 
     this.mobProxy = new MobXProxy();
