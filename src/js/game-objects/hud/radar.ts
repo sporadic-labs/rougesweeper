@@ -9,10 +9,11 @@ class Radar {
   private scene: Phaser.Scene;
   private graphics: Phaser.GameObjects.Graphics;
   private text: Phaser.GameObjects.Text;
-  private x: number;
-  private y: number;
-  private w: number;
-  private h: number;
+  private container: Phaser.GameObjects.Container;
+  private x: number = 0;
+  private y: number = 0;
+  private w: number = 0;
+  private h: number = 0;
   private padding = 2.5;
   private reusableRect = new Phaser.Geom.Rectangle();
   private mobProxy = new MobXProxy();
@@ -20,14 +21,16 @@ class Radar {
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
-    this.graphics = scene.add.graphics().setDepth(DEPTHS.ABOVE_GROUND);
+    this.graphics = scene.add.graphics();
     this.text = scene.add
       .text(0, 0, "0", {
         fontSize: 25,
         fontStyle: "bold",
         color: "#fff"
       })
-      .setOrigin(0.5)
+      .setOrigin(0.5);
+    this.container = scene.add
+      .container(0, 0, [this.graphics, this.text])
       .setDepth(DEPTHS.ABOVE_GROUND);
 
     this.mobProxy.observe(gameStore, "dangerCount", () =>
@@ -37,20 +40,13 @@ class Radar {
 
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
-
-    this.x = 10;
-    this.y = 0;
-    this.w = 225;
-    this.h = 225;
-    this.redraw();
   }
 
   setVisible(isVisible: boolean) {
-    this.text.setVisible(isVisible);
-    this.graphics.setVisible(isVisible);
+    this.container.setVisible(isVisible);
   }
 
-  setTiles(tiles: Tile[]) {
+  updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true) {
     if (tiles.length === 0) return;
     let minX: number = Number.MAX_SAFE_INTEGER;
     let maxX: number = Number.MIN_SAFE_INTEGER;
@@ -63,27 +59,47 @@ class Radar {
       if (top < minY) minY = top;
       if (bottom > maxY) maxY = bottom;
     });
+    const x = minX - this.padding;
+    const y = minY - this.padding;
+    const w = maxX - minX + this.padding * 2;
+    const h = maxY - minY + this.padding * 2;
 
-    this.x = minX - this.padding;
-    this.y = minY - this.padding;
-    this.w = maxX - minX + this.padding * 2;
-    this.h = maxY - minY + this.padding * 2;
-    this.redraw();
+    if (shouldAnimateUpdate) {
+      const tmp = { x: this.x, y: this.y, w: this.w, h: this.h };
+      this.scene.add.tween({
+        targets: tmp,
+        x,
+        y,
+        w,
+        h,
+        duration: shouldAnimateUpdate ? 175 : 0,
+        ease: Phaser.Math.Easing.Quadratic.Out,
+        onUpdate: () => this.updateShape(tmp.x, tmp.y, tmp.w, tmp.h)
+      });
+    } else {
+      this.updateShape(x, y, w, h);
+    }
+  }
+
+  private updateShape(x: number, y: number, w: number, h: number) {
+    this.x = x;
+    this.y = y;
+    this.container.setPosition(x, y);
+    if (w !== this.w || h !== this.h) {
+      this.w = w;
+      this.h = h;
+      this.text.setPosition(w / 2, h);
+      this.graphics
+        .clear()
+        .fillStyle(0xfc3f3f)
+        .lineStyle(5, 0xfc3f3f);
+      this.graphics.strokeRoundedRect(0, 0, w, h);
+      this.graphics.fillCircle(w / 2, h, 20);
+    }
   }
 
   setDangerCount(count: number) {
     this.text.setText(`${count}`);
-  }
-
-  redraw() {
-    const { x, y, w, h } = this;
-    this.graphics
-      .clear()
-      .fillStyle(0xfc3f3f)
-      .lineStyle(5, 0xfc3f3f);
-    this.graphics.strokeRoundedRect(x, y, w, h);
-    this.graphics.fillCircle(x + w / 2, y + h, 20);
-    this.text.setPosition(x + w / 2, y + h);
   }
 
   destroy() {

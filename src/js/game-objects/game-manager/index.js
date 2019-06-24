@@ -259,15 +259,15 @@ export default class GameManager {
     await this.level.fadeLevelIn();
     this.level.highlightTiles(playerStartGridPos);
     this.radar.setVisible(true);
-    this.updateRadar();
+    this.updateRadar(false);
 
     store.setGameState(GAME_MODES.MOVE_MODE);
   }
 
-  updateRadar() {
+  updateRadar(shouldAnimateUpdate = true) {
     const { x, y } = this.player.getGridPosition();
     const tiles = this.level.getNeighboringTiles(x, y);
-    this.radar.setTiles(tiles);
+    this.radar.updateShapeFromTiles(tiles, shouldAnimateUpdate);
   }
 
   destroy() {
