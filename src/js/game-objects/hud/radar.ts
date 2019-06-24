@@ -79,13 +79,13 @@ class Radar {
         y,
         w,
         h,
-        duration: shouldAnimateUpdate ? 175 : 0,
         ease: Phaser.Math.Easing.Quadratic.Out,
         onUpdate: () => this.updateShape(tmp.x, tmp.y, tmp.w, tmp.h)
       });
     } else {
       this.updateShape(x, y, w, h);
     }
+          duration: 175,
   }
 
   private updateShape(x: number, y: number, w: number, h: number) {
