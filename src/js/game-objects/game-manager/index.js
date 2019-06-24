@@ -195,7 +195,7 @@ export default class GameManager {
     await this.player.movePlayerAlongPath(worldPath, duration);
     this.player.setGridPosition(lastPoint.x, lastPoint.y);
     this.level.highlightTiles(this.player.getGridPosition());
-    this.updateRadar();
+    await this.updateRadar();
   }
 
   async movePlayerToTile(gridX, gridY, moveInstantly = false) {
@@ -204,7 +204,7 @@ export default class GameManager {
     await this.player.movePlayerTo(worldX, worldY, moveInstantly);
     this.player.setGridPosition(gridX, gridY);
     this.level.highlightTiles(this.player.getGridPosition());
-    this.updateRadar();
+    await this.updateRadar();
   }
 
   applyTileEffect(tile) {
@@ -264,10 +264,10 @@ export default class GameManager {
     store.setGameState(GAME_MODES.MOVE_MODE);
   }
 
-  updateRadar(shouldAnimateUpdate = true) {
+  async updateRadar(shouldAnimateUpdate = true) {
     const { x, y } = this.player.getGridPosition();
     const tiles = this.level.getNeighboringTiles(x, y);
-    this.radar.updateShapeFromTiles(tiles, shouldAnimateUpdate);
+    return this.radar.updateShapeFromTiles(tiles, shouldAnimateUpdate);
   }
 
   destroy() {

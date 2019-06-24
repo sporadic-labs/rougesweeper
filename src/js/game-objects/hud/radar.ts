@@ -47,45 +47,48 @@ class Radar {
     this.container.setVisible(isVisible);
   }
 
-  updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true) {
-    if (tiles.length === 0) return;
+  updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true): Promise<void> {
+    return new Promise(resolve => {
       if (tiles.length === 0) {
         globalLogger.error("Attempted to set the radar shape from an empty array of tiles.");
         return;
       }
 
-    // Calculate the bounds of the set of tiles in world space
-    let minX: number = Number.MAX_SAFE_INTEGER;
-    let maxX: number = Number.MIN_SAFE_INTEGER;
-    let minY: number = Number.MAX_SAFE_INTEGER;
-    let maxY: number = Number.MIN_SAFE_INTEGER;
-    tiles.map(tile => {
-      const { left, right, top, bottom } = tile.getBounds(this.reusableRect);
-      if (left < minX) minX = left;
-      if (right > maxX) maxX = right;
-      if (top < minY) minY = top;
-      if (bottom > maxY) maxY = bottom;
-    });
-    const x = minX - this.padding;
-    const y = minY - this.padding;
-    const w = maxX - minX + this.padding * 2;
-    const h = maxY - minY + this.padding * 2;
-
-    if (shouldAnimateUpdate) {
-      const tmp = { x: this.x, y: this.y, w: this.w, h: this.h };
-      this.scene.add.tween({
-        targets: tmp,
-        x,
-        y,
-        w,
-        h,
-        ease: Phaser.Math.Easing.Quadratic.Out,
-        onUpdate: () => this.updateShape(tmp.x, tmp.y, tmp.w, tmp.h)
+      // Calculate the bounds of the set of tiles in world space
+      let minX: number = Number.MAX_SAFE_INTEGER;
+      let maxX: number = Number.MIN_SAFE_INTEGER;
+      let minY: number = Number.MAX_SAFE_INTEGER;
+      let maxY: number = Number.MIN_SAFE_INTEGER;
+      tiles.map(tile => {
+        const { left, right, top, bottom } = tile.getBounds(this.reusableRect);
+        if (left < minX) minX = left;
+        if (right > maxX) maxX = right;
+        if (top < minY) minY = top;
+        if (bottom > maxY) maxY = bottom;
       });
-    } else {
-      this.updateShape(x, y, w, h);
-    }
+      const x = minX - this.padding;
+      const y = minY - this.padding;
+      const w = maxX - minX + this.padding * 2;
+      const h = maxY - minY + this.padding * 2;
+
+      if (shouldAnimateUpdate) {
+        const tmp = { x: this.x, y: this.y, w: this.w, h: this.h };
+        this.scene.add.tween({
+          targets: tmp,
+          x,
+          y,
+          w,
+          h,
           duration: 175,
+          ease: Phaser.Math.Easing.Quadratic.Out,
+          onUpdate: () => this.updateShape(tmp.x, tmp.y, tmp.w, tmp.h),
+          onComplete: resolve
+        });
+      } else {
+        this.updateShape(x, y, w, h);
+        resolve();
+      }
+    });
   }
 
   private updateShape(x: number, y: number, w: number, h: number) {
