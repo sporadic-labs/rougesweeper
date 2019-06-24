@@ -48,6 +48,8 @@ class Radar {
 
   updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true) {
     if (tiles.length === 0) return;
+
+    // Calculate the bounds of the set of tiles in world space
     let minX: number = Number.MAX_SAFE_INTEGER;
     let maxX: number = Number.MIN_SAFE_INTEGER;
     let minY: number = Number.MAX_SAFE_INTEGER;
