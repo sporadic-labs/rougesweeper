@@ -1,7 +1,0 @@
-const GAME_MODES = {
-  IDLE_MODE: "IDLE_MODE",
-  MOVE_MODE: "MOVE_MODE",
-  ATTACK_MODE: "ATTACK_MODE"
-};
-
-export default GAME_MODES;
