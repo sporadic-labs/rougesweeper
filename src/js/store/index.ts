@@ -32,7 +32,6 @@ class GameStore {
   }
 
   @action setGameState(state: GAME_MODES) {
-    console.log(state);
     this.gameState = state;
   }
   @action setDangerCount(count: number) {
@@ -70,6 +69,9 @@ class GameStore {
   }
   @action nextLevel() {
     if (this.levelIndex < levelKeys.length) this.levelIndex += 1;
+  }
+  @action setLevelByIndex(levelIndex: number) {
+    if (levelIndex >= 0 && levelIndex < levelKeys.length) this.levelIndex = levelIndex;
   }
 
   @computed get level() {

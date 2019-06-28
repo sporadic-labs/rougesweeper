@@ -10,6 +10,7 @@ import EventProxy from "../../helpers/event-proxy";
 import Compass from "../hud/compass";
 import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
+import DebugMenu from "../hud/debug-menu";
 
 export default class GameManager {
   /**
@@ -25,6 +26,7 @@ export default class GameManager {
     this.toastManager = toastManager;
     this.radar = new Radar(scene, store);
     this.radar.setVisible(false);
+    this.debugMenu = new DebugMenu(scene, store);
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -54,6 +56,7 @@ export default class GameManager {
       if (this.compass) this.compass.destroy();
       if (store.hasCompass) this.compass = new Compass(this.scene, this.player, this.level);
     });
+    this.mobProxy.observe(store, "levelIndex", () => this.startLevel());
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
@@ -106,7 +109,6 @@ export default class GameManager {
           } else {
             await this.movePlayerAlongPath(path);
             store.nextLevel();
-            this.startLevel();
             return;
           }
         } else if (tile.type === TILE_TYPES.SHOP) {
