@@ -238,7 +238,7 @@ export default class GameManager {
     store.setHasCompass(false);
     store.setHasKey(false);
 
-    this.level = new Level(this.scene, store.getLevel());
+    this.level = new Level(this.scene, store.level);
     const playerStartGridPos = this.level.getStartingGridPosition();
 
     const enemyCount = this.level.countNeighboringEnemies(

@@ -1,8 +1,21 @@
-import { observable, action, decorate } from "mobx";
+import { observable, action, computed } from "mobx";
 import GAME_MODES from "../game-objects/game-manager/events";
 import { levelKeys } from "./levels";
 
 class GameStore {
+  @observable gameState: GAME_MODES;
+  @observable dangerCount: number;
+  @observable goldCount: number;
+  @observable maxPlayerHealth: number;
+  @observable playerHealth: number;
+  @observable maxAttackCount: number;
+  @observable attackCount: number;
+  @observable isShopOpen: boolean;
+  @observable moveCount: number;
+  @observable hasCompass: boolean;
+  @observable levelIndex: number;
+  @observable hasKey: boolean;
+
   constructor() {
     this.gameState = GAME_MODES.IDLE_MODE;
     this.dangerCount = 0;
@@ -18,84 +31,60 @@ class GameStore {
     this.hasKey = false;
   }
 
-  setGameState(state) {
+  @action setGameState(state: GAME_MODES) {
+    console.log(state);
     this.gameState = state;
   }
-  setDangerCount(count) {
+  @action setDangerCount(count: number) {
     this.dangerCount = count;
   }
-  addGold(amt = 1) {
+  @action addGold(amt = 1) {
     if (this.goldCount >= 0) this.goldCount += amt;
   }
-  removeGold(amt = 1) {
+  @action removeGold(amt = 1) {
     if (this.goldCount > 0) this.goldCount -= amt;
   }
-  addHealth(amt = 1) {
+  @action addHealth(amt = 1) {
     if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
   }
-  removeHealth(amt = 1) {
+  @action removeHealth(amt = 1) {
     if (this.playerHealth > 0) this.playerHealth -= amt;
   }
-  addAttack(amt = 1) {
+  @action addAttack(amt = 1) {
     if (this.attackCount <= this.maxAttackCount) this.attackCount += amt;
   }
-  removeAttack(amt = 1) {
+  @action removeAttack(amt = 1) {
     if (this.attackCount > 0) this.attackCount -= amt;
   }
-  setShopOpen(isShopOpen) {
+  @action setShopOpen(isShopOpen: boolean) {
     this.isShopOpen = isShopOpen;
   }
-  setHasCompass(hasCompass) {
+  @action setHasCompass(hasCompass: boolean) {
     this.hasCompass = hasCompass;
   }
-  setHasKey(hasKey) {
+  @action setHasKey(hasKey: boolean) {
     this.hasKey = hasKey;
   }
-  addMove(amt = 1) {
+  @action addMove(amt = 1) {
     if (this.moveCount >= 0) this.moveCount += amt;
   }
-  getLevel() {
-    return levelKeys[this.levelIndex];
-  }
-  nextLevel() {
+  @action nextLevel() {
     if (this.levelIndex < levelKeys.length) this.levelIndex += 1;
   }
-  startNewGame() {
+
+  @computed get level() {
+    return levelKeys[this.levelIndex];
+  }
+
+  @action startNewGame() {
     this.playerHealth = this.maxPlayerHealth;
     this.goldCount = 0;
     this.attackCount = this.maxAttackCount;
-    this.levelIndex = 7;
+    this.levelIndex = 0;
     this.moveCount = 0;
     this.hasKey = false;
   }
 }
-
-decorate(GameStore, {
-  gameState: observable,
-  setGameState: action,
-  dangerCount: observable,
-  setDangerCount: action,
-  goldCount: observable,
-  addGold: action,
-  removeGold: action,
-  playerHealth: observable,
-  addHealth: action,
-  removeHealth: action,
-  attackCount: observable,
-  addAttack: action,
-  removeAttack: action,
-  isShopOpen: observable,
-  setShopOpen: action,
-  hasCompass: observable,
-  setHasCompass: action,
-  hasKey: observable,
-  setHasKey: action,
-  moveCount: observable,
-  addMove: action,
-  level: observable,
-  nextLevel: action,
-  startNewGame: action
-});
 
 const store = new GameStore();
 
