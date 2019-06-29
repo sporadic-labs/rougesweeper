@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="9" height="7" tilewidth="76" tileheight="76" infinite="0" nextobjectid="52">
+ <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
+  <image source="tiles.png" width="300" height="225"/>
+ </tileset>
+ <layer name="Ground" width="9" height="7">
+  <data encoding="csv">
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6
+</data>
+ </layer>
+ <layer name="Foreground" width="9" height="7">
+  <data encoding="csv">
+1,0,0,0,0,0,1,1,1,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,1,0,0,0,
+8,0,0,0,0,0,0,0,9,
+0,0,0,1,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+1,3,1,0,0,0,0,0,1
+</data>
+ </layer>
+ <objectgroup color="#0000ff" name="Key" opacity="0.5">
+  <object id="29" x="152" y="0">
+   <polygon points="0,0 456,0 456,532 0,532"/>
+  </object>
+  <object id="40" gid="10" x="228" y="76" width="75" height="75"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Enemies" opacity="0.5">
+  <object id="30" x="76" y="152">
+   <polygon points="0,0 0,-152 228,-152 228,0"/>
+  </object>
+  <object id="31" x="608" y="532">
+   <polygon points="0,0 -152,0 -152,-456 0,-456"/>
+  </object>
+  <object id="33" gid="7" x="76" y="76" width="75" height="75"/>
+  <object id="34" gid="7" x="152" y="456" width="75" height="75"/>
+  <object id="35" gid="7" x="532" y="456" width="75" height="75"/>
+  <object id="36" gid="7" x="532" y="532" width="75" height="75"/>
+  <object id="39" gid="7" x="152" y="380" width="75" height="75"/>
+  <object id="44" gid="7" x="532" y="380" width="75" height="75"/>
+  <object id="45" x="152" y="152" width="152" height="380"/>
+ </objectgroup>
+ <objectgroup name="Scramble Enemies" opacity="0.54">
+  <object id="48" x="152" y="0">
+   <polygon points="0,0 304,0 304,304 0,304"/>
+  </object>
+  <object id="49" gid="7" x="304" y="152" width="75" height="75"/>
+  <object id="50" x="228" y="228" width="304" height="304"/>
+  <object id="51" gid="7" x="304" y="380" width="75" height="75"/>
+ </objectgroup>
+</map>

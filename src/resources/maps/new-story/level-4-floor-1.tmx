@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="9" height="7" tilewidth="76" tileheight="76" infinite="0" nextobjectid="47">
+ <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
+  <image source="tiles.png" width="300" height="225"/>
+ </tileset>
+ <layer name="Ground" width="9" height="7">
+  <data encoding="csv">
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6,
+6,6,6,6,6,6,6,6,6
+</data>
+ </layer>
+ <layer name="Foreground" width="9" height="7">
+  <data encoding="csv">
+0,0,0,1,0,0,0,1,1,
+0,0,0,1,0,0,0,0,0,
+1,1,0,0,0,0,0,0,0,
+8,0,0,0,0,0,0,0,9,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,3,1,
+1,1,0,1,1,1,0,1,1
+</data>
+ </layer>
+ <layer name="Shield" width="9" height="7">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,5,5,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup color="#0000ff" name="Key" opacity="0.5">
+  <object id="29" x="0" y="0">
+   <polygon points="0,0 228,0 228,152 0,152"/>
+  </object>
+  <object id="40" gid="10" x="0" y="76" width="75" height="75"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Enemies" opacity="0.5">
+  <object id="30" x="0" y="152">
+   <polygon points="0,0 0,-152 228,-152 228,0"/>
+  </object>
+  <object id="31" x="608" y="304">
+   <polygon points="0,0 -304,0 -304,-304 0,-304"/>
+  </object>
+  <object id="33" gid="7" x="152" y="76" width="75" height="75"/>
+  <object id="34" gid="7" x="76" y="152" width="75" height="75"/>
+  <object id="35" gid="7" x="380" y="76" width="75" height="75"/>
+  <object id="36" gid="7" x="456" y="76" width="75" height="75"/>
+  <object id="37" gid="7" x="152" y="456" width="75" height="75"/>
+  <object id="38" gid="7" x="228" y="456" width="75" height="75"/>
+  <object id="39" gid="7" x="304" y="456" width="75" height="75"/>
+  <object id="43" x="152" y="228">
+   <polygon points="0,0 304,0 304,304 0,304"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="Shield Key">
+  <object id="44" x="304" y="76" width="304" height="228"/>
+  <object id="46" gid="4" x="532" y="152" width="75" height="75"/>
+ </objectgroup>
+</map>

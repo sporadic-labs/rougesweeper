@@ -16,40 +16,53 @@
  </layer>
  <layer name="Foreground" width="9" height="7">
   <data encoding="csv">
-1,1,0,1,1,1,0,0,1,
-1,1,0,0,0,0,0,0,1,
+1,0,1,0,0,0,1,0,1,
+0,0,1,0,0,0,1,0,0,
 0,0,0,0,0,0,0,0,0,
 8,0,0,0,0,0,0,0,9,
 0,0,0,0,0,0,0,0,0,
-1,0,0,0,0,0,0,1,1,
-1,0,0,3,1,1,0,1,1
+0,0,0,0,0,0,0,0,0,
+1,0,0,3,0,1,0,0,1
+</data>
+ </layer>
+ <layer name="Shield" width="9" height="7">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,5,5,5,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,5,0,0,0,0,
+0,0,0,0,0,0,0,0,0
 </data>
  </layer>
  <objectgroup color="#0000ff" name="Key" opacity="0.5">
-  <object id="29" x="152" y="0">
-   <polygon points="0,0 380,0 380,304 0,304"/>
+  <object id="29" x="304" y="456">
+   <polygon points="0,0 76,0 76,76 0,76"/>
   </object>
-  <object id="40" gid="10" x="228" y="152" width="75" height="75"/>
+  <object id="40" gid="10" x="304" y="532" width="75" height="75"/>
  </objectgroup>
  <objectgroup color="#ff0000" name="Enemies" opacity="0.5">
   <object id="30" x="152" y="532">
-   <polygon points="0,0 0,-532 76,-532 76,0"/>
+   <polygon points="0,0 0,-380 152,-380 152,0"/>
   </object>
-  <object id="31" x="608" y="380">
-   <polygon points="0,0 -152,0 -152,-380 0,-380"/>
+  <object id="31" x="608" y="532">
+   <polygon points="0,0 -152,0 -152,-532 0,-532"/>
   </object>
   <object id="33" gid="7" x="152" y="228" width="75" height="75"/>
   <object id="34" gid="7" x="152" y="304" width="75" height="75"/>
   <object id="35" gid="7" x="456" y="228" width="75" height="75"/>
   <object id="36" gid="7" x="456" y="304" width="75" height="75"/>
-  <object id="38" gid="7" x="380" y="456" width="75" height="75"/>
-  <object id="39" gid="7" x="228" y="456" width="75" height="75"/>
-  <object id="45" x="152" y="304" width="304" height="228"/>
- </objectgroup>
- <objectgroup name="Scramble Enemies" opacity="0.49">
-  <object id="47" x="228" y="76">
-   <polygon points="0,0 228,0 228,228 0,228"/>
+  <object id="37" gid="7" x="304" y="152" width="75" height="75"/>
+  <object id="38" gid="7" x="456" y="380" width="75" height="75"/>
+  <object id="39" gid="7" x="380" y="304" width="75" height="75"/>
+  <object id="43" x="228" y="0">
+   <polygon points="0,0 228,0 228,152 0,152"/>
   </object>
-  <object id="48" gid="7" x="304" y="228" width="75" height="75"/>
+  <object id="48" x="304" y="228" width="152" height="228"/>
+ </objectgroup>
+ <objectgroup name="Shield Key">
+  <object id="44" x="228" y="0" width="228" height="152"/>
+  <object id="45" gid="4" x="304" y="76" width="75" height="75"/>
  </objectgroup>
 </map>
