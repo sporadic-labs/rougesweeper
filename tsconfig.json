@@ -12,5 +12,5 @@
     "checkJs": false
   },
   "exclude": ["src/resources/**/*"],
-  "include": ["src/**/*", "types/**/*"]
+  "include": ["src/**/*", "node_modules/phaser/types"]
 }
