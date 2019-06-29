@@ -14,7 +14,7 @@
          "y":0
         }, 
         {
-         "data":[0, 4, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
+         "data":[0, 4, 0, 7, 0, 0, 0, 8, 0, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 7, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 7],
          "height":6,
          "id":13,
          "name":"Foreground",
@@ -36,12 +36,12 @@
          "columns":4,
          "firstgid":1,
          "image":"tiles.png",
-         "imageheight":150,
+         "imageheight":225,
          "imagewidth":300,
          "margin":0,
          "name":"tiles",
          "spacing":0,
-         "tilecount":8,
+         "tilecount":12,
          "tileheight":75,
          "tilewidth":75
         }],
