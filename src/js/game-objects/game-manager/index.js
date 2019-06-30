@@ -96,8 +96,8 @@ export default class GameManager {
         this.applyTileEffect(tile);
         const { x, y } = this.player.getPosition();
         await tile.playTileEffectAnimation(x, y);
-
-        if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
+        if (tile.type === TILE_TYPES.KEY) store.setHasKey(true);
+        else if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
       } else {
         if (tile.type === TILE_TYPES.EXIT) {
           if (this.level.isExitLocked() && !store.hasKey) {
@@ -114,11 +114,14 @@ export default class GameManager {
         } else if (tile.type === TILE_TYPES.SHOP) {
           await this.movePlayerAlongPath(path);
           this.applyTileEffect(tile);
+        } else if (tile.type === TILE_TYPES.KEY) {
+          store.setHasKey(true);
+          const { x, y } = this.player.getPosition();
+          await tile.playTileEffectAnimation(x, y);
         }
       }
 
       if (shouldMoveToTile) await this.movePlayerAlongPath(path);
-      if (tile.type === TILE_TYPES.KEY) store.setHasKey(true);
       this.updateEnemyCount();
 
       if (store.dangerCount === 0) {

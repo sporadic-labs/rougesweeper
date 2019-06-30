@@ -53,7 +53,11 @@ export default class Tile {
 
   playTileEffectAnimation(playerX, playerY) {
     return new Promise(resolve => {
-      if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.ENEMY) {
+      if (
+        this.type === TILE_TYPES.GOLD ||
+        this.type === TILE_TYPES.ENEMY ||
+        this.type === TILE_TYPES.KEY
+      ) {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
 
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();
@@ -61,7 +65,7 @@ export default class Tile {
         const tileGraphic = this.frontTile.getAt(1);
 
         // Setup different animations for the Gold vs. the Enemy graphics.
-        if (this.type === TILE_TYPES.GOLD) {
+        if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.KEY) {
           this.tileGraphicTimeline
             .add({
               targets: tileGraphic,
