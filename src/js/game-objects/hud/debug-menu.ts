@@ -1,6 +1,5 @@
 import EventProxy from "../../helpers/event-proxy";
 import GAME_MODES from "../game-manager/events";
-import MobXProxy from "../../helpers/mobx-proxy";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
@@ -20,7 +19,6 @@ export default class DebugMenu {
   scene: Phaser.Scene;
   gameStore: GameStore;
   restartLevelButton: TextButton;
-  mobProxy: MobXProxy;
   proxy: EventProxy;
   container: Phaser.GameObjects.Container;
   previousGameState: GAME_MODES;
@@ -106,7 +104,6 @@ export default class DebugMenu {
   }
 
   destroy() {
-    this.mobProxy.destroy();
     this.container.destroy();
     this.proxy.removeAll();
   }
