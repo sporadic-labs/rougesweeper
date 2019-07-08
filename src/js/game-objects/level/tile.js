@@ -17,10 +17,13 @@ const TYPE_TO_KEY = {
 
 export default class Tile {
   /** @param {Phaser.Scene} scene */
-  constructor(scene, type, x, y, levelEvents) {
+  constructor(scene, levelKey, type, x, y, levelEvents) {
     this.scene = scene;
+    this.levelKey = levelKey;
     this.levelEvents = levelEvents;
     this.type = type;
+
+    this.dialoguePlayedCounter = 0;
 
     this.gridX = 0;
     this.gridY = 0;

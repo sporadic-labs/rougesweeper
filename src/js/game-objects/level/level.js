@@ -21,6 +21,7 @@ export default class Level {
 
         const tile = new Tile(
           scene,
+          levelKey,
           type,
           this.gridXToWorldX(x),
           this.gridYToWorldY(y),
