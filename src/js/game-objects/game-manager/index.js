@@ -11,6 +11,7 @@ import Compass from "../hud/compass";
 import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
+import DialogScreen from "../hud/dialogue-screen";
 
 export default class GameManager {
   /**
@@ -27,6 +28,7 @@ export default class GameManager {
     this.radar = new Radar(scene, store);
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
+    this.dialogScreen = new DialogScreen(scene, store);
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
