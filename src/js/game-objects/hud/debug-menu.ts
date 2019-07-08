@@ -104,6 +104,7 @@ export default class DebugMenu {
   }
 
   destroy() {
+    this.scene.input.removeAllListeners();
     this.container.destroy();
     this.proxy.removeAll();
   }
