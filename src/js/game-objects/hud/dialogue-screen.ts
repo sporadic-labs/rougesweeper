@@ -8,6 +8,8 @@ import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
 import { levelKeys } from "../../store/levels";
 
+import { DialogueEntry } from "./dialogue-data";
+
 const baseTextStyle = {
   fill: "#ffffff"
 };
@@ -22,89 +24,13 @@ const textStyle = {
   fontSize: 18
 };
 
-interface DialogEntry {
-  title: string;
-  imageKey: string;
-  text: string[];
-}
+const DEFAULT_DIALOGUE_ENTRY: DialogueEntry = {
+  title: "Default",
+  imageKey: "",
+  text: []
+};
 
-const testPages: DialogEntry[] = [
-  {
-    title: "Elrond",
-    imageKey: "",
-    text: [
-      "Strangers from distant lands, friends of old.",
-      "You have been summoned here to answer the threat of Mordor.",
-      "Middle-Earth stands upon the brink of destruction.",
-      "None can escape it."
-    ]
-  },
-  {
-    title: "Elrond",
-    imageKey: "",
-    text: [
-      "You will unite or you will fall. Each race is bound to this fate--this one doom.",
-      "Bring forth the Ring, Frodo."
-    ]
-  },
-  {
-    title: "Boromir",
-    imageKey: "",
-    text: ["So it is true..."]
-  },
-  {
-    title: "Man of Laketown",
-    imageKey: "",
-    text: ["The Doom of Men!"]
-  },
-  {
-    title: "Borimir",
-    imageKey: "",
-    text: [
-      "It is a gift.",
-      "A gift to the foes of Mordor.",
-      "Why not use this Ring? Long has my father, the Steward of Gondor, kept the forces of Mordor at bay."
-    ]
-  },
-  {
-    title: "Borimir",
-    imageKey: "",
-    text: [
-      "By the blood of our people are your lands kept safe!",
-      "Give Gondor the weapon of the enemy.",
-      "Let us use it against him!"
-    ]
-  },
-  {
-    title: "Aragorn",
-    imageKey: "",
-    text: [
-      "You cannot wield it! None of us can. The One Ring answers to Sauron alone.",
-      "It has no other master."
-    ]
-  },
-  {
-    title: "Borimir",
-    imageKey: "",
-    text: ["And what would a ranger know of this matter?"]
-  },
-  {
-    title: "Legolas",
-    imageKey: "",
-    text: [
-      "This is no mere ranger.",
-      "He is Aragorn, son of Arathorn.",
-      "You owe him your allegiance."
-    ]
-  },
-  {
-    title: "Borimir",
-    imageKey: "",
-    text: ["Aragorn? This... is Isildur's heir?"]
-  }
-];
-
-enum DIALOG_STATES {
+enum DIALOGUE_STATES {
   EMPTY = "EMPTY",
   WRITING = "WRITING",
   OPEN = "OPEN",
@@ -120,14 +46,10 @@ export default class DialogScreen {
   private previousGameState: GAME_MODES;
   private isOpen: boolean = false;
 
-  private state: DIALOG_STATES = DIALOG_STATES.CLOSED;
+  private state: DIALOGUE_STATES = DIALOGUE_STATES.CLOSED;
 
-  private dialoguePages: DialogEntry[] = testPages;
-  private currentDialoguePage: DialogEntry = {
-    title: "Default",
-    imageKey: "",
-    text: []
-  };
+  private dialoguePages: DialogueEntry[] = [];
+  private currentDialoguePage: DialogueEntry = DEFAULT_DIALOGUE_ENTRY;
 
   private line: string[] = [];
 
@@ -137,7 +59,6 @@ export default class DialogScreen {
 
   private wordDelay: number = 96;
   private lineDelay: number = 184;
-  private pageDelay: number = 256;
 
   private title: Phaser.GameObjects.Text;
   private text: Phaser.GameObjects.Text;
@@ -202,16 +123,16 @@ export default class DialogScreen {
 
   nextState() {
     switch (this.state) {
-      case DIALOG_STATES.EMPTY:
+      case DIALOGUE_STATES.EMPTY:
         this.nextLine();
         break;
-      case DIALOG_STATES.WRITING:
-        this.completeText();
+      case DIALOGUE_STATES.WRITING:
+        this.complete();
         break;
-      case DIALOG_STATES.CLOSED:
+      case DIALOGUE_STATES.CLOSED:
         this.open();
         break;
-      case DIALOG_STATES.OPEN:
+      case DIALOGUE_STATES.OPEN:
       default:
         if (this.pageIndex < this.dialoguePages.length - 1) {
           this.nextPage();
@@ -245,11 +166,11 @@ export default class DialogScreen {
   }
 
   nextLine() {
-    this.state = DIALOG_STATES.WRITING;
+    this.state = DIALOGUE_STATES.WRITING;
 
     // If we're at the end, bail.
     if (this.lineIndex === this.currentDialoguePage.text.length) {
-      this.state = DIALOG_STATES.OPEN;
+      this.state = DIALOGUE_STATES.OPEN;
       return;
     }
 
@@ -272,14 +193,15 @@ export default class DialogScreen {
   }
 
   nextPage() {
-    this.resetTextContent();
+    this.reset();
     this.pageIndex++;
-    this.getTextContent();
+    this.currentDialoguePage = this.dialoguePages[this.pageIndex];
+    this.title.setText(this.currentDialoguePage.title);
     this.nextState();
   }
 
-  completeText() {
-    this.state = DIALOG_STATES.OPEN;
+  complete() {
+    this.state = DIALOGUE_STATES.OPEN;
     this.scene.time.removeAllEvents();
     // TODO(rex): Do this for real?
     const text = this.currentDialoguePage.text.join("\n");
@@ -287,44 +209,40 @@ export default class DialogScreen {
   }
 
   open() {
-    this.state = DIALOG_STATES.OPEN;
+    this.state = DIALOGUE_STATES.OPEN;
     this.isOpen = true;
-    this.getTextContent();
+    this.currentDialoguePage = this.dialoguePages[this.pageIndex];
+    this.title.setText(this.currentDialoguePage.title);
     this.container.setVisible(true);
-    this.nextLine();
     this.previousGameState = this.gameStore.gameState;
+    this.nextLine();
   }
 
   close() {
     this.isOpen = false;
     this.container.setVisible(false);
-    this.resetTextContent();
+    this.gameStore.setGameState(this.previousGameState);
+    this.reset();
     this.pageIndex = 0;
     this.scene.time.removeAllEvents();
-    this.gameStore.setGameState(this.previousGameState);
-    this.state = DIALOG_STATES.CLOSED;
+    this.state = DIALOGUE_STATES.CLOSED;
   }
 
-  getTextContent() {
-    this.currentDialoguePage = this.dialoguePages[this.pageIndex];
-    this.title.setText(this.currentDialoguePage.title);
-  }
-
-  resetTextContent() {
-    this.currentDialoguePage = {
-      title: "Default",
-      imageKey: "",
-      text: []
-    };
+  reset() {
+    this.currentDialoguePage = DEFAULT_DIALOGUE_ENTRY;
     this.title.setText("");
     this.text.setText("");
     this.lineIndex = 0;
     this.wordIndex = 0;
-    this.state = DIALOG_STATES.EMPTY;
+    this.state = DIALOGUE_STATES.EMPTY;
   }
 
   resetButtons() {
     // Manually call this when closing menu because of bug where button stays in pressed state
+  }
+
+  setDialoguePages(entries: DialogueEntry[]) {
+    this.dialoguePages = entries;
   }
 
   destroy() {

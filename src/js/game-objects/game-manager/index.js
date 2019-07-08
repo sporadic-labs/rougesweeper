@@ -11,7 +11,7 @@ import Compass from "../hud/compass";
 import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
-import DialogScreen from "../hud/dialogue-screen";
+import DialogueManager from "../hud/dialogue-manager";
 
 export default class GameManager {
   /**
@@ -28,7 +28,7 @@ export default class GameManager {
     this.radar = new Radar(scene, store);
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
-    this.dialogScreen = new DialogScreen(scene, store);
+    this.dialogueManager = new DialogueManager(scene, store);
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -125,6 +125,8 @@ export default class GameManager {
 
       if (shouldMoveToTile) await this.movePlayerAlongPath(path);
       this.updateEnemyCount();
+
+      this.dialogueManager.playDialogueFromTile(tile);
 
       if (store.dangerCount === 0) {
         const pos = this.player.getGridPosition();
