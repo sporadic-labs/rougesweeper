@@ -1,0 +1,34 @@
+{
+  "level": "level-1-floor-3",
+  "x": 2,
+  "y": 3,
+  "repeat": true,
+  "condition": null,
+  "entries": [
+    {
+      "title": "Boromir",
+      "imageKey": "",
+      "text": [
+        "Leave it! It is over.",
+        "The world of men will fall, and all will come to darkness… and my city to ruin."
+      ]
+    },
+    {
+      "title": "Aragorn",
+      "imageKey": "",
+      "text": [
+        "I do not know what strength is in my blood, but I swear to you I will not let the white city fall, nor our people fail!"
+      ]
+    },
+    {
+      "title": "Boromir",
+      "imageKey": "",
+      "text": ["Our people?", "Our people."]
+    },
+    {
+      "title": "Boromir",
+      "imageKey": "",
+      "text": ["I would have followed you my brother...", "...my captain...", "...my king!"]
+    }
+  ]
+}
