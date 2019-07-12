@@ -78,6 +78,7 @@ export default class GameManager {
         return;
       }
 
+      const tileType = tile.type; // Cache type since revealing alters the type
       const tileGridPos = tile.getGridPosition();
       const isRevealed = tile.isRevealed();
       const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
@@ -98,10 +99,10 @@ export default class GameManager {
         this.applyTileEffect(tile);
         const { x, y } = this.player.getPosition();
         await tile.playTileEffectAnimation(x, y);
-        if (tile.type === TILE_TYPES.KEY) store.setHasKey(true);
-        else if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
+        if (tileType === TILE_TYPES.KEY) store.setHasKey(true);
+        else if (tileType === TILE_TYPES.EXIT) store.setHasCompass(false);
       } else {
-        if (tile.type === TILE_TYPES.EXIT) {
+        if (tileType === TILE_TYPES.EXIT) {
           if (this.level.isExitLocked() && !store.hasKey) {
             this.toastManager.setMessage("Door is locked - you need a key.");
           } else if (store.levelIndex >= 8) {
@@ -113,10 +114,10 @@ export default class GameManager {
             store.nextLevel();
             return;
           }
-        } else if (tile.type === TILE_TYPES.SHOP) {
+        } else if (tileType === TILE_TYPES.SHOP) {
           await this.movePlayerAlongPath(path);
           this.applyTileEffect(tile);
-        } else if (tile.type === TILE_TYPES.KEY) {
+        } else if (tileType === TILE_TYPES.KEY) {
           store.setHasKey(true);
           const { x, y } = this.player.getPosition();
           await tile.playTileEffectAnimation(x, y);
