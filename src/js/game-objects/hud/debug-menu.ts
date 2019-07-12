@@ -74,14 +74,18 @@ export default class DebugMenu {
       .setDepth(DEPTHS.HUD)
       .setVisible(false);
 
-    scene.input.keyboard.on("keydown_D", () => {
-      if (this.isOpen) this.close();
-      else this.open();
-    });
-
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
+    this.proxy.on(
+      scene.input.keyboard,
+      "keydown_D",
+      () => {
+        if (this.isOpen) this.close();
+        else this.open();
+      },
+      this
+    );
   }
 
   restartLevel() {}
@@ -104,7 +108,6 @@ export default class DebugMenu {
   }
 
   destroy() {
-    this.scene.input.removeAllListeners();
     this.container.destroy();
     this.proxy.removeAll();
   }
