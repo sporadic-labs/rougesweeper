@@ -14,6 +14,7 @@ module.exports = function(env, argv) {
     context: path.resolve(__dirname, "src"),
     entry: "./js/main.js",
     cache: true,
+    devtool: "cheap-source-map",
     output: {
       path: path.resolve(__dirname, "public"),
       filename: "main.js"
@@ -55,7 +56,10 @@ module.exports = function(env, argv) {
     plugins: [
       new HTMLWebpackPlugin({ template: "./index.html" }),
 
-      new MiniCssExtractPlugin({ filename: "[name].[hash].css", chunkFilename: "[id].[hash].css" }),
+      new MiniCssExtractPlugin({
+        filename: "[name].[hash].css",
+        chunkFilename: "[id].[hash].css"
+      }),
 
       // Instead of using imports & file loader for Phaser assets, just copy over all resources
       new CopyWebpackPlugin([
