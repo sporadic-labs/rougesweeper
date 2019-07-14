@@ -9,7 +9,8 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true, // Necessary for default importing Phaser to pick up types properly
     "allowJs": true,
-    "checkJs": false
+    "checkJs": false,
+    "lib": ["dom", "esnext"]
   },
   "exclude": ["src/resources/**/*"],
   "include": ["src/**/*", "node_modules/phaser/types"]
