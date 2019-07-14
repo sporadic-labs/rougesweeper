@@ -38,12 +38,6 @@ export interface DialogueEntry {
   text: string[];
 }
 
-const DEFAULT_DIALOGUE_ENTRY: DialogueEntry = {
-  title: "Default",
-  imageKey: "",
-  text: []
-};
-
 enum DIALOGUE_STATES {
   EMPTY = "EMPTY",
   WRITING = "WRITING",
@@ -54,7 +48,6 @@ enum DIALOGUE_STATES {
 export default class DialogueManager {
   private scene: Phaser.Scene;
   private gameStore: GameStore;
-  private skipButton: TextButton;
   private proxy: EventProxy;
   private container: Phaser.GameObjects.Container;
   private previousGameState: GAME_MODES;
@@ -63,15 +56,18 @@ export default class DialogueManager {
   private state: DIALOGUE_STATES = DIALOGUE_STATES.CLOSED;
 
   private dialoguePages: DialogueEntry[] = [];
-  private currentDialoguePage: DialogueEntry = DEFAULT_DIALOGUE_ENTRY;
+  private currentDialoguePage: DialogueEntry;
 
   private line: string[] = [];
+  private word: string[] = [];
 
+  private characterIndex: number = 0;
   private wordIndex: number = 0;
   private lineIndex: number = 0;
   private pageIndex: number = 0;
 
-  private wordDelay: number = 96;
+  private characterDelay: number = 46;
+  private wordDelay: number = 64;
   private lineDelay: number = 184;
 
   private title: Phaser.GameObjects.Text;
@@ -105,8 +101,8 @@ export default class DialogueManager {
       .text(r.centerX + 72, r.centerY + 12, "", baseTextStyle)
       .setOrigin(0.5, 0.5)
       .setLineSpacing(6)
-      .setFixedSize(modalWidth * 0.78, modalHeight * 0.6)
-      .setWordWrapWidth(modalWidth * 0.78);
+      .setFixedSize(modalWidth * 0.76, modalHeight * 0.6)
+      .setWordWrapWidth(modalWidth * 0.76);
 
     this.sprite = scene.add.sprite(r.x + 36, r.centerY, "assets", "player").setOrigin(0, 0.5);
 
@@ -181,13 +177,42 @@ export default class DialogueManager {
     }
   }
 
+  nextCharacter() {
+    //  Add the next word onto the text string, followed by a space
+    const char = this.word[this.characterIndex];
+    if (char) this.text.text = this.text.text.concat(char);
+
+    //  Advance the word index to the next word in the line
+    this.characterIndex++;
+
+    //  Last word?
+    if (this.characterIndex === this.word.length) {
+      //  Add a carriage return
+      this.text.text = this.text.text.concat(" ");
+
+      //  Get the next line after the lineDelay amount of ms has elapsed
+      this.scene.time.addEvent({
+        callback: this.nextWord,
+        delay: this.wordDelay,
+        callbackScope: this
+      });
+    } else {
+      //  Get the next line after the lineDelay amount of ms has elapsed
+      this.scene.time.addEvent({
+        callback: this.nextCharacter,
+        delay: this.characterDelay,
+        callbackScope: this
+      });
+    }
+  }
+
   nextWord() {
     //  Add the next word onto the text string, followed by a space
     const word = this.line[this.wordIndex];
-    if (word) this.text.text = this.text.text.concat(`${word} `);
+    if (word) this.word = word.split("");
 
     //  Advance the word index to the next word in the line
-    this.wordIndex++;
+    this.characterIndex = 0;
 
     //  Last word?
     if (this.wordIndex === this.line.length) {
@@ -200,10 +225,20 @@ export default class DialogueManager {
         delay: this.lineDelay,
         callbackScope: this
       });
+    } else {
+      this.wordIndex++;
+      //  Get the next line after the lineDelay amount of ms has elapsed
+      this.scene.time.addEvent({
+        callback: this.nextCharacter,
+        delay: this.characterDelay,
+        callbackScope: this
+      });
     }
   }
 
   nextLine() {
+    if (!this.currentDialoguePage) return;
+
     this.state = DIALOGUE_STATES.WRITING;
 
     // If we're at the end, bail.
@@ -216,12 +251,12 @@ export default class DialogueManager {
     this.line = this.currentDialoguePage.text[this.lineIndex].split(" ");
 
     //  Reset the word index to zero (the first word in the line)
+    this.characterIndex = 0;
     this.wordIndex = 0;
 
     //  Call the 'nextWord' function once for each word in the line (line.length)
     this.scene.time.addEvent({
       callback: this.nextWord,
-      repeat: this.line.length,
       delay: this.wordDelay,
       callbackScope: this
     });
@@ -242,6 +277,7 @@ export default class DialogueManager {
   complete() {
     this.state = DIALOGUE_STATES.OPEN;
     this.scene.time.removeAllEvents();
+    this.scene.time.clearPendingEvents();
     // TODO(rex): Do this for real?
     const text = this.currentDialoguePage.text.join("\n");
     this.text.setText(text);
@@ -250,9 +286,11 @@ export default class DialogueManager {
   open() {
     this.state = DIALOGUE_STATES.OPEN;
     this.isOpen = true;
-    this.currentDialoguePage = this.dialoguePages[this.pageIndex];
-    this.sprite.setTexture("assets", this.currentDialoguePage.imageKey);
-    this.title.setText(this.currentDialoguePage.title);
+    if (this.dialoguePages[this.pageIndex]) {
+      this.currentDialoguePage = this.dialoguePages[this.pageIndex];
+      this.sprite.setTexture("assets", this.currentDialoguePage.imageKey);
+      this.title.setText(this.currentDialoguePage.title);
+    }
     this.container.setVisible(true);
     this.previousGameState = this.gameStore.gameState;
     this.nextLine();
@@ -265,11 +303,12 @@ export default class DialogueManager {
     this.reset();
     this.pageIndex = 0;
     this.scene.time.removeAllEvents();
+    this.scene.time.clearPendingEvents();
     this.state = DIALOGUE_STATES.CLOSED;
   }
 
   reset() {
-    this.currentDialoguePage = DEFAULT_DIALOGUE_ENTRY;
+    this.currentDialoguePage = null;
     this.title.setText("");
     this.text.setText("");
     this.lineIndex = 0;
@@ -278,7 +317,7 @@ export default class DialogueManager {
   }
 
   resetButtons() {
-    // Manually call this when closing menu because of bug where button stays in pressed state
+    // TODO(rex): Manually call this when closing menu because of bug where button stays in pressed state
   }
 
   setDialoguePages(entries: DialogueEntry[]) {
