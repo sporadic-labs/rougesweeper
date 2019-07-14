@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { SCENE_NAME } from "./index.js";
-import { loadLevels } from "../store/levels.ts";
+import { loadLevels, loadDialogue } from "../store/levels.ts";
 
 export default class LoadingScene extends Phaser.Scene {
   preload() {
@@ -15,6 +15,7 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.setPath("resources/");
     this.load.atlas("assets", "atlases/assets.png", "atlases/assets.json");
     loadLevels(this);
+    loadDialogue(this);
   }
 
   create() {
