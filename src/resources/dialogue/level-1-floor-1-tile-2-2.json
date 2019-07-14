@@ -2,7 +2,7 @@
   "level": "level-1-floor-1",
   "x": 2,
   "y": 2,
-  "repeat": true,
+  "repeat": -1,
   "condition": null,
   "entries": [
     {

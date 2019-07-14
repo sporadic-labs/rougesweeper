@@ -28,7 +28,7 @@ export interface TileDialogueEntry {
   x: number;
   y: number;
   entries: DialogueEntry[];
-  repeat: boolean;
+  repeat: number; // -1 for infinite repeat
   condition: () => boolean;
 }
 
@@ -142,7 +142,7 @@ export default class DialogueManager {
 
   playDialogueFromTile(tile: Tile) {
     const data = tile.getDialogueData();
-    if (data && (data.repeat || tile.dialoguePlayedCounter < 1)) {
+    if (data && (data.repeat < 0 || data.repeat >= tile.dialoguePlayedCounter)) {
       this.setDialoguePages(data.entries);
       this.open();
       tile.dialoguePlayedCounter++;
