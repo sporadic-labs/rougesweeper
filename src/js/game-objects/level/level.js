@@ -4,10 +4,19 @@ import Tile from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
 
-const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
+const neighborOffsets = [
+  [1, 0],
+  [1, 1],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+  [0, -1],
+  [1, -1]
+];
 
 export default class Level {
-  constructor(scene, levelKey) {
+  constructor(scene, levelKey, dialogueManager) {
     this.scene = scene;
     this.events = new Events.EventEmitter();
 
@@ -19,13 +28,20 @@ export default class Level {
       row.map((type, x) => {
         if (!type) return undefined;
 
+        const dialogueData = dialogueManager.getDialogueDataForTile(
+          levelKey,
+          x,
+          y
+        );
+
         const tile = new Tile(
           scene,
           levelKey,
           type,
           this.gridXToWorldX(x),
           this.gridYToWorldY(y),
-          this.events
+          this.events,
+          dialogueData
         );
         tile.setGridPosition(x, y);
         tile.enableInteractive();
