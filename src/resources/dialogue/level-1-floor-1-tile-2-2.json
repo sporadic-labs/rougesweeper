@@ -7,7 +7,7 @@
   "entries": [
     {
       "title": "Elrond",
-      "imageKey": "",
+      "imageKey": "player",
       "text": [
         "Strangers from distant lands, friends of old.",
         "You have been summoned here to answer the threat of Mordor.",
@@ -17,7 +17,7 @@
     },
     {
       "title": "Elrond",
-      "imageKey": "",
+      "imageKey": "player",
       "text": [
         "You will unite or you will fall. Each race is bound to this fate--this one doom.",
         "Bring forth the Ring, Frodo."
@@ -25,17 +25,17 @@
     },
     {
       "title": "Boromir",
-      "imageKey": "",
+      "imageKey": "marker",
       "text": ["So it is true..."]
     },
     {
       "title": "Man of Laketown",
-      "imageKey": "",
+      "imageKey": "tiles/enemy",
       "text": ["The Doom of Men!"]
     },
     {
       "title": "Borimir",
-      "imageKey": "",
+      "imageKey": "marker",
       "text": [
         "It is a gift.",
         "A gift to the foes of Mordor.",
@@ -44,7 +44,7 @@
     },
     {
       "title": "Borimir",
-      "imageKey": "",
+      "imageKey": "marker",
       "text": [
         "By the blood of our people are your lands kept safe!",
         "Give Gondor the weapon of the enemy.",
@@ -53,7 +53,7 @@
     },
     {
       "title": "Aragorn",
-      "imageKey": "",
+      "imageKey": "tiles/enemy",
       "text": [
         "You cannot wield it! None of us can. The One Ring answers to Sauron alone.",
         "It has no other master."
@@ -61,12 +61,12 @@
     },
     {
       "title": "Borimir",
-      "imageKey": "",
+      "imageKey": "marker",
       "text": ["And what would a ranger know of this matter?"]
     },
     {
       "title": "Legolas",
-      "imageKey": "",
+      "imageKey": "tiles/enemy",
       "text": [
         "This is no mere ranger.",
         "He is Aragorn, son of Arathorn.",
@@ -75,7 +75,7 @@
     },
     {
       "title": "Borimir",
-      "imageKey": "",
+      "imageKey": "marker",
       "text": ["Aragorn? This... is Isildur's heir?"]
     }
   ]

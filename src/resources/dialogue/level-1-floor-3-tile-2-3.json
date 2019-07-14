@@ -7,7 +7,7 @@
   "entries": [
     {
       "title": "Boromir",
-      "imageKey": "",
+      "imageKey": "marker",
       "text": [
         "Leave it! It is over.",
         "The world of men will fall, and all will come to darkness… and my city to ruin."
@@ -15,19 +15,19 @@
     },
     {
       "title": "Aragorn",
-      "imageKey": "",
+      "imageKey": "tile/enemy",
       "text": [
         "I do not know what strength is in my blood, but I swear to you I will not let the white city fall, nor our people fail!"
       ]
     },
     {
       "title": "Boromir",
-      "imageKey": "",
+      "imageKey": "marker",
       "text": ["Our people?", "Our people."]
     },
     {
       "title": "Boromir",
-      "imageKey": "",
+      "imageKey": "marker",
       "text": ["I would have followed you my brother...", "...my captain...", "...my king!"]
     }
   ]

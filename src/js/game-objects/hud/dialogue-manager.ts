@@ -76,6 +76,7 @@ export default class DialogueManager {
 
   private title: Phaser.GameObjects.Text;
   private text: Phaser.GameObjects.Text;
+  private sprite: Phaser.GameObjects.Sprite;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
@@ -97,15 +98,17 @@ export default class DialogueManager {
     background.fillRect(r.x, r.y, r.width, r.height);
 
     this.title = scene.add
-      .text(r.centerX, r.y + 16, "Dialogue Dialog", titleStyle)
-      .setOrigin(0.5, 0);
+      .text(r.centerX, r.y + 32, "Dialogue Dialog", titleStyle)
+      .setOrigin(0.5, 0.5);
 
     this.text = scene.add
-      .text(r.centerX, r.y + 56, "", baseTextStyle)
-      .setOrigin(0.5, 0)
+      .text(r.centerX + 72, r.centerY + 12, "", baseTextStyle)
+      .setOrigin(0.5, 0.5)
       .setLineSpacing(6)
-      .setFixedSize(modalWidth * 0.8, modalHeight * 0.6)
-      .setWordWrapWidth(modalWidth * 0.8);
+      .setFixedSize(modalWidth * 0.78, modalHeight * 0.6)
+      .setWordWrapWidth(modalWidth * 0.78);
+
+    this.sprite = scene.add.sprite(r.x + 36, r.centerY, "assets", "player").setOrigin(0, 0.5);
 
     const continueButton = new TextButton(scene, r.right - 172, r.bottom - 20, "Next", {
       origin: { x: 0.5, y: 1 }
@@ -117,7 +120,14 @@ export default class DialogueManager {
     skipButton.events.on("DOWN", this.close, this);
 
     this.container = scene.add
-      .container(0, 0, [background, this.title, this.text, continueButton.text, skipButton.text])
+      .container(0, 0, [
+        background,
+        this.title,
+        this.text,
+        this.sprite,
+        continueButton.text,
+        skipButton.text
+      ])
       .setDepth(DEPTHS.HUD)
       .setVisible(false);
 
@@ -141,7 +151,7 @@ export default class DialogueManager {
   }
 
   playDialogueFromTile(tile: Tile) {
-    const data = tile.getDialogueData();
+    const data: TileDialogueEntry = tile.getDialogueData();
     if (data && (data.repeat < 0 || data.repeat >= tile.dialoguePlayedCounter)) {
       this.setDialoguePages(data.entries);
       this.open();
@@ -224,6 +234,7 @@ export default class DialogueManager {
     this.reset();
     this.pageIndex++;
     this.currentDialoguePage = this.dialoguePages[this.pageIndex];
+    this.sprite.setTexture("assets", this.currentDialoguePage.imageKey);
     this.title.setText(this.currentDialoguePage.title);
     this.nextState();
   }
@@ -240,6 +251,7 @@ export default class DialogueManager {
     this.state = DIALOGUE_STATES.OPEN;
     this.isOpen = true;
     this.currentDialoguePage = this.dialoguePages[this.pageIndex];
+    this.sprite.setTexture("assets", this.currentDialoguePage.imageKey);
     this.title.setText(this.currentDialoguePage.title);
     this.container.setVisible(true);
     this.previousGameState = this.gameStore.gameState;
@@ -271,6 +283,10 @@ export default class DialogueManager {
 
   setDialoguePages(entries: DialogueEntry[]) {
     this.dialoguePages = entries;
+  }
+
+  setDialogueImage(imageFrame: string) {
+    this.sprite.setTexture("assets", imageFrame);
   }
 
   destroy() {
