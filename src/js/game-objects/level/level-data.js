@@ -23,13 +23,25 @@ const tilesetIDToEnum = {
   9: TILE.EXIT,
   10: TILE.KEY
 };
-const tiledPolygonToPhaser = (tileWidth, tileHeight, tiledPolygon) =>
-  new Phaser.Geom.Polygon(
-    tiledPolygon.polygon.map(({ x, y }) => [
-      (tiledPolygon.x + x) / tileWidth,
-      (tiledPolygon.y + y) / tileHeight
-    ])
-  );
+const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
+  if (tiledObject.rectangle) {
+    const { width, height, x, y } = tiledObject;
+    const tx = x / tileWidth;
+    const ty = y / tileHeight;
+    const tw = width / tileWidth;
+    const th = height / tileHeight;
+    return new Phaser.Geom.Polygon([[tx, ty], [tx + tw, ty], [tx + tw, ty + th], [tx, ty + th]]);
+  } else if (tiledObject.polygon) {
+    return new Phaser.Geom.Polygon(
+      tiledObject.polygon.map(({ x, y }) => [
+        (tiledObject.x + x) / tileWidth,
+        (tiledObject.y + y) / tileHeight
+      ])
+    );
+  } else {
+    throw new Error("Unsupported Tiled shape:", tiledObject);
+  }
+};
 
 export default class LevelData {
   /** @param {Phaser.Tilemaps.Tilemap} map */
@@ -90,8 +102,10 @@ export default class LevelData {
    * @memberof LevelData
    */
   generateKeyPosition(objectLayer) {
-    const obj = objectLayer.objects.find(obj => obj.polygon !== undefined);
-    const polygon = tiledPolygonToPhaser(this.tileWidth, this.tileHeight, obj);
+    const obj = objectLayer.objects.find(
+      obj => obj.polygon !== undefined || obj.rectangle === true
+    );
+    const polygon = tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj);
     const blanks = this.getBlanksWithin(polygon);
     const keyPosition = Phaser.Math.RND.pick(blanks);
     if (!keyPosition) throw new Error("Could not find a valid place to put a key.");
@@ -111,17 +125,19 @@ export default class LevelData {
    */
   generateEnemyPositions(objectLayer) {
     // Find the spawning polygons
-    const spawnRegions = objectLayer.objects.filter(obj => obj.polygon !== undefined);
+    const spawnRegions = objectLayer.objects.filter(
+      obj => obj.polygon !== undefined || obj.rectangle === true
+    );
     const spawnPolygons = spawnRegions.map(obj =>
-      tiledPolygonToPhaser(this.tileWidth, this.tileHeight, obj)
+      tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj)
     );
 
     // Count enemy tile objects within each region
     const enemyTiles = objectLayer.objects.filter(obj => obj.gid !== undefined);
     const enemyCounts = Array(spawnRegions.length).fill(0);
     enemyTiles.map(enemyTile => {
-      const x = enemyTile.x / this.tileWidth;
-      const y = enemyTile.y / this.tileHeight;
+      const x = enemyTile.x / this.tileWidth + 0.5;
+      const y = enemyTile.y / this.tileHeight - 0.5;
       let enemyPlaced = false;
       for (let i = 0; i < spawnPolygons.length; i++) {
         if (spawnPolygons[i].contains(x, y)) {
