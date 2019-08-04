@@ -14,7 +14,6 @@ module.exports = function(env, argv) {
     context: path.resolve(__dirname, "src"),
     entry: "./js/main.js",
     cache: true,
-    devtool: "cheap-source-map",
     output: {
       path: path.resolve(__dirname, "public"),
       filename: "main.js"
