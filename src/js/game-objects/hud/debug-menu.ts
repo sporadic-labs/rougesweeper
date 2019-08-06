@@ -95,6 +95,7 @@ export default class DebugMenu {
     this.container.setVisible(true);
     this.resetButtons();
     this.previousGameState = this.gameStore.gameState;
+    this.gameStore.setGameState(GAME_MODES.IDLE_MODE);
   };
 
   close = () => {
