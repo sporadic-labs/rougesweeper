@@ -23,6 +23,8 @@ export default class DebugMenu {
   container: Phaser.GameObjects.Container;
   previousGameState: GAME_MODES;
   isOpen: boolean = false;
+  levelSelectButtons: TextButton[];
+  closeButton: TextButton;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
@@ -42,10 +44,11 @@ export default class DebugMenu {
 
     const title = scene.add.text(r.centerX, r.y + 25, "Debug Menu", titleStyle).setOrigin(0.5, 0);
 
-    const leaveButton = new TextButton(scene, r.centerX, r.bottom - 30, "Close", {
+    const closeButton = new TextButton(scene, r.centerX, r.bottom - 30, "Close", {
       origin: { x: 0.5, y: 1 }
     });
-    leaveButton.events.on("DOWN", this.close);
+    closeButton.events.on("DOWN", this.close);
+    this.closeButton = closeButton;
 
     const cols = 2;
     const levelSelectButtons = levelKeys.map((name, i) => {
@@ -63,12 +66,13 @@ export default class DebugMenu {
       });
       return button;
     });
+    this.levelSelectButtons = levelSelectButtons;
 
     this.container = scene.add
       .container(0, 0, [
         background,
         title,
-        leaveButton.text,
+        closeButton.text,
         ...levelSelectButtons.map(b => b.text)
       ])
       .setDepth(DEPTHS.HUD)
@@ -106,6 +110,8 @@ export default class DebugMenu {
 
   resetButtons() {
     // Manually call this when closing menu because of bug where button stays in pressed state
+    this.levelSelectButtons.forEach(btn => btn.reset());
+    this.closeButton.reset();
   }
 
   destroy() {
