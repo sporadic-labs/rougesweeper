@@ -8,7 +8,7 @@ import LevelIndicator from "../game-objects/hud/level-indicator";
 import MovesIndicator from "../game-objects/hud/moves-indicator";
 import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
-import Shop from "../game-objects/hud/shop";
+import Shop from "../game-objects/hud/shop.ts";
 
 export default class Scene extends Phaser.Scene {
   create() {
