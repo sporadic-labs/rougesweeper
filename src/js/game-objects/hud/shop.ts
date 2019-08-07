@@ -1,5 +1,5 @@
 import EventProxy from "../../helpers/event-proxy";
-import store from "../../store";
+import store, { GameStore } from "../../store";
 import GAME_MODES from "../game-manager/events";
 import MobXProxy from "../../helpers/mobx-proxy";
 import TextButton from "./text-button";
@@ -21,17 +21,26 @@ const itemTextStyle = {
 };
 
 export default class Shop {
-  /** @param {Phaser.Scene} scene */
-  constructor(scene, gameStore) {
+  scene: Phaser.Scene;
+  gameStore: GameStore;
+  costs = {
+    heart: 3,
+    attack: 4,
+    compass: 5
+  };
+  buyHeartButton: TextButton;
+  buyAttackButton: TextButton;
+  buyCompassButton: TextButton;
+  container: Phaser.GameObjects.Container;
+  mobProxy: MobXProxy;
+  proxy: EventProxy;
+
+  constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
     this.gameStore = gameStore;
-    this.costs = {
-      heart: 3,
-      attack: 4,
-      compass: 5
-    };
 
-    const { width, height } = scene.game.config;
+    const width = Number(scene.game.config.width);
+    const height = Number(scene.game.config.height);
     const modalWidth = width - 100;
     const modalHeight = 0.6 * height;
 
