@@ -23,6 +23,7 @@ const itemTextStyle = {
 export default class Shop {
   scene: Phaser.Scene;
   gameStore: GameStore;
+  previousGameState: GAME_MODES;
   costs = {
     heart: 3,
     attack: 4,
@@ -100,7 +101,8 @@ export default class Shop {
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(gameStore, "isShopOpen", () => {
-      this.container.setVisible(gameStore.isShopOpen);
+      if (gameStore.isShopOpen) this.openShop();
+      else this.closeShop();
       leaveButton.reset(); // Bug: stays in pressed state, menu closing hides button w/o up event
       this.updateButtons();
     });
@@ -112,6 +114,13 @@ export default class Shop {
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
+
+  openShop = () => {
+    this.gameStore.isShopOpen = true;
+    this.container.setVisible(true);
+    this.previousGameState = this.gameStore.gameState;
+    this.gameStore.setGameState(GAME_MODES.IDLE_MODE);
+  };
 
   updateButtons() {
     const { gameStore, costs, buyHeartButton, buyAttackButton, buyCompassButton } = this;
@@ -131,7 +140,11 @@ export default class Shop {
     buyCompassButton.setVisible(canBuyCompass);
   }
 
-  closeShop = () => (this.gameStore.isShopOpen = false);
+  closeShop = () => {
+    this.gameStore.isShopOpen = false;
+    this.container.setVisible(false);
+    this.gameStore.setGameState(this.previousGameState);
+  };
 
   buyAttack = () => {
     const { gameStore, costs } = this;
