@@ -21,7 +21,6 @@ export default class DebugMenu {
   restartLevelButton: TextButton;
   proxy: EventProxy;
   container: Phaser.GameObjects.Container;
-  previousGameState: GAME_MODES;
   isOpen: boolean = false;
   levelSelectButtons: TextButton[];
   closeButton: TextButton;
@@ -98,14 +97,13 @@ export default class DebugMenu {
     this.isOpen = true;
     this.container.setVisible(true);
     this.resetButtons();
-    this.previousGameState = this.gameStore.gameState;
-    this.gameStore.setGameState(GAME_MODES.IDLE_MODE);
+    this.gameStore.setGameState(GAME_MODES.MENU_MODE);
   };
 
   close = () => {
     this.isOpen = false;
     this.container.setVisible(false);
-    this.gameStore.setGameState(this.previousGameState);
+    this.gameStore.goToPreviousGameState();
   };
 
   resetButtons() {

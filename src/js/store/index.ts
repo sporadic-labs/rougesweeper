@@ -3,6 +3,7 @@ import GAME_MODES from "../game-objects/game-manager/events";
 import { levelKeys } from "./levels";
 
 class GameStore {
+  @observable previousGameState: GAME_MODES;
   @observable gameState: GAME_MODES;
   @observable dangerCount: number;
   @observable goldCount: number;
@@ -18,6 +19,7 @@ class GameStore {
 
   constructor() {
     this.gameState = GAME_MODES.IDLE_MODE;
+    this.previousGameState = this.gameState;
     this.dangerCount = 0;
     this.goldCount = 0;
     this.maxPlayerHealth = 3;
@@ -32,7 +34,11 @@ class GameStore {
   }
 
   @action setGameState(state: GAME_MODES) {
+    this.previousGameState = this.gameState;
     this.gameState = state;
+  }
+  @action goToPreviousGameState() {
+    this.gameState = this.previousGameState;
   }
   @action setDangerCount(count: number) {
     this.dangerCount = count;

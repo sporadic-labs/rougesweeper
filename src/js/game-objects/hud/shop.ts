@@ -23,7 +23,6 @@ const itemTextStyle = {
 export default class Shop {
   scene: Phaser.Scene;
   gameStore: GameStore;
-  previousGameState: GAME_MODES;
   costs = {
     heart: 3,
     attack: 4,
@@ -118,8 +117,7 @@ export default class Shop {
   openShop = () => {
     this.gameStore.isShopOpen = true;
     this.container.setVisible(true);
-    this.previousGameState = this.gameStore.gameState;
-    this.gameStore.setGameState(GAME_MODES.IDLE_MODE);
+    this.gameStore.setGameState(GAME_MODES.MENU_MODE);
   };
 
   updateButtons() {
@@ -143,7 +141,7 @@ export default class Shop {
   closeShop = () => {
     this.gameStore.isShopOpen = false;
     this.container.setVisible(false);
-    this.gameStore.setGameState(this.previousGameState);
+    this.gameStore.goToPreviousGameState();
   };
 
   buyAttack = () => {
