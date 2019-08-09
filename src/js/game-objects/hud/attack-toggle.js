@@ -43,6 +43,13 @@ export default class AttackToggle {
       this.updateAttackCountText(gameStore.attackCount);
     });
     this.mobProxy.observe(gameStore, "gameState", () => {
+      if (!this.disabled) {
+        if (gameStore.gameState === GAME_MODES.MENU_MODE) {
+          this.disableInteractive();
+        } else {
+          this.enableInteractive();
+        }
+      }
       if (gameStore.gameState === GAME_MODES.MOVE_MODE) {
         this.state = TOGGLE_STATES.UP;
         this.attackToggle.getAt(1).alpha = 1;
