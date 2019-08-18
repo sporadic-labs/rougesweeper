@@ -20,7 +20,15 @@ export default class Level {
     this.scene = scene;
     this.events = new Events.EventEmitter();
 
+    // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
+    const tiles = this.map.addTilesetImage("hq-tileset");
+    this.map.layers.forEach(layerData => {
+      // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
+      if (layerData.name === "Foreground" || layerData.name === "Ground") return;
+      this.map.createStaticLayer(layerData.name, tiles);
+    });
+
     this.data = new LevelData(this.map);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
 
