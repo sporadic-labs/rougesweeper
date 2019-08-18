@@ -16,6 +16,12 @@ const neighborOffsets = [
 ];
 
 export default class Level {
+  /**
+   * @param {Phaser.Scene} scene
+   * @param {*} levelKey
+   * @param {*} dialogueManager
+   * @memberof Level
+   */
   constructor(scene, levelKey, dialogueManager) {
     this.scene = scene;
     this.events = new Events.EventEmitter();
