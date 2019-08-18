@@ -4,16 +4,7 @@ import Tile from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
 
-const neighborOffsets = [
-  [1, 0],
-  [1, 1],
-  [0, 1],
-  [-1, 1],
-  [-1, 0],
-  [-1, -1],
-  [0, -1],
-  [1, -1]
-];
+const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 
 export default class Level {
   /**
@@ -42,11 +33,7 @@ export default class Level {
       row.map((type, x) => {
         if (!type) return undefined;
 
-        const dialogueData = dialogueManager.getDialogueDataForTile(
-          levelKey,
-          x,
-          y
-        );
+        const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
 
         const tile = new Tile(
           scene,
