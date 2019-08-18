@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="13" height="10" tilewidth="76" tileheight="76" infinite="0" nextobjectid="17">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="13" height="10" tilewidth="76" tileheight="76" infinite="0" nextlayerid="4" nextobjectid="17">
  <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
   <image source="tiles.png" width="300" height="225"/>
  </tileset>
- <tileset firstgid="13" name="hq-tileset" tilewidth="76" tileheight="76" spacing="2" margin="2" tilecount="39" columns="13">
-  <image source="../../../../../../Sporadic Labs/Rougesweeper/concept/headquarters/hq-tileset.png" width="1014" height="234"/>
+ <tileset firstgid="13" name="hq-tileset" tilewidth="76" tileheight="76" spacing="2" margin="1" tilecount="39" columns="13">
+  <image source="../hq-tileset.png" width="1014" height="234"/>
  </tileset>
- <layer name="Background" width="13" height="10">
+ <layer id="1" name="Background" width="13" height="10">
   <data encoding="csv">
 13,26,26,26,26,26,26,26,26,26,26,26,39,
 14,27,40,40,15,28,28,28,41,40,40,16,29,
@@ -20,7 +20,7 @@
 25,36,49,37,37,37,37,37,37,37,37,37,50
 </data>
  </layer>
- <layer name="Ground" width="13" height="10" locked="1">
+ <layer id="2" name="Ground" width="13" height="10" visible="0" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -34,7 +34,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="Foreground" width="13" height="10" locked="1">
+ <layer id="3" name="Foreground" width="13" height="10" visible="0" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,
