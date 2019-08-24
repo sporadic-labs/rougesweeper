@@ -1,4 +1,7 @@
+import Phaser from "phaser";
 const noop = () => {};
+
+const { TWEEN_COMPLETE } = Phaser.Tweens.Events;
 
 /**
  * A component that can tween along an array of {x, y} points. Control playback via play/stop.
@@ -37,13 +40,7 @@ class PathTween {
 
   play() {
     return new Promise(resolve => {
-      // Empty array for args, Phaser bug
-      this.tween.setCallback("onComplete", () => resolve(), []);
-
-      // Phaser 3.17 and up bug... you can't play a tween that was created in a paused state, so we
-      // need to hack the internal state of the tween so that play will work again. Hopefully this
-      // will be fixed in 3.19.
-      this.tween.state = 1;
+      this.tween.on(TWEEN_COMPLETE, resolve);
       this.tween.play();
     });
   }
