@@ -1,5 +1,6 @@
 import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
+import { fractionToX, fractionToY } from "../../game-dimensions";
 
 export default class HealthIndicator {
   /**
@@ -7,8 +8,9 @@ export default class HealthIndicator {
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    const x = 124;
-    this.text = scene.add.text(x, 600, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
+    this.text = scene.add
+      .text(fractionToX(0.1), fractionToY(0.82), "", { fontSize: 25 })
+      .setOrigin(0.5, 0.5);
 
     this.updateText(gameStore.playerHealth, true);
     this.dispose = autorun(() => this.updateText(gameStore.playerHealth));

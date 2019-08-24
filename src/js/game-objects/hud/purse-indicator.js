@@ -1,5 +1,6 @@
 import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
+import { fractionToX, fractionToY } from "../../game-dimensions";
 
 export default class PurseIndicator {
   /**
@@ -7,8 +8,8 @@ export default class PurseIndicator {
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    const x = this.scene.game.config.width - 100;
-    this.text = scene.add.text(x, 600, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
+    const x = fractionToX(1) - 200;
+    this.text = scene.add.text(x, fractionToY(0.85), "", { fontSize: 25 }).setOrigin(0.5, 0.5);
 
     this.updateText(gameStore.goldCount, true);
     this.dispose = autorun(() => this.updateText(gameStore.goldCount));

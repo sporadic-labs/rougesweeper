@@ -1,5 +1,6 @@
 import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
+import { fractionToX, fractionToY } from "../../game-dimensions";
 
 export default class LevelIndicator {
   /**
@@ -7,8 +8,9 @@ export default class LevelIndicator {
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    const x = this.scene.game.config.width - 106;
-    this.text = scene.add.text(x, 635, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
+    this.text = scene.add
+      .text(fractionToX(1) - 200, fractionToY(0.82), "", { fontSize: 25 })
+      .setOrigin(0.5, 0.5);
 
     this.updateText(gameStore.level, true);
     this.dispose = autorun(() => this.updateText(gameStore.level));

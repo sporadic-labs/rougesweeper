@@ -2,6 +2,7 @@ import EventProxy from "../../helpers/event-proxy";
 import store from "../../store";
 import GAME_MODES from "../../game-objects/game-manager/events";
 import MobXProxy from "../../helpers/mobx-proxy";
+import { fractionToX, fractionToY } from "../../game-dimensions";
 
 const TOGGLE_STATES = {
   UP: "UP",
@@ -14,17 +15,18 @@ export default class AttackToggle {
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    const x = 116;
+    const x = fractionToX(0.1);
+    const startY = fractionToY(0.85);
 
     this.state = TOGGLE_STATES.UP;
 
-    this.attackCountText = scene.add.text(x, 635, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
+    this.attackCountText = scene.add.text(x, startY, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
 
     // Makeshift button for mvp purposes.
     // TODO(rex): Probably replace this with a sprite.
     const buttonWidth = 160;
     const buttonHeight = 40;
-    this.attackToggle = scene.add.container(x, 680, [
+    this.attackToggle = scene.add.container(x, startY + 40, [
       scene.add.rectangle(0, 0, buttonWidth, buttonHeight, 0xbcbcbc, 1).setOrigin(0.5, 0.5),
       scene.add.text(0, 0, "Attack", { fontSize: 25 }).setOrigin(0.5, 0.5),
       scene.add.text(0, 0, "Cancel", { fontSize: 25 }).setOrigin(0.5, 0.5)
