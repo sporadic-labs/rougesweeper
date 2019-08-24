@@ -3,6 +3,7 @@ import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
+import { gameCenter } from "../../game-dimensions";
 
 const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 
@@ -20,11 +21,20 @@ export default class Level {
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
     const tiles = this.map.addTilesetImage("hq-tileset");
-    this.map.layers.forEach(layerData => {
+    const layers = this.map.layers.map(layerData => {
       // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
       if (layerData.name === "Foreground" || layerData.name === "Ground") return;
-      this.map.createStaticLayer(layerData.name, tiles);
+      const layer = this.map.createStaticLayer(layerData.name, tiles);
+      layer.setPosition(
+        gameCenter.x - layer.displayWidth / 2,
+        gameCenter.y - layer.displayHeight / 2
+      );
+      return layer;
     });
+    this.left = layers[0].x;
+    this.top = layers[0].y;
+    this.tileWidth = this.map.tileWidth;
+    this.tileHeight = this.map.tileHeight;
 
     this.data = new LevelData(this.map);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
@@ -119,11 +129,11 @@ export default class Level {
   }
 
   gridXToWorldX(x) {
-    return 50 + x * 80;
+    return this.left + x * this.tileWidth + this.tileWidth / 2;
   }
 
   gridYToWorldY(y) {
-    return 50 + y * 80;
+    return this.top + y * this.tileHeight + this.tileHeight / 2;
   }
 
   hasTileAt(x, y) {
