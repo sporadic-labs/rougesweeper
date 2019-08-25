@@ -1,10 +1,25 @@
-import Phaser, { Events } from "phaser";
+import Phaser, { Events, Geom } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
 
+enum RadialOption {
+  MOVE = "MOVE",
+  HACK = "HACK",
+  CLOSE = "CLOSE"
+}
+
+enum MenuEvents {
+  VALID_OPTION_SELECT = "VALID_OPTION_SELECT",
+  INVALID_OPTION_SELECT = "INVALID_OPTION_SELECT",
+  MENU_CLOSE = "MENU_CLOSE"
+}
+
 class RadialMenuIcon {
+  public events: Events.EventEmitter;
+  public type: RadialOption;
+  public isEnabled = false;
   private scene: Phaser.Scene;
-  private graphic: Phaser.GameObjects.Graphics;
+  private container: Phaser.GameObjects.Container;
   private startX: number;
   private startY: number;
   private endX: number;
@@ -13,56 +28,80 @@ class RadialMenuIcon {
 
   constructor(
     scene: Phaser.Scene,
+    label: RadialOption,
     angle: number,
     menuX: number,
     menuY: number,
     menuRadius: number
   ) {
     this.scene = scene;
+    this.type = label;
     this.startX = menuX;
     this.startY = menuY;
     this.endX = menuX + Math.cos(angle) * menuRadius;
     this.endY = menuY + Math.sin(angle) * menuRadius;
 
-    this.graphic = scene.add.graphics({
+    const circleGraphic = scene.add.graphics({
       fillStyle: { color: 0xf7f7db },
       lineStyle: { width: 5, color: 0xea5efe }
     });
-    this.graphic.fillCircle(0, 0, 30);
-    this.graphic.strokeCircle(0, 0, 30);
-    this.graphic.setVisible(false);
+    circleGraphic.fillCircle(0, 0, 30);
+    circleGraphic.strokeCircle(0, 0, 30);
+
+    const textLabel = scene.add.text(0, 0, label, {
+      fontFamily: "monospace",
+      fontSize: "14px",
+      color: 0xff0000
+    });
+    textLabel.setOrigin(0.5, 0.5);
+
+    this.container = scene.add.container(this.startX, this.startY, [circleGraphic, textLabel]);
+    this.container.setVisible(false);
+
+    const hitbox = new Geom.Circle(0, 0, 30);
+    this.container.setInteractive(hitbox, Geom.Circle.Contains);
+
+    this.events = new Events.EventEmitter();
+    this.container.on("pointerdown", () => this.events.emit("pointerdown"));
+  }
+
+  setEnabled(isEnabled: boolean) {
+    this.isEnabled = isEnabled;
   }
 
   open() {
-    this.graphic.setAlpha(0);
-    this.graphic.setVisible(true);
-    this.graphic.setPosition(this.startX, this.startY);
+    this.container.setAlpha(0);
+    this.container.setVisible(true);
+    this.container.setPosition(this.startX, this.startY);
+    this.container.setInteractive();
     if (this.tween) this.tween.stop();
     this.tween = this.scene.tweens.add({
-      targets: this.graphic,
+      targets: this.container,
       x: this.endX,
       y: this.endY,
-      alpha: 0.95,
+      alpha: this.isEnabled ? 0.95 : 0.5,
       duration: 250
     });
   }
 
   close() {
+    this.container.disableInteractive();
     if (this.tween) this.tween.stop();
     this.tween = this.scene.tweens.add({
-      targets: this.graphic,
+      targets: this.container,
       x: this.startX,
       y: this.startY,
       alpha: 0,
       duration: 250,
       onComplete: () => {
-        this.graphic.setVisible(true);
+        this.container.setVisible(true);
       }
     });
   }
 
   destroy() {
-    // todo
+    if (this.tween) this.tween.stop();
+    this.container.destroy();
   }
 }
 
@@ -91,14 +130,32 @@ class RadialMenu {
     this.graphic.strokeCircle(0, 0, this.radius);
     this.graphic.setVisible(false);
 
-    this.menuIcons = [];
-    for (let a = 0; a < 2 * Math.PI; a += (2 * Math.PI) / 3) {
-      const icon = new RadialMenuIcon(scene, a, x, y, this.radius);
-      this.menuIcons.push(icon);
-    }
+    const labels = [RadialOption.MOVE, RadialOption.HACK, RadialOption.CLOSE];
+    const startAngle = -150 * (Math.PI / 180);
+    this.menuIcons = labels.map((label, i) => {
+      const angle = startAngle + (i / labels.length) * 2 * Math.PI;
+      const icon = new RadialMenuIcon(scene, label, angle, x, y, this.radius);
+      return icon;
+    });
 
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
+
+  setEnabledOptions(options: RadialOption[]) {
+    this.menuIcons.forEach(icon => {
+      const isEnabled = options.includes(icon.type);
+      icon.setEnabled(isEnabled);
+      icon.events.removeAllListeners();
+      if (icon.type === RadialOption.CLOSE) {
+        icon.events.on("pointerdown", () => this.events.emit(MenuEvents.MENU_CLOSE, icon.type));
+      } else {
+        const eventType = isEnabled
+          ? MenuEvents.VALID_OPTION_SELECT
+          : MenuEvents.INVALID_OPTION_SELECT;
+        icon.events.on("pointerdown", () => this.events.emit(eventType, icon.type));
+      }
+    });
   }
 
   open() {
@@ -129,13 +186,15 @@ class RadialMenu {
   }
 
   destroy() {
+    if (this.tween) this.tween.stop();
+    this.menuIcons.forEach(icon => icon.destroy());
     this.scene = undefined;
     this.events.destroy();
     this.graphic.destroy();
-    this.menuIcons.forEach(icon => icon.destroy());
     this.mobProxy.destroy();
     this.proxy.removeAll();
   }
 }
 
 export default RadialMenu;
+export { RadialOption, MenuEvents };
