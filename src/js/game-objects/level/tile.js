@@ -15,6 +15,64 @@ const TYPE_TO_KEY = {
   [TILE_TYPES.KEY]: "key"
 };
 
+const createPickupAnim = (timeline, target) => {
+  return timeline
+    .add({
+      targets: target,
+      ease: Phaser.Math.Easing.Quadratic.Out,
+      duration: 200,
+      scaleX: 1.05,
+      scaleY: 1.05,
+      y: -30
+    })
+    .add({
+      targets: target,
+      duration: 200,
+      ease: Phaser.Math.Easing.Quadratic.In,
+      scaleX: 0.5,
+      scaleY: 0.5,
+      y: 0
+    });
+};
+
+const createAttackAnim = (timeline, target) => {
+  return timeline
+    .add({
+      targets: target,
+      ease: Phaser.Math.Easing.Quadratic.InOut,
+      duration: 200,
+      x: 10,
+      angle: 5
+    })
+    .add({
+      targets: target,
+      duration: 150,
+      ease: Phaser.Math.Easing.Quadratic.In,
+      x: -10,
+      angle: -10
+    })
+    .add({
+      targets: target,
+      duration: 150,
+      ease: Phaser.Math.Easing.Quadratic.Out,
+      scaleX: 0.5,
+      scaleY: 0.5,
+      x: 0,
+      angle: 0
+    });
+};
+
+const createTileDisappearAnim = (timeline, target) => {
+  timeline.add({
+    targets: target,
+    duration: 400,
+    ease: Phaser.Math.Easing.Quadratic.In,
+    scaleX: 0.25,
+    scaleY: 0.25,
+    angle: 720
+  });
+};
+
 export default class Tile {
   /** @param {Phaser.Scene} scene */
   constructor(scene, levelKey, type, x, y, levelEvents, dialogueData = null) {
@@ -22,6 +80,7 @@ export default class Tile {
     this.levelKey = levelKey;
     this.levelEvents = levelEvents;
     this.type = type;
+    this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
 
     this.dialogueData = dialogueData;
     this.dialoguePlayedCounter = 0;
@@ -34,8 +93,10 @@ export default class Tile {
     // Construct the Front Tile based on it's type.
     // It always gets a background title, with an optional top graphic.
     const frontTileSprites = [scene.add.sprite(0, 0, "assets", "tiles/tile-blank")];
-    if (type !== TILE_TYPES.BLANK) {
-      frontTileSprites.push(scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`));
+    this.tileContents = null;
+    if (!this.isCurrentlyBlank) {
+      this.tileContents = scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`);
+      frontTileSprites.push(this.tileContents);
     }
     this.frontTile = scene.add.container(0, 0, frontTileSprites);
 
@@ -49,6 +110,11 @@ export default class Tile {
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
     this.container.setDepth(DEPTHS.GROUND);
+  }
+
+  removeTileContents() {
+    this.tileContents.setVisible(false);
+    this.isCurrentlyBlank = true;
   }
 
   isRevealed() {
@@ -66,71 +132,27 @@ export default class Tile {
 
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();
 
-        const tileGraphic = this.frontTile.getAt(1);
-
         // Setup different animations for the Gold vs. the Enemy graphics.
         if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.KEY) {
-          this.tileGraphicTimeline
-            .add({
-              targets: tileGraphic,
-              ease: Phaser.Math.Easing.Quadratic.Out,
-              duration: 200,
-              scaleX: 1.05,
-              scaleY: 1.05,
-              y: -30
-            })
-            .add({
-              targets: tileGraphic,
-              duration: 200,
-              ease: Phaser.Math.Easing.Quadratic.In,
-              scaleX: 0.5,
-              scaleY: 0.5,
-              y: 0
-            });
+          createPickupAnim(this.tileGraphicTimeline, this.tileContents);
         } else if (this.type === TILE_TYPES.ENEMY) {
-          this.tileGraphicTimeline
-            .add({
-              targets: tileGraphic,
-              ease: Phaser.Math.Easing.Quadratic.InOut,
-              duration: 200,
-              x: 10,
-              angle: 5
-            })
-            .add({
-              targets: tileGraphic,
-              duration: 150,
-              ease: Phaser.Math.Easing.Quadratic.In,
-              x: -10,
-              angle: -10
-            })
-            .add({
-              targets: tileGraphic,
-              duration: 150,
-              ease: Phaser.Math.Easing.Quadratic.Out,
-              scaleX: 0.5,
-              scaleY: 0.5,
-              x: 0,
-              angle: 0,
-              complete: () => {
-                const attackAnim = new AttackAnimation(
-                  this.scene,
-                  "enemy-attack",
-                  playerX - 40,
-                  playerY - 28
-                );
-                attackAnim.fadeout().then(() => attackAnim.destroy());
-              }
-            });
+          createAttackAnim(this.tileGraphicTimeline, this.tileContents);
+          this.tileGraphicTimeline.on("complete", () => {
+            const attackAnim = new AttackAnimation(
+              this.scene,
+              "enemy-attack",
+              playerX - 40,
+              playerY - 28
+            );
+            attackAnim.fadeout().then(() => attackAnim.destroy());
+          });
         }
 
-        this.tileGraphicTimeline
-          .on("complete", () => {
-            tileGraphic.destroy();
-            // Convert this tile to a blank to prevent player interaction.
-            this.type = TILE_TYPES.BLANK;
-            return resolve();
-          })
-          .play();
+        this.tileGraphicTimeline.on("complete", () => {
+          this.removeTileContents();
+          return resolve();
+        });
+        this.tileGraphicTimeline.play();
       } else {
         resolve();
       }
@@ -144,21 +166,10 @@ export default class Tile {
 
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();
 
-        const tileGraphic = this.frontTile.getAt(1);
-
+        createTileDisappearAnim(this.tileGraphicTimeline, this.tileContents);
         this.tileGraphicTimeline
-          .add({
-            targets: tileGraphic,
-            duration: 400,
-            ease: Phaser.Math.Easing.Quadratic.In,
-            scaleX: 0.25,
-            scaleY: 0.25,
-            angle: 720
-          })
           .on("complete", () => {
-            tileGraphic.destroy();
-            // Convert this tile to a blank to prevent player interaction.
-            this.type = TILE_TYPES.BLANK;
+            this.removeTileContents();
             return resolve();
           })
           .play();
@@ -259,7 +270,7 @@ export default class Tile {
       scaleY: 1.1,
       duration: 100
     });
-    this.levelEvents.emit(LEVEL_EVENTS.TILE_OUT, this);
+    this.levelEvents.emit(LEVEL_EVENTS.TILE_OVER, this);
   };
 
   onHoverEnd = () => {
