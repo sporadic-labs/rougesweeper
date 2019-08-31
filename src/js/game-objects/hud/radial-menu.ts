@@ -25,6 +25,7 @@ class RadialMenuIcon {
   private endX: number;
   private endY: number;
   private tween?: Phaser.Tweens.Tween;
+  private radius = 20;
 
   constructor(
     scene: Phaser.Scene,
@@ -43,22 +44,22 @@ class RadialMenuIcon {
 
     const circleGraphic = scene.add.graphics({
       fillStyle: { color: 0xf7f7db },
-      lineStyle: { width: 5, color: 0xea5efe }
+      lineStyle: { width: 4, color: 0xea5e5e }
     });
-    circleGraphic.fillCircle(0, 0, 30);
-    circleGraphic.strokeCircle(0, 0, 30);
+    circleGraphic.fillCircle(0, 0, this.radius);
+    circleGraphic.strokeCircle(0, 0, this.radius);
 
     const textLabel = scene.add.text(0, 0, label, {
       fontFamily: "monospace",
-      fontSize: "14px",
-      color: 0xff0000
+      fontSize: "13px",
+      color: "black"
     });
     textLabel.setOrigin(0.5, 0.5);
 
     this.container = scene.add.container(this.startX, this.startY, [circleGraphic, textLabel]);
     this.container.setVisible(false);
 
-    const hitbox = new Geom.Circle(0, 0, 30);
+    const hitbox = new Geom.Circle(0, 0, this.radius);
     this.container.setInteractive(hitbox, Geom.Circle.Contains);
 
     this.events = new Events.EventEmitter();
@@ -111,7 +112,7 @@ class RadialMenu {
   private menuIcons: RadialMenuIcon[];
   private x: number = 0;
   private y: number = 0;
-  private radius: number = 80;
+  private radius: number = 30;
   private mobProxy = new MobXProxy();
   private proxy = new EventProxy();
   private events: Events.EventEmitter;
@@ -124,7 +125,7 @@ class RadialMenu {
     this.events = new Events.EventEmitter();
 
     this.graphic = scene.add.graphics({
-      lineStyle: { width: 25, color: 0xea5efe, alpha: 0.95 }
+      lineStyle: { width: 15, color: 0xea5e5e, alpha: 0.95 }
     });
     this.graphic.setPosition(this.x, this.y);
     this.graphic.strokeCircle(0, 0, this.radius);
