@@ -14,6 +14,12 @@ enum MenuEvents {
   MENU_CLOSE = "MENU_CLOSE"
 }
 
+const tweenCompletePromise = (tween: Phaser.Tweens.Tween) => {
+  return new Promise(resolve => {
+    tween.once(Phaser.Tweens.Events.TWEEN_COMPLETE, resolve);
+  });
+};
+
 class RadialMenuIcon {
   public events: Events.EventEmitter;
   public type: RadialOption;
@@ -83,6 +89,7 @@ class RadialMenuIcon {
       alpha: this.isEnabled ? 0.95 : 0.5,
       duration: 250
     });
+    return tweenCompletePromise(this.tween);
   }
 
   close() {
@@ -98,6 +105,7 @@ class RadialMenuIcon {
         this.container.setVisible(true);
       }
     });
+    return tweenCompletePromise(this.tween);
   }
 
   destroy() {
@@ -170,6 +178,7 @@ class RadialMenu {
       scaleY: 1,
       duration: 250
     });
+    return tweenCompletePromise(this.tween);
   }
 
   close() {
@@ -184,6 +193,7 @@ class RadialMenu {
         this.graphic.setVisible(false);
       }
     });
+    return tweenCompletePromise(this.tween);
   }
 
   destroy() {
