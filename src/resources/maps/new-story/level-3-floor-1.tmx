@@ -3,6 +3,7 @@
  <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
   <image source="tiles.png" width="300" height="225"/>
  </tileset>
+ <tileset firstgid="13" source="tilesets/lab.tsx"/>
  <layer name="Background" width="24" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

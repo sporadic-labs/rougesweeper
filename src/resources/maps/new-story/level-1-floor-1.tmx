@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="13" height="10" tilewidth="76" tileheight="76" infinite="0" nextlayerid="4" nextobjectid="17">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="13" height="10" tilewidth="76" tileheight="76" infinite="0" nextobjectid="17">
  <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
   <image source="tiles.png" width="300" height="225"/>
  </tileset>
- <tileset firstgid="13" name="hq-tileset" tilewidth="76" tileheight="76" spacing="2" margin="1" tilecount="39" columns="13">
-  <image source="../hq-tileset.png" width="1014" height="234"/>
- </tileset>
- <layer id="1" name="Background" width="13" height="10">
+ <tileset firstgid="13" source="tilesets/hq.tsx"/>
+ <tileset firstgid="113" source="tilesets/temple.tsx"/>
+ <layer name="Background" width="13" height="10">
   <data encoding="csv">
-13,26,26,26,26,26,26,26,26,26,26,26,39,
-14,27,40,40,15,28,28,28,41,40,40,16,29,
-14,42,17,30,30,43,43,43,30,30,18,31,44,
-14,42,19,32,32,32,32,32,32,32,45,31,20,
-14,42,19,32,32,32,32,32,32,32,45,31,20,
-14,42,19,32,32,32,32,32,32,32,45,31,20,
-14,42,19,32,32,32,32,32,32,32,45,31,20,
-14,42,33,46,46,21,21,21,46,46,34,31,20,
-14,47,22,22,35,48,48,48,23,22,22,24,20,
-25,36,49,37,37,37,37,37,37,37,37,37,50
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="2" name="Ground" width="13" height="10" visible="0" locked="1">
+ <layer name="Ground" width="13" height="10" visible="0" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -34,7 +33,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="Foreground" width="13" height="10" visible="0" locked="1">
+ <layer name="Foreground" width="13" height="10" visible="0" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="9" height="4" tilewidth="76" tileheight="76" infinite="0" nextlayerid="12" nextobjectid="17">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="9" height="4" tilewidth="76" tileheight="76" infinite="0" nextobjectid="17">
  <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
   <image source="tiles.png" width="300" height="225"/>
  </tileset>
- <layer id="10" name="Ground" width="9" height="4">
+ <tileset firstgid="13" source="tilesets/warehouse.tsx"/>
+ <layer name="Ground" width="9" height="4">
   <data encoding="csv">
 6,6,6,6,6,6,6,6,6,
 6,6,6,6,6,6,6,6,6,
@@ -11,7 +12,7 @@
 6,6,6,6,6,6,6,6,6
 </data>
  </layer>
- <layer id="11" name="Foreground" width="9" height="4">
+ <layer name="Foreground" width="9" height="4">
   <data encoding="csv">
 0,0,1,10,0,0,1,1,0,
 0,0,1,1,7,0,0,0,2,
