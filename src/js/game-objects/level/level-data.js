@@ -47,18 +47,18 @@ export default class LevelData {
   /** @param {Phaser.Tilemaps.Tilemap} map */
   constructor(map) {
     const { width, height } = map;
-    this.width = width;
-    this.height = height;
-    this.tileWidth = map.tileWidth;
-    this.tileHeight = map.tileHeight;
 
-    this.tiles = create2DArray(width, height, undefined);
+    this.tileWidth = map.tileWidth * 2;
+    this.tileHeight = map.tileHeight * 2;
+
+    // this.tiles = create2DArray(width, height, undefined);
+    const tiles = create2DArray(width, height, undefined);
 
     // Loop over the ground layer, filling in all blanks
     map.setLayer("Ground");
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
-        if (map.getTileAt(x, y)) this.setTileAt(x, y, TILE.BLANK);
+        if (map.getTileAt(x, y)) tiles[y][x] = TILE.BLANK;
       }
     }
 
@@ -69,11 +69,37 @@ export default class LevelData {
         const tile = map.getTileAt(x, y);
         if (tile) {
           const type = tilesetIDToEnum[tile.index];
-          if (type !== undefined) this.setTileAt(x, y, type);
+          if (type !== undefined) tiles[y][x] = type;
           else logger.warn("Unexpected tile index in map");
         }
       }
     }
+
+    let leftOffset = 0;
+    let topOffset = 0;
+
+    // NOTE(rex): Use the Ground layer to determine the "size" of this map.
+    this.tiles = tiles
+      .map(row =>
+        row.filter((value, i) => {
+          if (value && !leftOffset) leftOffset = i;
+          return value;
+        })
+      )
+      .filter((row, i) => {
+        const empty = row.length === 0;
+        if (!empty && !topOffset) topOffset = i;
+        return !empty;
+      });
+
+    this.width = this.tiles[0].length;
+    this.height = this.tiles.length;
+
+    this.leftOffset = leftOffset;
+    this.topOffset = topOffset;
+
+    map.setLayer("Ground");
+    this.topLeftTile = map.getTileAt(leftOffset, topOffset);
 
     const keyLayer = map.getObjectLayer("Key");
     if (keyLayer) {

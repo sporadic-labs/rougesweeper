@@ -20,30 +20,53 @@ export default class Level {
 
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
-    const tiles = this.map.addTilesetImage("hq-tileset");
-    const layers = this.map.layers.map(layerData => {
+    let tilesSetImage = null;
+    const levelKeyParts = levelKey.split("-");
+    switch (levelKeyParts[1]) {
+      case "1":
+      default:
+        tilesSetImage = this.map.addTilesetImage("hq");
+        break;
+      case "2":
+        tilesSetImage = this.map.addTilesetImage("warehouse");
+        break;
+      case "3":
+        tilesSetImage = this.map.addTilesetImage("lab");
+        break;
+      case "4":
+        tilesSetImage = this.map.addTilesetImage("skyscraper");
+        break;
+      case "5":
+        tilesSetImage = this.map.addTilesetImage("temple");
+        break;
+    }
+    this.map.layers.forEach(layerData => {
       // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
-      if (layerData.name === "Foreground" || layerData.name === "Ground") return;
-      const layer = this.map.createStaticLayer(layerData.name, tiles);
+      if (!layerData.name === "Background") return;
+      const layer = this.map.createStaticLayer(layerData.name, tilesSetImage);
       layer.setPosition(
         gameCenter.x - layer.displayWidth / 2,
         gameCenter.y - layer.displayHeight / 2
       );
-      return layer;
     });
-    this.left = layers[0].x;
-    this.top = layers[0].y;
-    this.tileWidth = this.map.tileWidth;
-    this.tileHeight = this.map.tileHeight;
 
     this.data = new LevelData(this.map);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
+
+    this.left = this.data.topLeftTile.getLeft();
+    this.top = this.data.topLeftTile.getTop();
+    this.tileWidth = this.map.tileWidth * 2;
+    this.tileHeight = this.map.tileHeight * 2;
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
         if (!type) return undefined;
 
-        const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
+        const dialogueData = dialogueManager.getDialogueDataForTile(
+          levelKey,
+          x,
+          y
+        );
 
         const tile = new Tile(
           scene,
