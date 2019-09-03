@@ -113,7 +113,7 @@ export default class LevelData {
       enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
     }
 
-    this.isExitLocked = map.findTile(tile => tile.index === 10);
+    this.isExitLocked = this.hasTileOfType(TILE.KEY);
     this.startPosition = this.getPositionOf(TILE.START);
     this.exitPosition = this.getPositionOf(TILE.EXIT);
   }
@@ -214,12 +214,17 @@ export default class LevelData {
     return this.tiles[y][x];
   }
 
+  hasTileOfType(tileType) {
+    return this.getPositionOf(tileType) ? true : false;
+  }
+
   getPositionOf(tileType) {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
         if (this.tiles[y][x] === tileType) return { x, y };
       }
     }
+    return null;
   }
 
   getAllPositionsOf(tileType) {
