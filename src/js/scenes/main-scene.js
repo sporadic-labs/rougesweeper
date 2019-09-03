@@ -12,10 +12,6 @@ import Shop from "../game-objects/hud/shop.ts";
 
 export default class Scene extends Phaser.Scene {
   create() {
-    this.add
-      .tileSprite(0, 0, 750, 750, "assets", "subtle-pattern-ep-natural-black")
-      .setOrigin(0, 0);
-
     store.startNewGame();
 
     const player = new Player(this, 0, 0);
