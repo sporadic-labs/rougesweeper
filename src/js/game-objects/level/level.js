@@ -210,18 +210,20 @@ export default class Level {
         }
       })
     );
-    if (allowNeighbor) {
-      // Breadth-first search around the player to explore all walkable tiles that are reachable by
-      // the player. For each tile, check its direct neighbors. If a direct neighbor isn't walkable,
-      // it should be made walkable.
+    this.pathFinder.update();
+
+    const isDestinationBlocked = !this.pathFinder.isWalkableAt(tilePos.x, tilePos.y);
+    if (isDestinationBlocked && allowNeighbor) {
+      // Player's destination is unwalkable, so do a breadth-first search around player to see if
+      // the destination is a direct neighbor (one step away) from a walkable tile.
+      let newDestination = null;
       const pointsQueue = [playerPos];
       const visitedPoints = [];
-      const newlyWalkablePoints = [];
       const isPointInArray = (p1, array) => array.some(p2 => p1.x === p2.x && p1.y === p2.y);
-      while (pointsQueue.length !== 0) {
+      while (!newDestination && pointsQueue.length !== 0) {
         const { x, y } = pointsQueue.shift();
         visitedPoints.push({ x, y });
-        neighborOffsets.forEach(([dx, dy]) => {
+        for (const [dx, dy] of neighborOffsets) {
           const nx = x + dx;
           const ny = y + dy;
           const np = { x: nx, y: ny };
@@ -234,19 +236,30 @@ export default class Level {
             } else {
               const tile = this.tiles[ny][nx];
               if (
+                tilePos.x === nx &&
+                tilePos.y === ny &&
                 tile &&
-                (!tile.isRevealed() || tile.type !== TILE_TYPES.WALL) &&
-                !isPointInArray(np, newlyWalkablePoints)
-              )
-                newlyWalkablePoints.push(np);
+                (!tile.isRevealed || tile.type !== TILE_TYPES.WALL)
+              ) {
+                // We've found a walkable tile that directly neighbors the desired destination, so
+                // we can use that for path finding.
+                newDestination = { x, y };
+                break;
+              }
             }
           }
-        });
+        }
       }
-      newlyWalkablePoints.forEach(p => this.pathFinder.setWalkableAt(p.x, p.y));
+      if (!newDestination) return null;
+
+      // Find path to our modified destination and add in the final step from the walkable neighbor
+      // to the unwalkable original destination.
+      const path = this.pathFinder.findPath(playerPos, newDestination);
+      if (path) return [...path, tilePos];
+      else return path;
+    } else {
+      return this.pathFinder.findPath(playerPos, tilePos);
     }
-    this.pathFinder.update();
-    return this.pathFinder.findPath(playerPos, tilePos);
   }
 
   fadeLevelOut() {
