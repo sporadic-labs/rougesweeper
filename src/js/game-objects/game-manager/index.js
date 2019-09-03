@@ -122,9 +122,6 @@ export default class GameManager {
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
 
-      if (tile.type === TILE_TYPES.KEY) store.setHasKey(true);
-      else if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
-
       // Don't move to a freshly revealed wall or exit.
       const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
       if (shouldMoveToTile) {
@@ -138,7 +135,9 @@ export default class GameManager {
     this.updateEnemyCount();
     this.dialogueManager.playDialogueFromTile(currentTile);
 
-    if (currentTile.type === TILE_TYPES.EXIT) {
+    if (currentTile.type === TILE_TYPES.KEY) {
+      store.setHasKey(true);
+    } else if (currentTile.type === TILE_TYPES.EXIT) {
       if (this.level.isExitLocked() && !store.hasKey) {
         this.toastManager.setMessage("Door is locked - you need a key.");
       } else if (store.levelIndex >= 8) {
