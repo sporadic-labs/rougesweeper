@@ -200,8 +200,8 @@ export default class Level {
    * Find an A* path between the player and tile position if it exists.
    * @param {{x,y}} playerPos
    * @param {{x,y}} tilePos
-   * @param {boolean} allowNeighbor Whether or not to allow face down tiles neighboring the player
-   * position in the path (e.g. when attempting to move to a new face down tile, set this to true).
+   * @param {boolean} allowNeighbor Whether or not to allow player to take one step beyond the
+   * currently revealed tiles (i.e. step from a revealed tile to the neighboring unrevealed tile).
    */
   findPathBetween(playerPos, tilePos, allowNeighbor = false) {
     // Note: this is inefficient, but ensures the pathfinder is up-to-date. To optimize, level needs
@@ -211,16 +211,16 @@ export default class Level {
       row.map((tile, x) => {
         if (tile && tile.isRevealed() && tile.type !== TILE_TYPES.WALL) {
           this.pathFinder.setWalkableAt(x, y);
+          if (allowNeighbor) {
+            neighborOffsets.forEach(([dx, dy]) => {
+              const nx = x + dx;
+              const ny = y + dy;
+              if (this.hasTileAt(nx, ny)) this.pathFinder.setWalkableAt(nx, ny);
+            });
+          }
         }
       })
     );
-    if (allowNeighbor) {
-      neighborOffsets.forEach(([dx, dy]) => {
-        const nx = playerPos.x + dx;
-        const ny = playerPos.y + dy;
-        if (this.hasTileAt(nx, ny)) this.pathFinder.setWalkableAt(nx, ny);
-      });
-    }
     this.pathFinder.update();
     return this.pathFinder.findPath(playerPos, tilePos);
   }
