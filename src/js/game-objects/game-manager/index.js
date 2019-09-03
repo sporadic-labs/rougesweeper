@@ -7,7 +7,6 @@ import AttackAnimation from "../player/attack-animation";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { SCENE_NAME } from "../../scenes/index";
 import EventProxy from "../../helpers/event-proxy";
-import Compass from "../hud/compass";
 import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
@@ -49,10 +48,6 @@ export default class GameManager {
           }
           break;
       }
-    });
-    this.mobProxy.observe(store, "hasCompass", () => {
-      if (this.compass) this.compass.destroy();
-      if (store.hasCompass) this.compass = new Compass(this.scene, this.player, this.level);
     });
     this.mobProxy.observe(store, "levelIndex", () => this.startLevel());
 
@@ -239,7 +234,6 @@ export default class GameManager {
     }
 
     store.setGameState(GAME_MODES.IDLE_MODE);
-    store.setHasCompass(false);
     store.setHasKey(false);
 
     this.level = new Level(this.scene, store.level, this.dialogueManager);
