@@ -12,6 +12,7 @@ import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
 import DialogueManager from "../hud/dialogue-manager";
+import RadialMenu, { RadialOption, MenuEvents } from "../hud/radial-menu";
 
 export default class GameManager {
   /**
@@ -38,14 +39,8 @@ export default class GameManager {
       }
     });
     this.mobProxy.observe(store, "gameState", () => {
+      console.log(store.gameState);
       switch (store.gameState) {
-        case GAME_MODES.ATTACK_MODE:
-          this.startAttackFlow();
-          break;
-        case GAME_MODES.MOVE_MODE:
-          this.startMoveFlow();
-          break;
-        case GAME_MODES.IDLE_MODE:
         case GAME_MODES.MENU_MODE:
         default:
           // Remove event listeners from the current level
@@ -68,135 +63,136 @@ export default class GameManager {
     this.startLevel();
   }
 
-  startMoveFlow() {
+  startIdleFlow() {
     this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
-      if (
-        this.player.getGridPosition().x === tile.getGridPosition().x &&
-        this.player.getGridPosition().y === tile.getGridPosition().y
-      ) {
-        // Don't go to tile you are already at!
-        return;
-      }
-
-      const tileType = tile.type; // Cache type since revealing alters the type
+    this.level.events.on(LEVEL_EVENTS.TILE_OVER, tile => {
+      const playerGridPos = this.player.getGridPosition();
       const tileGridPos = tile.getGridPosition();
+      const tileWorldPos = tile.getPosition();
       const isRevealed = tile.isRevealed();
-      const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
-      const path = this.level.findPathBetween(
-        this.player.getGridPosition(),
-        tileGridPos,
-        !isRevealed
-      );
 
-      if (!path) {
-        this.toastManager.setMessage("Tile is too far away to move there.");
-        return;
+      if (this.menu) {
+        if (this.menu.x === tileWorldPos.x && this.menu.y === tileWorldPos.y) return;
+        this.menu.destroy();
+        this.menu = null;
       }
 
-      this.level.disableAllTiles();
-      if (!isRevealed) {
-        await tile.flipToFront();
-        this.applyTileEffect(tile);
-        const { x, y } = this.player.getPosition();
-        await tile.playTileEffectAnimation(x, y);
-        if (tileType === TILE_TYPES.KEY) store.setHasKey(true);
-        else if (tileType === TILE_TYPES.EXIT) store.setHasCompass(false);
-      } else {
-        if (tileType === TILE_TYPES.EXIT) {
-          if (this.level.isExitLocked() && !store.hasKey) {
-            this.toastManager.setMessage("Door is locked - you need a key.");
-          } else if (store.levelIndex >= 8) {
-            this.scene.scene.stop();
-            this.scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: true });
-            return;
-          } else {
-            await this.movePlayerAlongPath(path);
-            store.nextLevel();
-            return;
-          }
-        } else if (tileType === TILE_TYPES.SHOP) {
-          await this.movePlayerAlongPath(path);
-          this.applyTileEffect(tile);
-        } else if (tileType === TILE_TYPES.KEY) {
-          store.setHasKey(true);
-          const { x, y } = this.player.getPosition();
-          await tile.playTileEffectAnimation(x, y);
+      // Don't interact with the current tile on which player is standing.
+      if (playerGridPos.x === tileGridPos.x && playerGridPos.y === tileGridPos.y) return;
+
+      const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
+
+      this.menu = new RadialMenu(this.scene, tileWorldPos.x, tileWorldPos.y);
+      const options = [RadialOption.CLOSE];
+      if (path) {
+        if (!isRevealed) options.push(RadialOption.HACK);
+        if (!isRevealed || tile.type !== TILE_TYPES.WALL) options.push(RadialOption.MOVE);
+      }
+      this.menu.setEnabledOptions(options);
+      this.menu.open();
+      this.menu.events.on(MenuEvents.VALID_OPTION_SELECT, async type => {
+        this.menu.close();
+        if (type === RadialOption.MOVE) {
+          await this.runMoveFlow(tile, path);
+        } else if (type === RadialOption.HACK) {
+          await this.runAttackFlow(tile, path);
         }
-      }
-
-      if (shouldMoveToTile) await this.movePlayerAlongPath(path);
-      this.updateEnemyCount();
-
-      this.dialogueManager.playDialogueFromTile(tile);
-
-      if (store.dangerCount === 0) {
-        const pos = this.player.getGridPosition();
-        this.level.getNeighboringTiles(pos.x, pos.y).map(tile => {
-          tile.flipToFront();
-        });
-      }
-
-      this.level.enableAllTiles();
-
-      store.addMove();
+        this.startIdleFlow();
+      });
+      this.menu.events.on(MenuEvents.INVALID_OPTION_SELECT, type => {
+        let message;
+        if (type === RadialOption.MOVE) message = "You can't move there.";
+        else if (type === RadialOption.HACK) message = "You can't attack that tile.";
+        this.toastManager.setMessage(message);
+      });
+      this.menu.events.on(MenuEvents.MENU_CLOSE, () => this.menu.close());
     });
   }
 
-  startAttackFlow() {
-    this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT, async tile => {
-      const tileGridPos = tile.getGridPosition();
-      const inRange = this.level.isTileInPlayerRange(this.player.getGridPosition(), tileGridPos);
+  async runMoveFlow(tile, path) {
+    this.level.disableAllTiles();
+    store.addMove();
 
-      if (!inRange) {
-        this.toastManager.setMessage("That tile is too far away to attack.");
-        return;
-      }
+    const isRevealed = tile.isRevealed();
+    if (isRevealed) {
+      await this.movePlayerAlongPath(path);
+    } else {
+      if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
 
-      if (tile.isRevealed()) {
-        this.toastManager.setMessage("You can't attack a face up tile.");
-        return;
-      }
-
-      this.level.disableAllTiles();
       await tile.flipToFront();
-      store.removeAttack();
-      const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
-      const { x, y } = tile.getPosition();
-      const attackAnim = new AttackAnimation(this.scene, "player-attack", x - 40, y - 10);
-      await Promise.all([
-        attackAnim.fadeout().then(() => attackAnim.destroy()),
-        tile.playTileDestructionAnimation()
-      ]);
-      if (shouldGetCoin) {
-        const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
-        await coinAnim.play();
-        coinAnim.destroy();
-        store.addGold();
-      }
+      this.applyTileEffect(tile);
+      const { x, y } = this.player.getPosition();
+      await tile.playTileEffectAnimation(x, y);
 
-      if (tile.type !== TILE_TYPES.EXIT && tile.type !== TILE_TYPES.WALL) {
+      if (tile.type === TILE_TYPES.KEY) store.setHasKey(true);
+      else if (tile.type === TILE_TYPES.EXIT) store.setHasCompass(false);
+
+      // Don't move to a freshly revealed wall or exit.
+      const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
+      if (shouldMoveToTile) {
+        const tileGridPos = tile.getGridPosition();
         await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
       }
-      this.updateEnemyCount();
-      this.level.enableAllTiles();
+    }
 
-      if (store.dangerCount === 0) {
-        const pos = this.player.getGridPosition();
-        this.level.getNeighboringTiles(pos.x, pos.y).map(tile => {
-          tile.flipToFront();
-        });
+    const playerGridPos = this.player.getGridPosition();
+    const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
+    this.updateEnemyCount();
+    this.dialogueManager.playDialogueFromTile(currentTile);
+
+    if (currentTile.type === TILE_TYPES.EXIT) {
+      if (this.level.isExitLocked() && !store.hasKey) {
+        this.toastManager.setMessage("Door is locked - you need a key.");
+      } else if (store.levelIndex >= 8) {
+        this.scene.scene.stop();
+        this.scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: true });
+        return;
+      } else {
+        store.nextLevel();
+        return;
       }
+    }
 
-      store.setGameState(GAME_MODES.MOVE_MODE);
-    });
+    this.level.enableAllTiles();
+    this.startIdleFlow();
+  }
+
+  async runAttackFlow(tile, path) {
+    this.level.disableAllTiles();
+
+    if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
+    await tile.flipToFront();
+    store.removeAttack();
+    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
+    const { x, y } = tile.getPosition();
+    const attackAnim = new AttackAnimation(this.scene, "player-attack", x - 40, y - 10);
+    await Promise.all([
+      attackAnim.fadeout().then(() => attackAnim.destroy()),
+      tile.playTileDestructionAnimation()
+    ]);
+    if (shouldGetCoin) {
+      const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
+      await coinAnim.play();
+      coinAnim.destroy();
+      store.addGold();
+    }
+
+    if (tile.type !== TILE_TYPES.EXIT && tile.type !== TILE_TYPES.WALL) {
+      await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+    }
+    this.updateEnemyCount();
+
+    this.level.enableAllTiles();
+    this.startIdleFlow();
   }
 
   updateEnemyCount() {
     const pos = this.player.getGridPosition();
     const enemyCount = this.level.countNeighboringEnemies(pos.x, pos.y);
     store.setDangerCount(enemyCount);
+    if (enemyCount === 0) {
+      this.level.getNeighboringTiles(pos.x, pos.y).map(tile => tile.flipToFront());
+    }
     this.updateRadar();
   }
 
@@ -272,7 +268,7 @@ export default class GameManager {
     this.radar.setVisible(true);
     this.updateRadar(false);
 
-    store.setGameState(GAME_MODES.MOVE_MODE);
+    this.startIdleFlow();
   }
 
   async updateRadar(shouldAnimateUpdate = true) {
