@@ -211,16 +211,44 @@ export default class Level {
       row.map((tile, x) => {
         if (tile && tile.isRevealed() && tile.type !== TILE_TYPES.WALL) {
           this.pathFinder.setWalkableAt(x, y);
-          if (allowNeighbor) {
-            neighborOffsets.forEach(([dx, dy]) => {
-              const nx = x + dx;
-              const ny = y + dy;
-              if (this.hasTileAt(nx, ny)) this.pathFinder.setWalkableAt(nx, ny);
-            });
-          }
         }
       })
     );
+    if (allowNeighbor) {
+      // Breadth-first search around the player to explore all walkable tiles that are reachable by
+      // the player. For each tile, check its direct neighbors. If a direct neighbor isn't walkable,
+      // it should be made walkable.
+      const pointsQueue = [playerPos];
+      const visitedPoints = [];
+      const newlyWalkablePoints = [];
+      const isPointInArray = (p1, array) => array.some(p2 => p1.x === p2.x && p1.y === p2.y);
+      while (pointsQueue.length !== 0) {
+        const { x, y } = pointsQueue.shift();
+        visitedPoints.push({ x, y });
+        neighborOffsets.forEach(([dx, dy]) => {
+          const nx = x + dx;
+          const ny = y + dy;
+          const np = { x: nx, y: ny };
+          if (this.pathFinder.isInBounds(nx, ny)) {
+            if (this.pathFinder.isWalkableAt(nx, ny)) {
+              // Only add to queue if we haven't visited or aren't already planning on visiting.
+              if (!isPointInArray(np, pointsQueue) && !isPointInArray(np, visitedPoints)) {
+                pointsQueue.push(np);
+              }
+            } else {
+              const tile = this.tiles[ny][nx];
+              if (
+                tile &&
+                (!tile.isRevealed() || tile.type !== TILE_TYPES.WALL) &&
+                !isPointInArray(np, newlyWalkablePoints)
+              )
+                newlyWalkablePoints.push(np);
+            }
+          }
+        });
+      }
+      newlyWalkablePoints.forEach(p => this.pathFinder.setWalkableAt(p.x, p.y));
+    }
     this.pathFinder.update();
     return this.pathFinder.findPath(playerPos, tilePos);
   }
