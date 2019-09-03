@@ -105,6 +105,7 @@ export default class Tile {
 
     this.container.alpha = 0;
 
+    this.isRevealed = false;
     this.flipEffect = new FlipEffect(scene, this.frontTile, this.backSprite);
     this.flipEffect.setToBack();
 
@@ -115,10 +116,6 @@ export default class Tile {
   removeTileContents() {
     this.tileContents.setVisible(false);
     this.isCurrentlyBlank = true;
-  }
-
-  isRevealed() {
-    return this.flipEffect.flipProgress === 1;
   }
 
   playTileEffectAnimation(playerX, playerY) {
@@ -285,6 +282,7 @@ export default class Tile {
   };
 
   flipToFront() {
+    this.isRevealed = true;
     return new Promise(resolve => {
       this.flipEffect.events.once("complete", resolve);
       this.flipEffect.flipToFront();
@@ -292,6 +290,7 @@ export default class Tile {
   }
 
   flipToBack() {
+    this.isRevealed = false;
     return new Promise(resolve => {
       this.flipEffect.events.once("complete", resolve);
       this.flipEffect.flipToBack();

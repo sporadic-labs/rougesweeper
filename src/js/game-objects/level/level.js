@@ -91,7 +91,7 @@ export default class Level {
 
   highlightTiles(playerPos) {
     this.forEachTile(tile => {
-      if (tile.isRevealed() || this.isTileInPlayerRange(playerPos, tile.getGridPosition())) {
+      if (tile.isRevealed || this.isTileInPlayerRange(playerPos, tile.getGridPosition())) {
         tile.highlight();
       } else {
         tile.unhighlight();
@@ -205,7 +205,7 @@ export default class Level {
     this.pathFinder.setAllUnwalkable();
     this.tiles.map((row, y) =>
       row.map((tile, x) => {
-        if (tile && tile.isRevealed() && tile.type !== TILE_TYPES.WALL) {
+        if (tile && tile.isRevealed && tile.type !== TILE_TYPES.WALL) {
           this.pathFinder.setWalkableAt(x, y);
         }
       })

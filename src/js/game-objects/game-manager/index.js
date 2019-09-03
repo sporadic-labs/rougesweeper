@@ -69,7 +69,6 @@ export default class GameManager {
       const playerGridPos = this.player.getGridPosition();
       const tileGridPos = tile.getGridPosition();
       const tileWorldPos = tile.getPosition();
-      const isRevealed = tile.isRevealed();
 
       if (this.menu) {
         if (this.menu.x === tileWorldPos.x && this.menu.y === tileWorldPos.y) return;
@@ -85,8 +84,8 @@ export default class GameManager {
       this.menu = new RadialMenu(this.scene, tileWorldPos.x, tileWorldPos.y);
       const options = [RadialOption.CLOSE];
       if (path) {
-        if (!isRevealed) options.push(RadialOption.HACK);
-        if (!isRevealed || tile.type !== TILE_TYPES.WALL) options.push(RadialOption.MOVE);
+        if (!tile.isRevealed) options.push(RadialOption.HACK);
+        if (!tile.isRevealed || tile.type !== TILE_TYPES.WALL) options.push(RadialOption.MOVE);
       }
       this.menu.setEnabledOptions(options);
       this.menu.open();
@@ -113,8 +112,7 @@ export default class GameManager {
     this.level.disableAllTiles();
     store.addMove();
 
-    const isRevealed = tile.isRevealed();
-    if (isRevealed) {
+    if (tile.isRevealed) {
       await this.movePlayerAlongPath(path);
     } else {
       if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
