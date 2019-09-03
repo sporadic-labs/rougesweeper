@@ -62,11 +62,7 @@ export default class Level {
       row.map((type, x) => {
         if (!type) return undefined;
 
-        const dialogueData = dialogueManager.getDialogueDataForTile(
-          levelKey,
-          x,
-          y
-        );
+        const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
 
         const tile = new Tile(
           scene,
