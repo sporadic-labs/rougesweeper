@@ -34,6 +34,14 @@ export default class PathFinder {
     this.grid[y][x] = LOCATION.UNWALKABLE;
   }
 
+  isInBounds(x, y) {
+    return x >= 0 && x < this.width && y >= 0 && y < this.height;
+  }
+
+  isWalkableAt(x, y) {
+    return this.grid[y][x] === LOCATION.WALKABLE;
+  }
+
   update() {
     this.easyStar.setGrid(this.grid);
   }
@@ -43,5 +51,10 @@ export default class PathFinder {
     this.easyStar.findPath(start.x, start.y, end.x, end.y, p => (path = p));
     this.easyStar.calculate();
     return path;
+  }
+
+  dump() {
+    const string = this.grid.map(row => row.join(" ")).join("\n");
+    console.log(string);
   }
 }
