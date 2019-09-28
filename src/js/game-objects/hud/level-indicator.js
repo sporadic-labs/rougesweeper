@@ -2,11 +2,12 @@ import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
+import { levelData as allLevelData } from "../../store/levels";
 
 const textStyle = {
   fill: "#ffffff",
   align: "center",
-  fontSize: 30,
+  fontSize: 26,
   fontStyle: "bold"
 };
 export default class LevelIndicator {
@@ -37,7 +38,10 @@ export default class LevelIndicator {
   }
 
   updateText(level) {
-    this.text.setText(`Level: ${level}`);
+    const levelData = allLevelData.find(data => data.level === level);
+    if (levelData) {
+      this.text.setText(`${levelData.title}\n${levelData.subtitle}`);
+    }
   }
 
   destroy() {
