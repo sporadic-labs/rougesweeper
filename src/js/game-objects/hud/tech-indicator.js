@@ -1,6 +1,7 @@
 import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
+import DEPTHS from "../depths";
 
 const textStyle = {
   fill: "#585e5e",
@@ -38,11 +39,13 @@ export default class TechIndicator {
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0.5, 0.5);
 
-    this.container = scene.add.container(fractionToX(0.17), fractionToY(0.88), [
-      this.background,
-      this.sprite,
-      this.text
-    ]);
+    this.container = scene.add
+      .container(fractionToX(0.17), fractionToY(0.88), [
+        this.background,
+        this.sprite,
+        this.text
+      ])
+      .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.goldCount, true);
     this.dispose = autorun(() => this.updateText(gameStore.goldCount));

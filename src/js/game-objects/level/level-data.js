@@ -51,7 +51,6 @@ export default class LevelData {
     this.tileWidth = map.tileWidth * 2;
     this.tileHeight = map.tileHeight * 2;
 
-    // this.tiles = create2DArray(width, height, undefined);
     const tiles = create2DArray(width, height, undefined);
 
     // Loop over the ground layer, filling in all blanks

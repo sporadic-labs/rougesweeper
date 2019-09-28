@@ -3,9 +3,19 @@ import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
+import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
 
-const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
+const neighborOffsets = [
+  [1, 0],
+  [1, 1],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+  [0, -1],
+  [1, -1]
+];
 
 export default class Level {
   /**
@@ -48,6 +58,7 @@ export default class Level {
         gameCenter.x - layer.displayWidth / 2,
         gameCenter.y - layer.displayHeight / 2
       );
+      layer.setDepth(DEPTHS.GROUND);
     });
 
     this.data = new LevelData(this.map);
