@@ -2,7 +2,7 @@ import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 
-export default class HealthIndicator {
+export default class AlertIndicator {
   /**
    * @param {Phaser.Scene} scene
    */
