@@ -8,9 +8,16 @@ export default class LevelIndicator {
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    this.text = scene.add
-      .text(fractionToX(1) - 200, fractionToY(0.82), "", { fontSize: 25 })
+    this.text = scene.add.text(0, 0, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
+
+    this.background = scene.add
+      .rectangle(0, 0, 200, 200, 0x585e5e)
       .setOrigin(0.5, 0.5);
+
+    this.container = scene.add.container(fractionToX(0.5), fractionToY(0.9), [
+      this.background,
+      this.text
+    ]);
 
     this.updateText(gameStore.level, true);
     this.dispose = autorun(() => this.updateText(gameStore.level));
