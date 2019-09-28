@@ -18,7 +18,7 @@ const containerPos = fraction => {
   }
 };
 
-export default class PurseIndicator {
+export default class TechIndicator {
   /**
    * @param {Phaser.Scene} scene
    */
