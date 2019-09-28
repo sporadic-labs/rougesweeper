@@ -9,17 +9,32 @@ const textStyle = {
   fontStyle: "bold"
 };
 
+const containerHeight = 120;
+const containerPos = fraction => {
+  if (fraction > 0.5) {
+    return containerHeight * (fraction - 0.5);
+  } else {
+    return -(containerHeight * (0.5 - fraction));
+  }
+};
+
 export default class PurseIndicator {
   /**
    * @param {Phaser.Scene} scene
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    this.sprite = scene.add.sprite(0, 0, "assets", `tiles/tile-back`);
-    this.text = scene.add.text(0, 0, "0", textStyle).setOrigin(0.5, 0.5);
+
+    this.sprite = scene.add
+      .sprite(0, containerPos(0.35), "assets", "ui/tech-icon")
+      .setOrigin(0.5, 0.5);
+
+    this.text = scene.add
+      .text(0, containerPos(0.75), "0", textStyle)
+      .setOrigin(0.5, 0.5);
 
     this.background = scene.add
-      .rectangle(0, 0, 96, 120, 0xffffff)
+      .rectangle(0, 0, 96, containerHeight, 0xffffff)
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0.5, 0.5);
 
