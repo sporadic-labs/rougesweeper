@@ -11,7 +11,7 @@ const containerId = "game-container";
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
-  backgroundColor: "#000",
+  backgroundColor: "#a79279",
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

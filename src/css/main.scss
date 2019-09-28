@@ -7,12 +7,13 @@ body {
 body {
   width: 100vw;
   height: 100vh;
-  background-color: black;
-  color: white;
 }
 
 #root,
 #game-container {
   width: 100vw;
   height: 100vh;
+  // background-color: #a79279; // NOTE(rex): Uncomment to make the background the same color as the game canvas bg...
+  background-color: #8c7a68;
+  color: #f7f7eb;
 }
