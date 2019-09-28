@@ -2,15 +2,53 @@ import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 
+const FRAMES = {
+  FILLED: "ui/alert-icon-filled",
+  UNFILLED: "ui/alert-icon-unfilled"
+};
+
 export default class AlertIndicator {
   /**
    * @param {Phaser.Scene} scene
    */
   constructor(scene, gameStore) {
     this.scene = scene;
+
     this.text = scene.add
-      .text(fractionToX(0.1), fractionToY(0.82), "", { fontSize: 25 })
-      .setOrigin(0.5, 0.5);
+      .text(0, 0, "Alert", { fontSize: 20, fill: "#000000", fontStyle: "bold" })
+      .setOrigin(0.5, 0);
+
+    this.icons = [
+      scene.add.image(0, 0, "assets", FRAMES.UNFILLED),
+      scene.add.image(0, 0, "assets", FRAMES.UNFILLED),
+      scene.add.image(0, 0, "assets", FRAMES.UNFILLED)
+    ];
+
+    const iconSpacing = 2;
+    const iconHeight = this.icons[0].height;
+    const bgPadding = { x: 4, y: 25 };
+    const bgWidth = 96;
+
+    this.text.setPosition(bgWidth / 2, bgPadding.y);
+
+    const iconStartY = this.text.y + this.text.height + 15;
+    this.icons.forEach((icon, i) => {
+      icon.setOrigin(0.5, 0);
+      icon.x = bgWidth / 2;
+      icon.y = iconStartY + (iconHeight + iconSpacing) * i;
+    });
+
+    const bgHeight = this.icons[2].y + iconHeight + bgPadding.y;
+    this.background = scene.add
+      .rectangle(0, 0, bgWidth, bgHeight, 0xffffff)
+      .setStrokeStyle(8, 0x585e5e, 1)
+      .setOrigin(0, 0);
+
+    this.container = scene.add.container(fractionToX(0.14), fractionToY(0.17), [
+      this.background,
+      this.text,
+      ...this.icons
+    ]);
 
     this.updateText(gameStore.playerHealth, true);
     this.dispose = autorun(() => this.updateText(gameStore.playerHealth));
@@ -21,7 +59,11 @@ export default class AlertIndicator {
   }
 
   updateText(playerHealth) {
-    this.text.setText(`Alert: ${3 - playerHealth}/3`);
+    const alertLevel = 3 - playerHealth;
+    this.icons.forEach((icon, i) => {
+      const frame = i < alertLevel ? FRAMES.FILLED : FRAMES.UNFILLED;
+      icon.setFrame(frame);
+    });
   }
 
   destroy() {
