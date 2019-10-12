@@ -27,14 +27,12 @@ const levelKeys = levelData.map(({ level }) => level);
  * @param scene
  */
 function loadLevels(scene: Phaser.Scene) {
-  scene.load.image("hq", "maps/new-story/tilesets/hq.png");
-  scene.load.image("warehouse", "maps/new-story/tilesets/warehouse.png");
-  scene.load.image("lab", "maps/new-story/tilesets/lab.png");
-  scene.load.image("skyscraper", "maps/new-story/tilesets/skyscraper.png");
-  scene.load.image("temple", "maps/new-story/tilesets/temple.png");
-  levelData.forEach(({ level }) =>
-    scene.load.tilemapTiledJSON(level, `maps/new-story/${level}.json`)
-  );
+  scene.load.image("hq", "maps/tilesets/hq.png");
+  scene.load.image("warehouse", "maps/tilesets/warehouse.png");
+  scene.load.image("lab", "maps/tilesets/lab.png");
+  scene.load.image("skyscraper", "maps/tilesets/skyscraper.png");
+  scene.load.image("temple", "maps/tilesets/temple.png");
+  levelData.forEach(({ level }) => scene.load.tilemapTiledJSON(level, `maps/${level}.json`));
 }
 
 /**
