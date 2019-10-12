@@ -82,7 +82,7 @@ class Radar {
           duration: 175,
           ease: Phaser.Math.Easing.Quadratic.Out,
           onUpdate: () => this.updateShape(tmp.x, tmp.y, tmp.w, tmp.h),
-          onComplete: resolve
+          onComplete: () => resolve()
         });
       } else {
         this.updateShape(x, y, w, h);
