@@ -1,6 +1,7 @@
 import Phaser, { Events, Geom } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
+import DEPTHS from "../depths";
 
 enum RadialOption {
   MOVE = "MOVE",
@@ -64,6 +65,7 @@ class RadialMenuIcon {
 
     this.container = scene.add.container(this.startX, this.startY, [circleGraphic, textLabel]);
     this.container.setVisible(false);
+    this.container.setDepth(DEPTHS.HUD);
 
     const hitbox = new Geom.Circle(0, 0, this.radius);
     this.container.setInteractive(hitbox, Geom.Circle.Contains);
