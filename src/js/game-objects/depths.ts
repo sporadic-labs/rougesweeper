@@ -8,7 +8,9 @@ const DEPTHS = {
   ABOVE_GROUND: 100,
   PLAYER: 200,
   ABOVE_PLAYER: 300,
-  HUD: 400
+  HUD: 400,
+  DIALOGUE: 500,
+  MENU: 600
 };
 
 export default DEPTHS;
