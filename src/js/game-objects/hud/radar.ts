@@ -8,7 +8,8 @@ import globalLogger from "../../helpers/logger";
 
 class Radar {
   private scene: Phaser.Scene;
-  private graphics: Phaser.GameObjects.Graphics;
+  private outlineGraphics: Phaser.GameObjects.Graphics;
+  private labelGraphics: Phaser.GameObjects.Graphics;
   private text: Phaser.GameObjects.Text;
   private container: Phaser.GameObjects.Container;
   private x: number = 0;
@@ -22,17 +23,23 @@ class Radar {
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
-    this.graphics = scene.add.graphics();
+    this.outlineGraphics = scene.add.graphics({
+      fillStyle: { color: 0xfc3f3f },
+      lineStyle: { color: 0xfc3f3f, width: 6 }
+    });
+    this.labelGraphics = scene.add.graphics({ fillStyle: { color: 0xfc3f3f } });
+    this.labelGraphics.fillCircle(0, 0, 24);
     this.text = scene.add
       .text(0, 0, "0", {
-        fontSize: 25,
+        fontSize: 28,
         fontStyle: "bold",
         color: "#fff"
       })
       .setOrigin(0.5);
-    this.container = scene.add
-      .container(0, 0, [this.graphics, this.text])
-      .setDepth(DEPTHS.ABOVE_GROUND);
+
+    this.outlineGraphics.setDepth(DEPTHS.ABOVE_GROUND);
+    this.labelGraphics.setDepth(DEPTHS.ABOVE_PLAYER);
+    this.text.setDepth(DEPTHS.ABOVE_PLAYER);
 
     this.mobProxy.observe(gameStore, "dangerCount", () =>
       this.setDangerCount(gameStore.dangerCount)
@@ -44,7 +51,9 @@ class Radar {
   }
 
   setVisible(isVisible: boolean) {
-    this.container.setVisible(isVisible);
+    this.outlineGraphics.setVisible(isVisible);
+    this.labelGraphics.setVisible(isVisible);
+    this.text.setVisible(isVisible);
   }
 
   updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true): Promise<void> {
@@ -94,17 +103,14 @@ class Radar {
   private updateShape(x: number, y: number, w: number, h: number) {
     this.x = x;
     this.y = y;
-    this.container.setPosition(x, y);
+    this.text.setPosition(x + w / 2, y + h);
+    this.outlineGraphics.setPosition(x, y);
+    this.labelGraphics.setPosition(x + w / 2, y + h);
     if (w !== this.w || h !== this.h) {
       this.w = w;
       this.h = h;
-      this.text.setPosition(w / 2, h);
-      this.graphics
-        .clear()
-        .fillStyle(0xfc3f3f)
-        .lineStyle(5, 0xfc3f3f);
-      this.graphics.strokeRoundedRect(0, 0, w, h);
-      this.graphics.fillCircle(w / 2, h, 20);
+      this.outlineGraphics.clear();
+      this.outlineGraphics.strokeRoundedRect(0, 0, w, h);
     }
   }
 
@@ -114,7 +120,8 @@ class Radar {
 
   destroy() {
     this.scene = undefined;
-    this.graphics.destroy();
+    this.outlineGraphics.destroy();
+    this.labelGraphics.destroy();
     this.text.destroy();
     this.mobProxy.destroy();
     this.proxy.removeAll();
