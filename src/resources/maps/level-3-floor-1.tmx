@@ -114,14 +114,13 @@
   <object id="35" gid="7" x="684" y="456" width="75" height="75"/>
   <object id="36" gid="7" x="684" y="532" width="75" height="75"/>
   <object id="38" gid="7" x="608" y="684" width="75" height="75"/>
-  <object id="39" gid="7" x="532" y="456" width="75" height="75"/>
   <object id="45" x="380" y="532" width="304" height="228"/>
   <object id="49" gid="7" x="456" y="684" width="75" height="75"/>
  </objectgroup>
- <objectgroup name="Scramble Enemies" visible="0" opacity="0.49">
-  <object id="47" x="532" y="342">
+ <objectgroup name="Scramble Enemies" opacity="0.49">
+  <object id="47" x="456" y="304">
    <polygon points="0,0 228,0 228,228 0,228"/>
   </object>
-  <object id="48" gid="7" x="608" y="494" width="75" height="75"/>
+  <object id="48" gid="7" x="532" y="456" width="75" height="75"/>
  </objectgroup>
 </map>
