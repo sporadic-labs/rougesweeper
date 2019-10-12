@@ -124,7 +124,7 @@ export default class DialogueManager {
         continueButton.text,
         skipButton.text
       ])
-      .setDepth(DEPTHS.HUD)
+      .setDepth(DEPTHS.DIALOGUE)
       .setVisible(false);
 
     scene.input.keyboard.on("keydown_M", () => {
