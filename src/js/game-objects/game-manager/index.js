@@ -170,6 +170,7 @@ export default class GameManager {
     }
 
     if (tile.type !== TILE_TYPES.EXIT && tile.type !== TILE_TYPES.WALL) {
+      const tileGridPos = tile.getGridPosition();
       await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
     }
     this.updateEnemyCount();
