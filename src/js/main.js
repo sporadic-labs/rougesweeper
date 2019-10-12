@@ -1,4 +1,5 @@
-import "@babel/polyfill";
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import "../css/main.scss";
 import Phaser from "phaser";
 import { SCENE_NAME, installScenes } from "./scenes";
