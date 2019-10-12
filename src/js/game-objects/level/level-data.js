@@ -191,7 +191,12 @@ export default class LevelData {
 
   getBlanksWithin(polygon) {
     const blanks = this.getAllPositionsOf(TILE.BLANK);
-    return blanks.filter(p => polygon.contains(p.x, p.y));
+    return blanks.filter(p => {
+      const x = p.x + this.leftOffset;
+      const y = p.y + this.topOffset;
+      const polyContainsBlank = polygon.contains(x, y);
+      return polyContainsBlank;
+    });
   }
 
   getRandomBlankPosition(test = noopTrue) {
