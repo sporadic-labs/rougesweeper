@@ -127,13 +127,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup color="#0000ff" name="Key" visible="0" locked="1" opacity="0.5">
+ <objectgroup color="#0000ff" name="Key" locked="1" opacity="0.5">
   <object id="29" x="532" y="456">
    <polygon points="0,0 228,0 228,152 0,152"/>
   </object>
   <object id="40" gid="10" x="532" y="532" width="75" height="75"/>
  </objectgroup>
- <objectgroup color="#ff0000" name="Enemies" visible="0" locked="1" opacity="0.5">
+ <objectgroup color="#ff0000" name="Enemies" locked="1" opacity="0.5">
   <object id="30" x="532" y="608">
    <polygon points="0,0 0,-152 228,-152 228,0"/>
   </object>
@@ -151,7 +151,7 @@
    <polygon points="0,0 304,0 304,304 0,304"/>
   </object>
  </objectgroup>
- <objectgroup name="Shield Key" visible="0" locked="1">
+ <objectgroup name="Shield Key" locked="1">
   <object id="44" x="836" y="532" width="304" height="228"/>
   <object id="46" gid="4" x="1064" y="608" width="75" height="75"/>
  </objectgroup>

@@ -125,6 +125,8 @@ export default class LevelData {
     this.isExitLocked = this.hasTileOfType(TILE.KEY);
     this.startPosition = this.getPositionOf(TILE.START);
     this.exitPosition = this.getPositionOf(TILE.EXIT);
+
+    this.debugDump();
   }
 
   /**
