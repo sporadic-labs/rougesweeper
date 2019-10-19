@@ -40,14 +40,15 @@ class RadialMenuIcon {
     angle: number,
     menuX: number,
     menuY: number,
-    menuRadius: number
+    menuRadius: number,
+    parentContainer: Phaser.GameObjects.Container
   ) {
     this.scene = scene;
     this.type = label;
-    this.startX = menuX;
-    this.startY = menuY;
-    this.endX = menuX + Math.cos(angle) * menuRadius;
-    this.endY = menuY + Math.sin(angle) * menuRadius;
+    this.startX = 0;
+    this.startY = 0;
+    this.endX = 0 + Math.cos(angle) * menuRadius;
+    this.endY = 0 + Math.sin(angle) * menuRadius;
 
     const circleGraphic = scene.add.graphics({
       fillStyle: { color: 0xf7f7db },
@@ -66,6 +67,7 @@ class RadialMenuIcon {
     this.container = scene.add.container(this.startX, this.startY, [circleGraphic, textLabel]);
     this.container.setVisible(false);
     this.container.setDepth(DEPTHS.HUD);
+    parentContainer.add(this.container);
 
     const hitbox = new Geom.Circle(0, 0, this.radius);
     this.container.setInteractive(hitbox, Geom.Circle.Contains);
@@ -119,9 +121,8 @@ class RadialMenuIcon {
 class RadialMenu {
   private scene: Phaser.Scene;
   private graphic: Phaser.GameObjects.Graphics;
+  private container: Phaser.GameObjects.Container;
   private menuIcons: RadialMenuIcon[];
-  private x: number = 0;
-  private y: number = 0;
   private radius: number = 30;
   private mobProxy = new MobXProxy();
   private proxy = new EventProxy();
@@ -130,22 +131,22 @@ class RadialMenu {
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.scene = scene;
-    this.x = x;
-    this.y = y;
     this.events = new Events.EventEmitter();
 
     this.graphic = scene.add.graphics({
       lineStyle: { width: 15, color: 0xea5e5e, alpha: 0.95 }
     });
-    this.graphic.setPosition(this.x, this.y);
     this.graphic.strokeCircle(0, 0, this.radius);
-    this.graphic.setVisible(false);
+
+    this.container = scene.add.container(x, y, [this.graphic]);
+    this.container.setDepth(DEPTHS.HUD);
+    this.container.setVisible(false);
 
     const labels = [RadialOption.MOVE, RadialOption.HACK, RadialOption.CLOSE];
     const startAngle = -150 * (Math.PI / 180);
     this.menuIcons = labels.map((label, i) => {
       const angle = startAngle + (i / labels.length) * 2 * Math.PI;
-      const icon = new RadialMenuIcon(scene, label, angle, x, y, this.radius);
+      const icon = new RadialMenuIcon(scene, label, angle, x, y, this.radius, this.container);
       return icon;
     });
 
@@ -169,11 +170,19 @@ class RadialMenu {
     });
   }
 
+  setPosition(x: number, y: number) {
+    this.container.setPosition(x, y);
+  }
+
+  getPosition() {
+    return this.container.position;
+  }
+
   open() {
     this.menuIcons.forEach(icon => icon.open());
     if (this.tween) this.tween.stop();
     this.graphic.setScale(0);
-    this.graphic.setVisible(true);
+    this.container.setVisible(true);
     this.tween = this.scene.tweens.add({
       targets: this.graphic,
       scaleX: 1,
@@ -188,11 +197,11 @@ class RadialMenu {
     if (this.tween) this.tween.stop();
     this.tween = this.scene.tweens.add({
       targets: this.graphic,
-      scaleX: 0,
-      scaleY: 0,
+      scaleX: 1,
+      scaleY: 1,
       duration: 250,
       onComplete: () => {
-        this.graphic.setVisible(false);
+        this.container.setVisible(false);
       }
     });
     return tweenCompletePromise(this.tween);

@@ -29,6 +29,7 @@ export default class GameManager {
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
     this.dialogueManager = new DialogueManager(scene, store);
+    this.radialMenu = new RadialMenu(this.scene, 0, 0);
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -63,28 +64,27 @@ export default class GameManager {
       const playerGridPos = this.player.getGridPosition();
       const tileGridPos = tile.getGridPosition();
       const tileWorldPos = tile.getPosition();
+      const menu = this.radialMenu;
+      const menuPosition = menu.getPosition();
 
-      if (this.menu) {
-        if (this.menu.x === tileWorldPos.x && this.menu.y === tileWorldPos.y) return;
-        this.menu.destroy();
-        this.menu = null;
-      }
+      if (menuPosition.x === tileWorldPos.x && menuPosition.y === tileWorldPos.y) return;
 
       // Don't interact with the current tile on which player is standing.
       if (playerGridPos.x === tileGridPos.x && playerGridPos.y === tileGridPos.y) return;
 
       const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
 
-      this.menu = new RadialMenu(this.scene, tileWorldPos.x, tileWorldPos.y);
       const options = [RadialOption.CLOSE];
       if (path) {
         if (!tile.isRevealed) options.push(RadialOption.HACK);
         if (!tile.isRevealed || tile.type !== TILE_TYPES.WALL) options.push(RadialOption.MOVE);
       }
-      this.menu.setEnabledOptions(options);
-      this.menu.open();
-      this.menu.events.on(MenuEvents.VALID_OPTION_SELECT, async type => {
-        this.menu.close();
+      menu.setPosition(tileWorldPos.x, tileWorldPos.y);
+      menu.setEnabledOptions(options);
+      menu.open();
+      menu.events.removeAllListeners();
+      menu.events.on(MenuEvents.VALID_OPTION_SELECT, async type => {
+        menu.close();
         if (type === RadialOption.MOVE) {
           await this.runMoveFlow(tile, path);
         } else if (type === RadialOption.HACK) {
@@ -92,13 +92,13 @@ export default class GameManager {
         }
         this.startIdleFlow();
       });
-      this.menu.events.on(MenuEvents.INVALID_OPTION_SELECT, type => {
+      menu.events.on(MenuEvents.INVALID_OPTION_SELECT, type => {
         let message;
         if (type === RadialOption.MOVE) message = "You can't move there.";
         else if (type === RadialOption.HACK) message = "You can't attack that tile.";
         this.toastManager.setMessage(message);
       });
-      this.menu.events.on(MenuEvents.MENU_CLOSE, () => this.menu.close());
+      menu.events.on(MenuEvents.MENU_CLOSE, () => menu.close());
     });
   }
 
