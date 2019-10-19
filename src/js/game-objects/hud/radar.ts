@@ -11,14 +11,13 @@ class Radar {
   private outlineGraphics: Phaser.GameObjects.Graphics;
   private labelGraphics: Phaser.GameObjects.Graphics;
   private text: Phaser.GameObjects.Text;
-  private container: Phaser.GameObjects.Container;
+  private labelTween: Phaser.Tweens.Tween;
   private x: number = 0;
   private y: number = 0;
   private w: number = 0;
   private h: number = 0;
   private padding = 2.5;
   private reusableRect = new Phaser.Geom.Rectangle();
-  private mobProxy = new MobXProxy();
   private proxy = new EventProxy();
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
@@ -41,11 +40,6 @@ class Radar {
     this.labelGraphics.setDepth(DEPTHS.ABOVE_PLAYER);
     this.text.setDepth(DEPTHS.ABOVE_PLAYER);
 
-    this.mobProxy.observe(gameStore, "dangerCount", () =>
-      this.setDangerCount(gameStore.dangerCount)
-    );
-    this.setDangerCount(gameStore.dangerCount);
-
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
@@ -56,7 +50,7 @@ class Radar {
     this.text.setVisible(isVisible);
   }
 
-  updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true): Promise<void> {
+  private updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true): Promise<void> {
     return new Promise(resolve => {
       if (tiles.length === 0) {
         globalLogger.error("Attempted to set the radar shape from an empty array of tiles.");
@@ -79,6 +73,11 @@ class Radar {
       const y = minY - this.padding;
       const w = maxX - minX + this.padding * 2;
       const h = maxY - minY + this.padding * 2;
+
+      if (this.x == x && this.y == y && this.w == w && this.h == h) {
+        resolve();
+        return;
+      }
 
       if (shouldAnimateUpdate) {
         const tmp = { x: this.x, y: this.y, w: this.w, h: this.h };
@@ -114,16 +113,62 @@ class Radar {
     }
   }
 
-  setDangerCount(count: number) {
-    this.text.setText(`${count}`);
+  private setDangerCount(count: number, shouldAnimateUpdate: boolean): Promise<void> {
+    return new Promise(resolve => {
+      if (!shouldAnimateUpdate) {
+        this.text.setText(`${count}`);
+        resolve();
+      } else {
+        const target = { value: 1 };
+        let hasFlipped = false;
+        if (this.labelTween) this.labelTween.stop();
+        this.labelTween = this.scene.tweens.add({
+          targets: target,
+          value: -1,
+          duration: 250,
+          ease: Phaser.Math.Easing.Quadratic.Out,
+          onUpdate: () => {
+            if (target.value > 0) {
+              const scale = target.value;
+              this.text.scaleY = scale;
+              this.labelGraphics.scaleY = scale;
+            } else {
+              if (!hasFlipped) {
+                hasFlipped = true;
+                this.text.setText(`${count}`);
+              }
+              const scale = -1 * target.value;
+              this.text.scaleY = scale;
+              this.labelGraphics.scaleY = scale;
+            }
+          },
+          onComplete: () => resolve()
+        });
+      }
+    });
+  }
+
+  /**
+   * Updates the radar's shape and label. This should be called once, after the player has finished
+   * an action like attacking or moving.
+   *
+   * @param {Tile[]} tiles The neighboring tiles
+   * @param {number} dangerCount The number of neighboring enemies
+   * @param {boolean} shouldAnimateUpdate
+   * @returns {Promise<[void, void]>}
+   */
+  update(tiles: Tile[], dangerCount: number, shouldAnimateUpdate: boolean): Promise<[void, void]> {
+    const p1 = this.updateShapeFromTiles(tiles, shouldAnimateUpdate);
+    const p2 = this.setDangerCount(dangerCount, shouldAnimateUpdate);
+    return Promise.all([p1, p2]);
   }
 
   destroy() {
+    if (this.labelTween) this.labelTween.destroy();
     this.scene = undefined;
     this.outlineGraphics.destroy();
     this.labelGraphics.destroy();
     this.text.destroy();
-    this.mobProxy.destroy();
     this.proxy.removeAll();
   }
 }
