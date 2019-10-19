@@ -74,7 +74,7 @@ export default class DebugMenu {
         closeButton.text,
         ...levelSelectButtons.map(b => b.text)
       ])
-      .setDepth(DEPTHS.HUD)
+      .setDepth(DEPTHS.MENU)
       .setVisible(false);
 
     this.proxy = new EventProxy();
