@@ -112,7 +112,7 @@ export default class Level {
 
   countNeighboringEnemies(x, y) {
     const enemyCount = this.getNeighboringTiles(x, y).reduce((count, tile) => {
-      count += tile.type === TILE_TYPES.ENEMY;
+      count += tile.type === TILE_TYPES.ENEMY && !tile.isCurrentlyBlank;
       return count;
     }, 0);
     return enemyCount;
