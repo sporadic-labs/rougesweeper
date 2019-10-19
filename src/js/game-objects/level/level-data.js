@@ -30,12 +30,7 @@ const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
     const ty = y / tileHeight + 1;
     const tw = width / tileWidth;
     const th = height / tileHeight;
-    return new Phaser.Geom.Polygon([
-      [tx, ty],
-      [tx + tw, ty],
-      [tx + tw, ty + th],
-      [tx, ty + th]
-    ]);
+    return new Phaser.Geom.Polygon([[tx, ty], [tx + tw, ty], [tx + tw, ty + th], [tx, ty + th]]);
   } else if (tiledObject.polygon) {
     return new Phaser.Geom.Polygon(
       tiledObject.polygon.map(({ x, y }) => [
@@ -96,16 +91,11 @@ export default class LevelData {
         return !empty;
       });
 
-    console.log(this.tiles);
-
     this.width = this.tiles[0].length;
     this.height = this.tiles.length;
 
     this.leftOffset = leftOffset / 2;
     this.topOffset = (topOffset - 1) / 2;
-
-    console.log(this.leftOffset);
-    console.log(this.topOffset);
 
     map.setLayer("Ground");
     this.topLeftTile = map.getTileAt(leftOffset, topOffset);
@@ -142,15 +132,10 @@ export default class LevelData {
     const obj = objectLayer.objects.find(
       obj => obj.polygon !== undefined || obj.rectangle === true
     );
-    const polygon = tiledShapeToPhaserPoly(
-      this.tileWidth,
-      this.tileHeight,
-      obj
-    );
+    const polygon = tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj);
     const blanks = this.getBlanksWithin(polygon);
     const keyPosition = Phaser.Math.RND.pick(blanks);
-    if (!keyPosition)
-      throw new Error("Could not find a valid place to put a key.");
+    if (!keyPosition) throw new Error("Could not find a valid place to put a key.");
     return keyPosition;
   }
 
@@ -259,9 +244,7 @@ export default class LevelData {
   }
 
   debugDump() {
-    const debugTiles = this.tiles.map(row =>
-      row.map(tile => (tile ? debugTileMap[tile] : " "))
-    );
+    const debugTiles = this.tiles.map(row => row.map(tile => (tile ? debugTileMap[tile] : " ")));
     const grid = debugTiles.map(row => row.join(" ")).join("\n");
     const flatTiles = this.tiles.flat(1);
     const numTiles = flatTiles.filter(t => t !== undefined).length;
@@ -271,12 +254,8 @@ export default class LevelData {
     const numWall = flatTiles.filter(t => t === TILE.WALL).length;
     const stats =
       `Num tiles: ${numTiles}\n` +
-      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(
-        2
-      )}%)\n` +
-      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(
-        2
-      )}%)\n` +
+      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(2)}%)\n` +
+      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(2)}%)\n` +
       `Gold tiles: ${numGold} (${((numGold / numTiles) * 100).toFixed(2)}%)\n` +
       `Wall tiles: ${numWall} (${((numWall / numTiles) * 100).toFixed(2)}%)`;
     console.log(`${grid}\n${stats}`);

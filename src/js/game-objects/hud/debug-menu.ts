@@ -60,7 +60,6 @@ export default class DebugMenu {
       });
       button.events.on("DOWN", () => {
         this.close();
-        console.log("setting level to " + i);
         gameStore.setLevelByIndex(i);
       });
       return button;

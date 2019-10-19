@@ -38,7 +38,6 @@ export default class GameManager {
       }
     });
     this.mobProxy.observe(store, "gameState", () => {
-      console.log(store.gameState);
       switch (store.gameState) {
         case GAME_MODES.MENU_MODE:
         default:
