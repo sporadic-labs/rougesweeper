@@ -149,12 +149,26 @@ export default class Level {
     };
   }
 
+  /**
+   * Convert from grid x to the center x of a tile in the world. This factors in the fact that the
+   * tiles are offset by half a tile from the tilemap position.
+   *
+   * @param {number} x
+   * @returns
+   */
   gridXToWorldX(x) {
-    return this.left + x * this.tileWidth + this.tileWidth / 2;
+    return this.left + x * this.tileWidth + this.tileWidth;
   }
 
+  /**
+   * Convert from grid y to the center y of a tile in the world. This factors in the fact that the
+   * tiles are offset by half a tile from the tilemap position.
+   *
+   * @param {number} y
+   * @returns
+   */
   gridYToWorldY(y) {
-    return this.top + y * this.tileHeight + this.tileHeight / 2;
+    return this.top + y * this.tileHeight + this.tileHeight;
   }
 
   hasTileAt(x, y) {
