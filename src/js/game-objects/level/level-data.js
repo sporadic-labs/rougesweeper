@@ -30,7 +30,12 @@ const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
     const ty = y / tileHeight + 1;
     const tw = width / tileWidth;
     const th = height / tileHeight;
-    return new Phaser.Geom.Polygon([[tx, ty], [tx + tw, ty], [tx + tw, ty + th], [tx, ty + th]]);
+    return new Phaser.Geom.Polygon([
+      [tx, ty],
+      [tx + tw, ty],
+      [tx + tw, ty + th],
+      [tx, ty + th]
+    ]);
   } else if (tiledObject.polygon) {
     return new Phaser.Geom.Polygon(
       tiledObject.polygon.map(({ x, y }) => [
@@ -48,13 +53,15 @@ export default class LevelData {
   constructor(map) {
     const { width, height } = map;
 
-    this.tileWidth = map.tileWidth * 2;
-    this.tileHeight = map.tileHeight * 2;
+    console.log(`${width}, ${height}`);
+
+    this.tileWidth = map.tileWidth;
+    this.tileHeight = map.tileHeight;
 
     const tiles = create2DArray(width, height, undefined);
 
     // Loop over the ground layer, filling in all blanks
-    map.setLayer("Ground");
+    map.setLayer("Tiles");
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         if (map.getTileAt(x, y)) tiles[y][x] = TILE.BLANK;
@@ -62,7 +69,7 @@ export default class LevelData {
     }
 
     // Loop over the foreground to place any non-blank tiles
-    map.setLayer("Foreground");
+    map.setLayer("Assets");
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         const tile = map.getTileAt(x, y);
@@ -94,10 +101,10 @@ export default class LevelData {
     this.width = this.tiles[0].length;
     this.height = this.tiles.length;
 
-    this.leftOffset = leftOffset / 2;
-    this.topOffset = (topOffset - 1) / 2;
+    this.leftOffset = leftOffset;
+    this.topOffset = topOffset;
 
-    map.setLayer("Ground");
+    map.setLayer("Board");
     this.topLeftTile = map.getTileAt(leftOffset, topOffset);
 
     const keyLayer = map.getObjectLayer("Key");
@@ -132,10 +139,15 @@ export default class LevelData {
     const obj = objectLayer.objects.find(
       obj => obj.polygon !== undefined || obj.rectangle === true
     );
-    const polygon = tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj);
+    const polygon = tiledShapeToPhaserPoly(
+      this.tileWidth,
+      this.tileHeight,
+      obj
+    );
     const blanks = this.getBlanksWithin(polygon);
     const keyPosition = Phaser.Math.RND.pick(blanks);
-    if (!keyPosition) throw new Error("Could not find a valid place to put a key.");
+    if (!keyPosition)
+      throw new Error("Could not find a valid place to put a key.");
     return keyPosition;
   }
 
@@ -244,7 +256,9 @@ export default class LevelData {
   }
 
   debugDump() {
-    const debugTiles = this.tiles.map(row => row.map(tile => (tile ? debugTileMap[tile] : " ")));
+    const debugTiles = this.tiles.map(row =>
+      row.map(tile => (tile ? debugTileMap[tile] : " "))
+    );
     const grid = debugTiles.map(row => row.join(" ")).join("\n");
     const flatTiles = this.tiles.flat(1);
     const numTiles = flatTiles.filter(t => t !== undefined).length;
@@ -254,8 +268,12 @@ export default class LevelData {
     const numWall = flatTiles.filter(t => t === TILE.WALL).length;
     const stats =
       `Num tiles: ${numTiles}\n` +
-      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(2)}%)\n` +
-      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(2)}%)\n` +
+      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(
+        2
+      )}%)\n` +
+      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(
+        2
+      )}%)\n` +
       `Gold tiles: ${numGold} (${((numGold / numTiles) * 100).toFixed(2)}%)\n` +
       `Wall tiles: ${numWall} (${((numWall / numTiles) * 100).toFixed(2)}%)`;
     console.log(`${grid}\n${stats}`);

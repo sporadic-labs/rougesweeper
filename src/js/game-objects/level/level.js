@@ -6,7 +6,16 @@ import PathFinder from "./path-finder";
 import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
 
-const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
+const neighborOffsets = [
+  [1, 0],
+  [1, 1],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+  [0, -1],
+  [1, -1]
+];
 
 export default class Level {
   /**
@@ -43,7 +52,7 @@ export default class Level {
     }
     this.map.layers.forEach(layerData => {
       // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
-      if (!layerData.name === "Background") return;
+      if (!layerData.name === "Board") return;
       const layer = this.map.createStaticLayer(layerData.name, tilesSetImage);
       layer.setPosition(
         gameCenter.x - layer.displayWidth / 2,
@@ -57,14 +66,18 @@ export default class Level {
 
     this.left = this.data.topLeftTile.getLeft();
     this.top = this.data.topLeftTile.getTop();
-    this.tileWidth = this.map.tileWidth * 2;
-    this.tileHeight = this.map.tileHeight * 2;
+    this.tileWidth = this.map.tileWidth;
+    this.tileHeight = this.map.tileHeight;
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((type, x) => {
         if (!type) return undefined;
 
-        const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
+        const dialogueData = dialogueManager.getDialogueDataForTile(
+          levelKey,
+          x,
+          y
+        );
 
         const tile = new Tile(
           scene,
@@ -93,7 +106,10 @@ export default class Level {
 
   highlightTiles(playerPos) {
     this.forEachTile(tile => {
-      if (tile.isRevealed || this.isTileInPlayerRange(playerPos, tile.getGridPosition())) {
+      if (
+        tile.isRevealed ||
+        this.isTileInPlayerRange(playerPos, tile.getGridPosition())
+      ) {
         tile.highlight();
       } else {
         tile.unhighlight();
@@ -214,14 +230,18 @@ export default class Level {
     );
     this.pathFinder.update();
 
-    const isDestinationBlocked = !this.pathFinder.isWalkableAt(tilePos.x, tilePos.y);
+    const isDestinationBlocked = !this.pathFinder.isWalkableAt(
+      tilePos.x,
+      tilePos.y
+    );
     if (isDestinationBlocked && allowNeighbor) {
       // Player's destination is unwalkable, so do a breadth-first search around player to see if
       // the destination is a direct neighbor (one step away) from a walkable tile.
       let newDestination = null;
       const pointsQueue = [playerPos];
       const visitedPoints = [];
-      const isPointInArray = (p1, array) => array.some(p2 => p1.x === p2.x && p1.y === p2.y);
+      const isPointInArray = (p1, array) =>
+        array.some(p2 => p1.x === p2.x && p1.y === p2.y);
       while (!newDestination && pointsQueue.length !== 0) {
         const { x, y } = pointsQueue.shift();
         visitedPoints.push({ x, y });
@@ -232,7 +252,10 @@ export default class Level {
           if (this.pathFinder.isInBounds(nx, ny)) {
             if (this.pathFinder.isWalkableAt(nx, ny)) {
               // Only add to queue if we haven't visited or aren't already planning on visiting.
-              if (!isPointInArray(np, pointsQueue) && !isPointInArray(np, visitedPoints)) {
+              if (
+                !isPointInArray(np, pointsQueue) &&
+                !isPointInArray(np, visitedPoints)
+              ) {
                 pointsQueue.push(np);
               }
             } else {
