@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextobjectid="1">
- <tileset firstgid="1" name="hq_v2" tilewidth="75" tileheight="75" tilecount="56" columns="8">
-  <image source="tilesets/hq_v2.png" width="600" height="525"/>
- </tileset>
- <tileset firstgid="57" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
-  <image source="tiles.png" width="300" height="225"/>
- </tileset>
- <layer name="Board" width="16" height="14" offsetx="-38" offsety="-38">
-  <data encoding="csv">
+  <tileset firstgid="1" name="hq" tilewidth="75" tileheight="75" tilecount="56" columns="8">
+    <image source="tilesets/hq.png" width="600" height="525"/>
+  </tileset>
+  <tileset firstgid="57" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
+    <image source="tiles.png" width="300" height="225"/>
+  </tileset>
+  <layer name="Board" width="16" height="14" offsetx="-38" offsety="-38">
+    <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,9,10,10,11,12,12,12,12,13,10,10,15,1,1,
@@ -22,10 +22,10 @@
 1,1,41,42,42,43,44,44,44,44,45,42,42,47,51,51,
 1,1,1,50,51,51,51,54,54,51,51,51,51,51,51,51,
 1,1,1,1,50,56,56,54,54,51,51,51,51,51,51,51
-</data>
- </layer>
- <layer name="Tiles" width="16" height="14">
-  <data encoding="csv">
+    </data>
+  </layer>
+  <layer name="Tiles" width="16" height="14">
+    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -40,10 +40,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer name="Assets" width="16" height="14">
-  <data encoding="csv">
+    </data>
+  </layer>
+  <layer name="Assets" width="16" height="14">
+    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -58,6 +58,6 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
+    </data>
+  </layer>
 </map>

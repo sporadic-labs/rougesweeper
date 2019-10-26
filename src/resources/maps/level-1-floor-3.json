@@ -45,11 +45,11 @@
         {
          "columns":8,
          "firstgid":1,
-         "image":"tilesets\/hq_v2.png",
+         "image":"tilesets\/hq.png",
          "imageheight":525,
          "imagewidth":600,
          "margin":0,
-         "name":"hq_v2",
+         "name":"hq",
          "spacing":0,
          "tilecount":56,
          "tileheight":75,
