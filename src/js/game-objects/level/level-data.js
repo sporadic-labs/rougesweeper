@@ -13,16 +13,6 @@ const debugTileMap = {
   [TILE.EXIT]: "X",
   [TILE.BLANK]: "."
 };
-const tilesetIDToEnum = {
-  1: TILE.WALL,
-  2: TILE.EXIT,
-  3: TILE.SHOP,
-  6: TILE.BLANK,
-  7: TILE.ENEMY,
-  8: TILE.START,
-  9: TILE.EXIT,
-  10: TILE.KEY
-};
 const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
   if (tiledObject.rectangle) {
     const { width, height, x, y } = tiledObject;
@@ -30,12 +20,7 @@ const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
     const ty = y / tileHeight + 1;
     const tw = width / tileWidth;
     const th = height / tileHeight;
-    return new Phaser.Geom.Polygon([
-      [tx, ty],
-      [tx + tw, ty],
-      [tx + tw, ty + th],
-      [tx, ty + th]
-    ]);
+    return new Phaser.Geom.Polygon([[tx, ty], [tx + tw, ty], [tx + tw, ty + th], [tx, ty + th]]);
   } else if (tiledObject.polygon) {
     return new Phaser.Geom.Polygon(
       tiledObject.polygon.map(({ x, y }) => [
@@ -52,6 +37,20 @@ export default class LevelData {
   /** @param {Phaser.Tilemaps.Tilemap} map */
   constructor(map) {
     const { width, height } = map;
+
+    // For the gameboard, we are just using tiled to lay out levels, not load tile images. So,
+    // we need to parse the Tile IDs to an enum value as a way to identify each tile in the board.
+    const firstId = map.getTileset("tiles").firstgid;
+    const tilesetIDToEnum = {
+      [firstId + 0]: TILE.WALL,
+      [firstId + 1]: TILE.EXIT,
+      [firstId + 2]: TILE.SHOP,
+      [firstId + 5]: TILE.BLANK,
+      [firstId + 6]: TILE.ENEMY,
+      [firstId + 7]: TILE.START,
+      [firstId + 8]: TILE.EXIT,
+      [firstId + 9]: TILE.KEY
+    };
 
     console.log(`${width}, ${height}`);
 
@@ -139,15 +138,10 @@ export default class LevelData {
     const obj = objectLayer.objects.find(
       obj => obj.polygon !== undefined || obj.rectangle === true
     );
-    const polygon = tiledShapeToPhaserPoly(
-      this.tileWidth,
-      this.tileHeight,
-      obj
-    );
+    const polygon = tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj);
     const blanks = this.getBlanksWithin(polygon);
     const keyPosition = Phaser.Math.RND.pick(blanks);
-    if (!keyPosition)
-      throw new Error("Could not find a valid place to put a key.");
+    if (!keyPosition) throw new Error("Could not find a valid place to put a key.");
     return keyPosition;
   }
 
@@ -256,9 +250,7 @@ export default class LevelData {
   }
 
   debugDump() {
-    const debugTiles = this.tiles.map(row =>
-      row.map(tile => (tile ? debugTileMap[tile] : " "))
-    );
+    const debugTiles = this.tiles.map(row => row.map(tile => (tile ? debugTileMap[tile] : " ")));
     const grid = debugTiles.map(row => row.join(" ")).join("\n");
     const flatTiles = this.tiles.flat(1);
     const numTiles = flatTiles.filter(t => t !== undefined).length;
@@ -268,12 +260,8 @@ export default class LevelData {
     const numWall = flatTiles.filter(t => t === TILE.WALL).length;
     const stats =
       `Num tiles: ${numTiles}\n` +
-      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(
-        2
-      )}%)\n` +
-      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(
-        2
-      )}%)\n` +
+      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(2)}%)\n` +
+      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(2)}%)\n` +
       `Gold tiles: ${numGold} (${((numGold / numTiles) * 100).toFixed(2)}%)\n` +
       `Wall tiles: ${numWall} (${((numWall / numTiles) * 100).toFixed(2)}%)`;
     console.log(`${grid}\n${stats}`);
