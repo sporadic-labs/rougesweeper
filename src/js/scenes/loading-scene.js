@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { SCENE_NAME } from "./index.js";
-import { loadLevels, loadDialogue } from "../store/levels.ts";
+import { loadLevels, loadDialogue } from "../store/levels";
 
 export default class LoadingScene extends Phaser.Scene {
   preload() {
