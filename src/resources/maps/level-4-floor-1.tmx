@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextobjectid="39">
- <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
-  <image source="tiles.png" width="300" height="225"/>
- </tileset>
- <tileset firstgid="13" name="skyscraper_v2" tilewidth="75" tileheight="75" tilecount="91" columns="13">
-  <image source="tilesets/skyscraper_v2.png" width="975" height="525"/>
- </tileset>
- <layer name="Board" width="16" height="14" offsetx="-38" offsety="-38">
-  <data encoding="csv">
+  <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
+    <image source="tiles.png" width="300" height="225"/>
+  </tileset>
+  <tileset firstgid="13" name="skyscraper" tilewidth="75" tileheight="75" tilecount="91" columns="13">
+    <image source="tilesets/skyscraper.png" width="975" height="525"/>
+  </tileset>
+  <layer name="Board" width="16" height="14" offsetx="-38" offsety="-38">
+    <data encoding="csv">
 13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,
 13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,
 13,13,26,27,27,29,30,31,32,33,34,36,36,37,13,13,
@@ -22,10 +22,10 @@
 13,13,78,79,79,80,81,82,82,86,80,88,88,89,93,93,
 13,13,13,92,93,93,93,93,93,93,93,93,93,93,93,93,
 13,13,13,13,92,93,93,93,93,93,93,93,93,93,93,93
-</data>
- </layer>
- <layer name="Tiles" width="16" height="14">
-  <data encoding="csv">
+    </data>
+  </layer>
+  <layer name="Tiles" width="16" height="14">
+    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -40,10 +40,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer name="Assets" width="16" height="14">
-  <data encoding="csv">
+    </data>
+  </layer>
+  <layer name="Assets" width="16" height="14">
+    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -58,25 +58,25 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <objectgroup color="#0a16fa" name="Random Key" opacity="0.67">
-  <object id="25" x="450" y="300" width="150" height="150"/>
-  <object id="26" gid="10" x="450" y="375" width="75" height="75"/>
- </objectgroup>
- <objectgroup color="#e51418" name="Random Enemies" opacity="0.69">
-  <object id="27" x="450" y="375" width="150" height="75"/>
-  <object id="28" gid="7" x="525" y="450" width="75" height="75"/>
-  <object id="29" x="450" y="525" width="225" height="150"/>
-  <object id="30" x="675" y="300" width="150" height="150"/>
-  <object id="31" x="675" y="450" width="75" height="225"/>
-  <object id="32" gid="7" x="450" y="600" width="75" height="75"/>
-  <object id="33" gid="7" x="600" y="675" width="75" height="75"/>
-  <object id="34" gid="7" x="675" y="600" width="75" height="75"/>
-  <object id="35" gid="7" x="675" y="450" width="75" height="75"/>
- </objectgroup>
- <objectgroup color="#15e606" name="Shield" opacity="0.7">
-  <object id="36" x="450" y="450" width="150" height="75"/>
-  <object id="38" gid="4" x="750" y="450" width="75" height="75"/>
- </objectgroup>
+    </data>
+  </layer>
+  <objectgroup color="#0a16fa" name="Random Key" opacity="0.67">
+    <object id="25" x="450" y="300" width="150" height="150"/>
+    <object id="26" gid="10" x="450" y="375" width="75" height="75"/>
+  </objectgroup>
+  <objectgroup color="#e51418" name="Random Enemies" opacity="0.69">
+    <object id="27" x="450" y="375" width="150" height="75"/>
+    <object id="28" gid="7" x="525" y="450" width="75" height="75"/>
+    <object id="29" x="450" y="525" width="225" height="150"/>
+    <object id="30" x="675" y="300" width="150" height="150"/>
+    <object id="31" x="675" y="450" width="75" height="225"/>
+    <object id="32" gid="7" x="450" y="600" width="75" height="75"/>
+    <object id="33" gid="7" x="600" y="675" width="75" height="75"/>
+    <object id="34" gid="7" x="675" y="600" width="75" height="75"/>
+    <object id="35" gid="7" x="675" y="450" width="75" height="75"/>
+  </objectgroup>
+  <objectgroup color="#15e606" name="Shield" opacity="0.7">
+    <object id="36" x="450" y="450" width="150" height="75"/>
+    <object id="38" gid="4" x="750" y="450" width="75" height="75"/>
+  </objectgroup>
 </map>

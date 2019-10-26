@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextobjectid="27">
- <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
-  <image source="tiles.png" width="300" height="225"/>
- </tileset>
- <tileset firstgid="13" name="temple_v2" tilewidth="75" tileheight="75" tilecount="100" columns="10">
-  <image source="tilesets/temple_v2.png" width="750" height="750"/>
- </tileset>
- <layer name="Board" width="16" height="14" offsetx="-38" offsety="-38">
-  <data encoding="csv">
+  <tileset firstgid="1" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
+    <image source="tiles.png" width="300" height="225"/>
+  </tileset>
+  <tileset firstgid="13" name="temple" tilewidth="75" tileheight="75" tilecount="100" columns="10">
+    <image source="tilesets/temple.png" width="750" height="750"/>
+  </tileset>
+  <layer name="Board" width="16" height="14" offsetx="-38" offsety="-38">
+    <data encoding="csv">
 103,103,103,103,103,103,103,103,103,103,103,103,103,103,103,103,
 103,13,14,15,18,18,18,16,17,18,18,18,19,20,21,103,
 103,23,24,25,28,28,28,26,27,28,28,28,29,30,31,103,
@@ -22,10 +22,10 @@
 103,83,84,85,88,88,88,86,87,88,88,88,89,90,91,106,
 103,93,94,95,98,98,98,96,97,98,98,98,99,100,101,106,
 103,103,103,105,106,106,106,106,106,106,106,106,106,106,106,106
-</data>
- </layer>
- <layer name="Tiles" width="16" height="14">
-  <data encoding="csv">
+    </data>
+  </layer>
+  <layer name="Tiles" width="16" height="14">
+    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -40,10 +40,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer name="Assets" width="16" height="14">
-  <data encoding="csv">
+    </data>
+  </layer>
+  <layer name="Assets" width="16" height="14">
+    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -58,11 +58,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <objectgroup color="#0a16fa" name="Random Key" opacity="0.67">
-  <object id="25" x="600" y="225" width="225" height="525"/>
-  <object id="26" gid="10" x="600" y="300" width="75" height="75"/>
- </objectgroup>
- <objectgroup color="#e51418" name="Random Enemies" opacity="0.69"/>
+    </data>
+  </layer>
+  <objectgroup color="#0a16fa" name="Random Key" opacity="0.67">
+    <object id="25" x="600" y="225" width="225" height="525"/>
+    <object id="26" gid="10" x="600" y="300" width="75" height="75"/>
+  </objectgroup>
+  <objectgroup color="#e51418" name="Random Enemies" opacity="0.69"/>
 </map>

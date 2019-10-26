@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextobjectid="20">
-  <tileset firstgid="1" name="hq_v2" tilewidth="75" tileheight="75" tilecount="56" columns="8">
-    <image source="tilesets/hq_v2.png" width="600" height="525"/>
-  </tileset>
-  <tileset firstgid="57" name="hq" tilewidth="38" tileheight="38" tilecount="100" columns="10">
-    <image source="tilesets/hq.png" width="380" height="380"/>
-  </tileset>
   <tileset firstgid="157" name="tiles" tilewidth="75" tileheight="75" tilecount="12" columns="4">
     <image source="tiles.png" width="300" height="225"/>
-  </tileset>
-  <tileset firstgid="169" name="warehouse_v2" tilewidth="75" tileheight="75" tilecount="42" columns="6">
-    <image source="tilesets/warehouse_v2.png" width="450" height="525"/>
-  </tileset>
-  <tileset firstgid="211" name="warehouse_v2" tilewidth="75" tileheight="75" tilecount="42" columns="6">
-    <image source="tilesets/warehouse_v2.png" width="450" height="525"/>
   </tileset>
   <tileset firstgid="253" name="lab" tilewidth="75" tileheight="75" tilecount="30" columns="5">
     <image source="tilesets/lab.png" width="375" height="450"/>
