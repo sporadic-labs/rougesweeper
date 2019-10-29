@@ -27,9 +27,7 @@ module.exports = function(env, argv) {
         {
           test: /\.(scss|sass)$/,
           use: [
-            isDev
-              ? { loader: "style-loader", options: { sourceMap: true } }
-              : MiniCssExtractPlugin.loader,
+            isDev ? { loader: "style-loader" } : MiniCssExtractPlugin.loader,
             { loader: "css-loader", options: { sourceMap: true } },
             { loader: "sass-loader", options: { sourceMap: true } }
           ]
