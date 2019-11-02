@@ -8,6 +8,7 @@ const debugTileMap = {
   [TILE.START]: "S",
   [TILE.SHOP]: "s",
   [TILE.ENEMY]: "e",
+  [TILE.KEY]: "K",
   [TILE.SCRAMBLE_ENEMY]: "?",
   [TILE.GOLD]: "g",
   [TILE.WALL]: "W",
@@ -18,7 +19,7 @@ const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
   if (tiledObject.rectangle) {
     const { width, height, x, y } = tiledObject;
     const tx = x / tileWidth;
-    const ty = y / tileHeight + 1;
+    const ty = y / tileHeight;
     const tw = width / tileWidth;
     const th = height / tileHeight;
     return new Phaser.Geom.Polygon([[tx, ty], [tx + tw, ty], [tx + tw, ty + th], [tx, ty + th]]);
@@ -53,12 +54,11 @@ export default class LevelData {
       [firstId + 9]: TILE.KEY
     };
 
-    console.log(`${width}, ${height}`);
-
     this.tileWidth = map.tileWidth;
     this.tileHeight = map.tileHeight;
 
     const tiles = create2DArray(width, height, undefined);
+    this.tiles = tiles;
 
     // Loop over the ground layer, filling in all blanks
     map.setLayer("Tiles");
@@ -80,12 +80,32 @@ export default class LevelData {
         }
       }
     }
+    const keyLayer = map.getObjectLayer("Random Key");
+    if (keyLayer) {
+      const keyPosition = this.generateKeyPosition(keyLayer);
+      this.setTileAt(keyPosition.x, keyPosition.y, TILE.KEY);
+    }
 
+    const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
+    if (scrambleEnemyLayer) {
+      scrambleEnemyLayer.objects.forEach(({ x, y }) => {
+        const tx = x / this.tileWidth;
+        const ty = y / this.tileHeight - 1;
+        this.setTileAt(tx, ty, TILE.SCRAMBLE_ENEMY);
+      });
+    }
+
+    const enemiesLayer = map.getObjectLayer("Random Enemies");
+    if (enemiesLayer) {
+      const enemyPositions = this.generateEnemyPositions(enemiesLayer);
+      enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
+    }
+
+    // Calculate top & left offset and trim map AFTER parsing everything from the Tiled map.
     let leftOffset = 0;
     let topOffset = 0;
-
-    // NOTE(rex): Use the Ground layer to determine the "size" of this map.
-    this.tiles = tiles
+    map.setLayer("Board");
+    this.tiles = this.tiles
       .map(row =>
         row.filter((value, i) => {
           if (value && !leftOffset) leftOffset = i;
@@ -97,36 +117,11 @@ export default class LevelData {
         if (!empty && !topOffset) topOffset = i;
         return !empty;
       });
-
-    this.width = this.tiles[0].length;
-    this.height = this.tiles.length;
-
     this.leftOffset = leftOffset;
     this.topOffset = topOffset;
-
-    map.setLayer("Board");
+    this.width = this.tiles[0].length;
+    this.height = this.tiles.length;
     this.topLeftTile = map.getTileAt(leftOffset, topOffset);
-
-    const keyLayer = map.getObjectLayer("Key");
-    if (keyLayer) {
-      const keyPosition = this.generateKeyPosition(keyLayer);
-      this.setTileAt(keyPosition.x, keyPosition.y, TILE.KEY);
-    }
-
-    const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
-    if (scrambleEnemyLayer) {
-      scrambleEnemyLayer.objects.forEach(({ x, y }) => {
-        const tx = x / this.tileWidth - leftOffset;
-        const ty = y / this.tileHeight - 1 - topOffset;
-        this.setTileAt(tx, ty, TILE.SCRAMBLE_ENEMY);
-      });
-    }
-
-    const enemiesLayer = map.getObjectLayer("Enemies");
-    if (enemiesLayer) {
-      const enemyPositions = this.generateEnemyPositions(enemiesLayer);
-      enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
-    }
 
     this.isExitLocked = this.hasTileOfType(TILE.KEY);
     this.startPosition = this.getPositionOf(TILE.START);
@@ -207,14 +202,18 @@ export default class LevelData {
     return enemyPositions;
   }
 
+  /**
+   * Get the blank tile positions within a given polygon (that is placed and sized in tile
+   * coordinates). If a polygon is a rectangle at (1, 1) with a size of 2 x 1, then this method will
+   * check (1, 1) and (2, 1), but not (1, 2) or (2, 2).
+   *
+   * @param {Phaser.Geom.Polygon} polygon
+   * @returns [{x, y}]
+   * @memberof LevelData
+   */
   getBlanksWithin(polygon) {
     const blanks = this.getAllPositionsOf(TILE.BLANK);
-    return blanks.filter(p => {
-      const x = p.x + this.leftOffset;
-      const y = p.y + this.topOffset;
-      const polyContainsBlank = polygon.contains(x, y);
-      return polyContainsBlank;
-    });
+    return blanks.filter(p => polygon.contains(p.x + 0.5, p.y + 0.5));
   }
 
   getRandomBlankPosition(test = noopTrue) {
