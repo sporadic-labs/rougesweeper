@@ -23,6 +23,7 @@ class Radar {
   private padding = 2.5;
   private reusableRect = new Phaser.Geom.Rectangle();
   private proxy = new EventProxy();
+  private scrambleTimer: Phaser.Time.TimerEvent;
 
   constructor(scene: Phaser.Scene, player: Player) {
     this.scene = scene;
@@ -163,6 +164,34 @@ class Radar {
   }
 
   /**
+   *
+   */
+  private startScrambleDangerCount() {
+    if (this.scrambleTimer) this.scrambleTimer.remove(false);
+    this.scrambleTimer = this.scene.time.addEvent({
+      delay: 500,
+      loop: true,
+      callback: () => {
+        let newEnemyCount = this.enemyCount;
+        do {
+          console.log("get new enemy count");
+          newEnemyCount = Phaser.Math.RND.integerInRange(0, 9);
+        } while (newEnemyCount === this.enemyCount);
+        this.enemyCount = newEnemyCount;
+        this.setDangerCount(false);
+      },
+      callbackScope: this
+    });
+  }
+
+  /**
+   *
+   */
+  private stopScrambleDangerCount() {
+    if (this.scrambleTimer) this.scrambleTimer.remove(false);
+  }
+
+  /**
    * Updates the radar's shape and label. This should be called once, after the player has finished
    * an action like attacking or moving.
    *
@@ -172,6 +201,12 @@ class Radar {
     if (!this.level) return;
     const { x, y } = this.player.getGridPosition();
     this.enemyCount = this.level.countNeighboringEnemies(x, y);
+    const inRangeOfScrambleEnemy = this.level.isNeighboringScrambleEnemy(x, y);
+    if (inRangeOfScrambleEnemy) {
+      this.startScrambleDangerCount();
+    } else {
+      this.stopScrambleDangerCount();
+    }
     const tiles = this.level.getNeighboringTiles(x, y);
     const p1 = this.updateShapeFromTiles(tiles, true);
     const p2 = this.setDangerCount(true);
@@ -180,6 +215,7 @@ class Radar {
 
   destroy() {
     if (this.labelTween) this.labelTween.destroy();
+    if (this.scrambleTimer) this.scrambleTimer.remove(false);
     this.scene = undefined;
     this.outlineGraphics.destroy();
     this.labelGraphics.destroy();
