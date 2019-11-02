@@ -104,7 +104,7 @@ export default class Level {
   isNeighboringScrambleEnemy(x, y) {
     const tiles = this.getNeighboringTiles(x, y);
     for (const tile of tiles) {
-      if (tile.type === TILE_TYPES.SCRAMBLE_ENEMY) {
+      if (!tile.isCurrentlyBlank && tile.type === TILE_TYPES.SCRAMBLE_ENEMY) {
         const dx = Math.abs(tile.gridX - x);
         const dy = Math.abs(tile.gridY - y);
         if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
