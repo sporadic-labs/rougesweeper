@@ -101,9 +101,25 @@ export default class Level {
     });
   }
 
+  isNeighboringScrambleEnemy(x, y) {
+    const tiles = this.getNeighboringTiles(x, y);
+    for (const tile of tiles) {
+      if (tile.type === TILE_TYPES.SCRAMBLE_ENEMY) {
+        const dx = Math.abs(tile.gridX - x);
+        const dy = Math.abs(tile.gridY - y);
+        if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   countNeighboringEnemies(x, y) {
     const enemyCount = this.getNeighboringTiles(x, y).reduce((count, tile) => {
-      count += tile.type === TILE_TYPES.ENEMY && !tile.isCurrentlyBlank;
+      count +=
+        (tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY) &&
+        !tile.isCurrentlyBlank;
       return count;
     }, 0);
     return enemyCount;

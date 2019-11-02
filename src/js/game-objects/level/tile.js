@@ -10,6 +10,7 @@ const TYPE_TO_KEY = {
   [TILE_TYPES.BLANK]: "tile-blank",
   [TILE_TYPES.GOLD]: "tech",
   [TILE_TYPES.ENEMY]: "enemy",
+  [TILE_TYPES.SCRAMBLE_ENEMY]: "enemy",
   [TILE_TYPES.EXIT]: "stairs-down",
   [TILE_TYPES.WALL]: "wall",
   [TILE_TYPES.KEY]: "key"
@@ -123,6 +124,7 @@ export default class Tile {
       if (
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||
+        this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
         this.type === TILE_TYPES.KEY
       ) {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
@@ -132,7 +134,7 @@ export default class Tile {
         // Setup different animations for the Gold vs. the Enemy graphics.
         if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.KEY) {
           createPickupAnim(this.tileGraphicTimeline, this.tileContents);
-        } else if (this.type === TILE_TYPES.ENEMY) {
+        } else if (this.type === TILE_TYPES.ENEMY || this.type === TILE_TYPES.SCRAMBLE_ENEMY) {
           createAttackAnim(this.tileGraphicTimeline, this.tileContents);
           this.tileGraphicTimeline.on("complete", () => {
             const attackAnim = new AttackAnimation(
@@ -158,7 +160,11 @@ export default class Tile {
 
   playTileDestructionAnimation() {
     return new Promise(resolve => {
-      if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.ENEMY) {
+      if (
+        this.type === TILE_TYPES.GOLD ||
+        this.type === TILE_TYPES.ENEMY ||
+        this.type === TILE_TYPES.SCRAMBLE_ENEMY
+      ) {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
 
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();

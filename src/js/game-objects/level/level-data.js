@@ -8,6 +8,7 @@ const debugTileMap = {
   [TILE.START]: "S",
   [TILE.SHOP]: "s",
   [TILE.ENEMY]: "e",
+  [TILE.SCRAMBLE_ENEMY]: "?",
   [TILE.GOLD]: "g",
   [TILE.WALL]: "W",
   [TILE.EXIT]: "X",
@@ -110,6 +111,15 @@ export default class LevelData {
     if (keyLayer) {
       const keyPosition = this.generateKeyPosition(keyLayer);
       this.setTileAt(keyPosition.x, keyPosition.y, TILE.KEY);
+    }
+
+    const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
+    if (scrambleEnemyLayer) {
+      scrambleEnemyLayer.objects.forEach(({ x, y }) => {
+        const tx = x / this.tileWidth - leftOffset;
+        const ty = y / this.tileHeight - 1 - topOffset;
+        this.setTileAt(tx, ty, TILE.SCRAMBLE_ENEMY);
+      });
     }
 
     const enemiesLayer = map.getObjectLayer("Enemies");

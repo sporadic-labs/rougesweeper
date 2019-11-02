@@ -3,6 +3,7 @@ enum TILE_TYPES {
   EXIT = "EXIT",
   BLANK = "BLANK",
   ENEMY = "ENEMY",
+  SCRAMBLE_ENEMY = "SCRAMBLE_ENEMY",
   GOLD = "GOLD",
   SHOP = "SHOP",
   WALL = "WALL",
