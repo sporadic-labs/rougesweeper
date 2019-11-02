@@ -23,7 +23,8 @@ class Radar {
   private padding = 2.5;
   private reusableRect = new Phaser.Geom.Rectangle();
   private proxy = new EventProxy();
-  private scrambleTimer: Phaser.Time.TimerEvent;
+
+  private scrambleDangerCountTimer: Phaser.Time.TimerEvent;
 
   constructor(scene: Phaser.Scene, player: Player) {
     this.scene = scene;
@@ -164,17 +165,16 @@ class Radar {
   }
 
   /**
-   *
+   * Scramble the count of enemies near the player, and the color of the radar.
    */
-  private startScrambleDangerCount() {
-    if (this.scrambleTimer) this.scrambleTimer.remove(false);
-    this.scrambleTimer = this.scene.time.addEvent({
-      delay: 500,
+  private startScrambleRadar() {
+    if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
+    this.scrambleDangerCountTimer = this.scene.time.addEvent({
+      delay: 250,
       loop: true,
       callback: () => {
         let newEnemyCount = this.enemyCount;
         do {
-          console.log("get new enemy count");
           newEnemyCount = Phaser.Math.RND.integerInRange(0, 9);
         } while (newEnemyCount === this.enemyCount);
         this.enemyCount = newEnemyCount;
@@ -182,13 +182,23 @@ class Radar {
       },
       callbackScope: this
     });
+
+    this.labelGraphics.fillStyle(0xe3c220);
+    this.labelGraphics.fill();
+    this.outlineGraphics.lineStyle(2, 0xe3c220);
+    this.outlineGraphics.stroke();
   }
 
   /**
-   *
+   * Stop scrambling the count of enemies near the player and the color of the radar.
    */
-  private stopScrambleDangerCount() {
-    if (this.scrambleTimer) this.scrambleTimer.remove(false);
+  private stopScrambleRadar() {
+    if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
+
+    this.labelGraphics.fillStyle(0xfc3f3f);
+    this.labelGraphics.fill();
+    this.outlineGraphics.lineStyle(6, 0xfc3f3f);
+    this.outlineGraphics.stroke();
   }
 
   /**
@@ -203,9 +213,9 @@ class Radar {
     this.enemyCount = this.level.countNeighboringEnemies(x, y);
     const inRangeOfScrambleEnemy = this.level.isNeighboringScrambleEnemy(x, y);
     if (inRangeOfScrambleEnemy) {
-      this.startScrambleDangerCount();
+      this.startScrambleRadar();
     } else {
-      this.stopScrambleDangerCount();
+      this.stopScrambleRadar();
     }
     const tiles = this.level.getNeighboringTiles(x, y);
     const p1 = this.updateShapeFromTiles(tiles, true);
@@ -215,7 +225,7 @@ class Radar {
 
   destroy() {
     if (this.labelTween) this.labelTween.destroy();
-    if (this.scrambleTimer) this.scrambleTimer.remove(false);
+    if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
     this.scene = undefined;
     this.outlineGraphics.destroy();
     this.labelGraphics.destroy();
