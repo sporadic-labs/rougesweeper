@@ -60,11 +60,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup color="#0a16fa" name="Random Key" visible="0" opacity="0.67">
+ <objectgroup color="#0a16fa" name="Random Key" opacity="0.67">
   <object id="1" x="450" y="225" width="225" height="150"/>
   <object id="2" gid="10" x="525" y="300" width="75" height="75"/>
  </objectgroup>
- <objectgroup color="#e51418" name="Random Enemies" visible="0" opacity="0.69">
+ <objectgroup color="#e51418" name="Random Enemies" opacity="0.69">
   <object id="4" x="675" y="525" width="150" height="225"/>
   <object id="5" x="675" y="300" width="225" height="150"/>
   <object id="7" x="375" y="525" width="150" height="225"/>
