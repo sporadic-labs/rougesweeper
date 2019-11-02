@@ -25,7 +25,7 @@ export default class GameManager {
     this.level = null;
     this.player = player;
     this.toastManager = toastManager;
-    this.radar = new Radar(scene, store);
+    this.radar = new Radar(scene, player);
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
     this.dialogueManager = new DialogueManager(scene, store);
@@ -126,8 +126,14 @@ export default class GameManager {
 
     const playerGridPos = this.player.getGridPosition();
     const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
-    this.updateEnemyCount();
-    this.updateRadar();
+
+    await this.radar.update();
+    if (this.radar.enemyCount === 0) {
+      this.level
+        .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
+        .map(tile => tile.flipToFront());
+    }
+
     this.dialogueManager.playDialogueFromTile(currentTile);
 
     if (currentTile.type === TILE_TYPES.KEY) {
@@ -173,20 +179,17 @@ export default class GameManager {
       const tileGridPos = tile.getGridPosition();
       await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
     }
-    this.updateEnemyCount();
-    this.updateRadar();
+
+    const playerGridPos = this.player.getGridPosition();
+    await this.radar.update();
+    if (this.radar.enemyCount === 0) {
+      this.level
+        .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
+        .map(tile => tile.flipToFront());
+    }
 
     this.level.enableAllTiles();
     this.startIdleFlow();
-  }
-
-  updateEnemyCount() {
-    const pos = this.player.getGridPosition();
-    const enemyCount = this.level.countNeighboringEnemies(pos.x, pos.y);
-    store.setDangerCount(enemyCount);
-    if (enemyCount === 0) {
-      this.level.getNeighboringTiles(pos.x, pos.y).map(tile => tile.flipToFront());
-    }
   }
 
   async movePlayerAlongPath(path, duration = 200) {
@@ -255,17 +258,12 @@ export default class GameManager {
 
     await this.level.fadeLevelIn();
     this.level.highlightTiles(playerStartGridPos);
-    this.radar.setVisible(true);
 
-    this.updateRadar(false);
+    this.radar.setLevel(this.level);
+    this.radar.setVisible(true);
+    this.radar.update();
 
     this.startIdleFlow();
-  }
-
-  async updateRadar(shouldAnimateUpdate = true) {
-    const { x, y } = this.player.getGridPosition();
-    const tiles = this.level.getNeighboringTiles(x, y);
-    return this.radar.update(tiles, store.dangerCount, shouldAnimateUpdate);
   }
 
   destroy() {

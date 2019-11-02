@@ -1,17 +1,21 @@
 import Phaser from "phaser";
 import Tile from "../level/tile";
-import { GameStore } from "../../store/index";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
 import globalLogger from "../../helpers/logger";
+import Player from "../player";
+import Level from "../level/level";
 
 class Radar {
   private scene: Phaser.Scene;
+  private player: Player;
+  private level: Level;
   private outlineGraphics: Phaser.GameObjects.Graphics;
   private labelGraphics: Phaser.GameObjects.Graphics;
   private text: Phaser.GameObjects.Text;
   private labelTween: Phaser.Tweens.Tween;
+  private enemyCount: number = 0;
   private x: number = 0;
   private y: number = 0;
   private w: number = 0;
@@ -20,8 +24,10 @@ class Radar {
   private reusableRect = new Phaser.Geom.Rectangle();
   private proxy = new EventProxy();
 
-  constructor(scene: Phaser.Scene, gameStore: GameStore) {
+  constructor(scene: Phaser.Scene, player: Player) {
     this.scene = scene;
+    this.player = player;
+    this.level = null;
     this.outlineGraphics = scene.add.graphics({
       fillStyle: { color: 0xfc3f3f },
       lineStyle: { color: 0xfc3f3f, width: 6 }
@@ -42,6 +48,14 @@ class Radar {
 
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
+
+  getEnemyCount() {
+    return this.enemyCount;
+  }
+
+  setLevel(level: Level) {
+    this.level = level;
   }
 
   setVisible(isVisible: boolean) {
@@ -113,10 +127,10 @@ class Radar {
     }
   }
 
-  private setDangerCount(count: number, shouldAnimateUpdate: boolean): Promise<void> {
+  private setDangerCount(shouldAnimateUpdate: boolean): Promise<void> {
     return new Promise(resolve => {
       if (!shouldAnimateUpdate) {
-        this.text.setText(`${count}`);
+        this.text.setText(`${this.enemyCount}`);
         resolve();
       } else {
         const target = { value: 1 };
@@ -135,7 +149,7 @@ class Radar {
             } else {
               if (!hasFlipped) {
                 hasFlipped = true;
-                this.text.setText(`${count}`);
+                this.text.setText(`${this.enemyCount}`);
               }
               const scale = -1 * target.value;
               this.text.scaleY = scale;
@@ -152,14 +166,15 @@ class Radar {
    * Updates the radar's shape and label. This should be called once, after the player has finished
    * an action like attacking or moving.
    *
-   * @param {Tile[]} tiles The neighboring tiles
-   * @param {number} dangerCount The number of neighboring enemies
-   * @param {boolean} shouldAnimateUpdate
    * @returns {Promise<[void, void]>}
    */
-  update(tiles: Tile[], dangerCount: number, shouldAnimateUpdate: boolean): Promise<[void, void]> {
-    const p1 = this.updateShapeFromTiles(tiles, shouldAnimateUpdate);
-    const p2 = this.setDangerCount(dangerCount, shouldAnimateUpdate);
+  update(): Promise<[void, void]> {
+    if (!this.level) return;
+    const { x, y } = this.player.getGridPosition();
+    this.enemyCount = this.level.countNeighboringEnemies(x, y);
+    const tiles = this.level.getNeighboringTiles(x, y);
+    const p1 = this.updateShapeFromTiles(tiles, true);
+    const p2 = this.setDangerCount(true);
     return Promise.all([p1, p2]);
   }
 
