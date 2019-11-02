@@ -179,28 +179,6 @@
          "name":"Scramble Enemies",
          "objects":[
                 {
-                 "height":225,
-                 "id":8,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":225,
-                 "x":525,
-                 "y":225
-                }, 
-                {
-                 "height":225,
-                 "id":9,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":225,
-                 "x":375,
-                 "y":450
-                }, 
-                {
                  "gid":7,
                  "height":75,
                  "id":10,
