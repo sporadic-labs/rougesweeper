@@ -16,6 +16,8 @@ class Radar {
   private text: Phaser.GameObjects.Text;
   private labelTween: Phaser.Tweens.Tween;
   private enemyCount: number = 0;
+  private isScrambling = false;
+  private scrambledEnemyCount: number = 0;
   private x: number = 0;
   private y: number = 0;
   private w: number = 0;
@@ -23,7 +25,6 @@ class Radar {
   private padding = 2.5;
   private reusableRect = new Phaser.Geom.Rectangle();
   private proxy = new EventProxy();
-
   private scrambleDangerCountTimer: Phaser.Time.TimerEvent;
 
   constructor(scene: Phaser.Scene, player: Player) {
@@ -130,9 +131,10 @@ class Radar {
   }
 
   private setDangerCount(shouldAnimateUpdate: boolean): Promise<void> {
+    const count = this.isScrambling ? this.scrambledEnemyCount : this.enemyCount;
     return new Promise(resolve => {
       if (!shouldAnimateUpdate) {
-        this.text.setText(`${this.enemyCount}`);
+        this.text.setText(`${count}`);
         resolve();
       } else {
         const target = { value: 1 };
@@ -151,7 +153,7 @@ class Radar {
             } else {
               if (!hasFlipped) {
                 hasFlipped = true;
-                this.text.setText(`${this.enemyCount}`);
+                this.text.setText(`${count}`);
               }
               const scale = -1 * target.value;
               this.text.scaleY = scale;
@@ -168,16 +170,17 @@ class Radar {
    * Scramble the count of enemies near the player, and the color of the radar.
    */
   private startScrambleRadar() {
+    this.isScrambling = true;
     if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
     this.scrambleDangerCountTimer = this.scene.time.addEvent({
       delay: 250,
       loop: true,
       callback: () => {
-        let newEnemyCount = this.enemyCount;
+        let newEnemyCount;
         do {
           newEnemyCount = Phaser.Math.RND.integerInRange(0, 9);
-        } while (newEnemyCount === this.enemyCount);
-        this.enemyCount = newEnemyCount;
+        } while (newEnemyCount === this.scrambledEnemyCount);
+        this.scrambledEnemyCount = newEnemyCount;
         this.setDangerCount(false);
       },
       callbackScope: this
@@ -193,6 +196,7 @@ class Radar {
    * Stop scrambling the count of enemies near the player and the color of the radar.
    */
   private stopScrambleRadar() {
+    this.isScrambling = false;
     if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
 
     this.labelGraphics.fillStyle(0xfc3f3f);
@@ -212,9 +216,9 @@ class Radar {
     const { x, y } = this.player.getGridPosition();
     this.enemyCount = this.level.countNeighboringEnemies(x, y);
     const inRangeOfScrambleEnemy = this.level.isNeighboringScrambleEnemy(x, y);
-    if (inRangeOfScrambleEnemy) {
+    if (inRangeOfScrambleEnemy && !this.isScrambling) {
       this.startScrambleRadar();
-    } else {
+    } else if (!inRangeOfScrambleEnemy && this.isScrambling) {
       this.stopScrambleRadar();
     }
     const tiles = this.level.getNeighboringTiles(x, y);
