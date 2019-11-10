@@ -128,7 +128,7 @@ export default class GameManager {
     const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
 
     await this.radar.update();
-    if (this.radar.enemyCount === 0) {
+    if (this.radar.getEnemyCount() === 0) {
       this.level
         .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
         .map(tile => tile.flipToFront());
@@ -182,7 +182,7 @@ export default class GameManager {
 
     const playerGridPos = this.player.getGridPosition();
     await this.radar.update();
-    if (this.radar.enemyCount === 0) {
+    if (this.radar.getEnemyCount() === 0) {
       this.level
         .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
         .map(tile => tile.flipToFront());
