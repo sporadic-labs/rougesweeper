@@ -1,4 +1,4 @@
-import { Math as PMath } from "phaser";
+import { Math as PMath, Geom } from "phaser";
 import { default as TILE } from "./tile-types";
 import { create2DArray } from "../../helpers/array-utils";
 import logger from "../../helpers/logger";
@@ -128,6 +128,69 @@ export default class LevelData {
     this.exitPosition = this.getPositionOf(TILE.EXIT);
 
     this.debugDump();
+  }
+
+  /**
+   * Calculate the bounding box of all the non-empty tiles within a layer of the map.
+   *
+   * @param {string} layerName Name of the layer in Tiled to use for the bbox calculation.
+   * @memberof LevelData
+   */
+  calculateLayerBoundingBox(layerName) {
+    // TODO: may need to use our own bbox object. Phaser's has the correct top/left/bottom/right,
+    // but the width and height are off by one.
+    const bbox = new Geom.Rectangle(0, 0, 0, 0);
+    let hasFoundLeft = false;
+    let hasFoundTop = false;
+    let hasFoundRight = false;
+    let hasFoundBottom = false;
+    const layerData = this.map.getLayer(layerName);
+    const rows = layerData.data.length;
+    const cols = layerData.data[0].length;
+
+    // Parse the top/left by looping from the top left to bottom right.
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const tile = layerData.data[y][x];
+        const isEmpty = tile.index === -1;
+        if (isEmpty) continue;
+        if (!hasFoundLeft) {
+          bbox.left = x;
+          hasFoundLeft = true;
+        }
+        if (!hasFoundTop) {
+          bbox.top = y;
+          hasFoundTop = true;
+        }
+        if (hasFoundLeft && hasFoundTop) break;
+      }
+      if (hasFoundLeft && hasFoundTop) break;
+    }
+
+    // Parse the bottom/right by looping from the bottom right to top left.
+    for (let y = rows - 1; y >= 0; y--) {
+      for (let x = cols - 1; x >= 0; x--) {
+        const tile = layerData.data[y][x];
+        const isEmpty = tile.index === -1;
+        if (isEmpty) continue;
+        if (!hasFoundRight) {
+          bbox.right = x;
+          hasFoundRight = true;
+        }
+        if (!hasFoundBottom) {
+          bbox.bottom = y;
+          hasFoundBottom = true;
+        }
+        if (hasFoundRight && hasFoundBottom) break;
+      }
+      if (hasFoundRight && hasFoundBottom) break;
+    }
+
+    if (!hasFoundBottom || !hasFoundTop || !hasFoundLeft || !hasFoundRight) {
+      throw new Error(`Error calculating the bounding box of layer ${layerName}.`);
+    }
+
+    return bbox;
   }
 
   /**
