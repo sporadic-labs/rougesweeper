@@ -38,6 +38,7 @@ const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
 export default class LevelData {
   /** @param {Phaser.Tilemaps.Tilemap} map */
   constructor(map) {
+    this.map = map;
     const { width, height } = map;
 
     // For the gameboard, we are just using tiled to lay out levels, not load tile images. So,
