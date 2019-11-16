@@ -27,6 +27,7 @@ const levelKeys = levelData.map(({ level }) => level);
  * @param scene
  */
 function loadLevels(scene: Phaser.Scene) {
+  scene.load.image("all-assets", "maps/tilesets/all-assets.png");
   scene.load.image("hq", "maps/tilesets/hq.png");
   scene.load.image("warehouse", "maps/tilesets/warehouse.png");
   scene.load.image("lab", "maps/tilesets/lab.png");
