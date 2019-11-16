@@ -41,6 +41,9 @@ export default class LevelData {
     this.map = map;
     const { width, height } = map;
 
+    // TODO: this needs to be refactored to not generate a 2D array of enum values. Instead, use
+    // calculateLayerBoundingBox to find the bbox of the Tiles layer.
+
     // For the gameboard, we are just using tiled to lay out levels, not load tile images. So,
     // we need to parse the Tile IDs to an enum value as a way to identify each tile in the board.
     const firstId = map.getTileset("tiles").firstgid;
