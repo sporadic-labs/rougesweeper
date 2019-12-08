@@ -61,8 +61,10 @@ export default class Level {
     this.tileHeight = this.map.tileHeight;
 
     this.tiles = this.data.tiles.map((row, y) =>
-      row.map((type, x) => {
-        if (!type) return undefined;
+      row.map((dataTile, x) => {
+        if (!dataTile || !dataTile.type) return undefined;
+
+        const { type, phaserTile } = dataTile;
 
         const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
 

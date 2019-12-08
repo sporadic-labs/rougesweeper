@@ -35,6 +35,13 @@ const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
   }
 };
 
+class DataTile {
+  constructor(type, phaserTile) {
+    this.type = type;
+    this.phaserTile = phaserTile;
+  }
+}
+
 export default class LevelData {
   /** @param {Phaser.Tilemaps.Tilemap} map */
   constructor(map) {
@@ -60,7 +67,9 @@ export default class LevelData {
 
         // Fill in any ground tiles from the "Tiles" layer.
         const groundTile = map.getTileAt(mapX, mapY, false, "Tiles");
-        if (groundTile) tiles[groundY][groundX] = TILE.BLANK;
+        if (groundTile) {
+          tiles[groundY][groundX] = new DataTile(TILE.BLANK, groundTile);
+        }
 
         // Fill in another non-ground tiles, which are located within the "Assets" layer and are
         // expected to have a type property that matches TILE_TYPES exactly.
@@ -69,8 +78,11 @@ export default class LevelData {
           if (assetTile.properties && assetTile.properties.type) {
             const stringType = assetTile.properties.type;
             const parsedType = TILE[stringType];
-            if (parsedType) tiles[groundY][groundX] = parsedType;
-            else logger.warn(`Unexpected tile type ${stringType} at (${groundX}, ${groundY})`);
+            if (parsedType) {
+              tiles[groundY][groundX] = new DataTile(parsedType, groundTile);
+            } else {
+              logger.warn(`Unexpected tile type ${stringType} at (${groundX}, ${groundY})`);
+            }
           } else {
             logger.warn(`Tile is missing type property at (${groundX}, ${groundY})`);
           }
