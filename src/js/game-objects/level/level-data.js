@@ -294,7 +294,7 @@ export default class LevelData {
   getPositionOf(tileType) {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        if (this.tiles[y][x] === tileType) return { x, y };
+        if (this.tiles[y][x] && this.tiles[y][x].type === tileType) return { x, y };
       }
     }
     return null;
@@ -304,7 +304,7 @@ export default class LevelData {
     const positions = [];
     this.tiles.forEach((row, y) => {
       row.forEach((tile, x) => {
-        if (tile === tileType) positions.push({ x, y });
+        if (tile && tile.type === tileType) positions.push({ x, y });
       });
     });
     return positions;
