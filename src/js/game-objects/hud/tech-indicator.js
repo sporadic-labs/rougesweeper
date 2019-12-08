@@ -10,15 +10,6 @@ const textStyle = {
   fontStyle: "bold"
 };
 
-const containerHeight = 120;
-const containerPos = fraction => {
-  if (fraction > 0.5) {
-    return containerHeight * (fraction - 0.5);
-  } else {
-    return -(containerHeight * (0.5 - fraction));
-  }
-};
-
 export default class TechIndicator {
   /**
    * @param {Phaser.Scene} scene
@@ -26,21 +17,25 @@ export default class TechIndicator {
   constructor(scene, gameStore) {
     this.scene = scene;
 
+    const containerHeight = 120;
+    const bgPadding = { x: 4, y: 25 };
+    const bgWidth = 96;
+
     this.sprite = scene.add
-      .sprite(0, containerPos(0.35), "assets", "ui/tech-icon")
-      .setOrigin(0.5, 0.5);
+      .sprite(bgWidth / 2, bgPadding.y, "assets", "ui/tech-icon")
+      .setOrigin(0.5, 0);
 
     this.text = scene.add
-      .text(0, containerPos(0.75), "0", textStyle)
-      .setOrigin(0.5, 0.5);
+      .text(bgWidth / 2, this.sprite.height + bgPadding.y + 10, "0", textStyle)
+      .setOrigin(0.5, 0);
 
     this.background = scene.add
       .rectangle(0, 0, 96, containerHeight, 0xffffff)
       .setStrokeStyle(8, 0x585e5e, 1)
-      .setOrigin(0.5, 0.5);
+      .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.17), fractionToY(0.88), [
+      .container(fractionToX(0.12), fractionToY(0.8), [
         this.background,
         this.sprite,
         this.text
