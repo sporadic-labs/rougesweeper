@@ -15,19 +15,23 @@ export default class AttackToggle {
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    const x = fractionToX(0.1);
-    const startY = fractionToY(0.85);
+    const x = fractionToX(0.9);
+    const startY = fractionToY(0.88);
 
     this.state = TOGGLE_STATES.UP;
 
-    this.attackCountText = scene.add.text(x, startY, "", { fontSize: 25 }).setOrigin(0.5, 0.5);
+    this.attackCountText = scene.add
+      .text(x, startY, "", { fontSize: 25 })
+      .setOrigin(0.5, 0.5);
 
     // Makeshift button for mvp purposes.
     // TODO(rex): Probably replace this with a sprite.
     const buttonWidth = 160;
     const buttonHeight = 40;
     this.attackToggle = scene.add.container(x, startY + 40, [
-      scene.add.rectangle(0, 0, buttonWidth, buttonHeight, 0xbcbcbc, 1).setOrigin(0.5, 0.5),
+      scene.add
+        .rectangle(0, 0, buttonWidth, buttonHeight, 0xbcbcbc, 1)
+        .setOrigin(0.5, 0.5),
       scene.add.text(0, 0, "Attack", { fontSize: 25 }).setOrigin(0.5, 0.5),
       scene.add.text(0, 0, "Cancel", { fontSize: 25 }).setOrigin(0.5, 0.5)
     ]);

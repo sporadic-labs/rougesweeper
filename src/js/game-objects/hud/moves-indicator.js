@@ -8,8 +8,10 @@ export default class MovesIndicator {
    */
   constructor(scene, gameStore) {
     this.scene = scene;
-    const x = fractionToX(1) - 200;
-    this.text = scene.add.text(x, fractionToY(0.88), "", { fontSize: 25 }).setOrigin(0.5, 0.5);
+    const x = fractionToX(0.9);
+    this.text = scene.add
+      .text(x, fractionToY(0.8), "", { fontSize: 25 })
+      .setOrigin(0.5, 0.5);
 
     this.updateText(gameStore.moveCount, true);
     this.dispose = autorun(() => this.updateText(gameStore.moveCount));
