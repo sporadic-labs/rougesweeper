@@ -1,6 +1,7 @@
 import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
+import DEPTHS from "../depths";
 
 const FRAMES = {
   FILLED: "ui/alert-icon-filled",
@@ -44,11 +45,13 @@ export default class AlertIndicator {
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0, 0);
 
-    this.container = scene.add.container(fractionToX(0.14), fractionToY(0.17), [
-      this.background,
-      this.text,
-      ...this.icons
-    ]);
+    this.container = scene.add
+      .container(fractionToX(0.12), fractionToY(0.08), [
+        this.background,
+        this.text,
+        ...this.icons
+      ])
+      .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.playerHealth, true);
     this.dispose = autorun(() => this.updateText(gameStore.playerHealth));
