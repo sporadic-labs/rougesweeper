@@ -7,7 +7,7 @@
   <image source="tiles.png" width="300" height="225"/>
  </tileset>
  <tileset firstgid="69" name="assets" tilewidth="75" tileheight="75" spacing="2" margin="2" tilecount="63" columns="9">
-  <image source="../../../../../Sporadic Labs/Rougesweeper/assets/1x/allAssets.png" width="696" height="542"/>
+  <image source="tilesets/all-assets.png" width="695" height="541"/>
  </tileset>
  <layer name="Board" width="16" height="14" offsetx="-38" offsety="-38">
   <data encoding="csv">
@@ -55,7 +55,7 @@
 0,0,0,0,0,0,111,112,103,0,0,0,0,0,0,0,
 0,0,0,0,64,0,0,0,0,0,58,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,57,0,57,0,57,0,57,0,0,0,0,0,
+0,0,0,0,94,0,108,0,102,0,93,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
