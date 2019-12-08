@@ -39,51 +39,45 @@ export default class LevelData {
   /** @param {Phaser.Tilemaps.Tilemap} map */
   constructor(map) {
     this.map = map;
-    const { width, height } = map;
-
-    // TODO: this needs to be refactored to not generate a 2D array of enum values. Instead, use
-    // calculateLayerBoundingBox to find the bbox of the Tiles layer.
-
-    // For the gameboard, we are just using tiled to lay out levels, not load tile images. So,
-    // we need to parse the Tile IDs to an enum value as a way to identify each tile in the board.
-    const firstId = map.getTileset("tiles").firstgid;
-    const tilesetIDToEnum = {
-      [firstId + 0]: TILE.WALL,
-      [firstId + 1]: TILE.EXIT,
-      [firstId + 2]: TILE.SHOP,
-      [firstId + 5]: TILE.BLANK,
-      [firstId + 6]: TILE.ENEMY,
-      [firstId + 7]: TILE.START,
-      [firstId + 8]: TILE.EXIT,
-      [firstId + 9]: TILE.KEY
-    };
-
     this.tileWidth = map.tileWidth;
     this.tileHeight = map.tileHeight;
 
-    const tiles = create2DArray(width, height, undefined);
+    const groundRect = this.calculateLayerBoundingBox("Tiles");
+    this.leftOffset = groundRect.left;
+    this.topOffset = groundRect.top;
+    this.width = groundRect.width;
+    this.height = groundRect.height;
+    this.topLeftTile = map.getTileAt(this.leftOffset, this.topOffset, false, "Tiles");
+
+    const tiles = create2DArray(this.width, this.height, undefined);
     this.tiles = tiles;
 
-    // Loop over the ground layer, filling in all blanks
-    map.setLayer("Tiles");
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        if (map.getTileAt(x, y)) tiles[y][x] = TILE.BLANK;
-      }
-    }
+    // Loop over the board locations within the map to determine the tiles.
+    for (let groundX = 0; groundX < this.width; groundX++) {
+      for (let groundY = 0; groundY < this.height; groundY++) {
+        const mapX = groundRect.left + groundX;
+        const mapY = groundRect.top + groundY;
 
-    // Loop over the foreground to place any non-blank tiles
-    map.setLayer("Assets");
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        const tile = map.getTileAt(x, y);
-        if (tile) {
-          const type = tilesetIDToEnum[tile.index];
-          if (type !== undefined) tiles[y][x] = type;
-          else logger.warn("Unexpected tile index in map");
+        // Fill in any ground tiles from the "Tiles" layer.
+        const groundTile = map.getTileAt(mapX, mapY, false, "Tiles");
+        if (groundTile) tiles[groundY][groundX] = TILE.BLANK;
+
+        // Fill in another non-ground tiles, which are located within the "Assets" layer and are
+        // expected to have a type property that matches TILE_TYPES exactly.
+        const assetTile = map.getTileAt(mapX, mapY, false, "Assets");
+        if (assetTile) {
+          if (assetTile.properties && assetTile.properties.type) {
+            const stringType = assetTile.properties.type;
+            const parsedType = TILE[stringType];
+            if (parsedType) tiles[groundY][groundX] = parsedType;
+            else logger.warn(`Unexpected tile type ${stringType} at (${groundX}, ${groundY})`);
+          } else {
+            logger.warn(`Tile is missing type property at (${groundX}, ${groundY})`);
+          }
         }
       }
     }
+
     const keyLayer = map.getObjectLayer("Random Key");
     if (keyLayer) {
       const keyPosition = this.generateKeyPosition(keyLayer);
@@ -105,28 +99,6 @@ export default class LevelData {
       enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
     }
 
-    // Calculate top & left offset and trim map AFTER parsing everything from the Tiled map.
-    let leftOffset = 0;
-    let topOffset = 0;
-    map.setLayer("Board");
-    this.tiles = this.tiles
-      .map(row =>
-        row.filter((value, i) => {
-          if (value && !leftOffset) leftOffset = i;
-          return value;
-        })
-      )
-      .filter((row, i) => {
-        const empty = row.length === 0;
-        if (!empty && !topOffset) topOffset = i;
-        return !empty;
-      });
-    this.leftOffset = leftOffset;
-    this.topOffset = topOffset;
-    this.width = this.tiles[0].length;
-    this.height = this.tiles.length;
-    this.topLeftTile = map.getTileAt(leftOffset, topOffset);
-
     this.isExitLocked = this.hasTileOfType(TILE.KEY);
     this.startPosition = this.getPositionOf(TILE.START);
     this.exitPosition = this.getPositionOf(TILE.EXIT);
@@ -141,9 +113,7 @@ export default class LevelData {
    * @memberof LevelData
    */
   calculateLayerBoundingBox(layerName) {
-    // TODO: may need to use our own bbox object. Phaser's has the correct top/left/bottom/right,
-    // but the width and height are off by one.
-    const bbox = new Geom.Rectangle(0, 0, 0, 0);
+    const bbox = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
     let hasFoundLeft = false;
     let hasFoundTop = false;
     let hasFoundRight = false;
@@ -193,6 +163,9 @@ export default class LevelData {
     if (!hasFoundBottom || !hasFoundTop || !hasFoundLeft || !hasFoundRight) {
       throw new Error(`Error calculating the bounding box of layer ${layerName}.`);
     }
+
+    bbox.width = bbox.right - bbox.left + 1;
+    bbox.height = bbox.bottom - bbox.top + 1;
 
     return bbox;
   }
