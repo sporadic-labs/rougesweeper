@@ -23,7 +23,7 @@ export default class LevelIndicator {
       .setOrigin(0.5, 0.5);
 
     this.container = scene.add
-      .container(fractionToX(0.5), fractionToY(0.924), [
+      .container(fractionToX(0.5), fractionToY(0.9525), [
         this.background,
         this.text
       ])
