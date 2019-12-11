@@ -14,6 +14,7 @@ export default class LoadingScene extends Phaser.Scene {
 
     this.load.setPath("resources/");
     this.load.atlas("assets", "atlases/assets.png", "atlases/assets.json");
+    this.load.atlas("all-assets", "atlases/all-assets.png", "atlases/all-assets.json");
     loadLevels(this);
     loadDialogue(this);
   }
