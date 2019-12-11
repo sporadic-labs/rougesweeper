@@ -8,6 +8,6 @@ export function arrayEqual(array1: any[], array2: any[]): boolean {
 /**
  * Creates a 2D array of width x height, filled with the given value.
  */
-export function create2DArray(width: number, height: number, value: any): any[][] {
+export function create2DArray(width: number, height: number, value?: any): any[][] {
   return [...Array(height)].map(() => Array(width).fill(value));
 }

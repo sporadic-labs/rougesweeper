@@ -1,15 +1,21 @@
 import { js as EasyStar } from "easystarjs";
 import { create2DArray } from "../../helpers/array-utils";
 
-const LOCATION = {
-  WALKABLE: 0,
-  UNWALKABLE: 1
-};
+enum LOCATION {
+  WALKABLE = 0,
+  UNWALKABLE = 1
+}
+
+interface Point {
+  x: number;
+  y: number;
+}
 
 export default class PathFinder {
-  constructor(width, height) {
-    this.width = width;
-    this.height = height;
+  private grid: number[][];
+  private easyStar: EasyStar;
+
+  constructor(public width: number, public height: number) {
     this.grid = create2DArray(width, height);
     this.easyStar = new EasyStar();
     this.easyStar.setGrid(this.grid);
@@ -26,19 +32,19 @@ export default class PathFinder {
     );
   }
 
-  setWalkableAt(x, y) {
+  setWalkableAt(x: number, y: number) {
     this.grid[y][x] = LOCATION.WALKABLE;
   }
 
-  setUnwalkableAt(x, y) {
+  setUnwalkableAt(x: number, y: number) {
     this.grid[y][x] = LOCATION.UNWALKABLE;
   }
 
-  isInBounds(x, y) {
+  isInBounds(x: number, y: number) {
     return x >= 0 && x < this.width && y >= 0 && y < this.height;
   }
 
-  isWalkableAt(x, y) {
+  isWalkableAt(x: number, y: number) {
     return this.grid[y][x] === LOCATION.WALKABLE;
   }
 
@@ -46,7 +52,7 @@ export default class PathFinder {
     this.easyStar.setGrid(this.grid);
   }
 
-  findPath(start, end) {
+  findPath(start: Point, end: Point): Point[] {
     let path = null;
     this.easyStar.findPath(start.x, start.y, end.x, end.y, p => (path = p));
     this.easyStar.calculate();
