@@ -323,12 +323,8 @@ export default class LevelData {
     const numWall = flatTiles.filter(t => t.type === TILE.WALL).length;
     const stats =
       `Num tiles: ${numTiles}\n` +
-      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(
-        2
-      )}%)\n` +
-      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(
-        2
-      )}%)\n` +
+      `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(2)}%)\n` +
+      `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(2)}%)\n` +
       `Gold tiles: ${numGold} (${((numGold / numTiles) * 100).toFixed(2)}%)\n` +
       `Wall tiles: ${numWall} (${((numWall / numTiles) * 100).toFixed(2)}%)`;
     console.log(`${grid}\n${stats}`);
