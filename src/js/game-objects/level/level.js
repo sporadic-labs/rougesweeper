@@ -65,6 +65,7 @@ export default class Level {
         if (!dataTile || !dataTile.type) return undefined;
 
         const { type, phaserTile } = dataTile;
+        const { frameName } = phaserTile.properties;
 
         const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
 
@@ -72,6 +73,7 @@ export default class Level {
           scene,
           levelKey,
           type,
+          frameName,
           this.gridXToWorldX(x),
           this.gridYToWorldY(y),
           this.events,

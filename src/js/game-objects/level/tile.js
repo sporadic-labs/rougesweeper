@@ -7,21 +7,9 @@ import createPickupAnimation from "./tile-animations/pickup-animation.ts";
 import createDisappearAnimation from "./tile-animations/disappear-animation.ts";
 import createAttackAnimation from "./tile-animations/attack-animation.ts";
 
-const TYPE_TO_KEY = {
-  [TILE_TYPES.START]: "tile-blank",
-  [TILE_TYPES.SHOP]: "shop",
-  [TILE_TYPES.BLANK]: "tile-blank",
-  [TILE_TYPES.GOLD]: "tech",
-  [TILE_TYPES.ENEMY]: "enemy",
-  [TILE_TYPES.SCRAMBLE_ENEMY]: "enemy",
-  [TILE_TYPES.EXIT]: "stairs-down",
-  [TILE_TYPES.WALL]: "wall",
-  [TILE_TYPES.KEY]: "key"
-};
-
 export default class Tile {
   /** @param {Phaser.Scene} scene */
-  constructor(scene, levelKey, type, x, y, levelEvents, dialogueData = null) {
+  constructor(scene, levelKey, type, frameName, x, y, levelEvents, dialogueData = null) {
     this.scene = scene;
     this.levelKey = levelKey;
     this.levelEvents = levelEvents;
@@ -34,14 +22,15 @@ export default class Tile {
     this.gridX = 0;
     this.gridY = 0;
 
-    this.backSprite = scene.add.sprite(0, 0, "assets", `tiles/tile-back`);
+    this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back");
 
     // Construct the Front Tile based on it's type.
     // It always gets a background title, with an optional top graphic.
-    const frontTileSprites = [scene.add.sprite(0, 0, "assets", "tiles/tile-blank")];
+    // TODO: this isn't the right sprite for all levels.
+    const frontTileSprites = [scene.add.sprite(0, 0, "all-assets", "tile-skyscraper")];
     this.tileContents = null;
-    if (!this.isCurrentlyBlank) {
-      this.tileContents = scene.add.sprite(0, 0, "assets", `tiles/${TYPE_TO_KEY[type]}`);
+    if (!this.isCurrentlyBlank && type !== TILE_TYPES.START) {
+      this.tileContents = scene.add.sprite(0, 0, "all-assets", frameName);
       frontTileSprites.push(this.tileContents);
     }
     this.frontTile = scene.add.container(0, 0, frontTileSprites);
