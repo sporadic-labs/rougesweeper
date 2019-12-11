@@ -4,9 +4,7 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.5.0</string>
-        <key>fileName</key>
-        <string>C:/Users/rex/Documents/GitHub/rougesweeper/src/resources/atlases/allAssets.tps</string>
+        <string>5.2.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -36,7 +34,7 @@
         <key>dataFormat</key>
         <string>phaser-json-hash</string>
         <key>textureFileName</key>
-        <filename>allAssets.png</filename>
+        <filename>all-assets.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -58,7 +56,7 @@
         <key>jxrCompressionLevel</key>
         <uint>0</uint>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
+        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -84,7 +82,7 @@
         <key>atfFormats</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png</enum>
+        <enum type="SettingsBase::TextureFormat">png8</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -129,28 +127,12 @@
                 <uint>1</uint>
             </struct>
         </struct>
-        <key>andEngine</key>
-        <struct type="AndEngine">
-            <key>minFilter</key>
-            <enum type="AndEngine::MinFilter">Linear</enum>
-            <key>packageName</key>
-            <string>Texture</string>
-            <key>wrap</key>
-            <struct type="AndEngineWrap">
-                <key>s</key>
-                <enum type="AndEngineWrap::Wrap">Clamp</enum>
-                <key>t</key>
-                <enum type="AndEngineWrap::Wrap">Clamp</enum>
-            </struct>
-            <key>magFilter</key>
-            <enum type="AndEngine::MagFilter">MagLinear</enum>
-        </struct>
         <key>dataFileNames</key>
         <map type="GFileNameMap">
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>allAssets.json</filename>
+                <filename>all-assets.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -169,7 +151,7 @@
         <key>autoAliasEnabled</key>
         <true/>
         <key>trimSpriteNames</key>
-        <false/>
+        <true/>
         <key>prependSmartFolderName</key>
         <false/>
         <key>autodetectAnimations</key>
@@ -199,64 +181,81 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">allAssets/3d-printer-1.png</key>
-            <key type="filename">allAssets/ancient-statue.png</key>
-            <key type="filename">allAssets/attack-fx-1.png</key>
-            <key type="filename">allAssets/attack-fx-2.png</key>
-            <key type="filename">allAssets/attack-fx-3.png</key>
-            <key type="filename">allAssets/bookcase-1.png</key>
-            <key type="filename">allAssets/bookcase-2.png</key>
-            <key type="filename">allAssets/bookcase-cabinet.png</key>
-            <key type="filename">allAssets/cabinet-1.png</key>
-            <key type="filename">allAssets/cabinet-plant.png</key>
-            <key type="filename">allAssets/compass.png</key>
-            <key type="filename">allAssets/computer-1.png</key>
-            <key type="filename">allAssets/computer-2.png</key>
-            <key type="filename">allAssets/desk-1.png</key>
-            <key type="filename">allAssets/desk-2.png</key>
-            <key type="filename">allAssets/desk-3.png</key>
-            <key type="filename">allAssets/desk-4.png</key>
-            <key type="filename">allAssets/desk-5.png</key>
-            <key type="filename">allAssets/desk-6.png</key>
-            <key type="filename">allAssets/desk-drinks.png</key>
-            <key type="filename">allAssets/desk-science.png</key>
-            <key type="filename">allAssets/enemy-1.png</key>
-            <key type="filename">allAssets/enemy-2.png</key>
-            <key type="filename">allAssets/enemy-3.png</key>
-            <key type="filename">allAssets/glove-box-1.png</key>
-            <key type="filename">allAssets/hole-1.png</key>
-            <key type="filename">allAssets/key.png</key>
-            <key type="filename">allAssets/marker-1.png</key>
-            <key type="filename">allAssets/marker-2.png</key>
-            <key type="filename">allAssets/player-f.png</key>
-            <key type="filename">allAssets/player-m.png</key>
-            <key type="filename">allAssets/rocks-1.png</key>
-            <key type="filename">allAssets/rocks-2.png</key>
-            <key type="filename">allAssets/ruins-1.png</key>
-            <key type="filename">allAssets/ruins-2.png</key>
-            <key type="filename">allAssets/shelves-1.png</key>
-            <key type="filename">allAssets/shelves-2.png</key>
-            <key type="filename">allAssets/shield-switch-1.png</key>
-            <key type="filename">allAssets/shop.png</key>
-            <key type="filename">allAssets/stairs-1.png</key>
-            <key type="filename">allAssets/stairs-2.png</key>
-            <key type="filename">allAssets/statue-tree.png</key>
-            <key type="filename">allAssets/tech-1.png</key>
-            <key type="filename">allAssets/tech-2.png</key>
-            <key type="filename">allAssets/tile-back-disabled.png</key>
-            <key type="filename">allAssets/tile-back.png</key>
-            <key type="filename">allAssets/tile-hq.png</key>
-            <key type="filename">allAssets/tile-lab.png</key>
-            <key type="filename">allAssets/tile-skyscraper.png</key>
-            <key type="filename">allAssets/tile-temple.png</key>
-            <key type="filename">allAssets/tile-warehouse.png</key>
-            <key type="filename">allAssets/trash.png</key>
-            <key type="filename">allAssets/watercooler.png</key>
-            <key type="filename">allAssets/workbench-1.png</key>
-            <key type="filename">allAssets/workbench-2.png</key>
+            <key type="filename">all-assets/3d-printer-1.png</key>
+            <key type="filename">all-assets/ancient-statue.png</key>
+            <key type="filename">all-assets/attack-fx-1.png</key>
+            <key type="filename">all-assets/attack-fx-2.png</key>
+            <key type="filename">all-assets/attack-fx-3.png</key>
+            <key type="filename">all-assets/bookcase-1.png</key>
+            <key type="filename">all-assets/bookcase-2.png</key>
+            <key type="filename">all-assets/bookcase-cabinet.png</key>
+            <key type="filename">all-assets/cabinet-1.png</key>
+            <key type="filename">all-assets/cabinet-plant.png</key>
+            <key type="filename">all-assets/compass.png</key>
+            <key type="filename">all-assets/computer-1.png</key>
+            <key type="filename">all-assets/computer-2.png</key>
+            <key type="filename">all-assets/desk-1.png</key>
+            <key type="filename">all-assets/desk-2.png</key>
+            <key type="filename">all-assets/desk-3.png</key>
+            <key type="filename">all-assets/desk-4.png</key>
+            <key type="filename">all-assets/desk-5.png</key>
+            <key type="filename">all-assets/desk-6.png</key>
+            <key type="filename">all-assets/desk-drinks.png</key>
+            <key type="filename">all-assets/desk-science.png</key>
+            <key type="filename">all-assets/enemy-1.png</key>
+            <key type="filename">all-assets/enemy-2.png</key>
+            <key type="filename">all-assets/enemy-3.png</key>
+            <key type="filename">all-assets/glove-box-1.png</key>
+            <key type="filename">all-assets/hole-1.png</key>
+            <key type="filename">all-assets/key.png</key>
+            <key type="filename">all-assets/marker-1.png</key>
+            <key type="filename">all-assets/marker-2.png</key>
+            <key type="filename">all-assets/player-f.png</key>
+            <key type="filename">all-assets/player-m.png</key>
+            <key type="filename">all-assets/rocks-1.png</key>
+            <key type="filename">all-assets/rocks-2.png</key>
+            <key type="filename">all-assets/ruins-1.png</key>
+            <key type="filename">all-assets/ruins-2.png</key>
+            <key type="filename">all-assets/shelves-1.png</key>
+            <key type="filename">all-assets/shelves-2.png</key>
+            <key type="filename">all-assets/shield-switch-1.png</key>
+            <key type="filename">all-assets/shop.png</key>
+            <key type="filename">all-assets/stairs-1.png</key>
+            <key type="filename">all-assets/stairs-2.png</key>
+            <key type="filename">all-assets/statue-tree.png</key>
+            <key type="filename">all-assets/tech-1.png</key>
+            <key type="filename">all-assets/tech-2.png</key>
+            <key type="filename">all-assets/tile-back-disabled.png</key>
+            <key type="filename">all-assets/tile-back.png</key>
+            <key type="filename">all-assets/tile-hq.png</key>
+            <key type="filename">all-assets/tile-lab.png</key>
+            <key type="filename">all-assets/tile-skyscraper.png</key>
+            <key type="filename">all-assets/tile-temple.png</key>
+            <key type="filename">all-assets/tile-warehouse.png</key>
+            <key type="filename">all-assets/trash.png</key>
+            <key type="filename">all-assets/watercooler.png</key>
+            <key type="filename">all-assets/workbench-1.png</key>
+            <key type="filename">all-assets/workbench-2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>19,19,37,37</rect>
+                <key>scale9Paddings</key>
+                <rect>19,19,37,37</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">all-assets/tile-blank.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -269,7 +268,7 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>allAssets</filename>
+            <filename>all-assets</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
