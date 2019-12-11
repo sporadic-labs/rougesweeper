@@ -79,7 +79,7 @@ export default class LevelData {
             const stringType = assetTile.properties.type;
             const parsedType = TILE[stringType];
             if (parsedType) {
-              tiles[groundY][groundX] = new DataTile(parsedType, groundTile);
+              tiles[groundY][groundX] = new DataTile(parsedType, assetTile);
             } else {
               logger.warn(`Unexpected tile type ${stringType} at (${groundX}, ${groundY})`);
             }
