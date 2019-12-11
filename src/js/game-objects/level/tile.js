@@ -3,6 +3,9 @@ import LEVEL_EVENTS from "./events";
 import FlipEffect from "./flip-effect";
 import AttackAnimation from "../player/attack-animation";
 import DEPTHS from "../depths";
+import createPickupAnimation from "./tile-animations/pickup-animation.ts";
+import createDisappearAnimation from "./tile-animations/disappear-animation.ts";
+import createAttackAnimation from "./tile-animations/attack-animation.ts";
 
 const TYPE_TO_KEY = {
   [TILE_TYPES.START]: "tile-blank",
@@ -14,64 +17,6 @@ const TYPE_TO_KEY = {
   [TILE_TYPES.EXIT]: "stairs-down",
   [TILE_TYPES.WALL]: "wall",
   [TILE_TYPES.KEY]: "key"
-};
-
-const createPickupAnim = (timeline, target) => {
-  return timeline
-    .add({
-      targets: target,
-      ease: Phaser.Math.Easing.Quadratic.Out,
-      duration: 200,
-      scaleX: 1.05,
-      scaleY: 1.05,
-      y: -30
-    })
-    .add({
-      targets: target,
-      duration: 200,
-      ease: Phaser.Math.Easing.Quadratic.In,
-      scaleX: 0.5,
-      scaleY: 0.5,
-      y: 0
-    });
-};
-
-const createAttackAnim = (timeline, target) => {
-  return timeline
-    .add({
-      targets: target,
-      ease: Phaser.Math.Easing.Quadratic.InOut,
-      duration: 200,
-      x: 10,
-      angle: 5
-    })
-    .add({
-      targets: target,
-      duration: 150,
-      ease: Phaser.Math.Easing.Quadratic.In,
-      x: -10,
-      angle: -10
-    })
-    .add({
-      targets: target,
-      duration: 150,
-      ease: Phaser.Math.Easing.Quadratic.Out,
-      scaleX: 0.5,
-      scaleY: 0.5,
-      x: 0,
-      angle: 0
-    });
-};
-
-const createTileDisappearAnim = (timeline, target) => {
-  timeline.add({
-    targets: target,
-    duration: 400,
-    ease: Phaser.Math.Easing.Quadratic.In,
-    scaleX: 0.25,
-    scaleY: 0.25,
-    angle: 720
-  });
 };
 
 export default class Tile {
@@ -133,9 +78,9 @@ export default class Tile {
 
         // Setup different animations for the Gold vs. the Enemy graphics.
         if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.KEY) {
-          createPickupAnim(this.tileGraphicTimeline, this.tileContents);
+          this.tileGraphicTimeline = createPickupAnimation(this.scene, this.tileContents);
         } else if (this.type === TILE_TYPES.ENEMY || this.type === TILE_TYPES.SCRAMBLE_ENEMY) {
-          createAttackAnim(this.tileGraphicTimeline, this.tileContents);
+          this.tileGraphicTimeline = createAttackAnimation(this.scene, this.tileContents);
           this.tileGraphicTimeline.on("complete", () => {
             const attackAnim = new AttackAnimation(
               this.scene,
@@ -166,10 +111,7 @@ export default class Tile {
         this.type === TILE_TYPES.SCRAMBLE_ENEMY
       ) {
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
-
-        this.tileGraphicTimeline = this.scene.tweens.createTimeline();
-
-        createTileDisappearAnim(this.tileGraphicTimeline, this.tileContents);
+        this.tileGraphicTimeline = createDisappearAnimation(this.scene, this.tileContents);
         this.tileGraphicTimeline
           .on("complete", () => {
             this.removeTileContents();
