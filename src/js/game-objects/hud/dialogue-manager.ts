@@ -20,7 +20,7 @@ const titleStyle = {
 };
 const textStyle = {
   ...baseTextStyle,
-  fontSize: 18
+  fontSize: 22
 };
 
 export interface TileDialogueEntry {
@@ -98,7 +98,7 @@ export default class DialogueManager {
       .setOrigin(0.5, 0.5);
 
     this.text = scene.add
-      .text(r.centerX + 72, r.centerY + 12, "", baseTextStyle)
+      .text(r.centerX + 72, r.centerY + 12, "", textStyle)
       .setOrigin(0.5, 0.5)
       .setLineSpacing(6)
       .setFixedSize(modalWidth * 0.76, modalHeight * 0.6)
