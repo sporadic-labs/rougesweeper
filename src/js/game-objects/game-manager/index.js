@@ -1,4 +1,4 @@
-import LEVEL_EVENTS from "../level/events";
+import LEVEL_EVENTS from "../level/events.ts";
 import TILE_TYPES from "../level/tile-types";
 import Level from "../level/level";
 import store from "../../store";

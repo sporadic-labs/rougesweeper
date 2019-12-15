@@ -1,0 +1,7 @@
+enum LEVEL_EVENTS {
+  TILE_OVER = "TILE_OVER",
+  TILE_OUT = "TILE_OUT",
+  TILE_SELECT = "TILE_SELECT"
+}
+
+export default LEVEL_EVENTS;

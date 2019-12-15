@@ -1,5 +1,5 @@
 import TILE_TYPES from "./tile-types";
-import LEVEL_EVENTS from "./events";
+import LEVEL_EVENTS from "./events.ts";
 import FlipEffect from "./flip-effect";
 import AttackAnimation from "../player/attack-animation";
 import DEPTHS from "../depths";
