@@ -11,7 +11,6 @@ import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
 import DialogueManager from "../hud/dialogue-manager";
-import RadialMenu, { RadialOption, MenuEvents } from "../hud/radial-menu";
 
 export default class GameManager {
   /**
@@ -29,7 +28,6 @@ export default class GameManager {
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
     this.dialogueManager = new DialogueManager(scene, store);
-    this.radialMenu = new RadialMenu(this.scene, 0, 0);
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -59,48 +57,58 @@ export default class GameManager {
   }
 
   startIdleFlow() {
-    this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
-    this.level.events.on(LEVEL_EVENTS.TILE_OVER, tile => {
-      const playerGridPos = this.player.getGridPosition();
-      const tileGridPos = tile.getGridPosition();
-      const tileWorldPos = tile.getPosition();
-      const menu = this.radialMenu;
-      const menuPosition = menu.getPosition();
-
-      if (menuPosition.x === tileWorldPos.x && menuPosition.y === tileWorldPos.y) return;
-
-      // Don't interact with the current tile on which player is standing.
-      if (playerGridPos.x === tileGridPos.x && playerGridPos.y === tileGridPos.y) return;
-
-      const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
-
-      const options = [RadialOption.CLOSE];
-      if (path) {
-        if (!tile.isRevealed) options.push(RadialOption.HACK);
-        if (!tile.isRevealed || tile.type !== TILE_TYPES.WALL) options.push(RadialOption.MOVE);
-      }
-      menu.setPosition(tileWorldPos.x, tileWorldPos.y);
-      menu.setEnabledOptions(options);
-      menu.open();
-      menu.events.removeAllListeners();
-      menu.events.on(MenuEvents.VALID_OPTION_SELECT, async type => {
-        menu.close();
-        if (type === RadialOption.MOVE) {
-          await this.runMoveFlow(tile, path);
-        } else if (type === RadialOption.HACK) {
-          await this.runAttackFlow(tile, path);
-        }
-        this.startIdleFlow();
-      });
-      menu.events.on(MenuEvents.INVALID_OPTION_SELECT, type => {
-        let message;
-        if (type === RadialOption.MOVE) message = "You can't move there.";
-        else if (type === RadialOption.HACK) message = "You can't attack that tile.";
-        this.toastManager.setMessage(message);
-      });
-      menu.events.on(MenuEvents.MENU_CLOSE, () => menu.close());
-    });
+    this.enableTileSelect();
   }
+
+  enableTileSelect() {
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
+  }
+
+  disableTileSelect() {
+    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
+    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
+  }
+
+  onTileSelectForAttack = async tile => {
+    const playerGridPos = this.player.getGridPosition();
+    const tileGridPos = tile.getGridPosition();
+
+    // Don't interact with the current tile on which player is standing.
+    if (playerGridPos.x === tileGridPos.x && playerGridPos.y === tileGridPos.y) {
+      return;
+    }
+
+    const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
+    const canAttack = path && !tile.isRevealed;
+    if (!canAttack) {
+      this.toastManager.setMessage("You can't hack that location.");
+      return;
+    }
+
+    this.disableTileSelect();
+    await this.runAttackFlow(tile, path);
+  };
+
+  onTileSelectForMove = async tile => {
+    const playerGridPos = this.player.getGridPosition();
+    const tileGridPos = tile.getGridPosition();
+
+    // Don't interact with the current tile on which player is standing.
+    if (playerGridPos.x === tileGridPos.x && playerGridPos.y === tileGridPos.y) {
+      return;
+    }
+
+    const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
+    const isValidMove = path && (!tile.isRevealed || tile.type !== TILE_TYPES.WALL);
+    if (!isValidMove) {
+      this.toastManager.setMessage("You can't move there.");
+      return;
+    }
+
+    this.disableTileSelect();
+    await this.runMoveFlow(tile, path);
+  };
 
   async runMoveFlow(tile, path) {
     this.level.disableAllTiles();
