@@ -25,7 +25,7 @@ export default class AlertIndicator {
       scene.add.image(0, 0, "assets", FRAMES.UNFILLED)
     ];
 
-    const iconSpacing = 2;
+    const iconSpacing = 6;
     const iconHeight = this.icons[0].height;
     const bgPadding = { x: 4, y: 25 };
     const bgWidth = 96;
@@ -46,11 +46,7 @@ export default class AlertIndicator {
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.08), [
-        this.background,
-        this.text,
-        ...this.icons
-      ])
+      .container(fractionToX(0.12), fractionToY(0.08), [this.background, this.text, ...this.icons])
       .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.playerHealth, true);
