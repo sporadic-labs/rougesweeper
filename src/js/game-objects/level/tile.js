@@ -26,8 +26,20 @@ export default class Tile {
 
     // Construct the Front Tile based on it's type.
     // It always gets a background title, with an optional top graphic.
-    // TODO: this isn't the right sprite for all levels.
-    const frontTileSprites = [scene.add.sprite(0, 0, "all-assets", "tile-skyscraper")];
+    let tileKey = "tile-blank";
+    if (levelKey.startsWith("level-1")) {
+      tileKey = "tile-hq";
+    } else if (levelKey.startsWith("level-2")) {
+      tileKey = "tile-warehouse";
+    } else if (levelKey.startsWith("level-3")) {
+      tileKey = "tile-lab";
+    } else if (levelKey.startsWith("level-4")) {
+      tileKey = "tile-skyscraper";
+    } else if (levelKey.startsWith("level-5")) {
+      tileKey = "tile-temple";
+    }
+
+    const frontTileSprites = [scene.add.sprite(0, 0, "all-assets", tileKey)];
     this.tileContents = null;
     if (!this.isCurrentlyBlank && type !== TILE_TYPES.START) {
       this.tileContents = scene.add.sprite(0, 0, "all-assets", frameName);
