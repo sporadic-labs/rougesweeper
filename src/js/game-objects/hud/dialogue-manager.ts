@@ -65,10 +65,7 @@ export default class DialogueManager {
   private wordIndex: number = 0;
   private lineIndex: number = 0;
   private pageIndex: number = 0;
-
-  private characterDelay: number = 46;
-  private wordDelay: number = 64;
-  private lineDelay: number = 184;
+  private charactersPerSecond: number = 200;
 
   private title: Phaser.GameObjects.Text;
   private text: Phaser.GameObjects.Text;
@@ -141,6 +138,10 @@ export default class DialogueManager {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
+  get characterDelayMs() {
+    return 1000 / this.charactersPerSecond;
+  }
+
   getDialogueDataForTile(level: string, x: number, y: number): TileDialogueEntry {
     const key = getDialogueKey(level, { x, y });
     return this.scene.cache.json.get(`${key}`);
@@ -193,14 +194,14 @@ export default class DialogueManager {
       //  Get the next line after the lineDelay amount of ms has elapsed
       this.scene.time.addEvent({
         callback: this.nextWord,
-        delay: this.wordDelay,
+        delay: this.characterDelayMs,
         callbackScope: this
       });
     } else {
       //  Get the next line after the lineDelay amount of ms has elapsed
       this.scene.time.addEvent({
         callback: this.nextCharacter,
-        delay: this.characterDelay,
+        delay: this.characterDelayMs,
         callbackScope: this
       });
     }
@@ -222,7 +223,7 @@ export default class DialogueManager {
       //  Get the next line after the lineDelay amount of ms has elapsed
       this.scene.time.addEvent({
         callback: this.nextLine,
-        delay: this.lineDelay,
+        delay: this.characterDelayMs,
         callbackScope: this
       });
     } else {
@@ -230,7 +231,7 @@ export default class DialogueManager {
       //  Get the next line after the lineDelay amount of ms has elapsed
       this.scene.time.addEvent({
         callback: this.nextCharacter,
-        delay: this.characterDelay,
+        delay: this.characterDelayMs,
         callbackScope: this
       });
     }
@@ -257,7 +258,7 @@ export default class DialogueManager {
     //  Call the 'nextWord' function once for each word in the line (line.length)
     this.scene.time.addEvent({
       callback: this.nextWord,
-      delay: this.wordDelay,
+      delay: this.characterDelayMs,
       callbackScope: this
     });
 
