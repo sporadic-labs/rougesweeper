@@ -234,6 +234,7 @@ export default class GameManager {
    * Fade out the player, fade out the previous level, set up the next level, and start things off!
    */
   async startLevel() {
+    if (this.dialogueManager.isOpen) this.dialogueManager.close();
     this.radar.setVisible(false);
     await this.player.fadePlayerOut();
 
