@@ -10,6 +10,7 @@ import EventProxy from "../../helpers/event-proxy";
 import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
+import InventoryMenu from "../hud/inventory";
 import DialogueManager from "../hud/dialogue-manager";
 
 export default class GameManager {
@@ -27,6 +28,7 @@ export default class GameManager {
     this.radar = new Radar(scene, player);
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
+    this.inventoryMenu = new InventoryMenu(scene, store);
     this.dialogueManager = new DialogueManager(scene, store);
 
     this.mobProxy = new MobXProxy();
