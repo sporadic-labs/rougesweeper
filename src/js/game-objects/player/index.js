@@ -7,7 +7,7 @@ export default class Player {
   constructor(scene, x, y) {
     this.scene = scene;
     this.sprite = scene.add
-      .sprite(x, y, "assets", "player")
+      .sprite(x, y, "all-assets", "player-m")
       .setScale(1.25, 1.25)
       .setOrigin(0.5, 0.7)
       .setAlpha(0)

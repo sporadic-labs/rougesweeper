@@ -10,7 +10,7 @@ export default class AttackAnimation {
   constructor(scene, key, x, y) {
     this.scene = scene;
 
-    this.sprite = scene.add.sprite(0, 0, "assets", key).setOrigin(0.5, 0.5);
+    this.sprite = scene.add.sprite(0, 0, "all-assets", key).setOrigin(0.5, 0.5);
     this.sprite.setDepth(DEPTHS.ABOVE_PLAYER);
     this.sprite.setVisible(false);
 
