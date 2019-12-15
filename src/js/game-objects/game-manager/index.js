@@ -58,6 +58,9 @@ export default class GameManager {
     this.startLevel();
   }
 
+  /**
+   * Start the idle flow for the player, waiting for the user to make a move!
+   */
   startIdleFlow() {
     this.enableTileSelect();
   }
@@ -112,31 +115,42 @@ export default class GameManager {
     await this.runMoveFlow(tile, path);
   };
 
+  /**
+   * Start the move flow for the player.
+   * @param {*} tile
+   * @param {*} path
+   */
   async runMoveFlow(tile, path) {
+    // disable tiles, start the move
     this.level.disableAllTiles();
     store.addMove();
 
-    if (tile.isRevealed) {
-      await this.movePlayerAlongPath(path);
-    } else {
-      if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
+    // if the path is longer than 2, move to the tile before this one.
+    if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
 
-      await tile.flipToFront();
+    // if the tile has not been revealed, reveal it
+    if (!tile.isRevealed) await tile.flipToFront();
+
+    // if the tile effect has not been applied, apply it
+    if (!tile.isCurrentlyBlank) {
       this.applyTileEffect(tile);
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
-
-      // Don't move to a freshly revealed wall or exit.
-      const shouldMoveToTile = tile.type !== TILE_TYPES.WALL && tile.type !== TILE_TYPES.EXIT;
-      if (shouldMoveToTile) {
-        const tileGridPos = tile.getGridPosition();
-        await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
-      }
     }
 
+    // if you can move to the tile, move
+    const shouldMoveToTile = tile.type !== TILE_TYPES.WALL;
+    if (shouldMoveToTile) {
+      const tileGridPos = tile.getGridPosition();
+      await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
+    }
+
+    // if there is dialogue, play it
     const playerGridPos = this.player.getGridPosition();
     const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
+    this.dialogueManager.playDialogueFromTile(currentTile);
 
+    // update the radar
     await this.radar.update();
     if (this.radar.getEnemyCount() === 0) {
       this.level
@@ -144,11 +158,8 @@ export default class GameManager {
         .map(tile => tile.flipToFront());
     }
 
-    this.dialogueManager.playDialogueFromTile(currentTile);
-
-    if (currentTile.type === TILE_TYPES.KEY) {
-      store.setHasKey(true);
-    } else if (currentTile.type === TILE_TYPES.EXIT) {
+    // if the tile is the EXIT, check if the player has the correct conditions to finish the level
+    if (currentTile.type === TILE_TYPES.EXIT) {
       if (this.level.isExitLocked() && !store.hasKey) {
         this.toastManager.setMessage("Door is locked - you need a key.");
       } else if (store.levelIndex >= 8) {
@@ -161,10 +172,16 @@ export default class GameManager {
       }
     }
 
+    // re-enable tiles, and kick off the idle flow to wait for another move.
     this.level.enableAllTiles();
     this.startIdleFlow();
   }
 
+  /**
+   * Start the attack flow for the player.
+   * @param {*} tile
+   * @param {*} path
+   */
   async runAttackFlow(tile, path) {
     this.level.disableAllTiles();
 
@@ -173,7 +190,8 @@ export default class GameManager {
     store.removeAttack();
     const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
     const { x, y } = tile.getPosition();
-    const attackAnim = new AttackAnimation(this.scene, "player-attack", x - 40, y - 10);
+    const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
+    const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
     await Promise.all([
       attackAnim.fadeout().then(() => attackAnim.destroy()),
       tile.playTileDestructionAnimation()
@@ -202,6 +220,11 @@ export default class GameManager {
     this.startIdleFlow();
   }
 
+  /**
+   * Move the player along a path of tiles.
+   * @param {*} path
+   * @param {*} duration
+   */
   async movePlayerAlongPath(path, duration = 200) {
     const lastPoint = path[path.length - 1];
     const worldPath = path.map(p => this.level.gridXYToWorldXY(p));
@@ -210,6 +233,12 @@ export default class GameManager {
     this.level.highlightTiles(this.player.getGridPosition());
   }
 
+  /**
+   * Move the player to the specified tile.
+   * @param {*} gridX
+   * @param {*} gridY
+   * @param {*} moveInstantly
+   */
   async movePlayerToTile(gridX, gridY, moveInstantly = false) {
     const worldX = this.level.gridXToWorldX(gridX);
     const worldY = this.level.gridYToWorldY(gridY);
@@ -218,6 +247,10 @@ export default class GameManager {
     this.level.highlightTiles(this.player.getGridPosition());
   }
 
+  /**
+   * Update the store based on the Tile type
+   * @param {*} tile
+   */
   applyTileEffect(tile) {
     switch (tile.type) {
       case TILE_TYPES.ENEMY:
@@ -228,6 +261,9 @@ export default class GameManager {
         break;
       case TILE_TYPES.SHOP:
         store.setShopOpen(true);
+        break;
+      case TILE_TYPES.KEY:
+        store.setHasKey(true);
         break;
     }
   }
