@@ -228,7 +228,7 @@ class Radar {
   }
 
   destroy() {
-    if (this.labelTween) this.labelTween.destroy();
+    if (this.labelTween) this.labelTween.stop();
     if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
     this.scene = undefined;
     this.outlineGraphics.destroy();
