@@ -125,7 +125,9 @@ export default class GameManager {
     this.level.disableAllTiles();
     store.addMove();
 
-    // if the tile has been revealed/is blank, move there immediately, otherwise move to the tile right before this one.
+    /* if the tile has been revealed/is blank, move there immediately,
+     * otherwise move to the tile right before this one.
+     */
     if (tile.isRevealed && tile.isCurrentlyBlank) await this.movePlayerAlongPath(path);
     else if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
 
