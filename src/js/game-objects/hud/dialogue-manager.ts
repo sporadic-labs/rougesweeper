@@ -151,6 +151,7 @@ export default class DialogueManager {
     const data: TileDialogueEntry = tile.getDialogueData();
     if (data && (data.repeat < 0 || data.repeat >= tile.dialoguePlayedCounter)) {
       this.setDialoguePages(data.entries);
+      if (this.isOpen) this.close();
       this.open();
       tile.dialoguePlayedCounter++;
     }
