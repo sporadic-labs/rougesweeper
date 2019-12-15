@@ -1,5 +1,5 @@
 import TILE_TYPES from "./tile-types";
-import LEVEL_EVENTS from "./events.ts";
+import EVENTS from "./events";
 import FlipEffect from "./flip-effect";
 import AttackAnimation from "../player/attack-animation";
 import DEPTHS from "../depths";
@@ -192,8 +192,9 @@ export default class Tile {
     this.container.off("pointerdown", this.onPointerDown);
   }
 
-  onPointerDown = () => {
-    this.levelEvents.emit(LEVEL_EVENTS.TILE_SELECT, this);
+  onPointerDown = pointer => {
+    const event = pointer.primaryDown ? EVENTS.TILE_SELECT_PRIMARY : EVENTS.TILE_SELECT_SECONDARY;
+    this.levelEvents.emit(event, this);
   };
 
   onHoverStart = () => {
@@ -204,7 +205,7 @@ export default class Tile {
       scaleY: 1.1,
       duration: 100
     });
-    this.levelEvents.emit(LEVEL_EVENTS.TILE_OVER, this);
+    this.levelEvents.emit(EVENTS.TILE_OVER, this);
   };
 
   onHoverEnd = () => {
@@ -215,7 +216,7 @@ export default class Tile {
       scaleY: 1,
       duration: 100
     });
-    this.levelEvents.emit(LEVEL_EVENTS.TILE_OUT, this);
+    this.levelEvents.emit(EVENTS.TILE_OUT, this);
   };
 
   flipToFront() {
