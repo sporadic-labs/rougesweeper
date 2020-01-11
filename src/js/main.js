@@ -5,9 +5,11 @@ import Phaser from "phaser";
 import { SCENE_NAME, installScenes } from "./scenes";
 import disableRightClickMenu from "./helpers/disable-right-click-menu";
 import { gameWidth, gameHeight } from "./game-dimensions";
+import registerTiledJSONExternalLoader from "./plugins/phaser-tiled-json-external-loader.js";
+
+registerTiledJSONExternalLoader(Phaser);
 
 const containerId = "game-container";
-
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   backgroundColor: "#a79279",
