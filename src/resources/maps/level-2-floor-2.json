@@ -62,7 +62,7 @@
         }, 
         {
          "firstgid":43,
-         "source":"assets.tsx"
+         "source":"assets.json"
         }],
  "tilewidth":75,
  "type":"map",
