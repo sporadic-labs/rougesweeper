@@ -63,7 +63,7 @@ class TiledFile extends Loader.MultiFile {
           const tilesetFile = new Loader.FileTypes.JSONFile(
             loader,
             // CHANGE: make each tileset unique. This is inefficient.
-            `_TILESET_${tilesetUrl}`,
+            `_TILESET_${this.key}${tilesetUrl}`,
             tilesetUrl
           );
 
