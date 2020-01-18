@@ -22,7 +22,12 @@ const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
     const ty = y / tileHeight;
     const tw = width / tileWidth;
     const th = height / tileHeight;
-    return new Phaser.Geom.Polygon([[tx, ty], [tx + tw, ty], [tx + tw, ty + th], [tx, ty + th]]);
+    return new Phaser.Geom.Polygon([
+      [tx, ty],
+      [tx + tw, ty],
+      [tx + tw, ty + th],
+      [tx, ty + th]
+    ]);
   } else if (tiledObject.polygon) {
     return new Phaser.Geom.Polygon(
       tiledObject.polygon.map(({ x, y }) => [

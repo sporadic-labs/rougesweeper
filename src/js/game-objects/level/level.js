@@ -6,7 +6,16 @@ import PathFinder from "./path-finder.ts";
 import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
 
-const neighborOffsets = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
+const neighborOffsets = [
+  [1, 0],
+  [1, 1],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+  [0, -1],
+  [1, -1]
+];
 
 export default class Level {
   /**
