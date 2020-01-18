@@ -222,6 +222,8 @@ class Radar {
       this.stopScrambleRadar();
     }
     const tiles = this.level.getNeighboringTiles(x, y);
+    const playerTile = this.level.getTileFromGrid(x, y);
+    if (playerTile) tiles.push(playerTile);
     const p1 = this.updateShapeFromTiles(tiles, true);
     const p2 = this.setDangerCount(true);
     return Promise.all([p1, p2]);
