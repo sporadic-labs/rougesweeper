@@ -33,10 +33,9 @@ function loadLevels(scene: Phaser.Scene) {
   scene.load.image("lab", "maps/tilesets/lab.png");
   scene.load.image("skyscraper", "maps/tilesets/skyscraper.png");
   scene.load.image("temple", "maps/tilesets/temple.png");
-
-  // TODO: extend ts defs so that this "any" workaround isn't necessary.
-  const s = scene as any;
-  levelData.forEach(({ level }) => s.load.tilemapTiledJSONExternal(level, `maps/${level}.json`));
+  levelData.forEach(({ level }) =>
+    scene.load.tilemapTiledJSONExternal(level, `maps/${level}.json`)
+  );
 }
 
 /**
