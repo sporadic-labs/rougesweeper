@@ -335,11 +335,11 @@ export default class LevelData {
     );
     const grid = debugTiles.map(row => row.join(" ")).join("\n");
     const flatTiles = this.tiles.flat(1);
-    const numTiles = flatTiles.filter(t => t.type !== undefined).length;
-    const numEnemy = flatTiles.filter(t => t.type === TILE.ENEMY).length;
-    const numBlank = flatTiles.filter(t => t.type === TILE.BLANK).length;
-    const numGold = flatTiles.filter(t => t.type === TILE.GOLD).length;
-    const numWall = flatTiles.filter(t => t.type === TILE.WALL).length;
+    const numTiles = flatTiles.filter(t => t && t.type !== undefined).length;
+    const numEnemy = flatTiles.filter(t => t && t.type === TILE.ENEMY).length;
+    const numBlank = flatTiles.filter(t => t && t.type === TILE.BLANK).length;
+    const numGold = flatTiles.filter(t => t && t.type === TILE.GOLD).length;
+    const numWall = flatTiles.filter(t => t && t.type === TILE.WALL).length;
     const stats =
       `Num tiles: ${numTiles}\n` +
       `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(2)}%)\n` +
