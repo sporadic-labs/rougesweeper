@@ -41,15 +41,21 @@ export default class Level {
         tilesSetImage = this.map.addTilesetImage("temple");
         break;
     }
+
     this.map.layers.forEach(layerData => {
       // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
-      if (!layerData.name === "Board") return;
-      const layer = this.map.createStaticLayer(layerData.name, tilesSetImage);
+      let tileSet = tilesSetImage;
+      let depth = DEPTHS.GROUND;
+      if (layerData.name === "Decorations") {
+        tileSet = this.map.addTilesetImage("decorations");
+        depth = DEPTHS.ABOVE_GROUND;
+      }
+      const layer = this.map.createStaticLayer(layerData.name, tileSet);
       layer.setPosition(
         gameCenter.x - layer.displayWidth / 2,
         gameCenter.y - layer.displayHeight / 2
       );
-      layer.setDepth(DEPTHS.GROUND);
+      layer.setDepth(depth);
     });
 
     this.data = new LevelData(this.map);
