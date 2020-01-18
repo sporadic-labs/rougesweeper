@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="5" nextobjectid="1">
  <editorsettings>
   <export target="level-2-floor-4.json" format="json"/>
  </editorsettings>
@@ -7,7 +7,8 @@
   <image source="tilesets/warehouse.png" width="450" height="525"/>
  </tileset>
  <tileset firstgid="43" source="assets.json"/>
- <layer id="1" name="Board" width="16" height="14">
+ <tileset firstgid="106" source="decorations.json"/>
+ <layer id="1" name="Board" width="16" height="14" offsetx="-38" offsety="-38">
   <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -25,7 +26,7 @@
 1,1,1,1,38,42,42,40,40,42,42,42,42,42,42,42
 </data>
  </layer>
- <layer id="2" name="Tiles" width="16" height="14" offsetx="38" offsety="38">
+ <layer id="2" name="Tiles" width="16" height="14">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -43,7 +44,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="Assets" width="16" height="14" offsetx="38" offsety="38">
+ <layer id="3" name="Assets" width="16" height="14">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -56,6 +57,24 @@
 0,0,0,0,45,0,0,0,0,0,45,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="4" name="Decorations" width="16" height="14" offsetx="-38" offsety="-38">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,112,0,112,0,0,112,0,112,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,154,0,0,0,0,0,0,0,0,140,0,0,0,
+0,0,0,190,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,204,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,154,0,0,0,0,0,0,0,0,140,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,126,0,126,0,0,126,0,126,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
