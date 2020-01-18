@@ -39,15 +39,9 @@ export default class GameManager {
       }
     });
     this.mobProxy.observe(store, "gameState", () => {
-      switch (store.gameState) {
-        case GAME_MODES.MENU_MODE:
-        default:
-          // Remove event listeners from the current level
-          if (this.level && this.level.events) {
-            this.level.events.removeAllListeners(LEVEL_EVENTS.TILE_SELECT);
-          }
-          break;
-      }
+      if (store.gameState === GAME_MODES.MENU_MODE && this.level && this.level.events)
+        this.disableTileSelect();
+      else if (this.level && this.level.events) this.enableTileSelect();
     });
     this.mobProxy.observe(store, "levelIndex", () => this.startLevel());
 
