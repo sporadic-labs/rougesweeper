@@ -95,7 +95,7 @@ export default class Shop {
         buyCompassText,
         buyCompassButton.text
       ])
-      .setDepth(DEPTHS.HUD)
+      .setDepth(DEPTHS.MENU)
       .setVisible(false);
 
     this.mobProxy = new MobXProxy();
