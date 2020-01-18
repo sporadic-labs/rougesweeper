@@ -69,9 +69,8 @@ export default class Level {
 
     this.data = new LevelData(this.map);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
-
-    this.left = this.data.topLeftTile.getLeft();
-    this.top = this.data.topLeftTile.getTop();
+    this.left = this.map.tileToWorldX(this.data.leftOffset);
+    this.top = this.map.tileToWorldY(this.data.topOffset);
     this.tileWidth = this.map.tileWidth;
     this.tileHeight = this.map.tileHeight;
 

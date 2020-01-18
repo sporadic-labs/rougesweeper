@@ -59,7 +59,6 @@ export default class LevelData {
     this.topOffset = groundRect.top;
     this.width = groundRect.width;
     this.height = groundRect.height;
-    this.topLeftTile = map.getTileAt(this.leftOffset, this.topOffset, false, "Tiles");
 
     const tiles = create2DArray(this.width, this.height, undefined);
     this.tiles = tiles;
