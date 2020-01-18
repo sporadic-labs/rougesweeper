@@ -139,42 +139,56 @@ export default class LevelData {
     const rows = layerData.data.length;
     const cols = layerData.data[0].length;
 
-    // Parse the top/left by looping from the top left to bottom right.
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        const tile = layerData.data[y][x];
-        const isEmpty = tile.index === -1;
-        if (isEmpty) continue;
-        if (!hasFoundLeft) {
+    // Find the leftmost tile by going column by column from the left.
+    for (let x = 0; x < cols; x++) {
+      for (let y = 0; y < rows; y++) {
+        const isEmpty = layerData.data[y][x].index === -1;
+        if (!isEmpty) {
           bbox.left = x;
           hasFoundLeft = true;
+          break;
         }
-        if (!hasFoundTop) {
-          bbox.top = y;
-          hasFoundTop = true;
-        }
-        if (hasFoundLeft && hasFoundTop) break;
       }
-      if (hasFoundLeft && hasFoundTop) break;
+      if (hasFoundLeft) break;
     }
 
-    // Parse the bottom/right by looping from the bottom right to top left.
-    for (let y = rows - 1; y >= 0; y--) {
-      for (let x = cols - 1; x >= 0; x--) {
-        const tile = layerData.data[y][x];
-        const isEmpty = tile.index === -1;
-        if (isEmpty) continue;
-        if (!hasFoundRight) {
+    // Find the rightmost tile by going column by column from the right.
+    for (let x = cols - 1; x >= 0; x--) {
+      for (let y = 0; y < rows; y++) {
+        const isEmpty = layerData.data[y][x].index === -1;
+        if (!isEmpty) {
           bbox.right = x;
           hasFoundRight = true;
+          break;
         }
-        if (!hasFoundBottom) {
+      }
+      if (hasFoundRight) break;
+    }
+
+    // Find the topmost tile by going row by row from the top.
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const isEmpty = layerData.data[y][x].index === -1;
+        if (!isEmpty) {
+          bbox.top = y;
+          hasFoundTop = true;
+          break;
+        }
+      }
+      if (hasFoundTop) break;
+    }
+
+    // Find the bottommost tile by going row by row from the bottom.
+    for (let y = rows - 1; y >= 0; y--) {
+      for (let x = 0; x < cols; x++) {
+        const isEmpty = layerData.data[y][x].index === -1;
+        if (!isEmpty) {
           bbox.bottom = y;
           hasFoundBottom = true;
+          break;
         }
-        if (hasFoundRight && hasFoundBottom) break;
       }
-      if (hasFoundRight && hasFoundBottom) break;
+      if (hasFoundBottom) break;
     }
 
     if (!hasFoundBottom || !hasFoundTop || !hasFoundLeft || !hasFoundRight) {
