@@ -5,7 +5,7 @@ import Phaser from "phaser";
 import { SCENE_NAME, installScenes } from "./scenes";
 import disableRightClickMenu from "./helpers/disable-right-click-menu";
 import { gameWidth, gameHeight } from "./game-dimensions";
-import registerTiledJSONExternalLoader from "./plugins/phaser-tiled-json-external-loader.js";
+import registerTiledJSONExternalLoader from "./plugins/phaser-tiled-json-external-loader";
 
 registerTiledJSONExternalLoader(Phaser);
 

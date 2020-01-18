@@ -8,7 +8,7 @@
  * The hacky changes to fix these issues are denoted in line.
  */
 
-export default function registerTiledJSONExternalLoader(Phaser) {
+export default function registerTiledJSONExternalLoader(Phaser: any) {
   const FileTypesManager = Phaser.Loader.FileTypesManager;
   const GetFastValue = Phaser.Utils.Objects.GetFastValue;
   const IsPlainObject = Phaser.Utils.Objects.IsPlainObject;
@@ -16,7 +16,15 @@ export default function registerTiledJSONExternalLoader(Phaser) {
   const MultiFile = Phaser.Loader.MultiFile;
 
   class TiledJSONExternalFile extends MultiFile {
-    constructor(loader, key, tilemapURL, path, baseURL, tilemapXhrSettings, tilesetXhrSettings) {
+    constructor(
+      loader: any,
+      key: any,
+      tilemapURL?: any,
+      path?: any,
+      baseURL?: any,
+      tilemapXhrSettings?: any,
+      tilesetXhrSettings?: any
+    ) {
       if (IsPlainObject(key)) {
         const config = key;
 
@@ -36,7 +44,7 @@ export default function registerTiledJSONExternalLoader(Phaser) {
       this.config.tilesetXhrSettings = tilesetXhrSettings;
     }
 
-    onFileComplete(file) {
+    onFileComplete(file: any) {
       const index = this.files.indexOf(file);
       if (index !== -1) {
         this.pending--;
@@ -70,7 +78,7 @@ export default function registerTiledJSONExternalLoader(Phaser) {
             // get the relative path.
             const url = new URL(file.src, "http://example.com");
             url.pathname += `/../${tileset.source}`;
-            const tilesetUrl = url.pathname.slice(1);
+            let tilesetUrl = url.pathname.slice(1);
 
             tilesetUrl = tilesetUrl.replace(currentPath, "");
 
@@ -127,11 +135,11 @@ export default function registerTiledJSONExternalLoader(Phaser) {
   }
 
   FileTypesManager.register("tilemapTiledJSONExternal", function(
-    key,
-    tilemapURL,
-    path,
-    baseURL,
-    tilemapXhrSettings
+    key: any,
+    tilemapURL: any,
+    path: any,
+    baseURL: any,
+    tilemapXhrSettings: any
   ) {
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
