@@ -21,7 +21,7 @@
          "id":0,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -283,7 +283,7 @@
          "id":28,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -545,7 +545,7 @@
          "id":56,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -573,7 +573,7 @@
          "id":58,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -709,6 +709,11 @@
          "id":72,
          "properties":[
                 {
+                 "name":"doorEntrance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
                  "value":"skyscraper\/skyscraper-door-left"
@@ -817,7 +822,7 @@
          "id":84,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -845,7 +850,7 @@
          "id":86,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -1089,7 +1094,7 @@
          "id":112,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -1117,7 +1122,7 @@
          "id":114,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -1361,7 +1366,7 @@
          "id":140,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
@@ -1389,7 +1394,7 @@
          "id":142,
          "properties":[
                 {
-                 "name":"doorEnterance",
+                 "name":"doorEntrance",
                  "type":"bool",
                  "value":true
                 }, 
