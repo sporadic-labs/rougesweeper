@@ -21,9 +21,14 @@
          "id":0,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"hq\/hq-door-left"
                 }]
         }, 
         {
@@ -37,7 +42,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"hq\/hq-door-right-0"
+                 "value":"hq\/hq-door-right"
                 }]
         }, 
         {
@@ -154,7 +159,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"hq\/hq-door-left"
                 }]
         }, 
         {
@@ -163,7 +168,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"hq\/hq-door-right-0"
+                 "value":"hq\/hq-door-right"
                 }]
         }, 
         {
@@ -278,9 +283,14 @@
          "id":28,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"hq\/hq-door-left"
                 }]
         }, 
         {
@@ -294,7 +304,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"hq\/hq-door-right-0"
+                 "value":"hq\/hq-door-right"
                 }]
         }, 
         {
@@ -411,7 +421,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"hq\/hq-door-left"
                 }]
         }, 
         {
@@ -420,7 +430,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"hq\/hq-door-right-0"
+                 "value":"hq\/hq-door-right"
                 }]
         }, 
         {
@@ -535,9 +545,14 @@
          "id":56,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"warehouse\/warehouse-door-left"
                 }]
         }, 
         {
@@ -551,16 +566,21 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"warehouse\/warehouse-door-right"
                 }]
         }, 
         {
          "id":58,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"skyscraper\/skyscraper-door-left"
                 }]
         }, 
         {
@@ -574,7 +594,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"skyscraper\/skyscraper-door-right"
                 }]
         }, 
         {
@@ -673,7 +693,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"warehouse\/warehouse-door-left"
                 }]
         }, 
         {
@@ -682,7 +702,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"warehouse\/warehouse-door-right"
                 }]
         }, 
         {
@@ -691,7 +711,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"skyscraper\/skyscraper-door-left"
                 }]
         }, 
         {
@@ -700,7 +720,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"skyscraper\/skyscraper-door-right"
                 }]
         }, 
         {
@@ -797,9 +817,14 @@
          "id":84,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"warehouse\/warehouse-door-left"
                 }]
         }, 
         {
@@ -813,16 +838,21 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"warehouse\/warehouse-door-right"
                 }]
         }, 
         {
          "id":86,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"skyscraper\/skyscraper-door-left"
                 }]
         }, 
         {
@@ -836,7 +866,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"skyscraper\/skyscraper-door-right"
                 }]
         }, 
         {
@@ -935,7 +965,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"warehouse\/warehouse-door-left"
                 }]
         }, 
         {
@@ -944,7 +974,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"warehouse\/warehouse-door-right"
                 }]
         }, 
         {
@@ -953,7 +983,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"skyscraper\/skyscraper-door-left"
                 }]
         }, 
         {
@@ -962,7 +992,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"skyscraper\/skyscraper-door-right"
                 }]
         }, 
         {
@@ -1059,9 +1089,14 @@
          "id":112,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"lab\/lab-door-left"
                 }]
         }, 
         {
@@ -1075,16 +1110,21 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"lab\/lab-door-right"
                 }]
         }, 
         {
          "id":114,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"temple\/temple-door-left"
                 }]
         }, 
         {
@@ -1098,7 +1138,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"temple\/temple-door-right"
                 }]
         }, 
         {
@@ -1197,7 +1237,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"lab\/lab-door-left"
                 }]
         }, 
         {
@@ -1206,7 +1246,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"lab\/lab-door-right"
                 }]
         }, 
         {
@@ -1215,7 +1255,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"temple\/temple-door-left"
                 }]
         }, 
         {
@@ -1224,7 +1264,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"temple\/temple-door-right"
                 }]
         }, 
         {
@@ -1321,9 +1361,14 @@
          "id":140,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"lab\/lab-door-left"
                 }]
         }, 
         {
@@ -1337,16 +1382,21 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"lab\/lab-door-right"
                 }]
         }, 
         {
          "id":142,
          "properties":[
                 {
+                 "name":"doorEnterance",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"temple\/temple-door-left"
                 }]
         }, 
         {
@@ -1360,7 +1410,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"temple\/temple-door-right"
                 }]
         }, 
         {
@@ -1459,7 +1509,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"lab\/lab-door-left"
                 }]
         }, 
         {
@@ -1468,7 +1518,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"lab\/lab-door-right"
                 }]
         }, 
         {
@@ -1477,7 +1527,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"temple\/temple-door-left"
                 }]
         }, 
         {
@@ -1486,7 +1536,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"temple\/temple-door-right"
                 }]
         }, 
         {
