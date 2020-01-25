@@ -131,7 +131,7 @@ export default class Level {
         this.exitWorldPosition.x,
         this.exitWorldPosition.y,
         this.events,
-        exitTile.properties.doorName,
+        exitTile.properties.frameName,
         isOpen
       );
     } else {
