@@ -274,6 +274,14 @@
             <key type="filename">all-assets/hq/hq-door-right-5.png</key>
             <key type="filename">all-assets/hq/hq-door-right-6.png</key>
             <key type="filename">all-assets/hq/hq-door-right-7.png</key>
+            <key type="filename">all-assets/lab/lab-door-right-0.png</key>
+            <key type="filename">all-assets/lab/lab-door-right-1.png</key>
+            <key type="filename">all-assets/lab/lab-door-right-2.png</key>
+            <key type="filename">all-assets/lab/lab-door-right-3.png</key>
+            <key type="filename">all-assets/lab/lab-door-right-4.png</key>
+            <key type="filename">all-assets/lab/lab-door-right-5.png</key>
+            <key type="filename">all-assets/lab/lab-door-right-6.png</key>
+            <key type="filename">all-assets/lab/lab-door-right-7.png</key>
             <key type="filename">all-assets/warehouse/warehouse-door-right-0.png</key>
             <key type="filename">all-assets/warehouse/warehouse-door-right-1.png</key>
             <key type="filename">all-assets/warehouse/warehouse-door-right-2.png</key>
