@@ -290,6 +290,14 @@
             <key type="filename">all-assets/skyscraper/skyscraper-door-right-5.png</key>
             <key type="filename">all-assets/skyscraper/skyscraper-door-right-6.png</key>
             <key type="filename">all-assets/skyscraper/skyscraper-door-right-7.png</key>
+            <key type="filename">all-assets/temple/temple-door-right-0.png</key>
+            <key type="filename">all-assets/temple/temple-door-right-1.png</key>
+            <key type="filename">all-assets/temple/temple-door-right-2.png</key>
+            <key type="filename">all-assets/temple/temple-door-right-3.png</key>
+            <key type="filename">all-assets/temple/temple-door-right-4.png</key>
+            <key type="filename">all-assets/temple/temple-door-right-5.png</key>
+            <key type="filename">all-assets/temple/temple-door-right-6.png</key>
+            <key type="filename">all-assets/temple/temple-door-right-7.png</key>
             <key type="filename">all-assets/warehouse/warehouse-door-right-0.png</key>
             <key type="filename">all-assets/warehouse/warehouse-door-right-1.png</key>
             <key type="filename">all-assets/warehouse/warehouse-door-right-2.png</key>
