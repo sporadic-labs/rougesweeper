@@ -185,10 +185,6 @@ export default class Level {
     return tiles;
   }
 
-  isExitLocked() {
-    return this.data.isExitLocked;
-  }
-
   getStartingWorldPosition() {
     const { x, y } = this.data.startPosition;
     return { x: this.gridXToWorldX(x), y: this.gridYToWorldY(y) };

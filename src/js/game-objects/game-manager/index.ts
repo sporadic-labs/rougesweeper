@@ -107,7 +107,7 @@ export default class GameManager {
       return;
     }
 
-    if (this.level.isExitLocked() && !store.hasKey) {
+    if (!this.level.exit.isOpen()) {
       this.toastManager.setMessage("The door is locked");
       return;
     }
@@ -203,7 +203,7 @@ export default class GameManager {
 
     // if the tile is the EXIT, check if the player has the correct conditions to finish the level
     if (currentTile.type === TILE_TYPES.EXIT) {
-      if (this.level.isExitLocked() && !store.hasKey) {
+      if (!this.level.exit.isOpen()) {
         this.toastManager.setMessage("Door is locked - you need a key.");
       } else if (store.levelIndex >= 8) {
         this.scene.scene.stop();
@@ -307,6 +307,7 @@ export default class GameManager {
         break;
       case TILE_TYPES.KEY:
         store.setHasKey(true);
+        this.level.exit.open();
         break;
     }
   }
