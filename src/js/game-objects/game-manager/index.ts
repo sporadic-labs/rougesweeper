@@ -12,19 +12,30 @@ import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
 import InventoryMenu from "../hud/inventory";
 import DialogueManager from "../hud/dialogue-manager";
+import Player from "../player";
+import ToastManager from "../hud/toast-manager";
+import Tile from "../level/tile";
+
+interface Point {
+  x: number;
+  y: number;
+}
 
 export default class GameManager {
-  /**
-   * @param {Phaser.Scene} scene
-   * @param {Player} player
-   * @param {ToastManager} toastManager
-   * @memberof GameManager
-   */
-  constructor(scene, player, toastManager) {
-    this.scene = scene;
+  private level: Level;
+  private radar: Radar;
+  private debugMenu: DebugMenu;
+  private inventoryMenu: InventoryMenu;
+  private dialogueManager: DialogueManager;
+  private mobProxy: MobXProxy;
+  private proxy: EventProxy;
+
+  constructor(
+    private scene: Phaser.Scene,
+    private player: Player,
+    private toastManager: ToastManager
+  ) {
     this.level = null;
-    this.player = player;
-    this.toastManager = toastManager;
     this.radar = new Radar(scene, player);
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
@@ -69,7 +80,7 @@ export default class GameManager {
     this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
   }
 
-  onTileSelectForAttack = async tile => {
+  onTileSelectForAttack = async (tile: Tile) => {
     const playerGridPos = this.player.getGridPosition();
     const tileGridPos = tile.getGridPosition();
 
@@ -89,7 +100,7 @@ export default class GameManager {
     await this.runAttackFlow(tile, path);
   };
 
-  onTileSelectForMove = async tile => {
+  onTileSelectForMove = async (tile: Tile) => {
     const playerGridPos = this.player.getGridPosition();
     const tileGridPos = tile.getGridPosition();
 
@@ -109,12 +120,7 @@ export default class GameManager {
     await this.runMoveFlow(tile, path);
   };
 
-  /**
-   * Start the move flow for the player.
-   * @param {*} tile
-   * @param {*} path
-   */
-  async runMoveFlow(tile, path) {
+  async runMoveFlow(tile: Tile, path: Point[]) {
     // disable tiles, start the move
     this.level.disableAllTiles();
     store.addMove();
@@ -179,7 +185,7 @@ export default class GameManager {
    * @param {*} tile
    * @param {*} path
    */
-  async runAttackFlow(tile, path) {
+  async runAttackFlow(tile: Tile, path: Point[]) {
     this.level.disableAllTiles();
 
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
@@ -222,10 +228,10 @@ export default class GameManager {
    * @param {*} path
    * @param {*} duration
    */
-  async movePlayerAlongPath(path, duration = 200) {
+  async movePlayerAlongPath(path: Point[], duration: number = 200) {
     const lastPoint = path[path.length - 1];
     const worldPath = path.map(p => this.level.gridXYToWorldXY(p));
-    await this.player.movePlayerAlongPath(worldPath, duration);
+    await this.player.movePlayerAlongPath(worldPath);
     this.player.setGridPosition(lastPoint.x, lastPoint.y);
     this.level.highlightTiles(this.player.getGridPosition());
   }
@@ -236,7 +242,7 @@ export default class GameManager {
    * @param {*} gridY
    * @param {*} moveInstantly
    */
-  async movePlayerToTile(gridX, gridY, moveInstantly = false) {
+  async movePlayerToTile(gridX: number, gridY: number, moveInstantly = false) {
     const worldX = this.level.gridXToWorldX(gridX);
     const worldY = this.level.gridYToWorldY(gridY);
     await this.player.movePlayerTo(worldX, worldY, moveInstantly);
@@ -248,7 +254,7 @@ export default class GameManager {
    * Update the store based on the Tile type
    * @param {*} tile
    */
-  applyTileEffect(tile) {
+  applyTileEffect(tile: Tile) {
     switch (tile.type) {
       case TILE_TYPES.ENEMY:
         store.removeHealth();
@@ -269,7 +275,7 @@ export default class GameManager {
    * Fade out the player, fade out the previous level, set up the next level, and start things off!
    */
   async startLevel() {
-    if (this.dialogueManager.isOpen) this.dialogueManager.close();
+    if (this.dialogueManager.isOpen()) this.dialogueManager.close();
     this.radar.setVisible(false);
     await this.player.fadePlayerOut();
 
@@ -291,11 +297,11 @@ export default class GameManager {
     );
     store.setDangerCount(enemyCount);
 
-    this.movePlayerToTile(playerStartGridPos.x, playerStartGridPos.y, 0);
+    this.movePlayerToTile(playerStartGridPos.x, playerStartGridPos.y, true);
 
     const worldX = this.level.gridXToWorldX(playerStartGridPos.x);
     const worldY = this.level.gridYToWorldY(playerStartGridPos.y);
-    this.player.movePlayerTo(worldX, worldY, 0);
+    this.player.movePlayerTo(worldX, worldY, true);
     this.player.setGridPosition(playerStartGridPos.x, playerStartGridPos.y);
 
     await this.player.fadePlayerIn();
