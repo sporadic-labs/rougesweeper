@@ -15,8 +15,28 @@ export default class Exit {
     private isCurrentlyOpen = false
   ) {
     // TODO: use doorName to figure out which sprites/anims to load.
-    this.sprite = scene.add.sprite(worldX, worldY, "all-assets", "tile-back");
+
+    this.sprite = scene.add.sprite(worldX, worldY, "all-assets", "hq/hq-door-right-0");
     this.sprite.setDepth(DEPTHS.GROUND);
+
+    scene.anims.create({
+      key: "hq-door-open",
+      frames: scene.anims.generateFrameNames("all-assets", {
+        prefix: "hq/hq-door-right-",
+        start: 1,
+        end: 7
+      }),
+      frameRate: 24
+    });
+    scene.anims.create({
+      key: "hq-door-close",
+      frames: scene.anims.generateFrameNames("all-assets", {
+        prefix: "hq/hq-door-right-",
+        start: 7,
+        end: 1
+      }),
+      frameRate: 24
+    });
 
     this.enableInteractive();
   }
@@ -28,16 +48,14 @@ export default class Exit {
   open() {
     if (!this.isCurrentlyOpen) {
       this.isCurrentlyOpen = true;
-      // TODO: play animation.
-      this.sprite.setFrame("tile-hq");
+      this.sprite.play("hq-door-open");
     }
   }
 
   close() {
     if (this.isCurrentlyOpen) {
       this.isCurrentlyOpen = false;
-      // TODO: play animation.
-      this.sprite.setFrame("tile-back");
+      this.sprite.play("hq-door-close");
     }
   }
 
