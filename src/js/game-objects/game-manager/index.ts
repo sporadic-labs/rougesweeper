@@ -82,8 +82,6 @@ export default class GameManager {
   }
 
   onExitSelect = async () => {
-    console.log("Exit!");
-
     const playerGridPos = this.player.getGridPosition();
     const exitGridPos = this.level.exitGridPosition;
     const exitNeighborTiles: Tile[] = this.level.getNeighboringTiles(exitGridPos.x, exitGridPos.y);
