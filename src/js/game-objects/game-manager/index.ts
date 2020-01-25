@@ -93,17 +93,25 @@ export default class GameManager {
       return;
     }
 
-    let path: Point[] = null;
+    // Find the shortest path to the exit, using the fact that diagonal moves have a distance of
+    // ~1.4 compared to a distance of 1 for horizontal/vertical moves.
+    let shortestPath: Point[] = null;
+    let shortestDistance = Number.MAX_VALUE;
     for (const tile of revealedTiles) {
       const tileGridPos = tile.getGridPosition();
-      const possiblePath = this.level.findPathBetween(playerGridPos, tileGridPos, true);
-      if (possiblePath) {
-        path = possiblePath;
-        break;
+      const path: Point[] = this.level.findPathBetween(playerGridPos, tileGridPos, true);
+      if (!path) continue;
+      let distance = 0;
+      for (let i = 0; i < path.length - 1; i++) {
+        distance += Phaser.Math.Distance.BetweenPoints(path[i], path[i + 1]);
+      }
+      if (!shortestPath || distance < shortestDistance) {
+        shortestPath = path;
+        shortestDistance = distance;
       }
     }
 
-    if (!path) {
+    if (!shortestPath) {
       this.toastManager.setMessage("There is no clear path to the door - get closer.");
       return;
     }
@@ -117,7 +125,7 @@ export default class GameManager {
     store.addMove();
 
     // TODO: open door and move through it.
-    await this.movePlayerAlongPath(path);
+    await this.movePlayerAlongPath(shortestPath);
     store.nextLevel();
   };
 
