@@ -177,9 +177,9 @@ export default class GameManager {
 
     // if the tile effect has not been applied, apply it
     if (!tile.isCurrentlyBlank) {
-      this.applyTileEffect(tile);
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
+      this.applyTileEffect(tile);
     }
 
     // if you can move to the tile, move
