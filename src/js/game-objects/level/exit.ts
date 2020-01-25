@@ -14,8 +14,6 @@ export default class Exit {
     private doorPrefix: string,
     private isCurrentlyOpen = false
   ) {
-    // TODO: use doorName to figure out which sprites/anims to load.
-    this.doorPrefix = doorPrefix = "hq/hq-door-right";
     this.sprite = scene.add.sprite(worldX, worldY, "all-assets", `${doorPrefix}-0`);
     this.sprite.setDepth(DEPTHS.GROUND);
 
