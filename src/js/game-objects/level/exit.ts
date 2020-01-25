@@ -14,8 +14,11 @@ export default class Exit {
     private doorPrefix: string,
     private isCurrentlyOpen = false
   ) {
-    this.sprite = scene.add.sprite(worldX, worldY, "all-assets", `${doorPrefix}-0`);
-    this.sprite.setDepth(DEPTHS.GROUND);
+    this.sprite = scene.add
+      .sprite(0, 0, "all-assets", `${doorPrefix}-0`)
+      .setOrigin(0, 0.5)
+      .setDepth(DEPTHS.GROUND);
+    this.sprite.setPosition(worldX - this.sprite.width / 2, worldY);
 
     scene.anims.create({
       key: `${doorPrefix}-open`,
