@@ -51,7 +51,7 @@ export default class DialogueManager {
   private proxy: EventProxy;
   private container: Phaser.GameObjects.Container;
   private previousGameState: GAME_MODES;
-  private isOpen: boolean = false;
+  private isCurrentlyOpen: boolean = false;
 
   private state: DIALOGUE_STATES = DIALOGUE_STATES.CLOSED;
 
@@ -125,7 +125,7 @@ export default class DialogueManager {
       .setVisible(false);
 
     scene.input.keyboard.on("keydown_M", () => {
-      if (this.isOpen) this.close();
+      if (this.isCurrentlyOpen) this.close();
       else this.open();
     });
 
@@ -142,6 +142,10 @@ export default class DialogueManager {
     return 1000 / this.charactersPerSecond;
   }
 
+  isOpen() {
+    return this.isCurrentlyOpen;
+  }
+
   getDialogueDataForTile(level: string, x: number, y: number): TileDialogueEntry {
     const key = getDialogueKey(level, { x, y });
     return this.scene.cache.json.get(`${key}`);
@@ -151,7 +155,7 @@ export default class DialogueManager {
     const data: TileDialogueEntry = tile.getDialogueData();
     if (data && (data.repeat < 0 || data.repeat >= tile.dialoguePlayedCounter)) {
       this.setDialoguePages(data.entries);
-      if (this.isOpen) this.close();
+      if (this.isCurrentlyOpen) this.close();
       this.open();
       tile.dialoguePlayedCounter++;
     }
@@ -287,7 +291,7 @@ export default class DialogueManager {
 
   open() {
     this.state = DIALOGUE_STATES.OPEN;
-    this.isOpen = true;
+    this.isCurrentlyOpen = true;
     if (this.dialoguePages[this.pageIndex]) {
       this.currentDialoguePage = this.dialoguePages[this.pageIndex];
       this.sprite.setTexture("assets", this.currentDialoguePage.imageKey);
@@ -299,7 +303,7 @@ export default class DialogueManager {
   }
 
   close() {
-    this.isOpen = false;
+    this.isCurrentlyOpen = false;
     this.container.setVisible(false);
     this.gameStore.setGameState(this.previousGameState);
     this.reset();
