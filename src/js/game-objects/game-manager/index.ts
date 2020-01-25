@@ -51,8 +51,8 @@ export default class GameManager {
     });
     this.mobProxy.observe(store, "gameState", () => {
       if (store.gameState === GAME_MODES.MENU_MODE && this.level && this.level.events)
-        this.disableTileSelect();
-      else if (this.level && this.level.events) this.enableTileSelect();
+        this.disableInteractivity();
+      else if (this.level && this.level.events) this.enableInteractivity();
     });
     this.mobProxy.observe(store, "levelIndex", () => this.startLevel());
 
@@ -67,18 +67,60 @@ export default class GameManager {
    * Start the idle flow for the player, waiting for the user to make a move!
    */
   startIdleFlow() {
-    this.enableTileSelect();
+    this.enableInteractivity();
   }
 
-  enableTileSelect() {
+  enableInteractivity() {
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
+    this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
   }
 
-  disableTileSelect() {
+  disableInteractivity() {
     this.level.events.off(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
     this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
   }
+
+  onExitSelect = async () => {
+    console.log("Exit!");
+
+    const playerGridPos = this.player.getGridPosition();
+    const exitGridPos = this.level.exitGridPosition;
+    const exitNeighborTiles: Tile[] = this.level.getNeighboringTiles(exitGridPos.x, exitGridPos.y);
+
+    const revealedTiles = exitNeighborTiles.filter(tile => tile.isRevealed);
+    if (revealedTiles.length === 0) {
+      this.toastManager.setMessage("There is no clear path to the door - get closer.");
+      return;
+    }
+
+    let path: Point[] = null;
+    for (const tile of revealedTiles) {
+      const tileGridPos = tile.getGridPosition();
+      const possiblePath = this.level.findPathBetween(playerGridPos, tileGridPos, true);
+      if (possiblePath) {
+        path = possiblePath;
+        break;
+      }
+    }
+
+    if (!path) {
+      this.toastManager.setMessage("There is no clear path to the door - get closer.");
+      return;
+    }
+
+    if (this.level.isExitLocked() && !store.hasKey) {
+      this.toastManager.setMessage("The door is locked");
+      return;
+    }
+
+    this.disableInteractivity();
+    store.addMove();
+
+    // TODO: open door and move through it.
+    await this.movePlayerAlongPath(path);
+    store.nextLevel();
+  };
 
   onTileSelectForAttack = async (tile: Tile) => {
     const playerGridPos = this.player.getGridPosition();
@@ -96,7 +138,7 @@ export default class GameManager {
       return;
     }
 
-    this.disableTileSelect();
+    this.disableInteractivity();
     await this.runAttackFlow(tile, path);
   };
 
@@ -116,7 +158,7 @@ export default class GameManager {
       return;
     }
 
-    this.disableTileSelect();
+    this.disableInteractivity();
     await this.runMoveFlow(tile, path);
   };
 

@@ -5,6 +5,7 @@ import LevelData from "./level-data";
 import PathFinder from "./path-finder.ts";
 import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
+import Exit from "./exit";
 
 const neighborOffsets = [
   [1, 0],
@@ -105,8 +106,11 @@ export default class Level {
       tile.flipToFront();
     });
 
-    const exit = this.data.exitPosition;
-    this.tiles[exit.y][exit.x].flipToFront();
+    // TODO: maybe this should be in Tiled as an object layer.
+    this.exitGridPosition = { x: this.data.width, y: Math.floor(this.data.height / 2) };
+    const exitX = this.gridXToWorldX(this.exitGridPosition.x);
+    const exitY = this.gridYToWorldY(this.exitGridPosition.y);
+    this.exit = new Exit(scene, exitX, exitY, this.events);
   }
 
   highlightTiles(playerPos) {
@@ -347,6 +351,7 @@ export default class Level {
         if (tile) tile.destroy();
       })
     );
+    this.exit.destroy();
     this.map.destroy();
     this.events.destroy();
     this.scene = undefined;
