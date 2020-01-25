@@ -11,27 +11,27 @@ export default class Exit {
     worldX: number,
     worldY: number,
     private levelEvents: Events.EventEmitter,
-    private doorName: string,
+    private doorPrefix: string,
     private isCurrentlyOpen = false
   ) {
     // TODO: use doorName to figure out which sprites/anims to load.
-
-    this.sprite = scene.add.sprite(worldX, worldY, "all-assets", "hq/hq-door-right-0");
+    this.doorPrefix = doorPrefix = "hq/hq-door-right";
+    this.sprite = scene.add.sprite(worldX, worldY, "all-assets", `${doorPrefix}-0`);
     this.sprite.setDepth(DEPTHS.GROUND);
 
     scene.anims.create({
-      key: "hq-door-open",
+      key: `${doorPrefix}-open`,
       frames: scene.anims.generateFrameNames("all-assets", {
-        prefix: "hq/hq-door-right-",
+        prefix: `${doorPrefix}-`,
         start: 1,
         end: 7
       }),
       frameRate: 24
     });
     scene.anims.create({
-      key: "hq-door-close",
+      key: `${doorPrefix}-close`,
       frames: scene.anims.generateFrameNames("all-assets", {
-        prefix: "hq/hq-door-right-",
+        prefix: `${doorPrefix}-`,
         start: 7,
         end: 1
       }),
@@ -48,14 +48,14 @@ export default class Exit {
   open() {
     if (!this.isCurrentlyOpen) {
       this.isCurrentlyOpen = true;
-      this.sprite.play("hq-door-open");
+      this.sprite.play(`${this.doorPrefix}-open`);
     }
   }
 
   close() {
     if (this.isCurrentlyOpen) {
       this.isCurrentlyOpen = false;
-      this.sprite.play("hq-door-close");
+      this.sprite.play(`${this.doorPrefix}-close`);
     }
   }
 
