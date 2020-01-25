@@ -125,11 +125,18 @@ export default class Level {
       // All doors are two tall, so remove both tiles.
       this.map.removeTileAt(exitTile.x, exitTile.y);
       this.map.removeTileAt(exitTile.x, exitTile.y + 1);
+      const isOpen = !this.data.isExitLocked;
+      this.exit = new Exit(
+        scene,
+        this.exitWorldPosition.x,
+        this.exitWorldPosition.y,
+        this.events,
+        exitTile.properties.doorName,
+        isOpen
+      );
     } else {
       throw new Error(`No exit door (w/ property "doorExit") found in the "Decorations" layer`);
     }
-
-    this.exit = new Exit(scene, this.exitWorldPosition.x, this.exitWorldPosition.y, this.events);
   }
 
   highlightTiles(playerPos) {

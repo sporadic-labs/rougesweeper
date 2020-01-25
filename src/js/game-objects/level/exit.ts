@@ -10,13 +10,35 @@ export default class Exit {
     private scene: Scene,
     worldX: number,
     worldY: number,
-    private levelEvents: Events.EventEmitter
+    private levelEvents: Events.EventEmitter,
+    private doorName: string,
+    private isCurrentlyOpen = false
   ) {
-    // TEMP
-    this.sprite = scene.add.sprite(worldX, worldY, "all-assets", "stairs-1");
+    // TODO: use doorName to figure out which sprites/anims to load.
+    this.sprite = scene.add.sprite(worldX, worldY, "all-assets", "tile-back");
     this.sprite.setDepth(DEPTHS.GROUND);
 
     this.enableInteractive();
+  }
+
+  isOpen() {
+    return this.isCurrentlyOpen;
+  }
+
+  open() {
+    if (!this.isCurrentlyOpen) {
+      this.isCurrentlyOpen = true;
+      // TODO: play animation.
+      this.sprite.setFrame("tile-hq");
+    }
+  }
+
+  close() {
+    if (this.isCurrentlyOpen) {
+      this.isCurrentlyOpen = false;
+      // TODO: play animation.
+      this.sprite.setFrame("tile-back");
+    }
   }
 
   enableInteractive() {
