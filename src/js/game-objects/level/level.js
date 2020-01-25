@@ -60,7 +60,7 @@ export default class Level {
         tileSet = this.map.addTilesetImage("decorations");
         depth = DEPTHS.ABOVE_GROUND;
       }
-      const layer = this.map.createStaticLayer(layerData.name, tileSet);
+      const layer = this.map.createDynamicLayer(layerData.name, tileSet);
       layer.setPosition(
         gameCenter.x - layer.displayWidth / 2,
         gameCenter.y - layer.displayHeight / 2
@@ -106,11 +106,30 @@ export default class Level {
       tile.flipToFront();
     });
 
-    // TODO: maybe this should be in Tiled as an object layer.
-    this.exitGridPosition = { x: this.data.width, y: Math.floor(this.data.height / 2) };
-    const exitX = this.gridXToWorldX(this.exitGridPosition.x);
-    const exitY = this.gridYToWorldY(this.exitGridPosition.y);
-    this.exit = new Exit(scene, exitX, exitY, this.events);
+    // Locate the top tile of the exit door from the "Decorations" layer to use it for positioning.
+    this.map.setLayer("Decorations");
+    const exitTile = this.map.findTile(tile => tile.properties.doorExit);
+    if (exitTile) {
+      // Translating from tile position in Tiled to our custom grid position is a little tricky. The
+      // "Decorations" layer has a negative offset, so it is effectively offset one tile to the left
+      // and one tile to the right when it comes to grid positions.
+      this.exitGridPosition = {
+        x: exitTile.x - this.data.leftOffset - 1,
+        y: exitTile.y - this.data.topOffset
+      };
+      // Find the center world position of the whole door (which is 2 tall) from the top tile.
+      this.exitWorldPosition = {
+        x: exitTile.getCenterX(),
+        y: exitTile.getBottom()
+      };
+      // All doors are two tall, so remove both tiles.
+      this.map.removeTileAt(exitTile.x, exitTile.y);
+      this.map.removeTileAt(exitTile.x, exitTile.y + 1);
+    } else {
+      throw new Error(`No exit door (w/ property "doorExit") found in the "Decorations" layer`);
+    }
+
+    this.exit = new Exit(scene, this.exitWorldPosition.x, this.exitWorldPosition.y, this.events);
   }
 
   highlightTiles(playerPos) {
