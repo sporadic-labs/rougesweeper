@@ -55,7 +55,7 @@ export default class InventoryMenu {
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.4), [this.background, this.text, ...this.icons])
+      .container(fractionToX(0.12), fractionToY(0.435), [this.background, this.text, ...this.icons])
       .setDepth(DEPTHS.HUD);
 
     this.mobxProxy = new MobXProxy();
