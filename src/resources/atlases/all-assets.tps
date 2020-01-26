@@ -266,6 +266,38 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">all-assets/alarm-off.png</key>
+            <key type="filename">all-assets/alarm-on.png</key>
+            <key type="filename">all-assets/arrow.png</key>
+            <key type="filename">all-assets/attack-fx-4.png</key>
+            <key type="filename">all-assets/attack-fx-5.png</key>
+            <key type="filename">all-assets/gears.png</key>
+            <key type="filename">all-assets/tile-blank.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>19,19,38,38</rect>
+                <key>scale9Paddings</key>
+                <rect>19,19,38,38</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">all-assets/all-assets.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>174,135,348,271</rect>
+                <key>scale9Paddings</key>
+                <rect>174,135,348,271</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">all-assets/hq/hq-door-right-0.png</key>
             <key type="filename">all-assets/hq/hq-door-right-1.png</key>
             <key type="filename">all-assets/hq/hq-door-right-2.png</key>
@@ -315,19 +347,6 @@
                 <rect>19,38,38,75</rect>
                 <key>scale9Paddings</key>
                 <rect>19,38,38,75</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">all-assets/tile-blank.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>19,19,38,38</rect>
-                <key>scale9Paddings</key>
-                <rect>19,19,38,38</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
