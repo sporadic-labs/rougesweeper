@@ -10,7 +10,7 @@ export default class CoinCollectAnimation {
     this.scene = scene;
 
     this.sprite = scene.add
-      .sprite(0, 0, "assets", "tiles/tech")
+      .sprite(0, 0, "all-assets", "tech-1")
       .setOrigin(0.5, 0.5)
       .setScale(0.5);
     this.sprite.setDepth(DEPTHS.ABOVE_PLAYER);

@@ -9,10 +9,6 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   create() {
-    // this.add
-    //   .tileSprite(0, 0, 750, 750, "assets", "subtle-pattern-ep-natural-black")
-    //   .setOrigin(0, 0);
-
     const { width, height } = this.game.config;
     let y = height / 2;
     const gameOverText = this.add

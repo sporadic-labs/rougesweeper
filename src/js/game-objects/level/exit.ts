@@ -17,7 +17,7 @@ export default class Exit {
     this.sprite = scene.add
       .sprite(0, 0, "all-assets", `${doorPrefix}-0`)
       .setOrigin(0, 0.5)
-      .setDepth(DEPTHS.GROUND);
+      .setDepth(DEPTHS.BOARD);
     this.sprite.setPosition(worldX - this.sprite.width / 2, worldY);
 
     scene.anims.create({

@@ -18,11 +18,11 @@ export default class TechIndicator {
     this.scene = scene;
 
     const containerHeight = 120;
-    const bgPadding = { x: 4, y: 25 };
+    const bgPadding = { x: 4, y: 0 };
     const bgWidth = 96;
 
     this.sprite = scene.add
-      .sprite(bgWidth / 2, bgPadding.y, "assets", "ui/tech-icon")
+      .sprite(bgWidth / 2, bgPadding.y, "all-assets", "tech-1")
       .setOrigin(0.5, 0);
 
     this.text = scene.add
@@ -35,11 +35,7 @@ export default class TechIndicator {
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.8), [
-        this.background,
-        this.sprite,
-        this.text
-      ])
+      .container(fractionToX(0.12), fractionToY(0.8), [this.background, this.sprite, this.text])
       .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.goldCount, true);

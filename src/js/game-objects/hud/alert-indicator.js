@@ -4,8 +4,8 @@ import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
 
 const FRAMES = {
-  FILLED: "ui/alert-icon-filled",
-  UNFILLED: "ui/alert-icon-unfilled"
+  FILLED: "alarm-on",
+  UNFILLED: "alarm-off"
 };
 
 export default class AlertIndicator {
@@ -20,9 +20,9 @@ export default class AlertIndicator {
       .setOrigin(0.5, 0);
 
     this.icons = [
-      scene.add.image(0, 0, "assets", FRAMES.UNFILLED),
-      scene.add.image(0, 0, "assets", FRAMES.UNFILLED),
-      scene.add.image(0, 0, "assets", FRAMES.UNFILLED)
+      scene.add.image(0, 0, "all-assets", FRAMES.UNFILLED),
+      scene.add.image(0, 0, "all-assets", FRAMES.UNFILLED),
+      scene.add.image(0, 0, "all-assets", FRAMES.UNFILLED)
     ];
 
     const iconSpacing = 6;

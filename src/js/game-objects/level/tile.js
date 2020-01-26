@@ -57,7 +57,7 @@ export default class Tile {
     this.flipEffect.setToBack();
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
-    this.container.setDepth(DEPTHS.GROUND);
+    this.container.setDepth(DEPTHS.BOARD);
   }
 
   removeTileContents() {

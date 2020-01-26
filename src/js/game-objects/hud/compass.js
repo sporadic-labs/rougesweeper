@@ -15,7 +15,7 @@ export default class Compass {
     this.angleOffset = Math.PI / 2; // Graphic points up, so it's off by 90 deg
 
     this.sprite = scene.add
-      .sprite(0, 0, "assets", "ui/arrow")
+      .sprite(0, 0, "all-assets", "arrow")
       .setDepth(DEPTHS.ABOVE_PLAYER)
       .setAlpha(0.95);
 

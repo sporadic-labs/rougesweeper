@@ -101,7 +101,7 @@ export default class DialogueManager {
       .setFixedSize(modalWidth * 0.76, modalHeight * 0.6)
       .setWordWrapWidth(modalWidth * 0.76);
 
-    this.sprite = scene.add.sprite(r.x + 36, r.centerY, "assets", "player").setOrigin(0, 0.5);
+    this.sprite = scene.add.sprite(r.x + 36, r.centerY, "all-assets", "player-m").setOrigin(0, 0.5);
 
     const continueButton = new TextButton(scene, r.right - 172, r.bottom - 20, "Next", {
       origin: { x: 0.5, y: 1 }
@@ -275,7 +275,7 @@ export default class DialogueManager {
     this.reset();
     this.pageIndex++;
     this.currentDialoguePage = this.dialoguePages[this.pageIndex];
-    this.sprite.setTexture("assets", this.currentDialoguePage.imageKey);
+    this.sprite.setTexture("all-assets", this.currentDialoguePage.imageKey);
     this.title.setText(this.currentDialoguePage.title);
     this.nextState();
   }
@@ -294,7 +294,7 @@ export default class DialogueManager {
     this.isCurrentlyOpen = true;
     if (this.dialoguePages[this.pageIndex]) {
       this.currentDialoguePage = this.dialoguePages[this.pageIndex];
-      this.sprite.setTexture("assets", this.currentDialoguePage.imageKey);
+      this.sprite.setTexture("all-assets", this.currentDialoguePage.imageKey);
       this.title.setText(this.currentDialoguePage.title);
     }
     this.container.setVisible(true);
@@ -331,7 +331,7 @@ export default class DialogueManager {
   }
 
   setDialogueImage(imageFrame: string) {
-    this.sprite.setTexture("assets", imageFrame);
+    this.sprite.setTexture("all-assets", imageFrame);
   }
 
   destroy() {

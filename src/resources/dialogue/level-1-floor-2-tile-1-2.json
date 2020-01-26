@@ -7,12 +7,12 @@
   "entries": [
     {
       "title": "Frodo",
-      "imageKey": "marker",
+      "imageKey": "marker-2",
       "text": ["If you ask it of me, I will give you the One Ring."]
     },
     {
       "title": "Galadriel",
-      "imageKey": "tile/enemy",
+      "imageKey": "enemy-3",
       "text": [
         "You offer it to me freely.",
         "I do not deny that my heart has greatly desired this."
@@ -20,7 +20,7 @@
     },
     {
       "title": "Galadriel",
-      "imageKey": "tile/enemy",
+      "imageKey": "enemy-3",
       "text": [
         "In place OF A DARK LORD, YOU WILL HAVE A QUEEN!",
         "NOT DARK BUT BEAUTIFUL AND TERRIBLE AS THE DAWN!",
