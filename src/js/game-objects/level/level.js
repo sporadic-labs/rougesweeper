@@ -1,4 +1,4 @@
-import { Math as PMath, Events } from "phaser";
+import { Events } from "phaser";
 import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
@@ -55,7 +55,7 @@ export default class Level {
     this.map.layers.forEach(layerData => {
       // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
       let tileSet = tilesSetImage;
-      let depth = DEPTHS.GROUND;
+      let depth = DEPTHS.BOARD;
       if (layerData.name === "Decorations") {
         tileSet = this.map.addTilesetImage("decorations");
         depth = DEPTHS.ABOVE_GROUND;
@@ -74,6 +74,13 @@ export default class Level {
     this.top = this.map.tileToWorldY(this.data.topOffset);
     this.tileWidth = this.map.tileWidth;
     this.tileHeight = this.map.tileHeight;
+
+    const mapWidth = this.map.widthInPixels;
+    this.background = scene.add
+      .rectangle(gameCenter.x, gameCenter.y, mapWidth + 12, this.map.heightInPixels + 12, 0x585e5e)
+      .setStrokeStyle(8, 0x585e5e, 1)
+      .setDepth(DEPTHS.GROUND)
+      .setOrigin(0.5, 0.5);
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((dataTile, x) => {

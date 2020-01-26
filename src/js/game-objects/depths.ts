@@ -5,6 +5,7 @@
  */
 const DEPTHS = {
   GROUND: 0,
+  BOARD: 50,
   ABOVE_GROUND: 100,
   PLAYER: 200,
   ABOVE_PLAYER: 300,
