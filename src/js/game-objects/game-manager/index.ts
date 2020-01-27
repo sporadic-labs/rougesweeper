@@ -125,7 +125,7 @@ export default class GameManager {
     store.addMove();
 
     // TODO: open door and move through it.
-    await this.movePlayerAlongPath(shortestPath);
+    if (shortestPath.length > 0) await this.movePlayerAlongPath(shortestPath);
     store.nextLevel();
   };
 
