@@ -126,6 +126,11 @@ export default class GameManager {
 
     // TODO: open door and move through it.
     if (shortestPath.length > 0) await this.movePlayerAlongPath(shortestPath);
+    const { x, y } = this.level.gridXYToWorldXY(exitGridPos);
+    const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
+    await coinAnim.play();
+    coinAnim.destroy();
+    store.addGold();
     store.nextLevel();
   };
 
@@ -142,6 +147,11 @@ export default class GameManager {
     const canAttack = path && !tile.isRevealed;
     if (!canAttack) {
       this.toastManager.setMessage("You can't hack that location.");
+      return;
+    }
+
+    if (store.goldCount === 0) {
+      this.toastManager.setMessage("Not enough tech to hack anything!");
       return;
     }
 
@@ -242,6 +252,7 @@ export default class GameManager {
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
     store.removeAttack();
+    store.removeGold();
     const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
     const { x, y } = tile.getPosition();
     const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;

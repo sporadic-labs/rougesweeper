@@ -86,7 +86,7 @@ class GameStore {
 
   @action startNewGame() {
     this.playerHealth = this.maxPlayerHealth;
-    this.goldCount = 0;
+    this.goldCount = 3;
     this.attackCount = this.maxAttackCount;
     this.levelIndex = 0;
     this.moveCount = 0;
