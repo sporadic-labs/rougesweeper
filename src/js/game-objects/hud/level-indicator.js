@@ -18,15 +18,10 @@ export default class LevelIndicator {
     this.scene = scene;
     this.text = scene.add.text(0, 0, "", textStyle).setOrigin(0.5, 0.5);
 
-    this.background = scene.add
-      .rectangle(0, 0, 240, 72, 0x585e5e)
-      .setOrigin(0.5, 0.5);
+    this.background = scene.add.rectangle(0, 0, 240, 72, 0x585e5e).setOrigin(0.5, 0.5);
 
     this.container = scene.add
-      .container(fractionToX(0.5), fractionToY(0.9525), [
-        this.background,
-        this.text
-      ])
+      .container(fractionToX(0.5), fractionToY(0.953), [this.background, this.text])
       .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.level, true);
