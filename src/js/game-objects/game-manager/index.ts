@@ -187,7 +187,6 @@ export default class GameManager {
     if (!tile.isCurrentlyBlank) {
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
-      this.applyTileEffect(tile);
     }
 
     // if you can move to the tile, move
@@ -200,7 +199,6 @@ export default class GameManager {
     // if there is dialogue, play it
     const playerGridPos = this.player.getGridPosition();
     const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
-    this.dialogueManager.playDialogueFromTile(currentTile);
 
     // update the radar
     await this.radar.update();
@@ -227,6 +225,10 @@ export default class GameManager {
     // re-enable tiles, and kick off the idle flow to wait for another move.
     this.level.enableAllTiles();
     this.startIdleFlow();
+
+    // NOTE(rex): Apply tile effects at the end, in case there are menus that open which disable interactivity.
+    this.dialogueManager.playDialogueFromTile(currentTile);
+    this.applyTileEffect(tile);
   }
 
   /**
