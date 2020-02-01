@@ -83,9 +83,10 @@ export default class Tile {
         } else if (this.type === TILE_TYPES.ENEMY || this.type === TILE_TYPES.SCRAMBLE_ENEMY) {
           this.tileGraphicTimeline = createAttackAnimation(this.scene, this.tileContents);
           this.tileGraphicTimeline.on("complete", () => {
+            const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(4, 5)}`;
             const attackAnim = new AttackAnimation(
               this.scene,
-              "enemy-attack",
+              attackAnimKey,
               playerX - 40,
               playerY - 28
             );
