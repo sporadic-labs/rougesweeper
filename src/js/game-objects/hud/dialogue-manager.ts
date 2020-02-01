@@ -52,6 +52,7 @@ export default class DialogueManager {
   private container: Phaser.GameObjects.Container;
   private previousGameState: GAME_MODES;
   private isCurrentlyOpen: boolean = false;
+  private controls: TextButton[];
 
   private state: DIALOGUE_STATES = DIALOGUE_STATES.CLOSED;
 
@@ -111,6 +112,7 @@ export default class DialogueManager {
       origin: { x: 0.5, y: 1 }
     });
     skipButton.events.on("DOWN", this.close, this);
+    this.controls = [continueButton, skipButton];
 
     this.container = scene.add
       .container(0, 0, [
@@ -297,8 +299,22 @@ export default class DialogueManager {
       this.sprite.setTexture("all-assets", this.currentDialoguePage.imageKey);
       this.title.setText(this.currentDialoguePage.title);
     }
+
+    this.resetButtons();
+
+    // Create Event listeners for easy control of the dialogue.
+    this.scene.input.on(
+      "pointerdown",
+      (e: any) => {
+        if (e.button === 0) this.nextState();
+        else if (e.button === 2) this.close();
+      },
+      this
+    );
+
     this.container.setVisible(true);
     this.previousGameState = this.gameStore.gameState;
+    this.gameStore.setGameState(GAME_MODES.MENU_MODE);
     this.nextLine();
   }
 
@@ -306,6 +322,7 @@ export default class DialogueManager {
     this.isCurrentlyOpen = false;
     this.container.setVisible(false);
     this.gameStore.setGameState(this.previousGameState);
+    this.scene.input.off("pointerdown");
     this.reset();
     this.pageIndex = 0;
     this.scene.time.removeAllEvents();
@@ -323,7 +340,8 @@ export default class DialogueManager {
   }
 
   resetButtons() {
-    // TODO(rex): Manually call this when closing menu because of bug where button stays in pressed state
+    // Manually call this when closing menu because of bug where button stays in pressed state
+    this.controls.forEach(btn => btn.reset());
   }
 
   setDialoguePages(entries: DialogueEntry[]) {
