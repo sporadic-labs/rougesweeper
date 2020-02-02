@@ -9,6 +9,13 @@ import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
 import Shop from "../game-objects/hud/shop.ts";
 
+const titleStyle = {
+  align: "center",
+  fill: "#ffffff",
+  fontSize: 30,
+  fontStyle: "bold"
+};
+
 export default class Scene extends Phaser.Scene {
   create() {
     store.startNewGame();
@@ -16,6 +23,14 @@ export default class Scene extends Phaser.Scene {
     const player = new Player(this, 0, 0);
     const toastManager = new ToastManager(this);
     const gameManager = new GameManager(this, player, toastManager);
+    const gameTitle = this.add
+      .text(
+        this.game.config.width * 0.91,
+        this.game.config.height * 0.92,
+        "SpyWare\n(or whatever...)",
+        titleStyle
+      )
+      .setOrigin(0.5, 0);
 
     new Shop(this, store);
     new TechIndicator(this, store);
