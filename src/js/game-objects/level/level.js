@@ -150,11 +150,9 @@ export default class Level {
       })
     );
 
-    const start = this.data.entrancePosition;
-    this.tiles[start.y][start.x + 1].flipToFront();
-    this.getNeighboringTiles(start.x, start.y + 1).map(tile => {
-      tile.flipToFront();
-    });
+    const start = this.getStartingGridPosition();
+    this.tiles[start.y][start.x].flipToFront();
+    this.getNeighboringTiles(start.x, start.y).map(tile => tile.flipToFront());
   }
 
   highlightTiles(playerPos) {
