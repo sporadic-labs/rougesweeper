@@ -143,6 +143,7 @@ export default class LevelData {
     const enemiesLayer = map.getObjectLayer("Random Enemies");
     if (enemiesLayer) {
       const enemyPositions = this.generateEnemyPositions(enemiesLayer);
+      console.log(enemyPositions);
       enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
     }
 
@@ -243,6 +244,7 @@ export default class LevelData {
       obj => obj.polygon !== undefined || obj.rectangle === true
     );
     const polygon = tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj);
+    console.log(polygon);
     const blanks = this.getBlanksWithin(polygon);
     const keyPosition = Phaser.Math.RND.pick(blanks);
     if (!keyPosition) throw new Error("Could not find a valid place to put a key.");
@@ -269,6 +271,8 @@ export default class LevelData {
       tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj)
     );
 
+    console.log(spawnPolygons);
+
     // Count enemy tile objects within each region
     const enemyTiles = objectLayer.objects.filter(obj => obj.gid !== undefined);
     const enemyCounts = Array(spawnRegions.length).fill(0);
@@ -290,7 +294,9 @@ export default class LevelData {
     // Attempt to find random places for all enemy tiles - inefficient!
     const enemyPositions = [];
     spawnPolygons.forEach((polygon, i) => {
+      console.log(polygon);
       const blanks = this.getBlanksWithin(polygon);
+      console.log(blanks);
       Phaser.Utils.Array.Shuffle(blanks);
       const count = enemyCounts[i];
       if (blanks.length < count) {
@@ -312,7 +318,10 @@ export default class LevelData {
    */
   getBlanksWithin(polygon) {
     const blanks = this.getAllPositionsOf(TILE.BLANK);
-    return blanks.filter(p => polygon.contains(p.x + 0.5, p.y + 0.5));
+    console.log(blanks);
+    return blanks.filter(p =>
+      polygon.contains(p.x + this.leftOffset + 0.5, p.y + this.topOffset + 0.5)
+    );
   }
 
   getRandomBlankPosition(test = noopTrue) {
@@ -327,7 +336,15 @@ export default class LevelData {
   }
 
   setTileAt(x, y, tile) {
-    this.tiles[y][x] = tile;
+    // this.tiles[y][x] = tile;
+    // this.tiles[y][x] = { type: tile };
+
+    const groundTile = this.map.getTileAt(x, y, false, "Tiles");
+    if (groundTile) {
+      this.tiles[y][x] = new DataTile(tile, groundTile);
+    }
+
+    console.log(this.tiles);
   }
 
   getTileAt(x, y) {
