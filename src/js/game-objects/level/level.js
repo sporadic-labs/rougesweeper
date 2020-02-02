@@ -1,4 +1,4 @@
-import { Events } from "phaser";
+import { Events, Math } from "phaser";
 import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
@@ -8,6 +8,8 @@ import { gameCenter } from "../../game-dimensions";
 import Door, { DOOR_PLACEMENT } from "./door";
 import getTileFrame from "./get-tile-frame";
 import getTilesetName from "./get-tileset-name";
+
+const Distance = Math.Distance.BetweenPoints;
 
 const neighborOffsets = [
   [1, 0],
@@ -104,6 +106,7 @@ export default class Level {
             x: phaserTile.getCenterX(),
             y: phaserTile.getBottom()
           };
+          this.entranceGridPosition = { x, y };
           // All doors are two tall, so remove both tiles.
           this.map.removeTileAt(phaserTile.x, phaserTile.y);
           this.map.removeTileAt(phaserTile.x, phaserTile.y + 1);
@@ -151,6 +154,16 @@ export default class Level {
         tile.unhighlight();
       }
     });
+    if (this.exit.isTileFlipped || Distance(this.exitGridPosition, playerPos) <= 1.5) {
+      this.exit.highlightTile();
+    } else {
+      this.exit.unhighlightTile();
+    }
+    if (this.entrance.isTileFlipped || Distance(this.entranceGridPosition, playerPos) <= 1.5) {
+      this.entrance.highlightTile();
+    } else {
+      this.entrance.unhighlightTile();
+    }
   }
 
   isNeighboringScrambleEnemy(x, y) {

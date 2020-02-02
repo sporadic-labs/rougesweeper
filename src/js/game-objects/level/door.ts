@@ -17,6 +17,7 @@ export default class Door {
   private doorMagnifyEffect: MagnifyEffect;
   private tileMagnifyEffect: MagnifyEffect;
   private tileFadeEffect: FadeEffect;
+  private isTileFlipped: boolean = false;
 
   constructor(
     private scene: Scene,
@@ -136,6 +137,7 @@ export default class Door {
 
   flipTileToFront() {
     return new Promise(resolve => {
+      this.isTileFlipped = true;
       this.tileFlipEffect.events.once("complete", resolve);
       this.tileFlipEffect.flipToFront();
     });
@@ -143,6 +145,7 @@ export default class Door {
 
   flipTileToBack() {
     return new Promise(resolve => {
+      this.isTileFlipped = false;
       this.tileFlipEffect.events.once("complete", resolve);
       this.tileFlipEffect.flipToBack();
     });
