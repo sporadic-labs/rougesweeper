@@ -363,11 +363,6 @@ export default class GameManager {
 
     this.movePlayerToTile(playerStartGridPos.x, playerStartGridPos.y, true);
 
-    const worldX = this.level.gridXToWorldX(playerStartGridPos.x);
-    const worldY = this.level.gridYToWorldY(playerStartGridPos.y);
-    this.player.movePlayerTo(worldX, worldY, true);
-    this.player.setGridPosition(playerStartGridPos.x, playerStartGridPos.y);
-
     await this.player.fadePlayerIn();
 
     await this.level.fadeLevelIn();
