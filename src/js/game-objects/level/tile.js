@@ -8,12 +8,12 @@ import createDisappearAnimation from "./tile-animations/disappear-animation.ts";
 import createAttackAnimation from "./tile-animations/attack-animation.ts";
 import { MagnifyEffect } from "../components/magnify-effect";
 import FadeEffect from "../components/fade-effect";
+import getTileFrame from "./get-tile-frame";
 
 export default class Tile {
   /** @param {Phaser.Scene} scene */
-  constructor(scene, levelKey, type, frameName, x, y, levelEvents, dialogueData = null) {
+  constructor(scene, tileKey, type, frameName, x, y, levelEvents, dialogueData = null) {
     this.scene = scene;
-    this.levelKey = levelKey;
     this.levelEvents = levelEvents;
     this.type = type;
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
@@ -25,21 +25,6 @@ export default class Tile {
     this.gridY = 0;
 
     this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back");
-
-    // Construct the Front Tile based on it's type.
-    // It always gets a background title, with an optional top graphic.
-    let tileKey = "tile-blank";
-    if (levelKey.startsWith("level-1")) {
-      tileKey = "tile-hq";
-    } else if (levelKey.startsWith("level-2")) {
-      tileKey = "tile-warehouse";
-    } else if (levelKey.startsWith("level-3")) {
-      tileKey = "tile-lab";
-    } else if (levelKey.startsWith("level-4")) {
-      tileKey = "tile-skyscraper";
-    } else if (levelKey.startsWith("level-5")) {
-      tileKey = "tile-temple";
-    }
 
     const frontTileSprites = [scene.add.sprite(0, 0, "all-assets", tileKey)];
     this.tileContents = null;

@@ -6,6 +6,7 @@ import PathFinder from "./path-finder.ts";
 import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
 import Door, { DOOR_PLACEMENT } from "./door";
+import getTileFrame from "./get-tile-frame";
 
 const neighborOffsets = [
   [1, 0],
@@ -82,6 +83,7 @@ export default class Level {
       .setDepth(DEPTHS.GROUND)
       .setOrigin(0.5, 0.5);
 
+    const tileKey = getTileFrame(levelKey);
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((dataTile, x) => {
         if (!dataTile || !dataTile.type) return undefined;
@@ -110,7 +112,7 @@ export default class Level {
             phaserTile.properties.frameName,
             isOpen,
             DOOR_PLACEMENT.RIGHT,
-            "tile-hq"
+            tileKey
           );
           this.exit.flipTileToBack();
           return;
@@ -132,7 +134,7 @@ export default class Level {
             phaserTile.properties.frameName,
             isOpen,
             DOOR_PLACEMENT.LEFT,
-            "tile-hq"
+            tileKey
           );
           this.entrance.flipTileToFront();
           return;
@@ -140,7 +142,7 @@ export default class Level {
 
         const tile = new Tile(
           scene,
-          levelKey,
+          tileKey,
           type,
           frameName,
           this.gridXToWorldX(x),
