@@ -1,6 +1,7 @@
 import EventProxy from "../../helpers/event-proxy";
 import GAME_MODES from "../game-manager/events";
 import TextButton from "./text-button";
+import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
 const baseTextStyle = {
@@ -18,6 +19,7 @@ export default class PauseMenu {
   scene: Phaser.Scene;
   gameStore: GameStore;
   restartLevelButton: TextButton;
+  mobProxy: MobXProxy;
   proxy: EventProxy;
   container: Phaser.GameObjects.Container;
   isOpen: boolean = false;
@@ -65,24 +67,28 @@ export default class PauseMenu {
       "keydown_P",
       () => {
         if (this.isOpen) this.close();
-        else this.open();
+        else if (gameStore.gameState !== GAME_MODES.MENU_MODE) gameStore.setPauseMenuOpen(true);
       },
       this
     );
-  }
 
-  restartLevel() {}
+    this.mobProxy = new MobXProxy();
+    this.mobProxy.observe(gameStore, "pauseMenuOpen", () => {
+      if (gameStore.pauseMenuOpen) this.open();
+      this.resetButtons();
+    });
+  }
 
   open = () => {
     this.isOpen = true;
     this.container.setVisible(true);
-    this.resetButtons();
     this.gameStore.setGameState(GAME_MODES.MENU_MODE);
   };
 
   close = () => {
     this.isOpen = false;
     this.container.setVisible(false);
+    this.gameStore.setPauseMenuOpen(false);
     this.gameStore.goToPreviousGameState();
   };
 

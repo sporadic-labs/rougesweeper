@@ -16,6 +16,7 @@ class GameStore {
   @observable hasCompass: boolean;
   @observable levelIndex: number;
   @observable hasKey: boolean;
+  @observable pauseMenuOpen: boolean;
 
   constructor() {
     this.gameState = GAME_MODES.IDLE_MODE;
@@ -31,6 +32,7 @@ class GameStore {
     this.hasCompass = false;
     this.levelIndex = 0;
     this.hasKey = false;
+    this.pauseMenuOpen = false;
   }
 
   @action setGameState(state: GAME_MODES) {
@@ -82,6 +84,10 @@ class GameStore {
 
   @computed get level() {
     return levelKeys[this.levelIndex];
+  }
+
+  @action setPauseMenuOpen(pauseMenuOpen: boolean) {
+    this.pauseMenuOpen = pauseMenuOpen;
   }
 
   @action startNewGame() {

@@ -84,7 +84,7 @@ export default class DebugMenu {
       "keydown_D",
       () => {
         if (this.isOpen) this.close();
-        else this.open();
+        else if (gameStore.gameState !== GAME_MODES.MENU_MODE) this.open();
       },
       this
     );
