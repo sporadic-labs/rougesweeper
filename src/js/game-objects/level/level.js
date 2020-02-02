@@ -91,6 +91,49 @@ export default class Level {
 
         const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
 
+        if (type === TILE_TYPES.EXIT) {
+          // Find the center world position of the whole door (which is 2 tall) from the top tile.
+          this.exitWorldPosition = {
+            x: phaserTile.getCenterX(),
+            y: phaserTile.getBottom()
+          };
+          this.exitGridPosition = { x, y };
+          // All doors are two tall, so remove both tiles.
+          this.map.removeTileAt(phaserTile.x, phaserTile.y);
+          this.map.removeTileAt(phaserTile.x, phaserTile.y + 1);
+          const isOpen = !this.data.isExitLocked;
+          this.exit = new Exit(
+            scene,
+            this.gridXToWorldX(x),
+            this.gridYToWorldY(y),
+            this.events,
+            phaserTile.properties.frameName,
+            isOpen,
+            "tile-hq"
+          );
+          return;
+        } else if (type === TILE_TYPES.ENTRANCE) {
+          // Find the center world position of the whole door (which is 2 tall) from the top tile.
+          this.entranceWorldPosition = {
+            x: phaserTile.getCenterX(),
+            y: phaserTile.getBottom()
+          };
+          // All doors are two tall, so remove both tiles.
+          this.map.removeTileAt(phaserTile.x, phaserTile.y);
+          this.map.removeTileAt(phaserTile.x, phaserTile.y + 1);
+          const isOpen = false;
+          this.entrance = new Exit(
+            scene,
+            this.gridXToWorldX(x),
+            this.gridYToWorldY(y),
+            this.events,
+            phaserTile.properties.frameName,
+            isOpen,
+            "tile-hq"
+          );
+          return;
+        }
+
         const tile = new Tile(
           scene,
           levelKey,
@@ -112,38 +155,6 @@ export default class Level {
     this.getNeighboringTiles(start.x, start.y).map(tile => {
       tile.flipToFront();
     });
-
-    // Locate the top tile of the exit door from the "Decorations" layer to use it for positioning.
-    this.map.setLayer("Decorations");
-    const exitTile = this.map.findTile(tile => tile.properties.doorExit);
-    if (exitTile) {
-      // Translating from tile position in Tiled to our custom grid position is a little tricky. The
-      // "Decorations" layer has a negative offset, so it is effectively offset one tile to the left
-      // and one tile to the right when it comes to grid positions.
-      this.exitGridPosition = {
-        x: exitTile.x - this.data.leftOffset - 1,
-        y: exitTile.y - this.data.topOffset
-      };
-      // Find the center world position of the whole door (which is 2 tall) from the top tile.
-      this.exitWorldPosition = {
-        x: exitTile.getCenterX(),
-        y: exitTile.getBottom()
-      };
-      // All doors are two tall, so remove both tiles.
-      this.map.removeTileAt(exitTile.x, exitTile.y);
-      this.map.removeTileAt(exitTile.x, exitTile.y + 1);
-      const isOpen = !this.data.isExitLocked;
-      this.exit = new Exit(
-        scene,
-        this.exitWorldPosition.x,
-        this.exitWorldPosition.y,
-        this.events,
-        exitTile.properties.frameName,
-        isOpen
-      );
-    } else {
-      throw new Error(`No exit door (w/ property "doorExit") found in the "Decorations" layer`);
-    }
   }
 
   highlightTiles(playerPos) {
