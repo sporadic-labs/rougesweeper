@@ -1,6 +1,6 @@
 import TILE_TYPES from "./tile-types";
 import EVENTS from "./events";
-import FlipEffect from "./flip-effect";
+import FlipEffect from "../components/flip-effect";
 import AttackAnimation from "../player/attack-animation";
 import DEPTHS from "../depths";
 import createPickupAnimation from "./tile-animations/pickup-animation.ts";
