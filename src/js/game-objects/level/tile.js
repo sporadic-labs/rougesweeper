@@ -7,6 +7,7 @@ import createPickupAnimation from "./tile-animations/pickup-animation.ts";
 import createDisappearAnimation from "./tile-animations/disappear-animation.ts";
 import createAttackAnimation from "./tile-animations/attack-animation.ts";
 import { MagnifyEffect } from "../components/magnify-effect";
+import FadeEffect from "../components/fade-effect";
 
 export default class Tile {
   /** @param {Phaser.Scene} scene */
@@ -58,6 +59,7 @@ export default class Tile {
     this.flipEffect.setToBack();
 
     this.magnifyEffect = new MagnifyEffect(scene, this.container, 1, 1.1, 100);
+    this.fadeEffect = new FadeEffect(scene, this.container, 1, 0.6, 100);
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
     this.container.setDepth(DEPTHS.BOARD);
@@ -134,17 +136,13 @@ export default class Tile {
    */
   fadeTileOut(duration = Phaser.Math.Between(150, 300), delay = 0) {
     return new Promise(resolve => {
-      if (this.fadeTween) this.fadeTween.stop();
-      this.fadeTween = this.scene.add.tween({
-        targets: this.container,
+      this.fadeEffect.fadeOut({
+        delay,
         alpha: 0,
         scaleX: 0.9,
         scaleY: 0.9,
-        delay,
         duration,
-        onComplete: () => {
-          return resolve();
-        }
+        onComplete: resolve
       });
     });
   }
@@ -154,15 +152,11 @@ export default class Tile {
    */
   fadeTileIn(duration = Phaser.Math.Between(150, 300), delay = 0) {
     return new Promise(resolve => {
-      if (this.fadeTween) this.fadeTween.stop();
-      this.fadeTween = this.scene.add.tween({
-        targets: this.container,
-        alpha: 0.6,
+      this.fadeEffect.fadeIn({
         delay,
-        duration: duration,
-        onComplete: () => {
-          return resolve();
-        }
+        alpha: 0.6,
+        duration,
+        onComplete: resolve
       });
     });
   }
@@ -256,21 +250,11 @@ export default class Tile {
   }
 
   highlight = () => {
-    if (this.fadeTween) this.fadeTween.stop();
-    this.fadeTween = this.scene.add.tween({
-      targets: this.container,
-      alpha: 1,
-      duration: 100
-    });
+    this.fadeEffect.fadeIn();
   };
 
   unhighlight = () => {
-    if (this.fadeTween) this.fadeTween.stop();
-    this.fadeTween = this.scene.add.tween({
-      targets: this.container,
-      alpha: 0.6,
-      duration: 100
-    });
+    this.fadeEffect.fadeOut();
   };
 
   getDialogueData() {
@@ -280,6 +264,7 @@ export default class Tile {
   destroy() {
     this.disableInteractive();
     this.magnifyEffect.destroy();
+    this.fadeEffect.destroy();
     if (this.fadeTween) this.fadeTween.stop();
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
     this.scene = undefined;
