@@ -130,6 +130,20 @@ export default class Door {
     this.levelEvents.emit(EVENTS.EXIT_OUT, this);
   };
 
+  flipTileToFront() {
+    return new Promise(resolve => {
+      this.tileFlipEffect.events.once("complete", resolve);
+      this.tileFlipEffect.flipToFront();
+    });
+  }
+
+  flipTileToBack() {
+    return new Promise(resolve => {
+      this.tileFlipEffect.events.once("complete", resolve);
+      this.tileFlipEffect.flipToBack();
+    });
+  }
+
   destroy() {
     this.disableInteractive();
     this.doorMagnifyEffect.destroy();

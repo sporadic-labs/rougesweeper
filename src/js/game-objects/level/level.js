@@ -112,6 +112,7 @@ export default class Level {
             DOOR_PLACEMENT.RIGHT,
             "tile-hq"
           );
+          this.exit.flipTileToBack();
           return;
         } else if (type === TILE_TYPES.ENTRANCE) {
           // Find the center world position of the whole door (which is 2 tall) from the top tile.
@@ -133,6 +134,7 @@ export default class Level {
             DOOR_PLACEMENT.LEFT,
             "tile-hq"
           );
+          this.entrance.flipTileToFront();
           return;
         }
 
