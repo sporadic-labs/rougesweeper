@@ -3,7 +3,7 @@ import Player from "../game-objects/player/index";
 import GameManager from "../game-objects/game-manager/index";
 import TechIndicator from "../game-objects/hud/tech-indicator";
 import AlertIndicator from "../game-objects/hud/alert-indicator";
-import AttackToggle from "../game-objects/hud/attack-toggle";
+import PauseToggle from "../game-objects/hud/pause-toggle";
 import LevelIndicator from "../game-objects/hud/level-indicator";
 import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
@@ -35,7 +35,7 @@ export default class Scene extends Phaser.Scene {
     new Shop(this, store);
     new TechIndicator(this, store);
     new AlertIndicator(this, store);
-    new AttackToggle(this, store);
+    new PauseToggle(this, store);
     new LevelIndicator(this, store);
   }
 }
