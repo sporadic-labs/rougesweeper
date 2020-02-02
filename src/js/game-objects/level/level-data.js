@@ -5,7 +5,7 @@ import logger from "../../helpers/logger";
 
 const noopTrue = () => true;
 const debugTileMap = {
-  [TILE.START]: "S",
+  [TILE.ENTRANCE]: "S",
   [TILE.SHOP]: "s",
   [TILE.ENEMY]: "e",
   [TILE.KEY]: "K",
@@ -94,6 +94,37 @@ export default class LevelData {
       }
     }
 
+    // Locate the top tile of the exit door from the "Decorations" layer.
+    this.map.setLayer("Decorations");
+    const exitTile = this.map.findTile(tile => tile.properties.doorExit);
+    if (!exitTile) {
+      throw new Error(`No exit door (w/ property "doorExit") found in the "Decorations" layer`);
+    }
+    // Translating from tile position in Tiled to our custom grid position is a little tricky. The
+    // "Decorations" layer has a negative offset, so it is effectively offset one tile to the left
+    // and one tile to the right when it comes to grid positions.
+    this.exitPosition = {
+      x: exitTile.x - this.leftOffset - 1,
+      y: exitTile.y - this.topOffset
+    };
+    tiles[this.exitPosition.y][this.exitPosition.x] = new DataTile(TILE.EXIT, exitTile);
+
+    // Locate the top tile of the entrance door from the "Decorations" layer.
+    this.map.setLayer("Decorations");
+    const entranceTile = this.map.findTile(tile => tile.properties.doorEntrance);
+    if (!entranceTile) {
+      throw new Error(`No exit door (w/ property "doorEntrance") found in the "Decorations" layer`);
+    }
+    // Translate tile position in Tiled to grid. In this case, we don't need an offset.
+    this.entrancePosition = {
+      x: entranceTile.x - this.leftOffset,
+      y: entranceTile.y - this.topOffset
+    };
+    tiles[this.entrancePosition.y][this.entrancePosition.x] = new DataTile(
+      TILE.ENTRANCE,
+      entranceTile
+    );
+
     const keyLayer = map.getObjectLayer("Random Key");
     if (keyLayer) {
       const keyPosition = this.generateKeyPosition(keyLayer);
@@ -116,7 +147,6 @@ export default class LevelData {
     }
 
     this.isExitLocked = this.hasTileOfType(TILE.KEY);
-    this.startPosition = this.getPositionOf(TILE.START);
 
     this.debugDump();
   }
