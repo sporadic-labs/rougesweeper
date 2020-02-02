@@ -150,9 +150,9 @@ export default class Level {
       })
     );
 
-    const start = this.data.startPosition;
-    this.tiles[start.y][start.x].flipToFront();
-    this.getNeighboringTiles(start.x, start.y).map(tile => {
+    const start = this.data.entrancePosition;
+    this.tiles[start.y][start.x + 1].flipToFront();
+    this.getNeighboringTiles(start.x, start.y + 1).map(tile => {
       tile.flipToFront();
     });
   }
