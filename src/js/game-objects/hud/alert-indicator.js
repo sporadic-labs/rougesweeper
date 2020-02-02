@@ -58,7 +58,7 @@ export default class AlertIndicator {
   }
 
   updateText(playerHealth) {
-    const alertLevel = 3 - playerHealth;
+    const alertLevel = 4 - playerHealth;
     this.icons.forEach((icon, i) => {
       const frame = i < alertLevel ? FRAMES.FILLED : FRAMES.UNFILLED;
       icon.setFrame(frame);

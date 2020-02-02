@@ -22,7 +22,7 @@ class GameStore {
     this.previousGameState = this.gameState;
     this.dangerCount = 0;
     this.goldCount = 0;
-    this.maxPlayerHealth = 3;
+    this.maxPlayerHealth = 4;
     this.playerHealth = this.maxPlayerHealth;
     this.maxAttackCount = 3;
     this.attackCount = this.maxAttackCount;
