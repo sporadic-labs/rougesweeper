@@ -3,6 +3,7 @@ import EVENTS from "./events";
 import DEPTHS from "../depths";
 import FlipEffect from "../components/flip-effect";
 import { MagnifyEffect } from "../components/magnify-effect";
+import FadeEffect from "../components/fade-effect";
 
 export enum DOOR_PLACEMENT {
   LEFT = "LEFT",
@@ -15,6 +16,7 @@ export default class Door {
   private tileFlipEffect: FlipEffect;
   private doorMagnifyEffect: MagnifyEffect;
   private tileMagnifyEffect: MagnifyEffect;
+  private tileFadeEffect: FadeEffect;
 
   constructor(
     private scene: Scene,
@@ -66,6 +68,8 @@ export default class Door {
 
     this.doorMagnifyEffect = new MagnifyEffect(scene, this.doorSprite, 1.0, 1.1, 100);
     this.tileMagnifyEffect = new MagnifyEffect(scene, this.tileContainer, 1.0, 1.1, 100);
+    this.tileFadeEffect = new FadeEffect(scene, this.tileContainer, 1, 0.6, 100);
+    this.tileFadeEffect.setToEnd();
     this.enableInteractive();
   }
 
@@ -144,10 +148,19 @@ export default class Door {
     });
   }
 
+  highlightTile() {
+    this.tileFadeEffect.fadeIn();
+  }
+
+  unhighlightTile() {
+    this.tileFadeEffect.fadeOut();
+  }
+
   destroy() {
     this.disableInteractive();
     this.doorMagnifyEffect.destroy();
     this.tileMagnifyEffect.destroy();
+    this.tileFadeEffect.destroy();
     this.scene = undefined;
     this.doorSprite.destroy();
   }
