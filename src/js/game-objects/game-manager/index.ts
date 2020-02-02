@@ -330,6 +330,7 @@ export default class GameManager {
       case TILE_TYPES.KEY:
         store.setHasKey(true);
         this.level.exit.open();
+        this.level.exit.flipTileToFront();
         break;
     }
   }
