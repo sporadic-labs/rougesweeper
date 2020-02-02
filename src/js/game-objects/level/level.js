@@ -193,13 +193,13 @@ export default class Level {
   }
 
   getStartingWorldPosition() {
-    const { x, y } = this.data.startPosition;
-    return { x: this.gridXToWorldX(x), y: this.gridYToWorldY(y) };
+    const { x, y } = this.data.entrancePosition;
+    return { x: this.gridXToWorldX(x + 1), y: this.gridYToWorldY(y) };
   }
 
   getStartingGridPosition() {
-    const { x, y } = this.data.startPosition;
-    return { x, y };
+    const { x, y } = this.data.entrancePosition;
+    return { x: x + 1, y };
   }
 
   getExitWorldPosition() {
