@@ -4,7 +4,7 @@ import DEPTHS from "../depths";
 import FlipEffect from "../components/flip-effect";
 import { MagnifyEffect } from "../components/magnify-effect";
 
-export default class Exit {
+export default class Door {
   private doorSprite: GameObjects.Sprite;
   private doorTween: Phaser.Tweens.Tween;
   private tileTween: Phaser.Tweens.Tween;

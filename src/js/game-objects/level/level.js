@@ -5,7 +5,7 @@ import LevelData from "./level-data";
 import PathFinder from "./path-finder.ts";
 import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
-import Exit from "./exit";
+import Door from "./door";
 
 const neighborOffsets = [
   [1, 0],
@@ -102,7 +102,7 @@ export default class Level {
           this.map.removeTileAt(phaserTile.x, phaserTile.y);
           this.map.removeTileAt(phaserTile.x, phaserTile.y + 1);
           const isOpen = !this.data.isExitLocked;
-          this.exit = new Exit(
+          this.exit = new Door(
             scene,
             this.gridXToWorldX(x),
             this.gridYToWorldY(y),
@@ -122,7 +122,7 @@ export default class Level {
           this.map.removeTileAt(phaserTile.x, phaserTile.y);
           this.map.removeTileAt(phaserTile.x, phaserTile.y + 1);
           const isOpen = false;
-          this.entrance = new Exit(
+          this.entrance = new Door(
             scene,
             this.gridXToWorldX(x),
             this.gridYToWorldY(y),
