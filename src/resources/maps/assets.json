@@ -1,4 +1,12 @@
 { "columns":9,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"tilesets\/all-assets.png",
  "imageheight":541,
  "imagewidth":695,
@@ -20,7 +28,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"START"
+                 "value":"BLANK"
                 }]
         }, 
         {
@@ -34,7 +42,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"START"
+                 "value":"BLANK"
                 }]
         }, 
         {

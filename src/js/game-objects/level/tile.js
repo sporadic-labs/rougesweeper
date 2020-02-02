@@ -42,7 +42,7 @@ export default class Tile {
 
     const frontTileSprites = [scene.add.sprite(0, 0, "all-assets", tileKey)];
     this.tileContents = null;
-    if (!this.isCurrentlyBlank && type !== TILE_TYPES.START) {
+    if (!this.isCurrentlyBlank && type !== TILE_TYPES.ENTRANCE) {
       this.tileContents = scene.add.sprite(0, 0, "all-assets", frameName);
       frontTileSprites.push(this.tileContents);
     }

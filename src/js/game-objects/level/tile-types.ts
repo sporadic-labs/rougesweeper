@@ -1,5 +1,5 @@
 enum TILE_TYPES {
-  START = "START",
+  ENTRANCE = "ENTRANCE",
   EXIT = "EXIT",
   BLANK = "BLANK",
   ENEMY = "ENEMY",

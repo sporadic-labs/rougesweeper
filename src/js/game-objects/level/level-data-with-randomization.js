@@ -4,7 +4,7 @@ import { create2DArray } from "../../helpers/array-utils";
 
 const noopTrue = () => true;
 const debugTileMap = {
-  [TILE.START]: "S",
+  [TILE.ENTRANCE]: "S",
   [TILE.SHOP]: "s",
   [TILE.ENEMY]: "e",
   [TILE.GOLD]: "g",
@@ -42,7 +42,7 @@ export default class LevelData {
 
     const playerSpots = this.getAllPositionsOf(TILE.BLANK);
     this.playerPosition = Utils.Array.GetRandom(playerSpots);
-    this.setTileAt(this.playerPosition.x, this.playerPosition.y, TILE.START);
+    this.setTileAt(this.playerPosition.x, this.playerPosition.y, TILE.ENTRANCE);
     const isNextToPlayer = p =>
       PMath.Distance.Between(p.x, p.y, this.playerPosition.x, this.playerPosition.y) < 2;
 
