@@ -6,8 +6,6 @@ import { MagnifyEffect } from "../components/magnify-effect";
 
 export default class Door {
   private doorSprite: GameObjects.Sprite;
-  private doorTween: Phaser.Tweens.Tween;
-  private tileTween: Phaser.Tweens.Tween;
   private tileContainer: Phaser.GameObjects.Container;
   private tileFlipEffect: FlipEffect;
   private doorMagnifyEffect: MagnifyEffect;
