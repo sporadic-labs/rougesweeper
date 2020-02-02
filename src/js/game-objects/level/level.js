@@ -5,7 +5,7 @@ import LevelData from "./level-data";
 import PathFinder from "./path-finder.ts";
 import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
-import Door from "./door";
+import Door, { DOOR_PLACEMENT } from "./door";
 
 const neighborOffsets = [
   [1, 0],
@@ -109,6 +109,7 @@ export default class Level {
             this.events,
             phaserTile.properties.frameName,
             isOpen,
+            DOOR_PLACEMENT.RIGHT,
             "tile-hq"
           );
           return;
@@ -129,6 +130,7 @@ export default class Level {
             this.events,
             phaserTile.properties.frameName,
             isOpen,
+            DOOR_PLACEMENT.LEFT,
             "tile-hq"
           );
           return;

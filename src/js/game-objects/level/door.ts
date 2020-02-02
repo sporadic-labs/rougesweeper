@@ -4,6 +4,11 @@ import DEPTHS from "../depths";
 import FlipEffect from "../components/flip-effect";
 import { MagnifyEffect } from "../components/magnify-effect";
 
+export enum DOOR_PLACEMENT {
+  LEFT = "LEFT",
+  RIGHT = "RIGHT"
+}
+
 export default class Door {
   private doorSprite: GameObjects.Sprite;
   private tileContainer: Phaser.GameObjects.Container;
@@ -18,6 +23,7 @@ export default class Door {
     private levelEvents: Events.EventEmitter,
     private doorPrefix: string,
     private isCurrentlyOpen = false,
+    private doorPlacement = DOOR_PLACEMENT.LEFT,
     tileKey: string
   ) {
     const tileBack = scene.add.sprite(0, 0, "all-assets", "tile-back");
@@ -30,8 +36,14 @@ export default class Door {
 
     this.doorSprite = scene.add
       .sprite(worldX, worldY, "all-assets", `${doorPrefix}-0`)
-      .setOrigin(0, 0.5)
       .setDepth(DEPTHS.DIALOGUE);
+
+    if (doorPlacement === DOOR_PLACEMENT.LEFT) {
+      this.doorSprite.setOrigin(1, 0.5);
+      this.doorSprite.setFlipX(true);
+    } else {
+      this.doorSprite.setOrigin(0, 0.5);
+    }
 
     scene.anims.create({
       key: `${doorPrefix}-open`,

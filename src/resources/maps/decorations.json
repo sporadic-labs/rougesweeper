@@ -244,7 +244,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"hq\/hq-door-left"
+                 "value":"hq\/hq-door-right"
                 }]
         }, 
         {
@@ -375,7 +375,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"hq\/hq-door-left"
+                 "value":"hq\/hq-door-right"
                 }]
         }, 
         {
@@ -506,7 +506,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"warehouse\/warehouse-door-left"
+                 "value":"warehouse\/warehouse-door-right"
                 }]
         }, 
         {
@@ -534,7 +534,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"skyscraper\/skyscraper-door-left"
+                 "value":"skyscraper\/skyscraper-door-right"
                 }]
         }, 
         {
@@ -647,7 +647,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"warehouse\/warehouse-door-left"
+                 "value":"warehouse\/warehouse-door-right"
                 }]
         }, 
         {
@@ -670,7 +670,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"skyscraper\/skyscraper-door-left"
+                 "value":"skyscraper\/skyscraper-door-right"
                 }]
         }, 
         {
@@ -783,7 +783,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"lab\/lab-door-left"
+                 "value":"lab\/lab-door-right"
                 }]
         }, 
         {
@@ -811,7 +811,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"temple\/temple-door-left"
+                 "value":"temple\/temple-door-right"
                 }]
         }, 
         {
@@ -924,7 +924,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"lab\/lab-door-left"
+                 "value":"lab\/lab-door-right"
                 }]
         }, 
         {
@@ -942,7 +942,7 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"temple\/temple-door-left"
+                 "value":"temple\/temple-door-right"
                 }]
         }, 
         {
