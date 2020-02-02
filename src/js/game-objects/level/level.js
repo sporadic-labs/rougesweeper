@@ -396,6 +396,7 @@ export default class Level {
         if (tile) tile.destroy();
       })
     );
+    this.entrance.destroy();
     this.exit.destroy();
     this.map.destroy();
     this.events.destroy();
