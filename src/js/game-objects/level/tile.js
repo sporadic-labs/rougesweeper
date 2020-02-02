@@ -250,7 +250,6 @@ export default class Tile {
     this.disableInteractive();
     this.magnifyEffect.destroy();
     this.fadeEffect.destroy();
-    if (this.fadeTween) this.fadeTween.stop();
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
     this.scene = undefined;
     this.container.destroy();
