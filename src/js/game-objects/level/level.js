@@ -303,6 +303,12 @@ export default class Level {
         }
       })
     );
+    if (this.exit.isOpen()) {
+      this.pathFinder.setWalkableAt(this.exitGridPosition.x, this.exitGridPosition.y);
+    }
+    if (this.entrance.isOpen()) {
+      this.pathFinder.setWalkableAt(this.entranceGridPosition.x, this.entranceGridPosition.y);
+    }
     this.pathFinder.update();
 
     const isDestinationBlocked = !this.pathFinder.isWalkableAt(tilePos.x, tilePos.y);
