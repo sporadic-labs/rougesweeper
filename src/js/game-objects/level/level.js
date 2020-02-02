@@ -7,6 +7,7 @@ import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
 import Door, { DOOR_PLACEMENT } from "./door";
 import getTileFrame from "./get-tile-frame";
+import getTilesetName from "./get-tileset-name";
 
 const neighborOffsets = [
   [1, 0],
@@ -32,26 +33,7 @@ export default class Level {
 
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
-    let tilesSetImage = null;
-    const levelKeyParts = levelKey.split("-");
-    switch (levelKeyParts[1]) {
-      case "1":
-      default:
-        tilesSetImage = this.map.addTilesetImage("hq");
-        break;
-      case "2":
-        tilesSetImage = this.map.addTilesetImage("warehouse");
-        break;
-      case "3":
-        tilesSetImage = this.map.addTilesetImage("lab");
-        break;
-      case "4":
-        tilesSetImage = this.map.addTilesetImage("skyscraper");
-        break;
-      case "5":
-        tilesSetImage = this.map.addTilesetImage("temple");
-        break;
-    }
+    const tilesSetImage = this.map.addTilesetImage(getTilesetName(levelKey));
 
     this.map.layers.forEach(layerData => {
       // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
