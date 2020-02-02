@@ -6,6 +6,7 @@ import DEPTHS from "../depths";
 import createPickupAnimation from "./tile-animations/pickup-animation.ts";
 import createDisappearAnimation from "./tile-animations/disappear-animation.ts";
 import createAttackAnimation from "./tile-animations/attack-animation.ts";
+import { MagnifyEffect } from "../components/magnify-effect";
 
 export default class Tile {
   /** @param {Phaser.Scene} scene */
@@ -55,6 +56,8 @@ export default class Tile {
     this.isRevealed = false;
     this.flipEffect = new FlipEffect(scene, this.frontTile, this.backSprite);
     this.flipEffect.setToBack();
+
+    this.magnifyEffect = new MagnifyEffect(scene, this.container, 1, 1.1, 100);
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
     this.container.setDepth(DEPTHS.BOARD);
@@ -211,24 +214,12 @@ export default class Tile {
   };
 
   onHoverStart = () => {
-    if (this.tween) this.tween.stop();
-    this.tween = this.scene.add.tween({
-      targets: this.container,
-      scaleX: 1.1,
-      scaleY: 1.1,
-      duration: 100
-    });
+    this.magnifyEffect.scaleUp();
     this.levelEvents.emit(EVENTS.TILE_OVER, this);
   };
 
   onHoverEnd = () => {
-    if (this.tween) this.tween.stop();
-    this.tween = this.scene.add.tween({
-      targets: this.container,
-      scaleX: 1,
-      scaleY: 1,
-      duration: 100
-    });
+    this.magnifyEffect.scaleDown();
     this.levelEvents.emit(EVENTS.TILE_OUT, this);
   };
 
@@ -288,7 +279,7 @@ export default class Tile {
 
   destroy() {
     this.disableInteractive();
-    if (this.tween) this.tween.stop();
+    this.magnifyEffect.destroy();
     if (this.fadeTween) this.fadeTween.stop();
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
     this.scene = undefined;
