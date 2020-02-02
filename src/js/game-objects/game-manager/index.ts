@@ -85,39 +85,16 @@ export default class GameManager {
   onExitSelect = async () => {
     const playerGridPos = this.player.getGridPosition();
     const exitGridPos = this.level.exitGridPosition;
-    const exitNeighborTiles: Tile[] = this.level.getNeighboringTiles(exitGridPos.x, exitGridPos.y);
-
-    const revealedTiles = exitNeighborTiles.filter(tile => tile.isRevealed);
-    if (revealedTiles.length === 0) {
-      this.toastManager.setMessage("There is no clear path to the door - get closer.");
-      return;
-    }
-
-    // Find the shortest path to the exit, using the fact that diagonal moves have a distance of
-    // ~1.4 compared to a distance of 1 for horizontal/vertical moves.
-    let shortestPath: Point[] = null;
-    let shortestDistance = Number.MAX_VALUE;
-    for (const tile of revealedTiles) {
-      const tileGridPos = tile.getGridPosition();
-      const path: Point[] = this.level.findPathBetween(playerGridPos, tileGridPos, true);
-      if (!path) continue;
-      let distance = 0;
-      for (let i = 0; i < path.length - 1; i++) {
-        distance += Phaser.Math.Distance.BetweenPoints(path[i], path[i + 1]);
-      }
-      if (!shortestPath || distance < shortestDistance) {
-        shortestPath = path;
-        shortestDistance = distance;
-      }
-    }
-
-    if (!shortestPath) {
-      this.toastManager.setMessage("There is no clear path to the door - get closer.");
-      return;
-    }
 
     if (!this.level.exit.isOpen()) {
-      this.toastManager.setMessage("The door is locked");
+      this.toastManager.setMessage("That door is locked - find the key.");
+      return;
+    }
+
+    const path = this.level.findPathBetween(playerGridPos, exitGridPos, true);
+
+    if (!path) {
+      this.toastManager.setMessage("There is no clear path to the door - get closer.");
       return;
     }
 
@@ -125,7 +102,7 @@ export default class GameManager {
     store.addMove();
 
     // TODO: open door and move through it.
-    if (shortestPath.length > 0) await this.movePlayerAlongPath(shortestPath);
+    await this.movePlayerAlongPath(path);
     const { x, y } = this.level.gridXYToWorldXY(exitGridPos);
     const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
     await coinAnim.play();
@@ -362,11 +339,6 @@ export default class GameManager {
     store.setDangerCount(enemyCount);
 
     this.movePlayerToTile(playerStartGridPos.x, playerStartGridPos.y, true);
-
-    const worldX = this.level.gridXToWorldX(playerStartGridPos.x);
-    const worldY = this.level.gridYToWorldY(playerStartGridPos.y);
-    this.player.movePlayerTo(worldX, worldY, true);
-    this.player.setGridPosition(playerStartGridPos.x, playerStartGridPos.y);
 
     await this.player.fadePlayerIn();
 

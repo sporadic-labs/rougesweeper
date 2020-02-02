@@ -303,6 +303,12 @@ export default class Level {
         }
       })
     );
+    if (this.exit.isOpen()) {
+      this.pathFinder.setWalkableAt(this.exitGridPosition.x, this.exitGridPosition.y);
+    }
+    if (this.entrance.isOpen()) {
+      this.pathFinder.setWalkableAt(this.entranceGridPosition.x, this.entranceGridPosition.y);
+    }
     this.pathFinder.update();
 
     const isDestinationBlocked = !this.pathFinder.isWalkableAt(tilePos.x, tilePos.y);
@@ -390,6 +396,7 @@ export default class Level {
         if (tile) tile.destroy();
       })
     );
+    this.entrance.destroy();
     this.exit.destroy();
     this.map.destroy();
     this.events.destroy();
