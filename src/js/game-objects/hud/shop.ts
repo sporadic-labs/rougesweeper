@@ -25,12 +25,14 @@ export default class Shop {
   gameStore: GameStore;
   costs = {
     heart: 3,
-    attack: 4,
-    compass: 5
+    compass: 5,
+    clearRadar: 4,
+    revealTile: 3
   };
   buyHeartButton: TextButton;
-  buyAttackButton: TextButton;
   buyCompassButton: TextButton;
+  buyClearRadarButton: TextButton;
+  buyRevealTileButton: TextButton;
   container: Phaser.GameObjects.Container;
   mobProxy: MobXProxy;
   proxy: EventProxy;
@@ -61,39 +63,58 @@ export default class Shop {
     leaveButton.events.on("DOWN", this.closeShop);
 
     const y = r.centerY;
-    const x1 = r.x + r.width * (1 / 6);
-    const x2 = r.x + r.width * (3 / 6);
-    const x3 = r.x + r.width * (5 / 6);
+    const x1 = r.x + r.width * (1 / 8);
+    const x2 = r.x + r.width * (3 / 8);
+    const x3 = r.x + r.width * (5 / 8);
+    const x4 = r.x + r.width * (7 / 8);
     const buyHeartText = scene.add
       .text(x1, y - 40, `Reduce alert\n(max 3)\nCost: ${this.costs.heart} tech`, itemTextStyle)
       .setOrigin(0.5, 0.5);
     const buyHeartButton = new TextButton(scene, x1, y + 40, "Buy");
     buyHeartButton.events.on("DOWN", this.buyHealth);
     this.buyHeartButton = buyHeartButton;
-    const buyAttackText = scene.add
-      .text(x2, y - 40, `Buy attack\n(max 3)\nCost: ${this.costs.attack} tech`, itemTextStyle)
-      .setOrigin(0.5, 0.5);
-    const buyAttackButton = new TextButton(scene, x2, y + 40, "Buy");
-    buyAttackButton.events.on("DOWN", this.buyAttack);
-    this.buyAttackButton = buyAttackButton;
     const buyCompassText = scene.add
-      .text(x3, y - 40, `Buy compass\nfor level\nCost: ${this.costs.compass} tech`, itemTextStyle)
+      .text(x2, y - 40, `Buy compass\nfor level\nCost: ${this.costs.compass} tech`, itemTextStyle)
       .setOrigin(0.5, 0.5);
-    const buyCompassButton = new TextButton(scene, x3, y + 40, "Buy");
+    const buyCompassButton = new TextButton(scene, x2, y + 40, "Buy");
     buyCompassButton.events.on("DOWN", this.buyCompass);
     this.buyCompassButton = buyCompassButton;
+    const buyClearRadar = scene.add
+      .text(
+        x3,
+        y - 40,
+        `Buy {RADAR CLEAR}\n(max 1)\nCost: ${this.costs.clearRadar} tech`,
+        itemTextStyle
+      )
+      .setOrigin(0.5, 0.5);
+    const buyClearRadarButton = new TextButton(scene, x3, y + 40, "Buy");
+    buyClearRadarButton.events.on("DOWN", this.buyClearRadar);
+    this.buyClearRadarButton = buyClearRadarButton;
+    const buyRevealTile = scene.add
+      .text(
+        x4,
+        y - 40,
+        `Buy {REVEAL TILE}\n(max 1)\nCost: ${this.costs.revealTile} tech`,
+        itemTextStyle
+      )
+      .setOrigin(0.5, 0.5);
+    const buyRevealTileButton = new TextButton(scene, x4, y + 40, "Buy");
+    buyRevealTileButton.events.on("DOWN", this.buyRevealTile);
+    this.buyRevealTileButton = buyRevealTileButton;
 
     this.container = scene.add
       .container(0, 0, [
         background,
         title,
         leaveButton.text,
-        buyAttackText,
-        buyAttackButton.text,
         buyHeartText,
         buyHeartButton.text,
         buyCompassText,
-        buyCompassButton.text
+        buyCompassButton.text,
+        buyClearRadar,
+        buyClearRadarButton.text,
+        buyRevealTile,
+        buyRevealTileButton.text
       ])
       .setDepth(DEPTHS.MENU)
       .setVisible(false);
@@ -121,20 +142,29 @@ export default class Shop {
   };
 
   updateButtons() {
-    const { gameStore, costs, buyHeartButton, buyAttackButton, buyCompassButton } = this;
+    const {
+      gameStore,
+      costs,
+      buyHeartButton,
+      buyRevealTileButton,
+      buyClearRadarButton,
+      buyCompassButton
+    } = this;
     const {
       goldCount,
       playerHealth,
       maxPlayerHealth,
-      attackCount,
-      maxAttackCount,
+      hasRevealTile,
+      hasClearRadar,
       hasCompass
     } = gameStore;
     const canBuyHeart = playerHealth < maxPlayerHealth && goldCount >= costs.heart;
-    const canBuyAttack = attackCount < maxAttackCount && goldCount >= costs.attack;
+    const canBuyRevealTile = !hasRevealTile && goldCount >= costs.revealTile;
+    const canBuyClearRadar = !hasClearRadar && goldCount >= costs.clearRadar;
     const canBuyCompass = !hasCompass && goldCount >= costs.compass;
     buyHeartButton.setVisible(canBuyHeart);
-    buyAttackButton.setVisible(canBuyAttack);
+    buyRevealTileButton.setVisible(canBuyRevealTile);
+    buyClearRadarButton.setVisible(canBuyClearRadar);
     buyCompassButton.setVisible(canBuyCompass);
   }
 
@@ -144,10 +174,16 @@ export default class Shop {
     this.gameStore.goToPreviousGameState();
   };
 
-  buyAttack = () => {
+  buyClearRadar = () => {
     const { gameStore, costs } = this;
-    gameStore.removeGold(costs.attack);
-    gameStore.addAttack(1);
+    gameStore.removeGold(costs.clearRadar);
+    gameStore.setHasClearRadar(true);
+  };
+
+  buyRevealTile = () => {
+    const { gameStore, costs } = this;
+    gameStore.removeGold(costs.revealTile);
+    gameStore.setHasRevealTile(true);
   };
 
   buyHealth = () => {

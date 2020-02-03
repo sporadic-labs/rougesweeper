@@ -231,7 +231,6 @@ export default class GameManager {
 
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
-    store.removeAttack();
     store.removeGold();
     const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
     const { x, y } = tile.getPosition();

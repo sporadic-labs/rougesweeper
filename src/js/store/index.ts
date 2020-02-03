@@ -9,11 +9,11 @@ class GameStore {
   @observable goldCount: number;
   @observable maxPlayerHealth: number;
   @observable playerHealth: number;
-  @observable maxAttackCount: number;
-  @observable attackCount: number;
   @observable isShopOpen: boolean;
   @observable moveCount: number;
   @observable hasCompass: boolean;
+  @observable hasRevealTile: boolean;
+  @observable hasClearRadar: boolean;
   @observable levelIndex: number;
   @observable hasKey: boolean;
   @observable pauseMenuOpen: boolean;
@@ -25,11 +25,11 @@ class GameStore {
     this.goldCount = 0;
     this.maxPlayerHealth = 4;
     this.playerHealth = this.maxPlayerHealth;
-    this.maxAttackCount = 3;
-    this.attackCount = this.maxAttackCount;
     this.isShopOpen = false;
     this.moveCount = 0;
     this.hasCompass = false;
+    this.hasRevealTile = false;
+    this.hasClearRadar = false;
     this.levelIndex = 0;
     this.hasKey = false;
     this.pauseMenuOpen = false;
@@ -57,17 +57,17 @@ class GameStore {
   @action removeHealth(amt = 1) {
     if (this.playerHealth > 0) this.playerHealth -= amt;
   }
-  @action addAttack(amt = 1) {
-    if (this.attackCount <= this.maxAttackCount) this.attackCount += amt;
-  }
-  @action removeAttack(amt = 1) {
-    if (this.attackCount > 0) this.attackCount -= amt;
-  }
   @action setShopOpen(isShopOpen: boolean) {
     this.isShopOpen = isShopOpen;
   }
   @action setHasCompass(hasCompass: boolean) {
     this.hasCompass = hasCompass;
+  }
+  @action setHasRevealTile(hasRevealTile: boolean) {
+    this.hasRevealTile = hasRevealTile;
+  }
+  @action setHasClearRadar(hasClearRadar: boolean) {
+    this.hasClearRadar = hasClearRadar;
   }
   @action setHasKey(hasKey: boolean) {
     this.hasKey = hasKey;
@@ -93,7 +93,6 @@ class GameStore {
   @action startNewGame() {
     this.playerHealth = this.maxPlayerHealth;
     this.goldCount = 3;
-    this.attackCount = this.maxAttackCount;
     this.levelIndex = 0;
     this.moveCount = 0;
     this.hasKey = false;

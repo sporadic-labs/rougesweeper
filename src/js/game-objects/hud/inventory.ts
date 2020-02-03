@@ -28,6 +28,7 @@ export default class InventoryMenu {
     this.icons = [
       scene.add.image(0, 0, "all-assets", "key"),
       scene.add.image(0, 0, "all-assets", "compass"),
+      scene.add.image(0, 0, "all-assets", "marker-1"),
       scene.add.image(0, 0, "all-assets", "marker-2")
     ];
 
@@ -48,14 +49,14 @@ export default class InventoryMenu {
       icon.y = iconStartY + (iconHeight + iconSpacing) * i;
     });
 
-    const bgHeight = this.icons[2].y + iconHeight + bgPadding.y;
+    const bgHeight = this.icons[this.icons.length - 1].y + iconHeight + bgPadding.y;
     this.background = scene.add
       .rectangle(0, 0, bgWidth, bgHeight, 0xffffff)
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.435), [this.background, this.text, ...this.icons])
+      .container(fractionToX(0.12), fractionToY(0.4), [this.background, this.text, ...this.icons])
       .setDepth(DEPTHS.HUD);
 
     this.mobxProxy = new MobXProxy();
@@ -67,10 +68,14 @@ export default class InventoryMenu {
       const alpha = gameStore.hasCompass ? activeIconAlpha : inactiveIconAlpha;
       this.icons[1].alpha = alpha;
     });
-    // this.mobxProxy.observe(gameStore, "hasShield", () => {
-    //   const alpha = gameStore.hasCompass ? activeIconAlpha :inactiveIconAlpha;
-    //   this.icons[2].alpha = alpha;
-    // });
+    this.mobxProxy.observe(gameStore, "hasClearRadar", () => {
+      const alpha = gameStore.hasClearRadar ? activeIconAlpha : inactiveIconAlpha;
+      this.icons[2].alpha = alpha;
+    });
+    this.mobxProxy.observe(gameStore, "hasRevealTile", () => {
+      const alpha = gameStore.hasRevealTile ? activeIconAlpha : inactiveIconAlpha;
+      this.icons[3].alpha = alpha;
+    });
 
     this.eventProxy = new EventProxy();
     this.eventProxy.on(scene.events, "shutdown", this.destroy, this);
