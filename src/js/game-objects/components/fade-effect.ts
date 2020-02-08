@@ -9,7 +9,7 @@ export default class FadeEffect {
     private startAlpha: number,
     private endAlpha: number,
     private duration: number,
-    private additionalTweenConfig?: Types.Tweens.TweenBuilderConfig
+    private additionalTweenConfig?: Types.Tweens.TweenBuilderConfig | object
   ) {}
 
   setToStart() {
@@ -20,7 +20,7 @@ export default class FadeEffect {
     this.target.setAlpha(this.endAlpha);
   }
 
-  fadeIn(additionalTweenConfig?: Types.Tweens.TweenBuilderConfig) {
+  fadeIn(additionalTweenConfig?: Types.Tweens.TweenBuilderConfig | object) {
     if (this.tween) this.tween.stop();
     this.tween = this.scene.add.tween({
       targets: this.target,
@@ -31,7 +31,7 @@ export default class FadeEffect {
     });
   }
 
-  fadeOut(additionalTweenConfig?: Types.Tweens.TweenBuilderConfig) {
+  fadeOut(additionalTweenConfig?: Types.Tweens.TweenBuilderConfig | object) {
     if (this.tween) this.tween.stop();
     this.tween = this.scene.add.tween({
       targets: this.target,

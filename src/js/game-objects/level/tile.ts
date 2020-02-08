@@ -1,21 +1,42 @@
+import Phaser, { Scene, Events, GameObjects, Tweens, Input } from "phaser";
 import TILE_TYPES from "./tile-types";
 import EVENTS from "./events";
 import FlipEffect from "../components/flip-effect";
 import AttackAnimation from "../player/attack-animation";
 import DEPTHS from "../depths";
-import createPickupAnimation from "./tile-animations/pickup-animation.ts";
-import createDisappearAnimation from "./tile-animations/disappear-animation.ts";
-import createAttackAnimation from "./tile-animations/attack-animation.ts";
+import createPickupAnimation from "./tile-animations/pickup-animation";
+import createDisappearAnimation from "./tile-animations/disappear-animation";
+import createAttackAnimation from "./tile-animations/attack-animation";
 import { MagnifyEffect } from "../components/magnify-effect";
 import FadeEffect from "../components/fade-effect";
 import getTileFrame from "./get-tile-frame";
+import { TileDialogueEntry } from "../hud/dialogue-manager";
 
 export default class Tile {
-  /** @param {Phaser.Scene} scene */
-  constructor(scene, tileKey, type, frameName, x, y, levelEvents, dialogueData = null) {
-    this.scene = scene;
-    this.levelEvents = levelEvents;
-    this.type = type;
+  public isRevealed = false;
+  public gridX = 0;
+  public gridY = 0;
+  public isCurrentlyBlank: boolean;
+  public dialoguePlayedCounter = 0;
+  private backSprite: GameObjects.Sprite;
+  private tileContents: GameObjects.Sprite;
+  private frontTile: GameObjects.Container;
+  private container: GameObjects.Container;
+  private flipEffect: FlipEffect;
+  private magnifyEffect: MagnifyEffect;
+  private fadeEffect: FadeEffect;
+  private tileGraphicTimeline: Tweens.Timeline;
+
+  constructor(
+    private scene: Scene,
+    private tileKey: string,
+    public type: TILE_TYPES,
+    private frameName: string,
+    private x: number,
+    private y: number,
+    private levelEvents: Events.EventEmitter,
+    private dialogueData: TileDialogueEntry
+  ) {
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
 
     this.dialogueData = dialogueData;
@@ -55,7 +76,7 @@ export default class Tile {
     this.isCurrentlyBlank = true;
   }
 
-  playTileEffectAnimation(playerX, playerY) {
+  playTileEffectAnimation(playerX: number, playerY: number) {
     return new Promise(resolve => {
       if (
         this.type === TILE_TYPES.GOLD ||
@@ -120,7 +141,7 @@ export default class Tile {
    * Fade the tile out, destroy it, and resolve a promise when the whole mess is done!
    */
   fadeTileOut(duration = Phaser.Math.Between(150, 300), delay = 0) {
-    return new Promise(resolve => {
+    return new Promise<void>((resolve: () => void) => {
       this.fadeEffect.fadeOut({
         delay,
         alpha: 0,
@@ -151,7 +172,7 @@ export default class Tile {
    * @param {Number} x
    * @param {Number} y
    */
-  setGridPosition(x, y) {
+  setGridPosition(x: number, y: number) {
     this.gridX = x;
     this.gridY = y;
   }
@@ -187,7 +208,7 @@ export default class Tile {
     this.container.off("pointerdown", this.onPointerDown);
   }
 
-  onPointerDown = pointer => {
+  onPointerDown = (pointer: Input.Pointer) => {
     const event = pointer.primaryDown ? EVENTS.TILE_SELECT_PRIMARY : EVENTS.TILE_SELECT_SECONDARY;
     this.levelEvents.emit(event, this);
   };
@@ -226,7 +247,6 @@ export default class Tile {
    * Returns the world bounds of the tile as a rect.
    * @param {Phaser.Geom.Rectangle} [rect=new Phaser.Geom.Rectangle()] Optional rectangle object to use.
    * @returns {Phaser.Geom.Rectangle}
-   * @memberof Tile
    */
   getBounds(rect = new Phaser.Geom.Rectangle()) {
     const { x, y, displayWidth, displayHeight } = this.container;
