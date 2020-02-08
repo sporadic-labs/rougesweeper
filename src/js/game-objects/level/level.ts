@@ -1,16 +1,19 @@
-import { Events, Math } from "phaser";
+import Phaser, { Events, Tilemaps, Scene, GameObjects } from "phaser";
 import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
-import PathFinder from "./path-finder.ts";
+import PathFinder from "./path-finder";
 import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
 import Door, { DOOR_PLACEMENT } from "./door";
 import getTileFrame from "./get-tile-frame";
 import getTilesetName from "./get-tileset-name";
+import DialogueManager from "../hud/dialogue-manager";
+import { Point } from "../../helpers/common-interfaces";
 
-const Distance = Math.Distance.BetweenPoints;
-
+const Distance = Phaser.Math.Distance.BetweenPoints;
+const isPointInArray = (p1: Point, array: Point[]) =>
+  array.some(p2 => p1.x === p2.x && p1.y === p2.y);
 const neighborOffsets = [
   [1, 0],
   [1, 1],
@@ -23,16 +26,24 @@ const neighborOffsets = [
 ];
 
 export default class Level {
-  /**
-   * @param {Phaser.Scene} scene
-   * @param {*} levelKey
-   * @param {*} dialogueManager
-   * @memberof Level
-   */
-  constructor(scene, levelKey, dialogueManager) {
-    this.scene = scene;
-    this.events = new Events.EventEmitter();
+  public events = new Events.EventEmitter();
+  public exitWorldPosition: Point;
+  public exitGridPosition: Point;
+  public exit: Door;
+  public entranceWorldPosition: Point;
+  public entranceGridPosition: Point;
+  public entrance: Door;
+  private map: Tilemaps.Tilemap;
+  private data: LevelData;
+  private pathFinder: PathFinder;
+  private left: number;
+  private top: number;
+  private tileWidth: number;
+  private tileHeight: number;
+  private background: GameObjects.Rectangle;
+  private tiles: Tile[][];
 
+  constructor(private scene: Scene, levelKey: string, dialogueManager: DialogueManager) {
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
     const tilesSetImage = this.map.addTilesetImage(getTilesetName(levelKey));
@@ -140,8 +151,8 @@ export default class Level {
     );
   }
 
-  highlightTiles(playerPos) {
-    this.forEachTile(tile => {
+  highlightTiles(playerPos: Point) {
+    this.forEachTile((tile: Tile) => {
       if (tile.isRevealed || this.isTileInPlayerRange(playerPos, tile.getGridPosition())) {
         tile.highlight();
       } else {
@@ -160,7 +171,7 @@ export default class Level {
     }
   }
 
-  isNeighboringScrambleEnemy(x, y) {
+  isNeighboringScrambleEnemy(x: number, y: number) {
     const tiles = this.getNeighboringTiles(x, y);
     for (const tile of tiles) {
       if (!tile.isCurrentlyBlank && tile.type === TILE_TYPES.SCRAMBLE_ENEMY) {
@@ -174,18 +185,17 @@ export default class Level {
     return false;
   }
 
-  countNeighboringEnemies(x, y) {
+  countNeighboringEnemies(x: number, y: number) {
     const enemyCount = this.getNeighboringTiles(x, y).reduce((count, tile) => {
-      count +=
-        (tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY) &&
-        !tile.isCurrentlyBlank;
+      const isEnemy = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
+      if (isEnemy && !tile.isCurrentlyBlank) count += 1;
       return count;
     }, 0);
     return enemyCount;
   }
 
-  getNeighboringTiles(x, y) {
-    const tiles = [];
+  getNeighboringTiles(x: number, y: number) {
+    const tiles: Tile[] = [];
     neighborOffsets.forEach(([dx, dy]) => {
       const nx = x + dx;
       const ny = y + dy;
@@ -213,7 +223,7 @@ export default class Level {
     };
   }
 
-  gridXYToWorldXY(pos) {
+  gridXYToWorldXY(pos: Point) {
     return {
       x: this.gridXToWorldX(pos.x),
       y: this.gridYToWorldY(pos.y)
@@ -223,30 +233,24 @@ export default class Level {
   /**
    * Convert from grid x to the center x of a tile in the world. This factors in the fact that the
    * tiles are offset by half a tile from the tilemap position.
-   *
-   * @param {number} x
-   * @returns
    */
-  gridXToWorldX(x) {
+  gridXToWorldX(x: number) {
     return this.left + x * this.tileWidth + this.tileWidth;
   }
 
   /**
    * Convert from grid y to the center y of a tile in the world. This factors in the fact that the
    * tiles are offset by half a tile from the tilemap position.
-   *
-   * @param {number} y
-   * @returns
    */
-  gridYToWorldY(y) {
+  gridYToWorldY(y: number) {
     return this.top + y * this.tileHeight + this.tileHeight;
   }
 
-  hasTileAt(x, y) {
+  hasTileAt(x: number, y: number) {
     return this.tiles[y] && this.tiles[y][x];
   }
 
-  getTileFromGrid(x, y) {
+  getTileFromGrid(x: number, y: number) {
     if (this.tiles[y] && this.tiles[y][x]) {
       return this.tiles[y][x];
     }
@@ -265,7 +269,7 @@ export default class Level {
    * Runs the given callback for each tile that exists in the map
    * @param {function} cb
    */
-  forEachTile(cb) {
+  forEachTile(cb: (t: Tile) => void) {
     this.tiles.forEach(row => {
       row.forEach(tile => {
         if (tile) cb(tile);
@@ -273,7 +277,7 @@ export default class Level {
     });
   }
 
-  isTileInPlayerRange(playerPos, tilePos) {
+  isTileInPlayerRange(playerPos: Point, tilePos: Point) {
     const dx = playerPos.x - tilePos.x;
     const dy = playerPos.y - tilePos.y;
     return dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1;
@@ -286,7 +290,7 @@ export default class Level {
    * @param {boolean} allowNeighbor Whether or not to allow player to take one step beyond the
    * currently revealed tiles (i.e. step from a revealed tile to the neighboring unrevealed tile).
    */
-  findPathBetween(playerPos, tilePos, allowNeighbor = false) {
+  findPathBetween(playerPos: Point, tilePos: Point, allowNeighbor = false) {
     // Note: this is inefficient, but ensures the pathfinder is up-to-date. To optimize, level needs
     // to know when tiles are highlighted/unhighlighted and revealed/hidden.
     this.pathFinder.setAllUnwalkable();
@@ -312,7 +316,6 @@ export default class Level {
       let newDestination = null;
       const pointsQueue = [playerPos];
       const visitedPoints = [];
-      const isPointInArray = (p1, array) => array.some(p2 => p1.x === p2.x && p1.y === p2.y);
       while (!newDestination && pointsQueue.length !== 0) {
         const { x, y } = pointsQueue.shift();
         visitedPoints.push({ x, y });
@@ -356,7 +359,7 @@ export default class Level {
   }
 
   fadeLevelOut() {
-    const tilePromises = [];
+    const tilePromises: Promise<void>[] = [];
     // Flip all to the front, then half a second later, kick off the fade out from left to right
     this.tiles.forEach((row, y) =>
       row.forEach((tile, x) => {

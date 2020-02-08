@@ -17,11 +17,7 @@ import Player from "../player";
 import ToastManager from "../hud/toast-manager";
 import Tile from "../level/tile";
 import Door from "../level/door";
-
-interface Point {
-  x: number;
-  y: number;
-}
+import { Point } from "../../helpers/common-interfaces";
 
 export default class GameManager {
   private level: Level;
