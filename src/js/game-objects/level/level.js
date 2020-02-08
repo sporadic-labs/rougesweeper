@@ -98,7 +98,6 @@ export default class Level {
             DOOR_PLACEMENT.RIGHT,
             tileKey
           );
-          this.exit.flipTileToBack();
           return;
         } else if (type === TILE_TYPES.ENTRANCE) {
           // Find the center world position of the whole door (which is 2 tall) from the top tile.
@@ -121,7 +120,6 @@ export default class Level {
             DOOR_PLACEMENT.LEFT,
             tileKey
           );
-          this.entrance.flipTileToFront();
           return;
         }
 
@@ -140,10 +138,6 @@ export default class Level {
         return tile;
       })
     );
-
-    const start = this.getStartingGridPosition();
-    this.tiles[start.y][start.x].flipToFront();
-    this.getNeighboringTiles(start.x, start.y).map(tile => tile.flipToFront());
   }
 
   highlightTiles(playerPos) {
@@ -377,17 +371,22 @@ export default class Level {
   }
 
   fadeLevelIn() {
-    const tilePromises = [];
+    const promises = [];
     // Staggered fade in from left to right of floor
     this.tiles.forEach((row, y) =>
       row.forEach((tile, x) => {
         if (tile) {
           const p = tile.fadeTileIn(250, x * 50);
-          tilePromises.push(p);
+          promises.push(p);
         }
       })
     );
-    return Promise.all(tilePromises);
+    promises.push(this.entrance.open());
+    return Promise.all(promises).then(() => {
+      const start = this.getStartingGridPosition();
+      this.tiles[start.y][start.x].flipToFront();
+      this.getNeighboringTiles(start.x, start.y).map(tile => tile.flipToFront());
+    });
   }
 
   destroy() {

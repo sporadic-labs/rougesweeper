@@ -81,7 +81,7 @@ export default class Player {
         alpha: 0,
         y: "-=50",
         ease: Phaser.Math.Easing.Quadratic.In,
-        duration: 400,
+        duration: 150,
         onComplete: () => {
           return resolve();
         }
@@ -99,7 +99,7 @@ export default class Player {
         targets: this.sprite,
         alpha: 1,
         ease: Phaser.Math.Easing.Quadratic.In,
-        duration: 400,
+        duration: 150,
         onComplete: () => {
           return resolve();
         }

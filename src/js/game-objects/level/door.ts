@@ -1,9 +1,16 @@
-import { Scene, Events, GameObjects } from "phaser";
+import { Scene, Events, GameObjects, Animations, Game } from "phaser";
 import EVENTS from "./events";
 import DEPTHS from "../depths";
 import FlipEffect from "../components/flip-effect";
 import { MagnifyEffect } from "../components/magnify-effect";
 import FadeEffect from "../components/fade-effect";
+
+const SPRITE_ANIMATION_COMPLETE = Animations.Events.SPRITE_ANIMATION_COMPLETE;
+const makeAnimCompletePromise = (sprite: GameObjects.Sprite) => {
+  return new Promise(resolve => {
+    sprite.once(SPRITE_ANIMATION_COMPLETE, resolve);
+  });
+};
 
 export enum DOOR_PLACEMENT {
   LEFT = "LEFT",
@@ -78,18 +85,36 @@ export default class Door {
     return this.isCurrentlyOpen;
   }
 
+  /**
+   * Open door and flip tile to revealed state.
+   */
   open() {
-    if (!this.isCurrentlyOpen) {
-      this.isCurrentlyOpen = true;
-      this.doorSprite.play(`${this.doorPrefix}-open`);
-    }
+    return new Promise(resolve => {
+      if (!this.isCurrentlyOpen) {
+        this.isCurrentlyOpen = true;
+        const p1 = this.flipTileToFront();
+        const p2 = makeAnimCompletePromise(this.doorSprite);
+        this.doorSprite.play(`${this.doorPrefix}-open`);
+        Promise.all([p1, p2]).then(resolve);
+      } else {
+        resolve();
+      }
+    });
   }
 
+  /**
+   * Close door, without re-hiding the tile.
+   */
   close() {
-    if (this.isCurrentlyOpen) {
-      this.isCurrentlyOpen = false;
-      this.doorSprite.play(`${this.doorPrefix}-close`);
-    }
+    return new Promise(resolve => {
+      if (this.isCurrentlyOpen) {
+        this.isCurrentlyOpen = false;
+        makeAnimCompletePromise(this.doorSprite).then(resolve);
+        this.doorSprite.play(`${this.doorPrefix}-close`);
+      } else {
+        resolve();
+      }
+    });
   }
 
   enableInteractive() {

@@ -346,12 +346,13 @@ export default class GameManager {
     );
     store.setDangerCount(enemyCount);
 
-    this.movePlayerToTile(playerStartGridPos.x, playerStartGridPos.y, true);
-
-    await this.player.fadePlayerIn();
-
     await this.level.fadeLevelIn();
-    this.level.highlightTiles(playerStartGridPos);
+
+    const entranceWorldPos = this.level.entranceWorldPosition;
+    this.player.setPosition(entranceWorldPos.x, entranceWorldPos.y);
+    await this.player.fadePlayerIn();
+    await this.movePlayerToTile(playerStartGridPos.x, playerStartGridPos.y, false);
+    await this.level.entrance.close();
 
     this.radar.setLevel(this.level);
     this.radar.setVisible(true);
