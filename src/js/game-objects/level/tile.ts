@@ -169,8 +169,6 @@ export default class Tile {
 
   /**
    * Set the position of the tile based on the Map Grid.
-   * @param {Number} x
-   * @param {Number} y
    */
   setGridPosition(x: number, y: number) {
     this.gridX = x;
@@ -245,8 +243,6 @@ export default class Tile {
 
   /**
    * Returns the world bounds of the tile as a rect.
-   * @param {Phaser.Geom.Rectangle} [rect=new Phaser.Geom.Rectangle()] Optional rectangle object to use.
-   * @returns {Phaser.Geom.Rectangle}
    */
   getBounds(rect = new Phaser.Geom.Rectangle()) {
     const { x, y, displayWidth, displayHeight } = this.container;
