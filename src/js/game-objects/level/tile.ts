@@ -9,7 +9,6 @@ import createDisappearAnimation from "./tile-animations/disappear-animation";
 import createAttackAnimation from "./tile-animations/attack-animation";
 import { MagnifyEffect } from "../components/magnify-effect";
 import FadeEffect from "../components/fade-effect";
-import getTileFrame from "./get-tile-frame";
 import { TileDialogueEntry } from "../hud/dialogue-manager";
 
 export default class Tile {
@@ -50,7 +49,7 @@ export default class Tile {
     const frontTileSprites = [scene.add.sprite(0, 0, "all-assets", tileKey)];
     this.tileContents = null;
     if (!this.isCurrentlyBlank && type !== TILE_TYPES.ENTRANCE) {
-      this.tileContents = scene.add.sprite(0, 0, "all-assets", frameName);
+      this.tileContents = scene.add.sprite(0, -20, "all-assets", frameName);
       frontTileSprites.push(this.tileContents);
     }
     this.frontTile = scene.add.container(0, 0, frontTileSprites);
@@ -68,6 +67,7 @@ export default class Tile {
     this.fadeEffect = new FadeEffect(scene, this.container, 1, 0.6, 100);
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
+    console.log(y);
     this.container.setDepth(DEPTHS.BOARD);
   }
 
@@ -157,7 +157,7 @@ export default class Tile {
    * Fade the tile in, and return a promise when it's done!
    */
   fadeTileIn(duration = Phaser.Math.Between(150, 300), delay = 0) {
-    return new Promise(resolve => {
+    return new Promise<void>((resolve: () => void) => {
       this.fadeEffect.fadeIn({
         delay,
         alpha: 0.6,
