@@ -16,6 +16,7 @@ import DialogueManager from "../hud/dialogue-manager";
 import Player from "../player";
 import ToastManager from "../hud/toast-manager";
 import Tile from "../level/tile";
+import Door from "../level/door";
 
 interface Point {
   x: number;
@@ -85,9 +86,14 @@ export default class GameManager {
     this.level.events.off(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
   }
 
-  onExitSelect = async () => {
+  onExitSelect = async (door: Door) => {
     const playerGridPos = this.player.getGridPosition();
     const exitGridPos = this.level.exitGridPosition;
+
+    if (door === this.level.entrance) {
+      this.toastManager.setMessage("The entrance is locked. You can't go back.");
+      return;
+    }
 
     if (!this.level.exit.isOpen()) {
       this.toastManager.setMessage("That door is locked - find the key.");
