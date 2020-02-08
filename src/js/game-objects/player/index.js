@@ -93,13 +93,15 @@ export default class Player {
    * Fade the Player out, destroy it, and resolve a promise when the whole mess is done!
    */
   fadePlayerIn() {
+    this.setPosition(this.getPosition().x, this.getPosition().y - 50)
     return new Promise(resolve => {
       if (this.fadeTween) this.fadeTween.stop();
       this.fadeTween = this.scene.add.tween({
         targets: this.sprite,
         alpha: 1,
+        y: "+=50",
         ease: Phaser.Math.Easing.Quadratic.In,
-        duration: 150,
+        duration: 250,
         onComplete: () => {
           return resolve();
         }
