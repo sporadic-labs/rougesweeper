@@ -54,6 +54,17 @@ export default class LevelData {
     this.tileWidth = map.tileWidth;
     this.tileHeight = map.tileHeight;
 
+    // Create a map that goes from our type property on the tileset in Tiled to our TileType enum in
+    // JS.
+    const tileset = this.map.getTileset("assets");
+    const tileTypeToId = {};
+    for (const tileId in tileset.tileProperties) {
+      const props = tileset.tileProperties[tileId];
+      if (props.type) {
+        tileTypeToId[props.type] = tileset.firstgid + Number.parseInt(tileId, 10);
+      }
+    }
+
     const groundRect = this.calculateLayerBoundingBox("Tiles");
     this.leftOffset = groundRect.left;
     this.topOffset = groundRect.top;
@@ -127,8 +138,12 @@ export default class LevelData {
 
     const keyLayer = map.getObjectLayer("Random Key");
     if (keyLayer) {
-      const keyPosition = this.generateKeyPosition(keyLayer);
-      this.setTileAt(keyPosition.x, keyPosition.y, TILE.KEY);
+      const { x, y } = this.generateKeyPosition(keyLayer);
+      const tile = this.map.putTileAt(tileTypeToId[TILE.KEY], x, y, false, "Assets");
+      // Annoying bug(?) in Phaser where newly created tiles don't get the properties from the
+      // tileset, which we need, so copy them manually:
+      tile.properties = this.map.getTileset("assets").getTileProperties(tile.index);
+      this.tiles[y][x] = new DataTile(TILE.KEY, tile);
     }
 
     const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
