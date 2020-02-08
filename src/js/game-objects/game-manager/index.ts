@@ -175,8 +175,16 @@ export default class GameManager {
     // if the tile has not been revealed, reveal it
     if (!tile.isRevealed) await tile.flipToFront();
 
-    // if the tile effect has not been applied, apply it
     if (!tile.isCurrentlyBlank) {
+      // Apply any effect that need to be immediate.
+      switch (tile.type) {
+        case TILE_TYPES.ENEMY:
+          store.removeHealth();
+          break;
+        case TILE_TYPES.GOLD:
+          store.addGold();
+          break;
+      }
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
     }
@@ -218,9 +226,19 @@ export default class GameManager {
     this.level.enableAllTiles();
     this.startIdleFlow();
 
-    // NOTE(rex): Apply tile effects at the end, in case there are menus that open which disable interactivity.
     this.dialogueManager.playDialogueFromTile(currentTile);
-    this.applyTileEffect(tile);
+
+    // Apply any effect that need to happen at the end of moving.
+    switch (tile.type) {
+      case TILE_TYPES.SHOP:
+        store.setShopOpen(true);
+        break;
+      case TILE_TYPES.KEY:
+        store.setHasKey(true);
+        this.level.exit.open();
+        this.level.exit.flipTileToFront();
+        break;
+    }
   }
 
   /**
@@ -291,29 +309,6 @@ export default class GameManager {
     await this.player.movePlayerTo(worldX, worldY, moveInstantly);
     this.player.setGridPosition(gridX, gridY);
     this.level.highlightTiles(this.player.getGridPosition());
-  }
-
-  /**
-   * Update the store based on the Tile type
-   * @param {*} tile
-   */
-  applyTileEffect(tile: Tile) {
-    switch (tile.type) {
-      case TILE_TYPES.ENEMY:
-        store.removeHealth();
-        break;
-      case TILE_TYPES.GOLD:
-        store.addGold();
-        break;
-      case TILE_TYPES.SHOP:
-        store.setShopOpen(true);
-        break;
-      case TILE_TYPES.KEY:
-        store.setHasKey(true);
-        this.level.exit.open();
-        this.level.exit.flipTileToFront();
-        break;
-    }
   }
 
   /**
