@@ -11,4 +11,17 @@ enum TILE_TYPES {
   KEY = "KEY"
 }
 
+const tileTypeToDebugCharacter = {
+  [TILE_TYPES.ENTRANCE]: "S",
+  [TILE_TYPES.SHOP]: "s",
+  [TILE_TYPES.ENEMY]: "e",
+  [TILE_TYPES.KEY]: "K",
+  [TILE_TYPES.SCRAMBLE_ENEMY]: "?",
+  [TILE_TYPES.GOLD]: "g",
+  [TILE_TYPES.WALL]: "W",
+  [TILE_TYPES.EXIT]: "X",
+  [TILE_TYPES.BLANK]: "."
+};
+
+export { tileTypeToDebugCharacter };
 export default TILE_TYPES;

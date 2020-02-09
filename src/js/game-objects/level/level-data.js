@@ -1,20 +1,9 @@
 import { Math as PMath, Geom } from "phaser";
-import { default as TILE } from "./tile-types";
+import { default as TILE, tileTypeToDebugCharacter } from "./tile-types";
 import { create2DArray } from "../../helpers/array-utils";
 import logger from "../../helpers/logger";
 
 const noopTrue = () => true;
-const debugTileMap = {
-  [TILE.ENTRANCE]: "S",
-  [TILE.SHOP]: "s",
-  [TILE.ENEMY]: "e",
-  [TILE.KEY]: "K",
-  [TILE.SCRAMBLE_ENEMY]: "?",
-  [TILE.GOLD]: "g",
-  [TILE.WALL]: "W",
-  [TILE.EXIT]: "X",
-  [TILE.BLANK]: "."
-};
 const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
   if (tiledObject.rectangle) {
     const { width, height, x, y } = tiledObject;
@@ -391,7 +380,7 @@ export default class LevelData {
 
   debugDump() {
     const debugTiles = this.tiles.map(row =>
-      row.map(tile => (tile ? debugTileMap[tile.type] : " "))
+      row.map(tile => (tile ? tileTypeToDebugCharacter[tile.type] : " "))
     );
     const grid = debugTiles.map(row => row.join(" ")).join("\n");
     const flatTiles = this.tiles.flat(1);
