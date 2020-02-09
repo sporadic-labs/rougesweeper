@@ -46,11 +46,11 @@ export default class LevelData {
     // Create a map that goes from our type property on the tileset in Tiled to our TileType enum in
     // JS.
     const tileset = this.map.getTileset("assets");
-    const tileTypeToId = {};
+    this.tileTypeToId = {};
     for (const tileId in tileset.tileProperties) {
       const props = tileset.tileProperties[tileId];
       if (props.type) {
-        tileTypeToId[props.type] = tileset.firstgid + Number.parseInt(tileId, 10);
+        this.tileTypeToId[props.type] = tileset.firstgid + Number.parseInt(tileId, 10);
       }
     }
 
@@ -128,11 +128,7 @@ export default class LevelData {
     const keyLayer = map.getObjectLayer("Random Key");
     if (keyLayer) {
       const { x, y } = this.generateKeyPosition(keyLayer);
-      const tile = this.map.putTileAt(tileTypeToId[TILE.KEY], x, y, false, "Assets");
-      // Annoying bug(?) in Phaser where newly created tiles don't get the properties from the
-      // tileset, which we need, so copy them manually:
-      tile.properties = this.map.getTileset("assets").getTileProperties(tile.index);
-      this.tiles[y][x] = new DataTile(TILE.KEY, tile);
+      this.setTileAt(x, y, TILE.KEY);
     }
 
     const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
@@ -339,16 +335,16 @@ export default class LevelData {
     return pos;
   }
 
-  setTileAt(x, y, tile) {
-    // this.tiles[y][x] = tile;
-    // this.tiles[y][x] = { type: tile };
-
-    const groundTile = this.map.getTileAt(x, y, false, "Tiles");
-    if (groundTile) {
-      this.tiles[y][x] = new DataTile(tile, groundTile);
-    }
-
-    console.log(this.tiles);
+  /**
+   * Set the tile in the "Assets" layer at the given XY position (relative to offset).
+   */
+  setTileAt(x, y, type) {
+    const id = this.tileTypeToId[type];
+    const tile = this.map.putTileAt(id, this.leftOffset + x, this.topOffset + y, false, "Assets");
+    // Annoying bug(?) in Phaser where newly created tiles don't get the properties from the
+    // tileset, which we need, so copy them manually:
+    tile.properties = this.map.getTileset("assets").getTileProperties(id);
+    this.tiles[y][x] = new DataTile(type, tile);
   }
 
   getTileAt(x, y) {
