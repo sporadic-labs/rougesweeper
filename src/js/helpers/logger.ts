@@ -1,4 +1,4 @@
-import noop from "./noop";
+const noopLog = (message?: any, ...optionalParams: any[]) => {};
 
 enum LOG_LEVEL {
   ALL = 3,
@@ -19,15 +19,15 @@ class Logger {
   }
 
   get error() {
-    return this.logLevel >= LOG_LEVEL.ERROR ? console.error : noop;
+    return this.logLevel >= LOG_LEVEL.ERROR ? console.error : noopLog;
   }
 
   get warn() {
-    return this.logLevel >= LOG_LEVEL.WARN ? console.warn : noop;
+    return this.logLevel >= LOG_LEVEL.WARN ? console.warn : noopLog;
   }
 
   get log() {
-    return this.logLevel >= LOG_LEVEL.ALL ? console.log : noop;
+    return this.logLevel >= LOG_LEVEL.ALL ? console.log : noopLog;
   }
 }
 
