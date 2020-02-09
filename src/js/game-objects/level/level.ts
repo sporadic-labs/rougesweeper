@@ -98,7 +98,7 @@ export default class Level {
           // All doors are two tall, so remove both tiles.
           this.map.removeTileAt(phaserTile.x, phaserTile.y);
           this.map.removeTileAt(phaserTile.x, phaserTile.y + 1);
-          const isOpen = !this.data.isExitLocked;
+          const isOpen = !this.data.doesLevelHaveKey();
           this.exit = new Door(
             scene,
             this.gridXToWorldX(x),

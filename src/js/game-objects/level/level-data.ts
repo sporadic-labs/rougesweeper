@@ -1,10 +1,17 @@
-import { Math as PMath, Geom } from "phaser";
-import { default as TILE, tileTypeToDebugCharacter } from "./tile-types";
+import { Math as PMath, Tilemaps, Geom } from "phaser";
+import TILE_TYPES, { default as TILE, tileTypeToDebugCharacter } from "./tile-types";
 import { create2DArray } from "../../helpers/array-utils";
 import logger from "../../helpers/logger";
+import { Point } from "../../helpers/common-interfaces";
 
-const noopTrue = () => true;
-const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
+const noopFilter = (x: number, y: number) => true;
+type TiledObject = Phaser.Types.Tilemaps.TiledObject;
+
+const tiledShapeToPhaserPoly = (
+  tileWidth: number,
+  tileHeight: number,
+  tiledObject: TiledObject
+) => {
   if (tiledObject.rectangle) {
     const { width, height, x, y } = tiledObject;
     const tx = x / tileWidth;
@@ -12,33 +19,44 @@ const tiledShapeToPhaserPoly = (tileWidth, tileHeight, tiledObject) => {
     const tw = width / tileWidth;
     const th = height / tileHeight;
     return new Phaser.Geom.Polygon([
-      [tx, ty],
-      [tx + tw, ty],
-      [tx + tw, ty + th],
-      [tx, ty + th]
+      new Geom.Point(tx, ty),
+      new Geom.Point(tx + tw, ty),
+      new Geom.Point(tx + tw, ty + th),
+      new Geom.Point(tx, ty + th)
     ]);
   } else if (tiledObject.polygon) {
     return new Phaser.Geom.Polygon(
-      tiledObject.polygon.map(({ x, y }) => [
-        (tiledObject.x + x) / tileWidth,
-        (tiledObject.y + y) / tileHeight
-      ])
+      tiledObject.polygon.map(
+        ({ x, y }) =>
+          new Geom.Point((tiledObject.x + x) / tileWidth, (tiledObject.y + y) / tileHeight)
+      )
     );
   } else {
-    throw new Error("Unsupported Tiled shape:", tiledObject);
+    throw new Error(`Unsupported Tiled shape:\n${JSON.stringify(tiledObject, null, 4)}`);
   }
 };
 
 class DataTile {
-  constructor(type, phaserTile) {
-    this.type = type;
-    this.phaserTile = phaserTile;
-  }
+  constructor(public type: TILE, public phaserTile: Tilemaps.Tile) {}
 }
 
+type TileProperty = { type?: TILE; frameName?: string };
+type TilesetProperty = { [key: string]: TileProperty };
+type TileTypeToTileIdMap = { [tileType in TILE]?: number };
+
 export default class LevelData {
-  /** @param {Phaser.Tilemaps.Tilemap} map */
-  constructor(map) {
+  public topOffset: number;
+  public leftOffset: number;
+  public width: number;
+  public height: number;
+  public exitPosition: Point;
+  public entrancePosition: Point;
+  public tiles: DataTile[][];
+  private tileWidth: number;
+  private tileHeight: number;
+  private tileTypeToId: TileTypeToTileIdMap;
+
+  constructor(private map: Tilemaps.Tilemap) {
     this.map = map;
     this.tileWidth = map.tileWidth;
     this.tileHeight = map.tileHeight;
@@ -46,11 +64,13 @@ export default class LevelData {
     // Create a map that goes from our type property on the tileset in Tiled to our TileType enum in
     // JS.
     const tileset = this.map.getTileset("assets");
+    const tilesetProperties = tileset.tileProperties as TilesetProperty;
     this.tileTypeToId = {};
-    for (const tileId in tileset.tileProperties) {
-      const props = tileset.tileProperties[tileId];
+    for (const tileId in tilesetProperties) {
+      const props = tilesetProperties[tileId];
       if (props.type) {
-        this.tileTypeToId[props.type] = tileset.firstgid + Number.parseInt(tileId, 10);
+        const id = Number.parseInt(tileId, 10);
+        this.tileTypeToId[props.type] = tileset.firstgid + id;
       }
     }
 
@@ -79,13 +99,13 @@ export default class LevelData {
         // expected to have a type property that matches TILE_TYPES exactly.
         const assetTile = map.getTileAt(mapX, mapY, false, "Assets");
         if (assetTile) {
-          if (assetTile.properties && assetTile.properties.type) {
-            const stringType = assetTile.properties.type;
-            const parsedType = TILE[stringType];
+          const props = assetTile.properties as TileProperty;
+          if (props && props.type) {
+            const parsedType = TILE[props.type];
             if (parsedType) {
               tiles[groundY][groundX] = new DataTile(parsedType, assetTile);
             } else {
-              logger.warn(`Unexpected tile type ${stringType} at (${groundX}, ${groundY})`);
+              logger.warn(`Unexpected tile type ${props.type} at (${groundX}, ${groundY})`);
             }
           } else {
             logger.warn(`Tile is missing type property at (${groundX}, ${groundY})`);
@@ -147,9 +167,11 @@ export default class LevelData {
       enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
     }
 
-    this.isExitLocked = this.hasTileOfType(TILE.KEY);
-
     this.debugDump();
+  }
+
+  doesLevelHaveKey() {
+    return this.hasTileOfType(TILE.KEY);
   }
 
   /**
@@ -158,7 +180,7 @@ export default class LevelData {
    * @param {string} layerName Name of the layer in Tiled to use for the bbox calculation.
    * @memberof LevelData
    */
-  calculateLayerBoundingBox(layerName) {
+  calculateLayerBoundingBox(layerName: string) {
     const bbox = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
     let hasFoundLeft = false;
     let hasFoundTop = false;
@@ -239,7 +261,7 @@ export default class LevelData {
    * @returns {{x,y}|undefined}
    * @memberof LevelData
    */
-  generateKeyPosition(objectLayer) {
+  generateKeyPosition(objectLayer: Tilemaps.ObjectLayer) {
     const obj = objectLayer.objects.find(
       obj => obj.polygon !== undefined || obj.rectangle === true
     );
@@ -262,7 +284,7 @@ export default class LevelData {
    * @returns {{x,y}|undefined}
    * @memberof LevelData
    */
-  generateEnemyPositions(objectLayer) {
+  generateEnemyPositions(objectLayer: Tilemaps.ObjectLayer) {
     // Find the spawning polygons
     const spawnRegions = objectLayer.objects.filter(
       obj => obj.polygon !== undefined || obj.rectangle === true
@@ -292,7 +314,7 @@ export default class LevelData {
     });
 
     // Attempt to find random places for all enemy tiles - inefficient!
-    const enemyPositions = [];
+    const enemyPositions: Point[] = [];
     spawnPolygons.forEach((polygon, i) => {
       console.log(polygon);
       const blanks = this.getBlanksWithin(polygon);
@@ -316,7 +338,7 @@ export default class LevelData {
    * @returns [{x, y}]
    * @memberof LevelData
    */
-  getBlanksWithin(polygon) {
+  getBlanksWithin(polygon: Geom.Polygon) {
     const blanks = this.getAllPositionsOf(TILE.BLANK);
     console.log(blanks);
     return blanks.filter(p =>
@@ -324,13 +346,13 @@ export default class LevelData {
     );
   }
 
-  getRandomBlankPosition(test = noopTrue) {
+  getRandomBlankPosition(test = noopFilter) {
     const pos = { x: 0, y: 0 };
     while (true) {
       pos.x = PMath.Between(0, this.width - 1);
       pos.y = PMath.Between(0, this.height - 1);
       const tile = this.getTileAt(pos.x, pos.y);
-      if (tile === TILE.BLANK && test(pos.x, pos.y)) break;
+      if (tile.type === TILE.BLANK && test(pos.x, pos.y)) break;
     }
     return pos;
   }
@@ -338,7 +360,7 @@ export default class LevelData {
   /**
    * Set the tile in the "Assets" layer at the given XY position (relative to offset).
    */
-  setTileAt(x, y, type) {
+  setTileAt(x: number, y: number, type: TILE) {
     const id = this.tileTypeToId[type];
     const tile = this.map.putTileAt(id, this.leftOffset + x, this.topOffset + y, false, "Assets");
     // Annoying bug(?) in Phaser where newly created tiles don't get the properties from the
@@ -347,15 +369,15 @@ export default class LevelData {
     this.tiles[y][x] = new DataTile(type, tile);
   }
 
-  getTileAt(x, y) {
+  getTileAt(x: number, y: number) {
     return this.tiles[y][x];
   }
 
-  hasTileOfType(tileType) {
+  hasTileOfType(tileType: TILE) {
     return this.getPositionOf(tileType) ? true : false;
   }
 
-  getPositionOf(tileType) {
+  getPositionOf(tileType: TILE) {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
         if (this.tiles[y][x] && this.tiles[y][x].type === tileType) return { x, y };
@@ -364,8 +386,8 @@ export default class LevelData {
     return null;
   }
 
-  getAllPositionsOf(tileType) {
-    const positions = [];
+  getAllPositionsOf(tileType: TILE) {
+    const positions: Point[] = [];
     this.tiles.forEach((row, y) => {
       row.forEach((tile, x) => {
         if (tile && tile.type === tileType) positions.push({ x, y });
