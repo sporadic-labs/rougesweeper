@@ -50,6 +50,7 @@ export default class Tile {
     this.tileContents = null;
     if (!this.isCurrentlyBlank && type !== TILE_TYPES.ENTRANCE) {
       this.tileContents = scene.add.sprite(0, -20, "all-assets", frameName);
+      this.tileContents.setScale(1.12);
       frontTileSprites.push(this.tileContents);
     }
     this.frontTile = scene.add.container(0, 0, frontTileSprites);
@@ -67,8 +68,9 @@ export default class Tile {
     this.fadeEffect = new FadeEffect(scene, this.container, 1, 0.6, 100);
 
     this.container.setSize(this.backSprite.width, this.backSprite.height);
-    console.log(y);
-    this.container.setDepth(DEPTHS.BOARD);
+
+    console.log(DEPTHS.BOARD + (y / 75) * 4);
+    this.container.setDepth(DEPTHS.BOARD + (y / 75) * 4);
   }
 
   removeTileContents() {

@@ -45,7 +45,7 @@ class Radar {
       })
       .setOrigin(0.5);
 
-    this.outlineGraphics.setDepth(DEPTHS.ABOVE_GROUND);
+    this.outlineGraphics.setDepth(DEPTHS.BOARD + 2);
     this.labelGraphics.setDepth(DEPTHS.ABOVE_PLAYER);
     this.text.setDepth(DEPTHS.ABOVE_PLAYER);
 
@@ -211,7 +211,7 @@ class Radar {
    *
    * @returns {Promise<[void, void]>}
    */
-  update(): Promise<[void, void]> {
+  async update(): Promise<[void, void]> {
     if (!this.level) return;
     const { x, y } = this.player.getGridPosition();
     this.enemyCount = this.level.countNeighboringEnemies(x, y);

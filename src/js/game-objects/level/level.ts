@@ -54,7 +54,7 @@ export default class Level {
       let depth = DEPTHS.BOARD;
       if (layerData.name === "Decorations") {
         tileSet = this.map.addTilesetImage("decorations");
-        depth = DEPTHS.ABOVE_GROUND;
+        depth = DEPTHS.BOARD;
       }
       const layer = this.map.createDynamicLayer(layerData.name, tileSet);
       layer.setPosition(

@@ -30,7 +30,10 @@ export default class Player {
     this.pathTween = new PathTween(
       this.scene,
       points,
-      ({ x, y }) => this.sprite.setPosition(x, y),
+      ({ x, y }) => {
+        this.sprite.setDepth(DEPTHS.BOARD + (y / 75) * 4 + 2)
+        this.sprite.setPosition(x, y)
+      },
       { duration, ease: "Quad.easeOut" }
     );
     return this.pathTween.play();
@@ -39,6 +42,8 @@ export default class Player {
   movePlayerTo(x, y, moveInstantly = false) {
     return new Promise(resolve => {
       if (this.moveTween) this.moveTween.stop();
+      console.log(DEPTHS.BOARD +( y / 75) * 4 + 2)
+      this.sprite.setDepth(DEPTHS.BOARD + (y / 75) * 4 + 2)
       if (moveInstantly) {
         this.setPosition(x, y);
         resolve();
