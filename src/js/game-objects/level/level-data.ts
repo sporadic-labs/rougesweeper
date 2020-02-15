@@ -7,35 +7,6 @@ import { Point } from "../../helpers/common-interfaces";
 const noopFilter = (x: number, y: number) => true;
 type TiledObject = Phaser.Types.Tilemaps.TiledObject;
 
-const tiledShapeToPhaserPoly = (
-  tileWidth: number,
-  tileHeight: number,
-  tiledObject: TiledObject
-) => {
-  if (tiledObject.rectangle) {
-    const { width, height, x, y } = tiledObject;
-    const tx = x / tileWidth;
-    const ty = y / tileHeight;
-    const tw = width / tileWidth;
-    const th = height / tileHeight;
-    return new Phaser.Geom.Polygon([
-      new Geom.Point(tx, ty),
-      new Geom.Point(tx + tw, ty),
-      new Geom.Point(tx + tw, ty + th),
-      new Geom.Point(tx, ty + th)
-    ]);
-  } else if (tiledObject.polygon) {
-    return new Phaser.Geom.Polygon(
-      tiledObject.polygon.map(
-        ({ x, y }) =>
-          new Geom.Point((tiledObject.x + x) / tileWidth, (tiledObject.y + y) / tileHeight)
-      )
-    );
-  } else {
-    throw new Error(`Unsupported Tiled shape:\n${JSON.stringify(tiledObject, null, 4)}`);
-  }
-};
-
 class DataTile {
   constructor(public type: TILE, public phaserTile: Tilemaps.Tile) {}
 }
@@ -277,6 +248,43 @@ export default class LevelData {
   }
 
   /**
+   * Convert a rectangle or polygon TiledObject to a Phaser Polygon in board position.
+   * @param tiledObject
+   */
+  tiledShapeToPhaserPoly(tiledObject: TiledObject) {
+    const { tileWidth, tileHeight } = this;
+    const { x, y } = tiledObject;
+    if (tiledObject.rectangle) {
+      const { width, height } = tiledObject;
+      const tx = x / tileWidth;
+      const ty = y / tileHeight;
+      const tw = width / tileWidth;
+      const th = height / tileHeight;
+      const topLeft = this.tilemapPositionToBoardPosition(tx, ty);
+      const topRight = this.tilemapPositionToBoardPosition(tx + tw, ty);
+      const bottomRight = this.tilemapPositionToBoardPosition(tx + tw, ty + th);
+      const bottomLeft = this.tilemapPositionToBoardPosition(tx, ty + th);
+      return new Phaser.Geom.Polygon([
+        new Geom.Point(topLeft.x, topLeft.y),
+        new Geom.Point(topRight.x, topRight.y),
+        new Geom.Point(bottomRight.x, bottomRight.y),
+        new Geom.Point(bottomLeft.x, bottomLeft.y)
+      ]);
+    } else if (tiledObject.polygon) {
+      return new Phaser.Geom.Polygon(
+        tiledObject.polygon.map(point => {
+          const mapX = (x + point.x) / tileWidth;
+          const mapY = (y + point.y) / tileHeight;
+          const boardPos = this.tilemapPositionToBoardPosition(mapX, mapY);
+          return new Geom.Point(boardPos.x, boardPos.y);
+        })
+      );
+    } else {
+      throw new Error(`Unsupported Tiled shape:\n${JSON.stringify(tiledObject, null, 4)}`);
+    }
+  }
+
+  /**
    * Generate a location for the exit key based on the given object layer from Tiled. This expects
    * there to be a single polygon object within the layer which defines the region in which the key
    * can spawn.
@@ -289,7 +297,7 @@ export default class LevelData {
     const obj = objectLayer.objects.find(
       obj => obj.polygon !== undefined || obj.rectangle === true
     );
-    const polygon = tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj);
+    const polygon = this.tiledShapeToPhaserPoly(obj);
     const blanks = this.getBlanksWithin(polygon);
     const keyPosition = Phaser.Math.RND.pick(blanks);
     if (!keyPosition) throw new Error("Could not find a valid place to put a key.");
@@ -312,9 +320,7 @@ export default class LevelData {
     const spawnRegions = objectLayer.objects.filter(
       obj => obj.polygon !== undefined || obj.rectangle === true
     );
-    const spawnPolygons = spawnRegions.map(obj =>
-      tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj)
-    );
+    const spawnPolygons = spawnRegions.map(obj => this.tiledShapeToPhaserPoly(obj));
 
     // Count enemy tile objects within each region
     const enemyTiles = objectLayer.objects.filter(obj => obj.gid !== undefined);
@@ -322,9 +328,10 @@ export default class LevelData {
     enemyTiles.map(enemyTile => {
       const x = enemyTile.x / this.tileWidth + 0.5;
       const y = enemyTile.y / this.tileHeight - 0.5;
+      const boardPos = this.tilemapPositionToBoardPosition(x, y);
       let enemyPlaced = false;
       for (let i = 0; i < spawnPolygons.length; i++) {
-        if (spawnPolygons[i].contains(x, y)) {
+        if (spawnPolygons[i].contains(boardPos.x, boardPos.y)) {
           enemyPlaced = true;
           enemyCounts[i] += 1;
         }
@@ -349,7 +356,7 @@ export default class LevelData {
   }
 
   /**
-   * Get the blank tile positions within a given polygon (that is placed and sized in tile
+   * Get the blank tile positions within a given polygon (that is placed and sized in board
    * coordinates). If a polygon is a rectangle at (1, 1) with a size of 2 x 1, then this method will
    * check (1, 1) and (2, 1), but not (1, 2) or (2, 2).
    *
@@ -359,20 +366,7 @@ export default class LevelData {
    */
   getBlanksWithin(polygon: Geom.Polygon) {
     const blanks = this.getAllPositionsOf(TILE.BLANK);
-    return blanks.filter(p =>
-      polygon.contains(p.x + this.leftOffset + 0.5, p.y + this.topOffset + 0.5)
-    );
-  }
-
-  getRandomBlankPosition(test = noopFilter) {
-    const pos = { x: 0, y: 0 };
-    while (true) {
-      pos.x = PMath.Between(0, this.width - 1);
-      pos.y = PMath.Between(0, this.height - 1);
-      const tile = this.getTileAt(pos.x, pos.y);
-      if (tile.type === TILE.BLANK && test(pos.x, pos.y)) break;
-    }
-    return pos;
+    return blanks.filter(p => polygon.contains(p.x + 0.5, p.y + 0.5));
   }
 
   /**
