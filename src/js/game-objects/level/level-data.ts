@@ -154,8 +154,8 @@ export default class LevelData {
     const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
     if (scrambleEnemyLayer) {
       scrambleEnemyLayer.objects.forEach(({ x, y }) => {
-        const tx = x / this.tileWidth;
-        const ty = y / this.tileHeight - 1;
+        const tx = x / this.tileWidth - this.leftOffset;
+        const ty = y / this.tileHeight - 1 - this.topOffset;
         this.setTileAt(tx, ty, TILE.SCRAMBLE_ENEMY);
       });
     }
