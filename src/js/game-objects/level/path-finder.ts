@@ -1,5 +1,6 @@
 import { js as EasyStar } from "easystarjs";
 import { create2DArray } from "../../helpers/array-utils";
+import logger from "../../helpers/logger";
 
 enum LOCATION {
   WALKABLE = 0,
@@ -61,6 +62,6 @@ export default class PathFinder {
 
   dump() {
     const string = this.grid.map(row => row.join(" ")).join("\n");
-    console.log(string);
+    logger.log(string);
   }
 }

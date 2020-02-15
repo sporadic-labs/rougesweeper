@@ -128,7 +128,6 @@ export default class LevelData {
     const enemiesLayer = map.getObjectLayer("Random Enemies");
     if (enemiesLayer) {
       const enemyPositions = this.generateEnemyPositions(enemiesLayer);
-      console.log(enemyPositions);
       enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
     }
 
@@ -429,6 +428,6 @@ export default class LevelData {
       `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(2)}%)\n` +
       `Gold tiles: ${numGold} (${((numGold / numTiles) * 100).toFixed(2)}%)\n` +
       `Wall tiles: ${numWall} (${((numWall / numTiles) * 100).toFixed(2)}%)`;
-    console.log(`${grid}\n${stats}`);
+    logger.log(`${grid}\n${stats}`);
   }
 }
