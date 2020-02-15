@@ -88,6 +88,7 @@ export default class DebugMenu {
       },
       this
     );
+    this.proxy.on(scene.input.keyboard, "keydown_G", () => gameStore.addGold(), this);
   }
 
   restartLevel() {}
