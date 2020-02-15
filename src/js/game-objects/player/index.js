@@ -66,6 +66,10 @@ export default class Player {
     return { x: this.sprite.x, y: this.sprite.y };
   }
 
+  getTopCenter() {
+    return this.sprite.getTopCenter();
+  }
+
   setGridPosition(x, y) {
     this.gridX = x;
     this.gridY = y;
