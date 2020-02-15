@@ -151,6 +151,19 @@ export default class GameManager {
     }
 
     const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
+
+    // If the player can reveal a tile they can't directly interact with, reveal it and return to idle flow.
+    const canRevealDistantTile = !path && store.hasRevealTile && !tile.isRevealed;
+    if (canRevealDistantTile) {
+      this.level.disableAllTiles();
+
+      await tile.flipToFront();
+      store.setHasRevealTile(false);
+
+      this.level.enableAllTiles();
+      return;
+    }
+
     const isValidMove = path && (!tile.isRevealed || tile.type !== TILE_TYPES.WALL);
     if (!isValidMove) {
       this.toastManager.setMessage("You can't move there.");
