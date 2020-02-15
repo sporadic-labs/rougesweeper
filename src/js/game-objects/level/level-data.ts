@@ -84,15 +84,14 @@ export default class LevelData {
     this.tiles = tiles;
 
     // Loop over the board locations within the map to determine the tiles.
-    for (let groundX = 0; groundX < this.width; groundX++) {
-      for (let groundY = 0; groundY < this.height; groundY++) {
-        const mapX = groundRect.left + groundX;
-        const mapY = groundRect.top + groundY;
+    for (let boardX = 0; boardX < this.width; boardX++) {
+      for (let boardY = 0; boardY < this.height; boardY++) {
+        const { x: mapX, y: mapY } = this.boardPositionToTilemapPosition(boardX, boardY);
 
         // Fill in any ground tiles from the "Tiles" layer.
         const groundTile = map.getTileAt(mapX, mapY, false, "Tiles");
         if (groundTile) {
-          tiles[groundY][groundX] = new DataTile(TILE.BLANK, groundTile);
+          tiles[boardY][boardX] = new DataTile(TILE.BLANK, groundTile);
         }
 
         // Fill in another non-ground tiles, which are located within the "Assets" layer and are
@@ -103,12 +102,12 @@ export default class LevelData {
           if (props && props.type) {
             const parsedType = TILE[props.type];
             if (parsedType) {
-              tiles[groundY][groundX] = new DataTile(parsedType, assetTile);
+              tiles[boardY][boardX] = new DataTile(parsedType, assetTile);
             } else {
-              logger.warn(`Unexpected tile type ${props.type} at (${groundX}, ${groundY})`);
+              logger.warn(`Unexpected tile type ${props.type} at (${boardX}, ${boardY})`);
             }
           } else {
-            logger.warn(`Tile is missing type property at (${groundX}, ${groundY})`);
+            logger.warn(`Tile is missing type property at (${boardX}, ${boardY})`);
           }
         }
       }
@@ -123,10 +122,8 @@ export default class LevelData {
     // Translating from tile position in Tiled to our custom grid position is a little tricky. The
     // "Decorations" layer has a negative offset, so it is effectively offset one tile to the left
     // and one tile to the right when it comes to grid positions.
-    this.exitPosition = {
-      x: exitTile.x - this.leftOffset - 1,
-      y: exitTile.y - this.topOffset
-    };
+    this.exitPosition = this.tileToBoardPosition(exitTile);
+    this.exitPosition.x -= 1;
     tiles[this.exitPosition.y][this.exitPosition.x] = new DataTile(TILE.EXIT, exitTile);
 
     // Locate the top tile of the entrance door from the "Decorations" layer.
@@ -136,10 +133,7 @@ export default class LevelData {
       throw new Error(`No exit door (w/ property "doorEntrance") found in the "Decorations" layer`);
     }
     // Translate tile position in Tiled to grid. In this case, we don't need an offset.
-    this.entrancePosition = {
-      x: entranceTile.x - this.leftOffset,
-      y: entranceTile.y - this.topOffset
-    };
+    this.entrancePosition = this.tileToBoardPosition(entranceTile);
     tiles[this.entrancePosition.y][this.entrancePosition.x] = new DataTile(
       TILE.ENTRANCE,
       entranceTile
@@ -168,6 +162,36 @@ export default class LevelData {
     }
 
     this.debugDump();
+  }
+
+  /**
+   * Convert from the board position (relative to top left of the ground tile area) to tilemap
+   * position (relative to the top left of the whole tilemap).
+   * @param x
+   * @param y
+   */
+  boardPositionToTilemapPosition(x: number, y: number): Point {
+    return { x: x + this.leftOffset, y: y + this.topOffset };
+  }
+
+  /**
+   * Convert from tilemap position (relative to the top left of the whole tilemap) to the board
+   * position (relative to top left of the ground tile area).
+   * @param x
+   * @param y
+   */
+  tilemapPositionToBoardPosition(x: number, y: number): Point {
+    return { x: x - this.leftOffset, y: y - this.topOffset };
+  }
+
+  /**
+   * Convert from a tile's position (relative to the top left of the whole tilemap) to the board
+   * position (relative to top left of the ground tile area).
+   * @param x
+   * @param y
+   */
+  tileToBoardPosition(tile: Tilemaps.Tile): Point {
+    return this.tilemapPositionToBoardPosition(tile.x, tile.y);
   }
 
   doesLevelHaveKey() {
