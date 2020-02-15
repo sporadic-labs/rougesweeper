@@ -11,8 +11,9 @@ class Radar {
   private scene: Phaser.Scene;
   private player: Player;
   private level: Level;
-  private outlineGraphics: Phaser.GameObjects.Graphics;
-  private labelGraphics: Phaser.GameObjects.Graphics;
+  private areaGraphic: Phaser.GameObjects.Graphics;
+  private labelBackgroundSprite: Phaser.GameObjects.Sprite;
+  private labelContainer: Phaser.GameObjects.Container;
   private text: Phaser.GameObjects.Text;
   private labelTween: Phaser.Tweens.Tween;
   private enemyCount: number = 0;
@@ -22,7 +23,7 @@ class Radar {
   private y: number = 0;
   private w: number = 0;
   private h: number = 0;
-  private padding = 2.5;
+  private padding = 5;
   private reusableRect = new Phaser.Geom.Rectangle();
   private proxy = new EventProxy();
   private scrambleDangerCountTimer: Phaser.Time.TimerEvent;
@@ -31,23 +32,24 @@ class Radar {
     this.scene = scene;
     this.player = player;
     this.level = null;
-    this.outlineGraphics = scene.add.graphics({
-      fillStyle: { color: 0xfc3f3f },
-      lineStyle: { color: 0xfc3f3f, width: 6 }
+    this.areaGraphic = scene.add.graphics({
+      fillStyle: { color: 0xfc3f3f, alpha: 0.4 }
     });
-    this.labelGraphics = scene.add.graphics({ fillStyle: { color: 0xfc3f3f } });
-    this.labelGraphics.fillCircle(0, 0, 24);
+    this.labelBackgroundSprite = scene.add
+      .sprite(0, 0, "all-assets", "radar-pin")
+      .setOrigin(0.5, 1);
     this.text = scene.add
       .text(0, 0, "0", {
-        fontSize: 28,
+        fontSize: 29,
         fontStyle: "bold",
         color: "#fff"
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5, 0.5);
+    this.text.y = -this.labelBackgroundSprite.displayHeight * (22 / 38);
+    this.labelContainer = scene.add.container(0, 0, [this.labelBackgroundSprite, this.text]);
 
-    this.outlineGraphics.setDepth(DEPTHS.BOARD + 2);
-    this.labelGraphics.setDepth(DEPTHS.ABOVE_PLAYER);
-    this.text.setDepth(DEPTHS.ABOVE_PLAYER);
+    this.areaGraphic.setDepth(DEPTHS.BOARD + 2);
+    this.labelContainer.setDepth(DEPTHS.ABOVE_PLAYER);
 
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
@@ -62,9 +64,8 @@ class Radar {
   }
 
   setVisible(isVisible: boolean) {
-    this.outlineGraphics.setVisible(isVisible);
-    this.labelGraphics.setVisible(isVisible);
-    this.text.setVisible(isVisible);
+    this.areaGraphic.setVisible(isVisible);
+    this.labelContainer.setVisible(isVisible);
   }
 
   private updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true): Promise<void> {
@@ -119,15 +120,28 @@ class Radar {
   private updateShape(x: number, y: number, w: number, h: number) {
     this.x = x;
     this.y = y;
-    this.text.setPosition(x + w / 2, y + h);
-    this.outlineGraphics.setPosition(x, y);
-    this.labelGraphics.setPosition(x + w / 2, y + h);
+    this.areaGraphic.setPosition(x, y);
+    const labelPos = this.player.getTopCenter();
+    this.labelContainer.setPosition(labelPos.x, labelPos.y + 8);
+    // TODO: this kind of tween
+    // this.scene.add.tween({
+    //   targets: this.labelContainer,
+    //   y: labelPos.y - 2,
+    //   duration: 500,
+    //   yoyo: true,
+    //   repeat: -1,
+    //   easing: Phaser.Math.Easing.Bounce.InOut
+    // });
     if (w !== this.w || h !== this.h) {
       this.w = w;
       this.h = h;
-      this.outlineGraphics.clear();
-      this.outlineGraphics.strokeRoundedRect(0, 0, w, h);
+      this.redrawAreaGraphic();
     }
+  }
+
+  private redrawAreaGraphic() {
+    this.areaGraphic.clear();
+    this.areaGraphic.fillRoundedRect(0, 0, this.w, this.h);
   }
 
   private setDangerCount(shouldAnimateUpdate: boolean): Promise<void> {
@@ -148,16 +162,14 @@ class Radar {
           onUpdate: () => {
             if (target.value > 0) {
               const scale = target.value;
-              this.text.scaleY = scale;
-              this.labelGraphics.scaleY = scale;
+              this.labelContainer.scaleY = scale;
             } else {
               if (!hasFlipped) {
                 hasFlipped = true;
                 this.text.setText(`${count}`);
               }
               const scale = -1 * target.value;
-              this.text.scaleY = scale;
-              this.labelGraphics.scaleY = scale;
+              this.labelContainer.scaleY = scale;
             }
           },
           onComplete: () => resolve()
@@ -186,10 +198,10 @@ class Radar {
       callbackScope: this
     });
 
-    this.labelGraphics.fillStyle(0xe3c220);
-    this.labelGraphics.fill();
-    this.outlineGraphics.lineStyle(2, 0xe3c220);
-    this.outlineGraphics.stroke();
+    this.labelBackgroundSprite.setFrame("radar-pin-scrambled");
+
+    this.areaGraphic.fillStyle(0xe3c220, 0.4);
+    this.redrawAreaGraphic();
   }
 
   /**
@@ -199,10 +211,10 @@ class Radar {
     this.isScrambling = false;
     if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
 
-    this.labelGraphics.fillStyle(0xfc3f3f);
-    this.labelGraphics.fill();
-    this.outlineGraphics.lineStyle(6, 0xfc3f3f);
-    this.outlineGraphics.stroke();
+    this.labelBackgroundSprite.setFrame("radar-pin");
+
+    this.areaGraphic.fillStyle(0xfc3f3f, 0.4);
+    this.redrawAreaGraphic();
   }
 
   /**
@@ -233,9 +245,8 @@ class Radar {
     if (this.labelTween) this.labelTween.stop();
     if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
     this.scene = undefined;
-    this.outlineGraphics.destroy();
-    this.labelGraphics.destroy();
-    this.text.destroy();
+    this.areaGraphic.destroy();
+    this.labelContainer.destroy();
     this.proxy.removeAll();
   }
 }
