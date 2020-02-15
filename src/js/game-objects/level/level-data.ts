@@ -167,21 +167,21 @@ export default class LevelData {
   /**
    * Convert from the board position (relative to top left of the ground tile area) to tilemap
    * position (relative to the top left of the whole tilemap).
-   * @param x
-   * @param y
+   * @param boardX
+   * @param boardY
    */
-  boardPositionToTilemapPosition(x: number, y: number): Point {
-    return { x: x + this.leftOffset, y: y + this.topOffset };
+  boardPositionToTilemapPosition(boardX: number, boardY: number): Point {
+    return { x: boardX + this.leftOffset, y: boardY + this.topOffset };
   }
 
   /**
    * Convert from tilemap position (relative to the top left of the whole tilemap) to the board
    * position (relative to top left of the ground tile area).
-   * @param x
-   * @param y
+   * @param mapX
+   * @param mapY
    */
-  tilemapPositionToBoardPosition(x: number, y: number): Point {
-    return { x: x - this.leftOffset, y: y - this.topOffset };
+  tilemapPositionToBoardPosition(mapX: number, mapY: number): Point {
+    return { x: mapX - this.leftOffset, y: mapY - this.topOffset };
   }
 
   /**
@@ -290,7 +290,6 @@ export default class LevelData {
       obj => obj.polygon !== undefined || obj.rectangle === true
     );
     const polygon = tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj);
-    console.log(polygon);
     const blanks = this.getBlanksWithin(polygon);
     const keyPosition = Phaser.Math.RND.pick(blanks);
     if (!keyPosition) throw new Error("Could not find a valid place to put a key.");
@@ -317,8 +316,6 @@ export default class LevelData {
       tiledShapeToPhaserPoly(this.tileWidth, this.tileHeight, obj)
     );
 
-    console.log(spawnPolygons);
-
     // Count enemy tile objects within each region
     const enemyTiles = objectLayer.objects.filter(obj => obj.gid !== undefined);
     const enemyCounts = Array(spawnRegions.length).fill(0);
@@ -340,9 +337,7 @@ export default class LevelData {
     // Attempt to find random places for all enemy tiles - inefficient!
     const enemyPositions: Point[] = [];
     spawnPolygons.forEach((polygon, i) => {
-      console.log(polygon);
       const blanks = this.getBlanksWithin(polygon);
-      console.log(blanks);
       Phaser.Utils.Array.Shuffle(blanks);
       const count = enemyCounts[i];
       if (blanks.length < count) {
@@ -364,7 +359,6 @@ export default class LevelData {
    */
   getBlanksWithin(polygon: Geom.Polygon) {
     const blanks = this.getAllPositionsOf(TILE.BLANK);
-    console.log(blanks);
     return blanks.filter(p =>
       polygon.contains(p.x + this.leftOffset + 0.5, p.y + this.topOffset + 0.5)
     );
@@ -383,18 +377,22 @@ export default class LevelData {
 
   /**
    * Set the tile in the "Assets" layer at the given XY position (relative to offset).
+   * @param boardX
+   * @param boardY
+   * @param type
    */
-  setTileAt(x: number, y: number, type: TILE) {
+  setTileAt(boardX: number, boardY: number, type: TILE) {
     const id = this.tileTypeToId[type];
-    const tile = this.map.putTileAt(id, this.leftOffset + x, this.topOffset + y, false, "Assets");
+    const mapPos = this.boardPositionToTilemapPosition(boardX, boardY);
+    const tile = this.map.putTileAt(id, mapPos.x, mapPos.y, false, "Assets");
     // Annoying bug(?) in Phaser where newly created tiles don't get the properties from the
     // tileset, which we need, so copy them manually:
     tile.properties = this.map.getTileset("assets").getTileProperties(id);
-    this.tiles[y][x] = new DataTile(type, tile);
+    this.tiles[boardY][boardX] = new DataTile(type, tile);
   }
 
-  getTileAt(x: number, y: number) {
-    return this.tiles[y][x];
+  getTileAt(boardX: number, boardY: number) {
+    return this.tiles[boardY][boardX];
   }
 
   hasTileOfType(tileType: TILE) {
