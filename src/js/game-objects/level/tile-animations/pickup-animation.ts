@@ -15,7 +15,7 @@ export default function createPickupAnimation(
       duration: 200,
       scaleX: 1.05,
       scaleY: 1.05,
-      y: -30
+      y: "-=30"
     })
     .add({
       targets: target,
@@ -23,6 +23,6 @@ export default function createPickupAnimation(
       ease: Phaser.Math.Easing.Quadratic.In,
       scaleX: 0.5,
       scaleY: 0.5,
-      y: 0
+      y: "-=0"
     });
 }
