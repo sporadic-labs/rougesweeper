@@ -18,8 +18,8 @@ export default class Tile {
   public isCurrentlyBlank: boolean;
   public dialoguePlayedCounter = 0;
   private backSprite: GameObjects.Sprite;
+  private frontSprite: GameObjects.Sprite;
   private tileContents: GameObjects.Sprite;
-  private frontTile: GameObjects.Container;
   private container: GameObjects.Container;
   private flipEffect: FlipEffect;
   private magnifyEffect: MagnifyEffect;
@@ -44,37 +44,32 @@ export default class Tile {
     this.gridX = 0;
     this.gridY = 0;
 
+    this.frontSprite = scene.add.sprite(0, 0, "all-assets", tileKey);
     this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back");
 
-    const frontTileSprites = [scene.add.sprite(0, 0, "all-assets", tileKey)];
-    this.tileContents = null;
-    if (!this.isCurrentlyBlank && type !== TILE_TYPES.ENTRANCE) {
-      this.tileContents = scene.add.sprite(0, -20, "all-assets", frameName);
-      this.tileContents.setScale(1.12);
-      frontTileSprites.push(this.tileContents);
-    }
-    this.frontTile = scene.add.container(0, 0, frontTileSprites);
-
     // Add the front and back tile to a container for easy access.
-    this.container = scene.add.container(x, y, [this.backSprite, this.frontTile]);
-
+    this.container = scene.add.container(x, y, [this.backSprite, this.frontSprite]);
     this.container.alpha = 0;
+    this.container.setSize(this.backSprite.width, this.backSprite.height);
+    this.container.setDepth(DEPTHS.BOARD);
+
+    if (!this.isCurrentlyBlank && type !== TILE_TYPES.ENTRANCE) {
+      this.tileContents = scene.add.sprite(x, y - 20, "all-assets", frameName);
+      this.tileContents.setDepth(DEPTHS.BOARD + (y / 75) * 4);
+    }
 
     this.isRevealed = false;
-    this.flipEffect = new FlipEffect(scene, this.frontTile, this.backSprite);
+    this.flipEffect = new FlipEffect(scene, this.frontSprite, this.backSprite);
     this.flipEffect.setToBack();
+    this.tileContents?.setVisible(false);
 
     this.magnifyEffect = new MagnifyEffect(scene, this.container, 1, 1.1, 100);
     this.fadeEffect = new FadeEffect(scene, this.container, 1, 0.6, 100);
 
-    this.container.setSize(this.backSprite.width, this.backSprite.height);
-
-    console.log(DEPTHS.BOARD + (y / 75) * 4);
-    this.container.setDepth(DEPTHS.BOARD + (y / 75) * 4);
   }
 
   removeTileContents() {
-    this.tileContents.setVisible(false);
+    this.tileContents?.setVisible(false);
     this.isCurrentlyBlank = true;
   }
 
@@ -228,11 +223,13 @@ export default class Tile {
     return new Promise(resolve => {
       this.flipEffect.events.once("complete", resolve);
       this.flipEffect.flipToFront();
+      this.tileContents?.setVisible(true);
     });
   }
 
   flipToBack() {
     this.isRevealed = false;
+    this.tileContents?.setVisible(false);
     return new Promise(resolve => {
       this.flipEffect.events.once("complete", resolve);
       this.flipEffect.flipToBack();
@@ -265,11 +262,12 @@ export default class Tile {
   }
 
   destroy() {
+    this.container.destroy();
+    this.tileContents?.destroy();
     this.disableInteractive();
     this.magnifyEffect.destroy();
     this.fadeEffect.destroy();
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
     this.scene = undefined;
-    this.container.destroy();
   }
 }
