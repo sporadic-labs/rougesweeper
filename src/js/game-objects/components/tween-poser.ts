@@ -9,6 +9,16 @@ type TweenBuilderConfigExtension = Omit<TweenBuilderConfig, "targets"> | object;
  * tween is running at a time, so the target is heading to a "FadeIn" pose and then it is
  * interrupted to go to a "FadeOut" pose, "FadeIn" immediately stops wherever it is and "FadeOut"
  * takes over.
+ *
+ * @example
+ * ```typescript
+ * type Poses = "ZoomIn" | "ZoomOut";
+ * const poser = new TweenPoser<Poses>(scene, sprite, { duration: 100 });
+ * poser.definePose("ZoomIn", { scaleX: 1.5, scaleY: 1.5 });
+ * poser.definePose("ZoomOut", { scaleX: 1, scaleY: 1 });
+ * poser.setToPose("ZoomOut");
+ * poser.moveToPose("ZoomIn");
+ * ```
  */
 export default class TweenPoser<PoseType> {
   private tweenConfigs: Map<PoseType, TweenBuilderConfig> = new Map();
