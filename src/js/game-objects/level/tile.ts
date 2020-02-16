@@ -10,6 +10,7 @@ import createAttackAnimation from "./tile-animations/attack-animation";
 import { MagnifyEffect } from "../components/magnify-effect";
 import FadeEffect from "../components/fade-effect";
 import { TileDialogueEntry } from "../hud/dialogue-manager";
+import BezierEasing from "bezier-easing";
 
 export default class Tile {
   public isRevealed = false;
@@ -23,6 +24,7 @@ export default class Tile {
   private container: GameObjects.Container;
   private flipEffect: FlipEffect;
   private magnifyEffect: MagnifyEffect;
+  private contentsMagnifyEffect: MagnifyEffect;
   private fadeEffect: FadeEffect;
   private tileGraphicTimeline: Tweens.Timeline;
 
@@ -66,6 +68,9 @@ export default class Tile {
     this.magnifyEffect = new MagnifyEffect(scene, this.container, 1, 1.1, 100);
     this.fadeEffect = new FadeEffect(scene, this.container, 1, 0.6, 100);
 
+    this.contentsMagnifyEffect = new MagnifyEffect(scene, this.tileContents, 0, 1.2, 250, {
+      ease: BezierEasing(0.31, 0.68, 0.02, 1.47) // https://cubic-bezier.com/#.17,.67,.83,.67
+    });
   }
 
   removeTileContents() {
@@ -223,8 +228,10 @@ export default class Tile {
     return new Promise(resolve => {
       this.flipEffect.events.once("complete", resolve);
       this.flipEffect.flipToFront();
-      if (!this.isCurrentlyBlank) this.tileContents?.setVisible(true);
-      // this.contentsMagnifyEffect.scaleUp();
+      if (!this.isCurrentlyBlank) {
+        this.tileContents?.setVisible(true);
+        this.contentsMagnifyEffect.scaleUp();
+      }
     });
   }
 
@@ -268,6 +275,7 @@ export default class Tile {
     this.disableInteractive();
     this.magnifyEffect.destroy();
     this.fadeEffect.destroy();
+    this.contentsMagnifyEffect.destroy();
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
     this.scene = undefined;
   }
