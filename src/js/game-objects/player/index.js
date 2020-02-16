@@ -42,7 +42,6 @@ export default class Player {
   movePlayerTo(x, y, moveInstantly = false) {
     return new Promise(resolve => {
       if (this.moveTween) this.moveTween.stop();
-      console.log(DEPTHS.BOARD + (y / 75) * 4 + 2);
       this.sprite.setDepth(DEPTHS.BOARD + (y / 75) * 4 + 2);
       if (moveInstantly) {
         this.setPosition(x, y);
