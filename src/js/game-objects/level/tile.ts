@@ -223,7 +223,8 @@ export default class Tile {
     return new Promise(resolve => {
       this.flipEffect.events.once("complete", resolve);
       this.flipEffect.flipToFront();
-      this.tileContents?.setVisible(true);
+      if (!this.isCurrentlyBlank) this.tileContents?.setVisible(true);
+      // this.contentsMagnifyEffect.scaleUp();
     });
   }
 
