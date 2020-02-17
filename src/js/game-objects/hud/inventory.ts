@@ -1,13 +1,15 @@
+import Phaser, { Input } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
-import { GameStore } from "../../store/index";
+import store, { GameStore } from "../../store/index";
+import InventoryToggle, { INVENTORY_ITEMS } from "./inventory-toggle";
 
 export default class InventoryMenu {
   private scene: Phaser.Scene;
   private text: Phaser.GameObjects.Text;
-  private icons: Phaser.GameObjects.Image[];
+  private icons: InventoryToggle[];
 
   private background: Phaser.GameObjects.Shape;
   private container: Phaser.GameObjects.Container;
@@ -26,55 +28,79 @@ export default class InventoryMenu {
       .setOrigin(0.5, 0);
 
     this.icons = [
-      scene.add.image(0, 0, "all-assets", "key"),
-      scene.add.image(0, 0, "all-assets", "compass"),
-      scene.add.image(0, 0, "all-assets", "marker-1"),
-      scene.add.image(0, 0, "all-assets", "marker-2")
+      new InventoryToggle(
+        scene,
+        gameStore,
+        INVENTORY_ITEMS.COMPASS,
+        0,
+        0,
+        "all-assets",
+        "compass",
+        this.onPointerDown
+      ),
+      new InventoryToggle(
+        scene,
+        gameStore,
+        INVENTORY_ITEMS.REVEAL_IN_RADAR,
+        0,
+        0,
+        "all-assets",
+        "marker-1",
+        this.onPointerDown
+      ),
+      new InventoryToggle(
+        scene,
+        gameStore,
+        INVENTORY_ITEMS.REVEAL_TILE,
+        0,
+        0,
+        "all-assets",
+        "marker-2",
+        this.onPointerDown
+      )
     ];
 
-    const activeIconAlpha = 1.0;
-    const inactiveIconAlpha = 0.32;
     const iconSpacing = 6;
     const iconHeight = this.icons[0].height;
     const bgPadding = { x: 4, y: 25 };
     const bgWidth = 96;
 
     this.text.setPosition(bgWidth / 2, bgPadding.y);
-
     const iconStartY = this.text.y + this.text.height + 15;
+
     this.icons.forEach((icon, i) => {
-      icon.setOrigin(0.5, 0);
-      icon.alpha = inactiveIconAlpha;
-      icon.x = bgWidth / 2;
-      icon.y = iconStartY + (iconHeight + iconSpacing) * i;
+      icon.setInactive();
+      icon.setPosition(bgWidth / 2, iconStartY + iconHeight / 2 + (iconHeight + iconSpacing) * i);
     });
 
-    const bgHeight = this.icons[this.icons.length - 1].y + iconHeight + bgPadding.y;
+    this.enableInteractive();
+
+    const bgHeight = this.icons[this.icons.length - 1].position.y + iconHeight / 2 + bgPadding.y;
     this.background = scene.add
       .rectangle(0, 0, bgWidth, bgHeight, 0xffffff)
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.4), [this.background, this.text, ...this.icons])
+      .container(fractionToX(0.12), fractionToY(0.42), [
+        this.background,
+        this.text,
+        ...this.icons.map(icon => icon.sprite)
+      ])
       .setDepth(DEPTHS.HUD);
 
     this.mobxProxy = new MobXProxy();
-    this.mobxProxy.observe(gameStore, "hasKey", () => {
-      const alpha = gameStore.hasKey ? activeIconAlpha : inactiveIconAlpha;
-      this.icons[0].alpha = alpha;
-    });
     this.mobxProxy.observe(gameStore, "hasCompass", () => {
-      const alpha = gameStore.hasCompass ? activeIconAlpha : inactiveIconAlpha;
-      this.icons[1].alpha = alpha;
+      if (store.hasCompass) this.icons[0].setActive();
+      else this.icons[0].setInactive();
     });
     this.mobxProxy.observe(gameStore, "hasClearRadar", () => {
-      const alpha = gameStore.hasClearRadar ? activeIconAlpha : inactiveIconAlpha;
-      this.icons[2].alpha = alpha;
+      if (store.hasClearRadar) this.icons[1].setActive();
+      else this.icons[1].setInactive();
     });
     this.mobxProxy.observe(gameStore, "hasRevealTile", () => {
-      const alpha = gameStore.hasRevealTile ? activeIconAlpha : inactiveIconAlpha;
-      this.icons[3].alpha = alpha;
+      if (store.hasRevealTile) this.icons[2].setActive();
+      else this.icons[2].setInactive();
     });
 
     this.eventProxy = new EventProxy();
@@ -82,9 +108,49 @@ export default class InventoryMenu {
     this.eventProxy.on(scene.events, "destroy", this.destroy, this);
   }
 
+  /**
+   * Enable user interactivity for the tile.
+   */
+  enableInteractive() {
+    this.icons.forEach(icon => {
+      icon.enableInteractive();
+    });
+  }
+
+  /**
+   * Disable user interactivity for the tile.
+   */
+  disableInteractive() {
+    /* NOTE(rex): This handles the edge case of onHoverEnd never triggering,
+     * since the gameManager disables interactivity when the move action kicks off.
+     */
+    this.icons.forEach(icon => {
+      icon.disableInteractive();
+    });
+  }
+
+  onPointerDown = (toggle: InventoryToggle) => {
+    console.log(toggle);
+    switch (toggle.type) {
+      case INVENTORY_ITEMS.COMPASS:
+        console.log("Compass!");
+        if (!store.hasCompass) store.setHasCompass(true);
+        break;
+      case INVENTORY_ITEMS.REVEAL_IN_RADAR:
+        if (!store.hasClearRadar) store.setHasClearRadar(true);
+        console.log("Reveal everything in the radar!");
+        break;
+      case INVENTORY_ITEMS.REVEAL_TILE:
+        if (!store.hasRevealTile) store.setHasRevealTile(true);
+        console.log("Reveal any tile!");
+        break;
+    }
+  };
+
   destroy() {
     this.mobxProxy.destroy();
-    this.text.destroy();
+    this.container.destroy();
+    this.icons.forEach(icon => icon.destroy());
     this.eventProxy.removeAll();
   }
 }
