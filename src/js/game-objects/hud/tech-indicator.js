@@ -17,25 +17,30 @@ export default class TechIndicator {
   constructor(scene, gameStore) {
     this.scene = scene;
 
-    const containerHeight = 120;
-    const bgPadding = { x: 4, y: 0 };
+    const bgPadding = { x: 4, y: 25 };
     const bgWidth = 96;
+    const iconSpacing = 6;
+
+    this.title = scene.add
+      .text(bgWidth / 2, bgPadding.y, "Tech", { fontSize: 20, fill: "#000000", fontStyle: "bold" })
+      .setOrigin(0.5, 0);
 
     this.sprite = scene.add
-      .sprite(bgWidth / 2, bgPadding.y, "all-assets", "tech-1")
+      .sprite(bgWidth / 2, this.title.y + this.title.height + iconSpacing, "all-assets", "tech-1")
       .setOrigin(0.5, 0);
 
     this.text = scene.add
-      .text(bgWidth / 2, this.sprite.height + bgPadding.y + 10, "0", textStyle)
+      .text(bgWidth / 2, this.sprite.y + this.sprite.height + iconSpacing, "0", textStyle)
       .setOrigin(0.5, 0);
 
+    const bgHeight = this.text.y + this.text.height + bgPadding.y;
     this.background = scene.add
-      .rectangle(0, 0, 96, containerHeight, 0xffffff)
+      .rectangle(0, 0, bgWidth, bgHeight, 0xffffff)
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.8), [this.background, this.sprite, this.text])
+      .container(fractionToX(0.12), fractionToY(0.76), [this.background, this.title, this.sprite, this.text])
       .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.goldCount, true);
