@@ -54,7 +54,7 @@ export default class Level {
       let depth = DEPTHS.BOARD;
       if (layerData.name === "Decorations") {
         tileSet = this.map.addTilesetImage("decorations");
-        depth = DEPTHS.ABOVE_GROUND;
+        depth = DEPTHS.BOARD;
       }
       const layer = this.map.createDynamicLayer(layerData.name, tileSet);
       layer.setPosition(
@@ -373,8 +373,8 @@ export default class Level {
     return Promise.all(tilePromises);
   }
 
-  fadeLevelIn() {
-    const promises = [];
+  async fadeLevelIn() {
+    const promises: Promise<void>[] = [];
     // Staggered fade in from left to right of floor
     this.tiles.forEach((row, y) =>
       row.forEach((tile, x) => {
@@ -384,12 +384,12 @@ export default class Level {
         }
       })
     );
-    promises.push(this.entrance.open());
-    return Promise.all(promises).then(() => {
-      const start = this.getStartingGridPosition();
-      this.tiles[start.y][start.x].flipToFront();
-      this.getNeighboringTiles(start.x, start.y).map(tile => tile.flipToFront());
-    });
+    await Promise.all(promises);
+    await this.entrance.open();
+
+    const start = this.getStartingGridPosition();
+    this.tiles[start.y][start.x].flipToFront();
+    this.getNeighboringTiles(start.x, start.y).map(tile => tile.flipToFront());
   }
 
   destroy() {

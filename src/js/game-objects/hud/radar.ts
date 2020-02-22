@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import BezierEasing from "bezier-easing";
 import Tile from "../level/tile";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
@@ -11,8 +12,9 @@ class Radar {
   private scene: Phaser.Scene;
   private player: Player;
   private level: Level;
-  private outlineGraphics: Phaser.GameObjects.Graphics;
-  private labelGraphics: Phaser.GameObjects.Graphics;
+  private areaGraphic: Phaser.GameObjects.Graphics;
+  private labelBackgroundSprite: Phaser.GameObjects.Sprite;
+  private labelContainer: Phaser.GameObjects.Container;
   private text: Phaser.GameObjects.Text;
   private labelTween: Phaser.Tweens.Tween;
   private enemyCount: number = 0;
@@ -22,32 +24,37 @@ class Radar {
   private y: number = 0;
   private w: number = 0;
   private h: number = 0;
-  private padding = 2.5;
+  private padding = 5;
+  private isOpen = false;
   private reusableRect = new Phaser.Geom.Rectangle();
   private proxy = new EventProxy();
   private scrambleDangerCountTimer: Phaser.Time.TimerEvent;
+  private openTween: Phaser.Tweens.Tween;
+  private labelHoverTween: Phaser.Tweens.Tween;
 
   constructor(scene: Phaser.Scene, player: Player) {
     this.scene = scene;
     this.player = player;
     this.level = null;
-    this.outlineGraphics = scene.add.graphics({
-      fillStyle: { color: 0xfc3f3f },
-      lineStyle: { color: 0xfc3f3f, width: 6 }
+    this.areaGraphic = scene.add.graphics({
+      fillStyle: { color: 0xfc3f3f, alpha: 0.25 }
     });
-    this.labelGraphics = scene.add.graphics({ fillStyle: { color: 0xfc3f3f } });
-    this.labelGraphics.fillCircle(0, 0, 24);
+    this.labelBackgroundSprite = scene.add
+      .sprite(0, 0, "all-assets", "radar-pin")
+      .setOrigin(0.5, 1);
     this.text = scene.add
       .text(0, 0, "0", {
-        fontSize: 28,
+        fontSize: 29,
         fontStyle: "bold",
         color: "#fff"
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5, 0.5);
+    this.text.y = -this.labelBackgroundSprite.displayHeight * (22 / 38);
+    this.labelContainer = scene.add.container(0, 0, [this.labelBackgroundSprite, this.text]);
+    this.labelContainer.setAlpha(0.8);
 
-    this.outlineGraphics.setDepth(DEPTHS.ABOVE_GROUND);
-    this.labelGraphics.setDepth(DEPTHS.ABOVE_PLAYER);
-    this.text.setDepth(DEPTHS.ABOVE_PLAYER);
+    this.areaGraphic.setDepth(DEPTHS.ABOVE_GROUND);
+    this.labelContainer.setDepth(DEPTHS.ABOVE_PLAYER);
 
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
@@ -62,72 +69,103 @@ class Radar {
   }
 
   setVisible(isVisible: boolean) {
-    this.outlineGraphics.setVisible(isVisible);
-    this.labelGraphics.setVisible(isVisible);
-    this.text.setVisible(isVisible);
+    this.areaGraphic.setVisible(isVisible);
+    this.labelContainer.setVisible(isVisible);
   }
 
-  private updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true): Promise<void> {
-    return new Promise(resolve => {
-      if (tiles.length === 0) {
-        globalLogger.error("Attempted to set the radar shape from an empty array of tiles.");
-        return;
-      }
+  private async updateShapeFromTiles(tiles: Tile[], shouldAnimateUpdate = true): Promise<void> {
+    if (tiles.length === 0) {
+      globalLogger.error("Attempted to set the radar shape from an empty array of tiles.");
+      return;
+    }
 
-      // Calculate the bounds of the set of tiles in world space
-      let minX: number = Number.MAX_SAFE_INTEGER;
-      let maxX: number = Number.MIN_SAFE_INTEGER;
-      let minY: number = Number.MAX_SAFE_INTEGER;
-      let maxY: number = Number.MIN_SAFE_INTEGER;
-      tiles.map(tile => {
-        const { left, right, top, bottom } = tile.getBounds(this.reusableRect);
-        if (left < minX) minX = left;
-        if (right > maxX) maxX = right;
-        if (top < minY) minY = top;
-        if (bottom > maxY) maxY = bottom;
-      });
-      const x = minX - this.padding;
-      const y = minY - this.padding;
-      const w = maxX - minX + this.padding * 2;
-      const h = maxY - minY + this.padding * 2;
+    // Calculate the bounds of the set of tiles in world space
+    let minX: number = Number.MAX_SAFE_INTEGER;
+    let maxX: number = Number.MIN_SAFE_INTEGER;
+    let minY: number = Number.MAX_SAFE_INTEGER;
+    let maxY: number = Number.MIN_SAFE_INTEGER;
+    tiles.map(tile => {
+      const { left, right, top, bottom } = tile.getBounds(this.reusableRect);
+      if (left < minX) minX = left;
+      if (right > maxX) maxX = right;
+      if (top < minY) minY = top;
+      if (bottom > maxY) maxY = bottom;
+    });
+    const w = maxX - minX + this.padding * 2;
+    const h = maxY - minY + this.padding * 2;
+    const x = minX + w / 2 - this.padding;
+    const y = minY + h / 2 - this.padding;
 
-      if (this.x == x && this.y == y && this.w == w && this.h == h) {
-        resolve();
-        return;
-      }
+    if (this.x == x && this.y == y && this.w == w && this.h == h) return;
 
-      if (shouldAnimateUpdate) {
-        const tmp = { x: this.x, y: this.y, w: this.w, h: this.h };
-        this.scene.add.tween({
-          targets: tmp,
-          x,
-          y,
-          w,
-          h,
-          duration: 175,
-          ease: Phaser.Math.Easing.Quadratic.Out,
-          onUpdate: () => this.updateShape(tmp.x, tmp.y, tmp.w, tmp.h),
+    if (shouldAnimateUpdate) {
+      this.updateShape(x, y, w, h);
+      if (this.isOpen) await this.closeRadar();
+      await this.openRadar();
+    } else {
+      this.updateShape(x, y, w, h);
+    }
+  }
+
+  closeRadar(): Promise<void> {
+    if (this.isOpen) {
+      this.isOpen = false;
+      return new Promise(resolve => {
+        this.openTween?.stop();
+        this.openTween = this.scene.add.tween({
+          targets: [this.labelContainer, this.areaGraphic],
+          scaleX: 0,
+          scaleY: 0,
+          duration: 150,
+          ease: Phaser.Math.Easing.Circular.Out,
           onComplete: () => resolve()
         });
-      } else {
-        this.updateShape(x, y, w, h);
-        resolve();
-      }
-    });
+      });
+    }
+  }
+
+  private openRadar(): Promise<void> {
+    if (!this.isOpen) {
+      this.isOpen = true;
+      return new Promise(resolve => {
+        this.openTween?.stop();
+        this.openTween = this.scene.add.tween({
+          targets: [this.labelContainer, this.areaGraphic],
+          scaleX: 1,
+          scaleY: 1,
+          duration: 300,
+          ease: BezierEasing(0.31, 0.68, 0.02, 1.47), // https://cubic-bezier.com/#.17,.67,.83,.67
+          onComplete: () => resolve()
+        });
+      });
+    }
   }
 
   private updateShape(x: number, y: number, w: number, h: number) {
     this.x = x;
     this.y = y;
-    this.text.setPosition(x + w / 2, y + h);
-    this.outlineGraphics.setPosition(x, y);
-    this.labelGraphics.setPosition(x + w / 2, y + h);
+    this.areaGraphic.setPosition(x, y);
+    const labelPos = this.player.getTopCenter();
+    this.labelContainer.setPosition(labelPos.x, labelPos.y + 4);
+    this.labelHoverTween?.stop();
+    this.labelHoverTween = this.scene.add.tween({
+      targets: this.labelContainer,
+      y: labelPos.y - 4,
+      duration: 500,
+      yoyo: true,
+      repeat: -1,
+      easing: Phaser.Math.Easing.Bounce.InOut
+    });
     if (w !== this.w || h !== this.h) {
       this.w = w;
       this.h = h;
-      this.outlineGraphics.clear();
-      this.outlineGraphics.strokeRoundedRect(0, 0, w, h);
+      this.redrawAreaGraphic();
     }
+  }
+
+  private redrawAreaGraphic() {
+    this.areaGraphic.clear();
+    this.areaGraphic.fillRoundedRect(-this.w / 2, -this.h / 2, this.w, this.h);
   }
 
   private setDangerCount(shouldAnimateUpdate: boolean): Promise<void> {
@@ -148,16 +186,14 @@ class Radar {
           onUpdate: () => {
             if (target.value > 0) {
               const scale = target.value;
-              this.text.scaleY = scale;
-              this.labelGraphics.scaleY = scale;
+              this.labelContainer.scaleY = scale;
             } else {
               if (!hasFlipped) {
                 hasFlipped = true;
                 this.text.setText(`${count}`);
               }
               const scale = -1 * target.value;
-              this.text.scaleY = scale;
-              this.labelGraphics.scaleY = scale;
+              this.labelContainer.scaleY = scale;
             }
           },
           onComplete: () => resolve()
@@ -186,10 +222,10 @@ class Radar {
       callbackScope: this
     });
 
-    this.labelGraphics.fillStyle(0xe3c220);
-    this.labelGraphics.fill();
-    this.outlineGraphics.lineStyle(2, 0xe3c220);
-    this.outlineGraphics.stroke();
+    this.labelBackgroundSprite.setFrame("radar-pin-scrambled");
+
+    this.areaGraphic.fillStyle(0xe3c220, 0.25);
+    this.redrawAreaGraphic();
   }
 
   /**
@@ -199,10 +235,10 @@ class Radar {
     this.isScrambling = false;
     if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
 
-    this.labelGraphics.fillStyle(0xfc3f3f);
-    this.labelGraphics.fill();
-    this.outlineGraphics.lineStyle(6, 0xfc3f3f);
-    this.outlineGraphics.stroke();
+    this.labelBackgroundSprite.setFrame("radar-pin");
+
+    this.areaGraphic.fillStyle(0xfc3f3f, 0.25);
+    this.redrawAreaGraphic();
   }
 
   /**
@@ -211,7 +247,7 @@ class Radar {
    *
    * @returns {Promise<[void, void]>}
    */
-  update(): Promise<[void, void]> {
+  async update(): Promise<[void, void]> {
     if (!this.level) return;
     const { x, y } = this.player.getGridPosition();
     this.enemyCount = this.level.countNeighboringEnemies(x, y);
@@ -230,12 +266,12 @@ class Radar {
   }
 
   destroy() {
+    this.openTween?.stop();
     if (this.labelTween) this.labelTween.stop();
     if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
     this.scene = undefined;
-    this.outlineGraphics.destroy();
-    this.labelGraphics.destroy();
-    this.text.destroy();
+    this.areaGraphic.destroy();
+    this.labelContainer.destroy();
     this.proxy.removeAll();
   }
 }

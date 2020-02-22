@@ -1,5 +1,7 @@
 import Phaser, { Types, Tweens } from "phaser";
 
+type TweenBuilderConfigExtension = Omit<Types.Tweens.TweenBuilderConfig, "targets">;
+
 export class MagnifyEffect {
   private tween: Tweens.Tween;
 
@@ -9,10 +11,10 @@ export class MagnifyEffect {
     private startScale: number,
     private endScale: number,
     private duration: number,
-    private additionalTweenConfig?: Types.Tweens.TweenBuilderConfig
+    private additionalTweenConfig?: TweenBuilderConfigExtension
   ) {}
 
-  scaleUp(additionalTweenConfig?: Types.Tweens.TweenBuilderConfig) {
+  scaleUp(additionalTweenConfig?: TweenBuilderConfigExtension) {
     if (this.tween) this.tween.stop();
     this.tween = this.scene.add.tween({
       targets: this.target,
@@ -24,7 +26,7 @@ export class MagnifyEffect {
     });
   }
 
-  scaleDown(additionalTweenConfig?: Types.Tweens.TweenBuilderConfig) {
+  scaleDown(additionalTweenConfig?: TweenBuilderConfigExtension) {
     if (this.tween) this.tween.stop();
     this.tween = this.scene.add.tween({
       targets: this.target,

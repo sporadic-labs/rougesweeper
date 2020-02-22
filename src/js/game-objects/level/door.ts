@@ -46,7 +46,7 @@ export default class Door {
 
     this.doorSprite = scene.add
       .sprite(worldX, worldY, "all-assets", `${doorPrefix}-0`)
-      .setDepth(DEPTHS.HUD);
+      .setDepth(DEPTHS.BOARD);
 
     if (doorPlacement === DOOR_PLACEMENT.LEFT) {
       this.doorSprite.setOrigin(1, 0.5);

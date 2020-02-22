@@ -303,6 +303,7 @@ export default class GameManager {
    * @param {*} duration
    */
   async movePlayerAlongPath(path: Point[], duration: number = 200) {
+    this.radar.closeRadar();
     const lastPoint = path[path.length - 1];
     const worldPath = path.map(p => this.level.gridXYToWorldXY(p));
     await this.player.movePlayerAlongPath(worldPath);
@@ -317,6 +318,7 @@ export default class GameManager {
    * @param {*} moveInstantly
    */
   async movePlayerToTile(gridX: number, gridY: number, moveInstantly = false) {
+    this.radar.closeRadar();
     const worldX = this.level.gridXToWorldX(gridX);
     const worldY = this.level.gridYToWorldY(gridY);
     await this.player.movePlayerTo(worldX, worldY, moveInstantly);
