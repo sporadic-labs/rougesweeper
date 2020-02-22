@@ -70,7 +70,8 @@ module.exports = function(env, argv) {
       new webpack.DefinePlugin({
         "typeof CANVAS_RENDERER": JSON.stringify(true),
         "typeof WEBGL_RENDERER": JSON.stringify(true),
-        PRODUCTION: !isDev
+        IS_PRODUCTION: JSON.stringify(!isDev),
+        IS_DEVELOPMENT: JSON.stringify(isDev)
       })
     ],
     devtool: isDev ? "eval-source-map" : "source-map"
