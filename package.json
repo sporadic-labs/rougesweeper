@@ -68,6 +68,7 @@
     "url": "https://github.com/sporadic-labs/phaser-3-sandbox.git/issues"
   },
   "dependencies": {
+    "@types/store": "^2.0.2",
     "bezier-easing": "^2.1.0"
   }
 }
