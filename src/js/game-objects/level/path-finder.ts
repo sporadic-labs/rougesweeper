@@ -53,8 +53,8 @@ export default class PathFinder {
     this.easyStar.setGrid(this.grid);
   }
 
-  findPath(start: Point, end: Point): Point[] {
-    let path = null;
+  findPath(start: Point, end: Point): Point[] | null {
+    let path: Point[] | null = null;
     this.easyStar.findPath(start.x, start.y, end.x, end.y, p => (path = p));
     this.easyStar.calculate();
     return path;
