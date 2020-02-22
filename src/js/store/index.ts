@@ -1,6 +1,7 @@
 import { observable, action, computed } from "mobx";
 import GAME_MODES from "../game-objects/game-manager/events";
 import { levelKeys } from "./levels";
+import storedSettings from "./stored-settings";
 
 class GameStore {
   @observable previousGameState: GAME_MODES;
@@ -22,7 +23,7 @@ class GameStore {
     this.gameState = GAME_MODES.IDLE_MODE;
     this.previousGameState = this.gameState;
     this.dangerCount = 0;
-    this.goldCount = 0;
+    this.goldCount = storedSettings.startingGold;
     this.maxPlayerHealth = 4;
     this.playerHealth = this.maxPlayerHealth;
     this.isShopOpen = false;
@@ -30,7 +31,7 @@ class GameStore {
     this.hasCompass = false;
     this.hasRevealTile = false;
     this.hasClearRadar = false;
-    this.levelIndex = 0;
+    this.levelIndex = storedSettings.startingLevel;
     this.hasKey = false;
     this.pauseMenuOpen = false;
   }
@@ -92,8 +93,8 @@ class GameStore {
 
   @action startNewGame() {
     this.playerHealth = this.maxPlayerHealth;
-    this.goldCount = 3;
-    this.levelIndex = 0;
+    this.goldCount = storedSettings.startingGold;
+    this.levelIndex = storedSettings.startingLevel;
     this.moveCount = 0;
     this.hasKey = false;
   }
