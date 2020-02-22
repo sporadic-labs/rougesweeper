@@ -1,9 +1,11 @@
+import Phaser, { Scene, GameObjects } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
 import GAME_MODES from "../game-manager/events";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
 import { levelKeys } from "../../store/levels";
+import storedSettings from "../../store/stored-settings";
 
 const baseTextStyle = {
   align: "center",
@@ -15,6 +17,51 @@ const titleStyle = {
   fontStyle: "bold"
 };
 
+/**
+ * Placeholder level select button that looks like this:
+ *
+ * Level-1-Floor-1
+ * [Load] [Start Here]
+ */
+class LevelSelectButton {
+  public label: GameObjects.Text;
+  public loadButton: TextButton;
+  public setStartingLevelButton: TextButton;
+  public container: GameObjects.Container;
+
+  constructor(scene: Scene, levelName: string, top: number, left: number) {
+    const origin = { origin: { x: 0, y: 0 } };
+    let x = 0;
+    let y = 0;
+    this.label = scene.add.text(x, y, levelName, {
+      align: "left",
+      fill: "#ffffff",
+      fontSize: 25
+    });
+    y += this.label.height + 5;
+    this.loadButton = new TextButton(scene, x, y, "Load", origin);
+    x += this.loadButton.text.width + 5;
+    this.setStartingLevelButton = new TextButton(scene, x, y, "Start Here", origin);
+
+    this.container = scene.add.container(top, left, [
+      this.label,
+      this.loadButton.text,
+      this.setStartingLevelButton.text
+    ]);
+  }
+
+  reset() {
+    this.loadButton.reset();
+    this.setStartingLevelButton.reset();
+  }
+
+  destroy() {
+    this.container.destroy();
+    this.loadButton.destroy();
+    this.setStartingLevelButton.destroy();
+  }
+}
+
 export default class DebugMenu {
   scene: Phaser.Scene;
   gameStore: GameStore;
@@ -22,7 +69,7 @@ export default class DebugMenu {
   proxy: EventProxy;
   container: Phaser.GameObjects.Container;
   isOpen: boolean = false;
-  levelSelectButtons: TextButton[];
+  levelSelectButtons: LevelSelectButton[];
   closeButton: TextButton;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
@@ -49,20 +96,23 @@ export default class DebugMenu {
     closeButton.events.on("DOWN", this.close);
     this.closeButton = closeButton;
 
-    const cols = 2;
     const levelSelectButtons = levelKeys.map((name, i) => {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const y = r.y + 100 + row * 50;
+      const matches = /level-(\d+)-floor-(\d+)/.exec(name);
+      const level = parseInt(matches[1], 10);
+      const floor = parseInt(matches[2], 10);
+      const col = floor - 1; // Floor starts at 1.
+      const row = level - 1; // Level starts at 1.
+      const y = r.y + 100 + row * 100;
       const x = r.x + 70 + col * 300;
-      const button = new TextButton(scene, x, y, `${name}`, {
-        origin: { x: 0, y: 0 }
+      const levelButton = new LevelSelectButton(scene, name, x, y);
+      levelButton.loadButton.events.on("DOWN", () => {
+        this.loadLevel(i);
       });
-      button.events.on("DOWN", () => {
-        this.close();
-        gameStore.setLevelByIndex(i);
+      levelButton.setStartingLevelButton.events.on("DOWN", () => {
+        this.loadLevel(i);
+        storedSettings.setStartingLevel(i);
       });
-      return button;
+      return levelButton;
     });
     this.levelSelectButtons = levelSelectButtons;
 
@@ -71,7 +121,7 @@ export default class DebugMenu {
         background,
         title,
         closeButton.text,
-        ...levelSelectButtons.map(b => b.text)
+        ...this.levelSelectButtons.map(b => b.container)
       ])
       .setDepth(DEPTHS.MENU)
       .setVisible(false);
@@ -91,7 +141,10 @@ export default class DebugMenu {
     this.proxy.on(scene.input.keyboard, "keydown_G", () => gameStore.addGold(), this);
   }
 
-  restartLevel() {}
+  loadLevel(i: number) {
+    this.close();
+    this.gameStore.setLevelByIndex(i);
+  }
 
   open = () => {
     this.isOpen = true;
@@ -108,7 +161,7 @@ export default class DebugMenu {
 
   resetButtons() {
     // Manually call this when closing menu because of bug where button stays in pressed state
-    this.levelSelectButtons.forEach(btn => btn.reset());
+    this.levelSelectButtons.forEach(b => b.reset());
     this.closeButton.reset();
   }
 
