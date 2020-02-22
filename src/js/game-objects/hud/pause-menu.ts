@@ -18,12 +18,10 @@ const titleStyle = {
 export default class PauseMenu {
   scene: Phaser.Scene;
   gameStore: GameStore;
-  restartLevelButton: TextButton;
   mobProxy: MobXProxy;
   proxy: EventProxy;
   container: Phaser.GameObjects.Container;
   isOpen: boolean = false;
-  levelSelectButtons: TextButton[];
   closeButton: TextButton;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {

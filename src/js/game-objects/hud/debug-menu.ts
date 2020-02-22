@@ -65,7 +65,6 @@ class LevelSelectButton {
 export default class DebugMenu {
   scene: Phaser.Scene;
   gameStore: GameStore;
-  restartLevelButton: TextButton;
   proxy: EventProxy;
   container: Phaser.GameObjects.Container;
   isOpen: boolean = false;
