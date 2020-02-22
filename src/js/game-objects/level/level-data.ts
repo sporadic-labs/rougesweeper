@@ -376,6 +376,7 @@ export default class LevelData {
    */
   setTileAt(boardX: number, boardY: number, type: TILE) {
     const id = this.tileTypeToId[type];
+    if (!id) throw Error(`setTileAt: No valid tile index found for type ${type}.`);
     const mapPos = this.boardPositionToTilemapPosition(boardX, boardY);
     const tile = this.map.putTileAt(id, mapPos.x, mapPos.y, false, "Assets");
     // Annoying bug(?) in Phaser where newly created tiles don't get the properties from the

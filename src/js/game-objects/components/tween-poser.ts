@@ -22,7 +22,7 @@ type TweenBuilderConfigExtension = Omit<TweenBuilderConfig, "targets"> | object;
  */
 export default class TweenPoser<PoseType> {
   private tweenConfigs: Map<PoseType, TweenBuilderConfig> = new Map();
-  private tween: Tweens.Tween;
+  private tween?: Tweens.Tween;
   private pose: PoseType | null = null;
 
   /**

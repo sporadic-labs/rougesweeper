@@ -7,7 +7,7 @@ export default class FlipEffect {
   public events: Events.EventEmitter;
   private frontScale: number;
   private backScale: number;
-  private flipTween: Tweens.Tween;
+  private flipTween?: Tweens.Tween;
   private flipProgress: number;
 
   /**
@@ -49,7 +49,7 @@ export default class FlipEffect {
    * Check if a flip is running.x
    */
   isFlipping(): boolean {
-    return this.flipTween && this.flipTween.isPlaying();
+    return this.flipTween?.isPlaying() ?? false;
   }
 
   /**
@@ -121,7 +121,6 @@ export default class FlipEffect {
   }
 
   destroy() {
-    this.scene = undefined;
     this.front = undefined;
     this.back = undefined;
     this.stopFlip();

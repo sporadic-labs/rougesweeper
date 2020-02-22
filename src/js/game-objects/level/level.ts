@@ -402,7 +402,6 @@ export default class Level {
     this.exit.destroy();
     this.map.destroy();
     this.events.destroy();
-    this.scene = undefined;
     this.data = undefined;
   }
 }

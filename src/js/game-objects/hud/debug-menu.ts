@@ -97,6 +97,9 @@ export default class DebugMenu {
 
     const levelSelectButtons = levelKeys.map((name, i) => {
       const matches = /level-(\d+)-floor-(\d+)/.exec(name);
+      if (!matches || matches.length < 3) {
+        throw new Error("Invalid level name");
+      }
       const level = parseInt(matches[1], 10);
       const floor = parseInt(matches[2], 10);
       const col = floor - 1; // Floor starts at 1.

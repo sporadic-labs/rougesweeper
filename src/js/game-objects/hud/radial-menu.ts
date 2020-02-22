@@ -210,7 +210,6 @@ class RadialMenu {
   destroy() {
     if (this.tween) this.tween.stop();
     this.menuIcons.forEach(icon => icon.destroy());
-    this.scene = undefined;
     this.events.destroy();
     this.graphic.destroy();
     this.mobProxy.destroy();

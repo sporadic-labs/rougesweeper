@@ -11,12 +11,12 @@ import Level from "../level/level";
 class Radar {
   private scene: Phaser.Scene;
   private player: Player;
-  private level: Level;
+  private level?: Level;
   private areaGraphic: Phaser.GameObjects.Graphics;
   private labelBackgroundSprite: Phaser.GameObjects.Sprite;
   private labelContainer: Phaser.GameObjects.Container;
   private text: Phaser.GameObjects.Text;
-  private labelTween: Phaser.Tweens.Tween;
+  private labelTween?: Phaser.Tweens.Tween;
   private enemyCount: number = 0;
   private isScrambling = false;
   private scrambledEnemyCount: number = 0;
@@ -28,14 +28,13 @@ class Radar {
   private isOpen = false;
   private reusableRect = new Phaser.Geom.Rectangle();
   private proxy = new EventProxy();
-  private scrambleDangerCountTimer: Phaser.Time.TimerEvent;
-  private openTween: Phaser.Tweens.Tween;
-  private labelHoverTween: Phaser.Tweens.Tween;
+  private scrambleDangerCountTimer?: Phaser.Time.TimerEvent;
+  private openTween?: Phaser.Tweens.Tween;
+  private labelHoverTween?: Phaser.Tweens.Tween;
 
   constructor(scene: Phaser.Scene, player: Player) {
     this.scene = scene;
     this.player = player;
-    this.level = null;
     this.areaGraphic = scene.add.graphics({
       fillStyle: { color: 0xfc3f3f, alpha: 0.25 }
     });
@@ -108,9 +107,9 @@ class Radar {
   }
 
   closeRadar(): Promise<void> {
-    if (this.isOpen) {
-      this.isOpen = false;
-      return new Promise(resolve => {
+    return new Promise(resolve => {
+      if (this.isOpen) {
+        this.isOpen = false;
         this.openTween?.stop();
         this.openTween = this.scene.add.tween({
           targets: [this.labelContainer, this.areaGraphic],
@@ -120,14 +119,16 @@ class Radar {
           ease: Phaser.Math.Easing.Circular.Out,
           onComplete: () => resolve()
         });
-      });
-    }
+      } else {
+        resolve();
+      }
+    });
   }
 
   private openRadar(): Promise<void> {
-    if (!this.isOpen) {
-      this.isOpen = true;
-      return new Promise(resolve => {
+    return new Promise(resolve => {
+      if (!this.isOpen) {
+        this.isOpen = true;
         this.openTween?.stop();
         this.openTween = this.scene.add.tween({
           targets: [this.labelContainer, this.areaGraphic],
@@ -137,8 +138,10 @@ class Radar {
           ease: BezierEasing(0.31, 0.68, 0.02, 1.47), // https://cubic-bezier.com/#.17,.67,.83,.67
           onComplete: () => resolve()
         });
-      });
-    }
+      } else {
+        resolve();
+      }
+    });
   }
 
   private updateShape(x: number, y: number, w: number, h: number) {
@@ -248,28 +251,32 @@ class Radar {
    * @returns {Promise<[void, void]>}
    */
   async update(): Promise<[void, void]> {
-    if (!this.level) return;
-    const { x, y } = this.player.getGridPosition();
-    this.enemyCount = this.level.countNeighboringEnemies(x, y);
-    const inRangeOfScrambleEnemy = this.level.isNeighboringScrambleEnemy(x, y);
-    if (inRangeOfScrambleEnemy && !this.isScrambling) {
-      this.startScrambleRadar();
-    } else if (!inRangeOfScrambleEnemy && this.isScrambling) {
-      this.stopScrambleRadar();
-    }
-    const tiles = this.level.getNeighboringTiles(x, y);
-    const playerTile = this.level.getTileFromGrid(x, y);
-    if (playerTile) tiles.push(playerTile);
-    const p1 = this.updateShapeFromTiles(tiles, true);
-    const p2 = this.setDangerCount(true);
-    return Promise.all([p1, p2]);
+    return new Promise(resolve => {
+      if (!this.level) {
+        resolve();
+        return;
+      }
+      const { x, y } = this.player.getGridPosition();
+      this.enemyCount = this.level.countNeighboringEnemies(x, y);
+      const inRangeOfScrambleEnemy = this.level.isNeighboringScrambleEnemy(x, y);
+      if (inRangeOfScrambleEnemy && !this.isScrambling) {
+        this.startScrambleRadar();
+      } else if (!inRangeOfScrambleEnemy && this.isScrambling) {
+        this.stopScrambleRadar();
+      }
+      const tiles = this.level.getNeighboringTiles(x, y);
+      const playerTile = this.level.getTileFromGrid(x, y);
+      if (playerTile) tiles.push(playerTile);
+      const p1 = this.updateShapeFromTiles(tiles, true);
+      const p2 = this.setDangerCount(true);
+      Promise.all([p1, p2]).then(resolve);
+    });
   }
 
   destroy() {
     this.openTween?.stop();
     if (this.labelTween) this.labelTween.stop();
     if (this.scrambleDangerCountTimer) this.scrambleDangerCountTimer.remove(false);
-    this.scene = undefined;
     this.areaGraphic.destroy();
     this.labelContainer.destroy();
     this.proxy.removeAll();

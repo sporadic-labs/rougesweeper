@@ -189,7 +189,6 @@ export default class Door {
     this.doorMagnifyEffect.destroy();
     this.tileMagnifyEffect.destroy();
     this.tileFadeEffect.destroy();
-    this.scene = undefined;
     this.doorSprite.destroy();
   }
 }

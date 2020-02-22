@@ -22,10 +22,10 @@ export default class Tile {
   public dialoguePlayedCounter = 0;
   private backSprite: GameObjects.Sprite;
   private frontSprite: GameObjects.Sprite;
-  private tileContents: GameObjects.Sprite;
+  private tileContents?: GameObjects.Sprite;
   private container: GameObjects.Container;
   private flipEffect: FlipEffect;
-  private tileGraphicTimeline: Tweens.Timeline;
+  private tileGraphicTimeline?: Tweens.Timeline;
   private tileFadePoser: TweenPoser<FadePoses>;
   private tileMagnifyPoser: TweenPoser<MagnifyPoses>;
   private contentsMagnifyPoser: TweenPoser<MagnifyPoses>;
@@ -97,6 +97,7 @@ export default class Tile {
         this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
         this.type === TILE_TYPES.KEY
       ) {
+        if (!this.tileContents) return;
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
 
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();
@@ -136,6 +137,7 @@ export default class Tile {
         this.type === TILE_TYPES.ENEMY ||
         this.type === TILE_TYPES.SCRAMBLE_ENEMY
       ) {
+        if (!this.tileContents) return;
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
         this.tileGraphicTimeline = createDisappearAnimation(this.scene, this.tileContents);
         this.tileGraphicTimeline
@@ -286,6 +288,5 @@ export default class Tile {
     this.tileContents?.destroy();
     this.disableInteractive();
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
-    this.scene = undefined;
   }
 }
