@@ -1,13 +1,21 @@
-import Phaser, { Input } from "phaser";
+import Phaser, { Events, Input } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
 import store, { GameStore } from "../../store/index";
 import InventoryToggle, { INVENTORY_ITEMS } from "./inventory-toggle";
+import GAME_MODES from "../game-manager/events";
+
+export enum INVETORY_EVENTS {
+  SELECT = "SELECT"
+}
 
 export default class InventoryMenu {
+  public events: Events.EventEmitter = new Events.EventEmitter();
+
   private scene: Phaser.Scene;
+  private store: GameStore;
   private text: Phaser.GameObjects.Text;
   private icons: InventoryToggle[];
 
@@ -22,6 +30,7 @@ export default class InventoryMenu {
    */
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
+    this.store = gameStore;
 
     this.text = scene.add
       .text(0, 0, "Stash", { fontSize: 20, fill: "#000000", fontStyle: "bold" })
@@ -130,27 +139,14 @@ export default class InventoryMenu {
   }
 
   onPointerDown = (toggle: InventoryToggle) => {
-    console.log(toggle);
-    switch (toggle.type) {
-      case INVENTORY_ITEMS.COMPASS:
-        console.log("Compass!");
-        if (!store.hasCompass) store.setHasCompass(true);
-        break;
-      case INVENTORY_ITEMS.REVEAL_IN_RADAR:
-        if (!store.hasClearRadar) store.setHasClearRadar(true);
-        console.log("Reveal everything in the radar!");
-        break;
-      case INVENTORY_ITEMS.REVEAL_TILE:
-        if (!store.hasRevealTile) store.setHasRevealTile(true);
-        console.log("Reveal any tile!");
-        break;
-    }
+    this.events.emit(INVETORY_EVENTS.SELECT, toggle.type);
   };
 
   destroy() {
-    this.mobxProxy.destroy();
-    this.container.destroy();
+    this.events.destroy();
     this.icons.forEach(icon => icon.destroy());
+    this.container.destroy();
+    this.mobxProxy.destroy();
     this.eventProxy.removeAll();
   }
 }
