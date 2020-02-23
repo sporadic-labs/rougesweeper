@@ -217,9 +217,18 @@ export default class Level {
   }
 
   getExitWorldPosition() {
+    const exitPos = this.data.exitPosition;
     return {
-      x: this.gridXToWorldX(this.data.exitPosition.x),
-      y: this.gridXToWorldX(this.data.exitPosition.y)
+      x: this.gridXToWorldX(exitPos.x),
+      y: this.gridYToWorldY(exitPos.y)
+    };
+  }
+
+  getKeyWorldPosition() {
+    const keyPos = this.data.getKeyPosition();
+    return {
+      x: this.gridXToWorldX(keyPos.x),
+      y: this.gridYToWorldY(keyPos.y)
     };
   }
 
