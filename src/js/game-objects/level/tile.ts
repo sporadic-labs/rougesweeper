@@ -68,20 +68,26 @@ export default class Tile {
     this.tileContents?.setVisible(false);
 
     this.tileMagnifyPoser = new TweenPoser(scene, this.container, { duration: 100 });
-    this.tileMagnifyPoser.definePose("ZoomIn", { scaleX: 1.1, scaleY: 1.1 });
-    this.tileMagnifyPoser.definePose("ZoomOut", { scaleX: 1, scaleY: 1 });
+    this.tileMagnifyPoser.definePoses({
+      ZoomIn: { scaleX: 1.1, scaleY: 1.1 },
+      ZoomOut: { scaleX: 1, scaleY: 1 }
+    });
 
     this.contentsMagnifyPoser = new TweenPoser(scene, this.tileContents, {
       duration: 250,
       ease: BezierEasing(0.31, 0.68, 0.02, 1.47) // https://cubic-bezier.com/#.17,.67,.83,.67
     });
-    this.contentsMagnifyPoser.definePose("ZoomIn", { scaleX: 1.2, scaleY: 1.2 });
-    this.contentsMagnifyPoser.definePose("ZoomOut", { scaleX: 0, scaleY: 0 });
+    this.contentsMagnifyPoser.definePoses({
+      ZoomIn: { scaleX: 1.2, scaleY: 1.2 },
+      ZoomOut: { scaleX: 0, scaleY: 0 }
+    });
     this.contentsMagnifyPoser.setToPose("ZoomOut");
 
     this.tileFadePoser = new TweenPoser(scene, this.container, { duration: 100 });
-    this.tileFadePoser.definePose("FadeIn", { alpha: 1 });
-    this.tileFadePoser.definePose("FadeOut", { alpha: 0.6 });
+    this.tileFadePoser.definePoses({
+      FadeIn: { alpha: 1 },
+      FadeOut: { alpha: 0.6 }
+    });
   }
 
   removeTileContents() {
