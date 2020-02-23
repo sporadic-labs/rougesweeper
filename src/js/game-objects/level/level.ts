@@ -289,10 +289,11 @@ export default class Level {
    * Find an A* path between the player and tile position if it exists.
    * @param playerPos
    * @param tilePos
-   * @param allowNeighbor Whether or not to allow player to take one step beyond the
+   * @param allowUnrevealedDestination Whether or not to allow player to move to a destination that
+   * is unrevealed. If true, the player can only move to a destination that is one step beyond the
    * currently revealed tiles (i.e. step from a revealed tile to the neighboring unrevealed tile).
    */
-  findPathBetween(playerPos: Point, tilePos: Point, allowNeighbor = false) {
+  findPathBetween(playerPos: Point, tilePos: Point, allowUnrevealedDestination = false) {
     // Note: this is inefficient, but ensures the pathfinder is up-to-date. To optimize, level needs
     // to know when tiles are highlighted/unhighlighted and revealed/hidden.
     this.pathFinder.setAllUnwalkable();
@@ -309,55 +310,12 @@ export default class Level {
     if (this.entrance.isOpen()) {
       this.pathFinder.setWalkableAt(this.entranceGridPosition.x, this.entranceGridPosition.y);
     }
-    this.pathFinder.update();
-
     const isDestinationBlocked = !this.pathFinder.isWalkableAt(tilePos.x, tilePos.y);
-    if (isDestinationBlocked && allowNeighbor) {
-      // Player's destination is unwalkable, so do a breadth-first search around player to see if
-      // the destination is a direct neighbor (one step away) from a walkable tile.
-      let newDestination = null;
-      const pointsQueue = [playerPos];
-      const visitedPoints = [];
-      while (!newDestination && pointsQueue.length !== 0) {
-        const { x, y } = pointsQueue.shift();
-        visitedPoints.push({ x, y });
-        for (const [dx, dy] of neighborOffsets) {
-          const nx = x + dx;
-          const ny = y + dy;
-          const np = { x: nx, y: ny };
-          if (this.pathFinder.isInBounds(nx, ny)) {
-            if (this.pathFinder.isWalkableAt(nx, ny)) {
-              // Only add to queue if we haven't visited or aren't already planning on visiting.
-              if (!isPointInArray(np, pointsQueue) && !isPointInArray(np, visitedPoints)) {
-                pointsQueue.push(np);
-              }
-            } else {
-              const tile = this.tiles[ny][nx];
-              if (
-                tilePos.x === nx &&
-                tilePos.y === ny &&
-                tile &&
-                (!tile.isRevealed || tile.type !== TILE_TYPES.WALL)
-              ) {
-                // We've found a walkable tile that directly neighbors the desired destination, so
-                // we can use that for path finding.
-                newDestination = { x, y };
-                break;
-              }
-            }
-          }
-        }
-      }
-      if (!newDestination) return null;
-
-      // Find path to our modified destination and add in the final step from the walkable neighbor
-      // to the unwalkable original destination.
-      const path = this.pathFinder.findPath(playerPos, newDestination);
-      if (path) return [...path, tilePos];
-      else return path;
-    } else {
-      return this.pathFinder.findPath(playerPos, tilePos);
+    if (isDestinationBlocked && allowUnrevealedDestination) {
+      this.pathFinder.setWalkableAt(tilePos.x, tilePos.y);
     }
+    this.pathFinder.update();
+    return this.pathFinder.findPath(playerPos, tilePos);
   }
 
   fadeLevelOut() {
