@@ -287,9 +287,9 @@ export default class Level {
 
   /**
    * Find an A* path between the player and tile position if it exists.
-   * @param {{x,y}} playerPos
-   * @param {{x,y}} tilePos
-   * @param {boolean} allowNeighbor Whether or not to allow player to take one step beyond the
+   * @param playerPos
+   * @param tilePos
+   * @param allowNeighbor Whether or not to allow player to take one step beyond the
    * currently revealed tiles (i.e. step from a revealed tile to the neighboring unrevealed tile).
    */
   findPathBetween(playerPos: Point, tilePos: Point, allowNeighbor = false) {
