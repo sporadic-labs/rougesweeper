@@ -1,14 +1,21 @@
-import Phaser, { Tweens, Events } from "phaser";
+import Phaser, { Tweens } from "phaser";
+import EventEmitter from "../../helpers/event-emitter";
 
 /**
  * This currently only does a horizontal flip, but we can extend to a vertical flip later if needed.
  */
 export default class FlipEffect {
-  public events: Events.EventEmitter;
+  public events: EventEmitter<{
+    halfway: FlipEffect;
+    complete: FlipEffect;
+    start: FlipEffect;
+  }> = new EventEmitter();
   private frontScale: number;
   private backScale: number;
   private flipTween?: Tweens.Tween;
   private flipProgress: number;
+  private hasPassedHalfway = false;
+  private flipDirection: "front" | "back";
 
   /**
    * @param {Phaser.Scene} scene
@@ -28,9 +35,6 @@ export default class FlipEffect {
     // neutral state so that the effect doesn't actually manipulate the game objects until the user
     // tells it to.
     this.flipProgress = 0;
-
-    // Emits flip events for "start" & "complete"
-    this.events = new Events.EventEmitter();
   }
 
   setToBack() {
@@ -57,11 +61,13 @@ export default class FlipEffect {
    * "complete" event.
    */
   stopFlip() {
-    if (this.flipTween) this.flipTween.stop();
+    this.flipTween?.stop();
   }
 
   flipToBack() {
     this.stopFlip();
+    this.flipDirection = "back";
+    this.hasPassedHalfway = false;
     this.flipTween = this.scene.tweens.add({
       targets: this,
       flipProgress: -1,
@@ -79,6 +85,8 @@ export default class FlipEffect {
 
   flipToFront() {
     this.stopFlip();
+    this.flipDirection = "front";
+    this.hasPassedHalfway = false;
     this.flipTween = this.scene.tweens.add({
       targets: this,
       flipProgress: 1,
@@ -101,6 +109,15 @@ export default class FlipEffect {
   }
 
   private onFlipUpdate() {
+    if (!this.hasPassedHalfway) {
+      if (this.flipDirection == "front" && this.flipProgress >= 0) {
+        this.hasPassedHalfway = true;
+        this.onFlipHalfway();
+      } else if (this.flipDirection == "back" && this.flipProgress <= 0) {
+        this.hasPassedHalfway = true;
+        this.onFlipHalfway();
+      }
+    }
     if (this.flipProgress > 0) {
       this.front.scaleX = this.flipProgress * this.frontScale;
       this.back.setVisible(false);
@@ -114,6 +131,10 @@ export default class FlipEffect {
 
   private onFlipStart() {
     this.events.emit("start", this);
+  }
+
+  private onFlipHalfway() {
+    this.events.emit("halfway", this);
   }
 
   private onFlipComplete() {
