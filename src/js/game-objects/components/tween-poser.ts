@@ -67,6 +67,11 @@ export default class TweenPoser<PoseType extends ValidPoses> {
     private baseConfig: PoseData = {}
   ) {}
 
+  /**
+   * Define all poses that can be tweened to. This is preferable over definePose, because it
+   * requires all valid poses to have a valid definition.
+   * @param poses
+   */
   definePoses(poses: Record<PoseType, PoseData>) {
     for (const key in poses) {
       this.tweenConfigs.set(key, { targets: this.target, ...this.baseConfig, ...poses[key] });
