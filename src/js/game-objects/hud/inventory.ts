@@ -54,7 +54,7 @@ export default class InventoryMenu {
         0,
         0,
         "all-assets",
-        "marker-1",
+        "clear-radar",
         this.onPointerDown
       ),
       new InventoryToggle(
@@ -64,7 +64,7 @@ export default class InventoryMenu {
         0,
         0,
         "all-assets",
-        "marker-2",
+        "reveal-tile",
         this.onPointerDown
       )
     ];
