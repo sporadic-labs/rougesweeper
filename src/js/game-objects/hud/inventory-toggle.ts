@@ -3,7 +3,7 @@ import GAME_MODES from "../game-manager/events";
 import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
-import { MagnifyEffect } from "../components/magnify-effect";
+import TweenPoser from "../components/tween-poser";
 
 export enum INVENTORY_ITEMS {
   COMPASS = "COMPASS",
@@ -11,10 +11,15 @@ export enum INVENTORY_ITEMS {
   REVEAL_TILE = "REVEAL_TILE"
 }
 
+type FadePoses = "FadeOut" | "FadeIn";
+type MagnifyPoses = "ZoomIn" | "ZoomOut" | "Select" | "ZoomInSelect";
+
 export default class InventoryToggle {
   scene: Phaser.Scene;
   gameStore: GameStore;
 
+  active: boolean;
+  selected: boolean;
   type: INVENTORY_ITEMS;
 
   sprite: Phaser.GameObjects.Sprite;
@@ -25,9 +30,8 @@ export default class InventoryToggle {
   disabled: boolean;
   isInteractive: boolean;
 
-  magnifyEffect: MagnifyEffect;
-
-  tween: Phaser.Tweens.Tween;
+  magnifyPoser: TweenPoser<MagnifyPoses>;
+  fadePoser: TweenPoser<FadePoses>;
 
   cb: Function;
 
@@ -57,6 +61,9 @@ export default class InventoryToggle {
 
     this.type = type;
 
+    this.active = false;
+    this.selected = false;
+
     this.sprite = scene.add
       .sprite(x, y, assetSheet, key)
       .setOrigin(0.5, 0.5)
@@ -64,7 +71,16 @@ export default class InventoryToggle {
 
     this.cb = cb;
 
-    this.magnifyEffect = new MagnifyEffect(scene, this.sprite, 1, 1.05, 100);
+    this.magnifyPoser = new TweenPoser(scene, this.sprite, { duration: 100 });
+    this.magnifyPoser.definePose("ZoomIn", { scaleX: 1.12, scaleY: 1.12 });
+    this.magnifyPoser.definePose("Select", { scaleX: 1.24, scaleY: 1.24 });
+    this.magnifyPoser.definePose("ZoomInSelect", { scaleX: 1.32, scaleY: 1.32 });
+    this.magnifyPoser.definePose("ZoomOut", { scaleX: 1, scaleY: 1 });
+    this.magnifyPoser.setToPose("ZoomOut");
+
+    this.fadePoser = new TweenPoser(scene, this.sprite, { duration: 100 });
+    this.fadePoser.definePose("FadeIn", { alpha: 1 });
+    this.fadePoser.definePose("FadeOut", { alpha: 0.32 });
 
     this.enableInteractive();
 
@@ -96,8 +112,6 @@ export default class InventoryToggle {
     this.sprite.on("pointerover", this.onHoverStart);
     this.sprite.on("pointerout", this.onHoverEnd);
     this.sprite.on("pointerdown", this.onPointerDown);
-    this.sprite.on("pointerup", this.onPointerUp);
-    // this.sprite.setAlpha(1);
   }
 
   disableInteractive() {
@@ -107,61 +121,43 @@ export default class InventoryToggle {
     this.sprite.off("pointerover", this.onHoverStart);
     this.sprite.off("pointerout", this.onHoverEnd);
     this.sprite.off("pointerdown", this.onPointerDown);
-    this.sprite.off("pointerup", this.onPointerUp);
-    // this.sprite.setAlpha(0.5);
   }
 
   onHoverStart = () => {
-    this.magnifyEffect.scaleUp();
+    if (this.selected) this.magnifyPoser.moveToPose("ZoomInSelect");
+    else this.magnifyPoser.moveToPose("ZoomIn");
   };
 
   onHoverEnd = () => {
-    this.magnifyEffect.scaleDown();
+    if (this.selected) this.magnifyPoser.moveToPose("Select");
+    else this.magnifyPoser.moveToPose("ZoomOut");
   };
 
   onPointerDown = () => {
-    if (this.tween) this.tween.stop();
-    this.tween = this.scene.add.tween({
-      targets: this.sprite,
-      scaleX: 0.95,
-      scaleY: 0.95,
-      duration: 100
-    });
-
-    if (this.cb) this.cb(this);
-  };
-
-  onPointerUp = () => {
-    if (this.tween) this.tween.stop();
-    this.tween = this.scene.add.tween({
-      targets: this.sprite,
-      scaleX: 1.05,
-      scaleY: 1.05,
-      duration: 100
-    });
+    if (this.active) {
+      this.selected = true;
+      this.magnifyPoser.moveToPose("Select");
+      if (this.cb) this.cb(this);
+    } else {
+      console.warn("Not allowed to select this particular item right now!");
+    }
   };
 
   setActive = () => {
-    if (this.tween) this.tween.stop();
-    this.tween = this.scene.add.tween({
-      targets: this.sprite,
-      alpha: 1,
-      duration: 100
-    });
+    this.active = true;
+    this.fadePoser.moveToPose("FadeIn");
   };
 
   setInactive = () => {
-    if (this.tween) this.tween.stop();
-    this.tween = this.scene.add.tween({
-      targets: this.sprite,
-      alpha: 0.32,
-      duration: 100
-    });
+    this.active = false;
+    this.selected = false;
+    this.fadePoser.moveToPose("FadeOut");
+    this.magnifyPoser.moveToPose("ZoomOut");
   };
 
   destroy() {
-    if (this.tween) this.tween.stop();
-    this.magnifyEffect.destroy();
+    this.fadePoser.destroy();
+    this.magnifyPoser.destroy();
     this.sprite.destroy();
     this.proxy.removeAll();
   }
