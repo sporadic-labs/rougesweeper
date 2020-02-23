@@ -1,7 +1,25 @@
 import Phaser, { Types, Tweens } from "phaser";
 
 type TweenBuilderConfig = Types.Tweens.TweenBuilderConfig;
-type TweenBuilderConfigExtension = Omit<TweenBuilderConfig, "targets"> | object;
+type ValidPoses = string | number | symbol;
+type TweenTarget = any | any[];
+
+// Type for possible tween settings, is it possible to enumerate all the possible target values on a
+// Phaser's built-in types?
+type PoseData =
+  | Omit<TweenBuilderConfig, "targets">
+  | {
+      // Common tween targets on Phaser objects:
+      scaleX?: number;
+      scaleY?: number;
+      x?: number;
+      y?: number;
+      alpha?: number;
+
+      // Any other tween target:
+      [key: string]: any;
+      [key: number]: any;
+    };
 
 /**
  * TweenPoser is like a stateful tween on a target or targets. You define a series of poses (states)
@@ -14,13 +32,25 @@ type TweenBuilderConfigExtension = Omit<TweenBuilderConfig, "targets"> | object;
  * ```typescript
  * type Poses = "ZoomIn" | "ZoomOut";
  * const poser = new TweenPoser<Poses>(scene, sprite, { duration: 100 });
+ *
+ * // Define individual poses:
  * poser.definePose("ZoomIn", { scaleX: 1.5, scaleY: 1.5 });
  * poser.definePose("ZoomOut", { scaleX: 1, scaleY: 1 });
+ *
+ * // Or define all in one:
+ * poser.definePoses({
+ *  ZoomIn: { scaleX: 1.5, scaleY: 1.5 },
+ *  ZoomOut: { scaleX: 1, scaleY: 1 },
+ * })
+ *
+ * // Jump to a pose immediately:
  * poser.setToPose("ZoomOut");
+ *
+ * // Animate to a defined pose:
  * poser.moveToPose("ZoomIn");
  * ```
  */
-export default class TweenPoser<PoseType> {
+export default class TweenPoser<PoseType extends ValidPoses> {
   private tweenConfigs: Map<PoseType, TweenBuilderConfig> = new Map();
   private tween?: Tweens.Tween;
   private pose: PoseType | null = null;
@@ -33,9 +63,15 @@ export default class TweenPoser<PoseType> {
    */
   constructor(
     private scene: Phaser.Scene,
-    private target: any | any[],
-    private baseConfig: TweenBuilderConfigExtension = {}
+    private target: TweenTarget,
+    private baseConfig: PoseData = {}
   ) {}
+
+  definePoses(poses: Record<PoseType, PoseData>) {
+    for (const key in poses) {
+      this.tweenConfigs.set(key, { targets: this.target, ...this.baseConfig, ...poses[key] });
+    }
+  }
 
   /**
    * Define a pose that can be tweened to.
@@ -43,7 +79,7 @@ export default class TweenPoser<PoseType> {
    * @param poseConfig Tween config for this pose. If the baseConfig and the pose config share a
    * setting, the pose config will override the base.
    */
-  definePose(pose: PoseType, poseConfig: TweenBuilderConfigExtension = {}) {
+  definePose(pose: PoseType, poseConfig: PoseData = {}) {
     this.tweenConfigs.set(pose, { targets: this.target, ...this.baseConfig, ...poseConfig });
     return this;
   }
@@ -54,7 +90,7 @@ export default class TweenPoser<PoseType> {
    * @param configOverrides Any tween settings that you want to override for this particular
    * transition. Precedence of settings is: configOverrides > poseConfig > baseConfig.
    */
-  moveToPose(pose: PoseType, configOverrides: TweenBuilderConfigExtension = {}) {
+  moveToPose(pose: PoseType, configOverrides: PoseData = {}) {
     this.tween?.stop();
     const config = this.getPoseConfig(pose);
     this.tween = this.scene.add.tween({ ...config, ...configOverrides });
@@ -68,7 +104,7 @@ export default class TweenPoser<PoseType> {
    * @param configOverrides Any tween settings that you want to override for this particular
    * transition. Precedence of settings is: configOverrides > poseConfig > baseConfig.
    */
-  setToPose(pose: PoseType, configOverrides: TweenBuilderConfigExtension = {}) {
+  setToPose(pose: PoseType, configOverrides: PoseData = {}) {
     this.tween?.stop();
     const config = this.getPoseConfig(pose);
     this.tween = this.scene.add.tween({ ...config, ...configOverrides, duration: 0 });
