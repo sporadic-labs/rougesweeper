@@ -1,7 +1,8 @@
-import Phaser, { Events, Geom } from "phaser";
+import Phaser, { Geom } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
+import EventEmitter from "../../helpers/event-emitter";
 
 enum RadialOption {
   MOVE = "MOVE",
@@ -22,7 +23,9 @@ const tweenCompletePromise = (tween: Phaser.Tweens.Tween) => {
 };
 
 class RadialMenuIcon {
-  public events: Events.EventEmitter;
+  public events: EventEmitter<{
+    pointerdown: RadialMenuIcon;
+  }> = new EventEmitter();
   public type: RadialOption;
   public isEnabled = false;
   private scene: Phaser.Scene;
@@ -72,8 +75,7 @@ class RadialMenuIcon {
     const hitbox = new Geom.Circle(0, 0, this.radius);
     this.container.setInteractive(hitbox, Geom.Circle.Contains);
 
-    this.events = new Events.EventEmitter();
-    this.container.on("pointerdown", () => this.events.emit("pointerdown"));
+    this.container.on("pointerdown", () => this.events.emit("pointerdown", this));
   }
 
   setEnabled(isEnabled: boolean) {
@@ -119,6 +121,11 @@ class RadialMenuIcon {
 }
 
 class RadialMenu {
+  public events: EventEmitter<{
+    [MenuEvents.INVALID_OPTION_SELECT]: RadialOption;
+    [MenuEvents.MENU_CLOSE]: RadialOption;
+    [MenuEvents.VALID_OPTION_SELECT]: RadialOption;
+  }> = new EventEmitter();
   private scene: Phaser.Scene;
   private graphic: Phaser.GameObjects.Graphics;
   private container: Phaser.GameObjects.Container;
@@ -126,12 +133,10 @@ class RadialMenu {
   private radius: number = 30;
   private mobProxy = new MobXProxy();
   private proxy = new EventProxy();
-  private events: Events.EventEmitter;
   private tween?: Phaser.Tweens.Tween;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.scene = scene;
-    this.events = new Events.EventEmitter();
 
     this.graphic = scene.add.graphics({
       lineStyle: { width: 15, color: 0xea5e5e, alpha: 0.95 }

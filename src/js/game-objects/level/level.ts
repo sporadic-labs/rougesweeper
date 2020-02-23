@@ -1,4 +1,4 @@
-import Phaser, { Events, Tilemaps, Scene, GameObjects } from "phaser";
+import Phaser, { Tilemaps, Scene, GameObjects } from "phaser";
 import TILE_TYPES from "./tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
@@ -10,6 +10,8 @@ import getTileFrame from "./get-tile-frame";
 import getTilesetName from "./get-tileset-name";
 import DialogueManager from "../hud/dialogue-manager";
 import { Point } from "../../helpers/common-interfaces";
+import EventEmitter from "../../helpers/event-emitter";
+import { LevelEmitter } from "./events";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 const isPointInArray = (p1: Point, array: Point[]) =>
@@ -26,7 +28,7 @@ const neighborOffsets = [
 ];
 
 export default class Level {
-  public events = new Events.EventEmitter();
+  public events: LevelEmitter = new EventEmitter();
   public exitWorldPosition: Point;
   public exitGridPosition: Point;
   public exit: Door;

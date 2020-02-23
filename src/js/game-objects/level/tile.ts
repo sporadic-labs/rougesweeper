@@ -1,6 +1,6 @@
-import Phaser, { Scene, Events, GameObjects, Tweens, Input } from "phaser";
+import Phaser, { Scene, GameObjects, Tweens, Input } from "phaser";
 import TILE_TYPES from "./tile-types";
-import EVENTS from "./events";
+import EVENTS, { LevelEmitter } from "./events";
 import FlipEffect from "../components/flip-effect";
 import AttackAnimation from "../player/attack-animation";
 import DEPTHS from "../depths";
@@ -37,7 +37,7 @@ export default class Tile {
     private frameName: string,
     private x: number,
     private y: number,
-    private levelEvents: Events.EventEmitter,
+    private levelEvents: LevelEmitter,
     private dialogueData: TileDialogueEntry
   ) {
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
@@ -237,12 +237,14 @@ export default class Tile {
   flipToFront() {
     this.isRevealed = true;
     return new Promise(resolve => {
+      if (!this.isCurrentlyBlank && this.tileContents) {
+        this.flipEffect.events.once("halfway", () => {
+          this.tileContents.setVisible(true);
+          this.contentsMagnifyPoser.moveToPose("ZoomIn");
+        });
+      }
       this.flipEffect.events.once("complete", resolve);
       this.flipEffect.flipToFront();
-      if (!this.isCurrentlyBlank) {
-        this.tileContents?.setVisible(true);
-        this.contentsMagnifyPoser.moveToPose("ZoomIn");
-      }
     });
   }
 

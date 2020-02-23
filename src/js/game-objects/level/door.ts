@@ -1,5 +1,5 @@
-import { Scene, Events, GameObjects, Animations, Game } from "phaser";
-import EVENTS from "./events";
+import { Scene, GameObjects, Animations } from "phaser";
+import EVENTS, { LevelEmitter } from "./events";
 import DEPTHS from "../depths";
 import FlipEffect from "../components/flip-effect";
 import { MagnifyEffect } from "../components/magnify-effect";
@@ -30,7 +30,7 @@ export default class Door {
     private scene: Scene,
     worldX: number,
     worldY: number,
-    private levelEvents: Events.EventEmitter,
+    private levelEvents: LevelEmitter,
     private doorPrefix: string,
     private isCurrentlyOpen = false,
     private doorPlacement = DOOR_PLACEMENT.LEFT,
