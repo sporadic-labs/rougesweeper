@@ -5,11 +5,11 @@ import EventEmitter from "../../helpers/event-emitter";
  * This currently only does a horizontal flip, but we can extend to a vertical flip later if needed.
  */
 export default class FlipEffect {
-  public events: EventEmitter<{
+  public events = new EventEmitter<{
     halfway: FlipEffect;
     complete: FlipEffect;
     start: FlipEffect;
-  }> = new EventEmitter();
+  }>();
   private frontScale: number;
   private backScale: number;
   private flipTween?: Tweens.Tween;
