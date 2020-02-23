@@ -124,14 +124,6 @@ class Radar {
     }
   }
 
-  public clearTilesInRadar(): Promise<unknown[]> {
-    console.log("Clear those tiles baby!");
-    const playerPos = this.player.getGridPosition();
-    const tiles = this.level.getNeighboringTiles(playerPos.x, playerPos.y);
-
-    return Promise.all(tiles.map(tile => tile.flipToFront()));
-  }
-
   private openRadar(): Promise<void> {
     if (!this.isOpen) {
       this.isOpen = true;
