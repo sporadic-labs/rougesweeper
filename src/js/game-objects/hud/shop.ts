@@ -33,6 +33,7 @@ export default class Shop {
   buyCompassButton: TextButton;
   buyClearRadarButton: TextButton;
   buyRevealTileButton: TextButton;
+  leaveButton: TextButton;
   container: Phaser.GameObjects.Container;
   mobProxy: MobXProxy;
   proxy: EventProxy;
@@ -61,6 +62,7 @@ export default class Shop {
       origin: { x: 0.5, y: 1 }
     });
     leaveButton.events.on("DOWN", this.closeShop);
+    this.leaveButton = leaveButton;
 
     const y = r.centerY;
     const x1 = r.x + r.width * (1 / 8);
@@ -136,6 +138,7 @@ export default class Shop {
   }
 
   openShop = () => {
+    this.resetButtons();
     this.gameStore.isShopOpen = true;
     this.container.setVisible(true);
     this.gameStore.setGameState(GAME_MODES.MENU_MODE);
@@ -197,6 +200,21 @@ export default class Shop {
     gameStore.removeGold(costs.compass);
     gameStore.setHasCompass(true);
   };
+
+  resetButtons() {
+    const {
+      buyHeartButton,
+      buyRevealTileButton,
+      buyClearRadarButton,
+      buyCompassButton,
+      leaveButton
+    } = this;
+    buyHeartButton.reset();
+    buyRevealTileButton.reset();
+    buyClearRadarButton.reset();
+    buyCompassButton.reset();
+    leaveButton.reset();
+  }
 
   destroy() {
     this.mobProxy.destroy();
