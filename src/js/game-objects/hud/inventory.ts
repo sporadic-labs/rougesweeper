@@ -8,7 +8,8 @@ import InventoryToggle, { INVENTORY_ITEMS } from "./inventory-toggle";
 import GAME_MODES from "../game-manager/events";
 
 export enum INVETORY_EVENTS {
-  SELECT = "SELECT"
+  SELECT = "SELECT",
+  DESELECT = "DESELECT"
 }
 
 export default class InventoryMenu {
@@ -68,6 +69,7 @@ export default class InventoryMenu {
         this.onPointerDown
       )
     ];
+    console.log(this.icons);
 
     const iconSpacing = 6;
     const iconHeight = this.icons[0].height;
@@ -138,8 +140,35 @@ export default class InventoryMenu {
     });
   }
 
+  getSelected() {
+    return this.icons.find(icon => icon.selected);
+  }
+
+  /**
+   * Deselect any selected icons from your inventory.
+   */
+  deselectAll() {
+    this.icons.forEach(icon => icon.setDeselected());
+  }
+
+  /**
+   * Click handler for Inventory Icons.
+   * @param toggle
+   */
   onPointerDown = (toggle: InventoryToggle) => {
-    this.events.emit(INVETORY_EVENTS.SELECT, toggle.type);
+    this.icons.forEach(icon => {
+      if (icon.type === toggle.type) {
+        if (icon.selected) {
+          icon.setDeselected();
+          this.events.emit(INVETORY_EVENTS.DESELECT, toggle.type);
+        } else {
+          icon.setSelected();
+          this.events.emit(INVETORY_EVENTS.SELECT, toggle.type);
+        }
+      } else {
+        icon.setDeselected();
+      }
+    });
   };
 
   destroy() {

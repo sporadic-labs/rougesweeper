@@ -135,12 +135,22 @@ export default class InventoryToggle {
 
   onPointerDown = () => {
     if (this.active) {
-      this.selected = true;
-      this.magnifyPoser.moveToPose("Select");
+      // this.selected = true;
+      // this.magnifyPoser.moveToPose("Select");
       if (this.cb) this.cb(this);
     } else {
       console.warn("Not allowed to select this particular item right now!");
     }
+  };
+
+  setSelected = () => {
+    this.selected = true;
+    this.magnifyPoser.moveToPose("Select");
+  };
+
+  setDeselected = () => {
+    this.selected = false;
+    this.magnifyPoser.moveToPose("ZoomOut");
   };
 
   setActive = () => {

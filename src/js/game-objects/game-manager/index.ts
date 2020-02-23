@@ -75,18 +75,20 @@ export default class GameManager {
 
   enableInteractivity() {
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectPrimary);
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectSecondary);
     this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
 
     this.inventoryMenu.events.on(INVETORY_EVENTS.SELECT, this.onInventorySelect);
+    this.inventoryMenu.events.on(INVETORY_EVENTS.DESELECT, this.onInventoryDeselect);
   }
 
   disableInteractivity() {
     this.level.events.off(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectPrimary);
-    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
+    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectSecondary);
     this.level.events.off(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
 
     this.inventoryMenu.events.off(INVETORY_EVENTS.SELECT, this.onInventorySelect);
+    this.inventoryMenu.events.off(INVETORY_EVENTS.DESELECT, this.onInventoryDeselect);
   }
 
   onInventorySelect = async (type: INVENTORY_ITEMS) => {
@@ -110,6 +112,11 @@ export default class GameManager {
         // NOTE(rex): This is handled by onTileSelectPrimary.
         break;
     }
+  };
+
+  onInventoryDeselect = async (type: INVENTORY_ITEMS) => {
+    this.disableInteractivity();
+    store.setGameState(GAME_MODES.IDLE_MODE);
   };
 
   onExitSelect = async (door: Door) => {
@@ -145,6 +152,23 @@ export default class GameManager {
     store.nextLevel();
   };
 
+  onTileSelectPrimary = async (tile: Tile) => {
+    if (store.gameState === GAME_MODES.SKILL_MODE) {
+      this.onTileSelectForReveal(tile);
+    } else {
+      this.onTileSelectForMove(tile);
+    }
+  };
+
+  onTileSelectSecondary = async (tile: Tile) => {
+    if (store.gameState === GAME_MODES.SKILL_MODE) {
+      store.setGameState(GAME_MODES.IDLE_MODE);
+      this.inventoryMenu.deselectAll();
+    } else {
+      this.onTileSelectForAttack(tile);
+    }
+  };
+
   onTileSelectForAttack = async (tile: Tile) => {
     if (store.gameState === GAME_MODES.SKILL_MODE) return;
 
@@ -170,14 +194,6 @@ export default class GameManager {
 
     this.disableInteractivity();
     await this.runAttackFlow(tile, path);
-  };
-
-  onTileSelectPrimary = async (tile: Tile) => {
-    if (store.gameState === GAME_MODES.SKILL_MODE) {
-      this.onTileSelectForReveal(tile);
-    } else {
-      this.onTileSelectForMove(tile);
-    }
   };
 
   onTileSelectForMove = async (tile: Tile) => {
