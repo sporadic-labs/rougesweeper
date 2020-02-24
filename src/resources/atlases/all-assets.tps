@@ -4,7 +4,9 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>5.3.0</string>
+        <string>4.5.0</string>
+        <key>fileName</key>
+        <string>C:/Users/rex/Documents/GitHub/rougesweeper/src/resources/atlases/all-assets.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -127,6 +129,22 @@
                 <uint>1</uint>
             </struct>
         </struct>
+        <key>andEngine</key>
+        <struct type="AndEngine">
+            <key>minFilter</key>
+            <enum type="AndEngine::MinFilter">Linear</enum>
+            <key>packageName</key>
+            <string>Texture</string>
+            <key>wrap</key>
+            <struct type="AndEngineWrap">
+                <key>s</key>
+                <enum type="AndEngineWrap::Wrap">Clamp</enum>
+                <key>t</key>
+                <enum type="AndEngineWrap::Wrap">Clamp</enum>
+            </struct>
+            <key>magFilter</key>
+            <enum type="AndEngine::MagFilter">MagLinear</enum>
+        </struct>
         <key>dataFileNames</key>
         <map type="GFileNameMap">
             <key>data</key>
@@ -208,8 +226,6 @@
             <key type="filename">all-assets/glove-box-1.png</key>
             <key type="filename">all-assets/hole-1.png</key>
             <key type="filename">all-assets/key.png</key>
-            <key type="filename">all-assets/marker-1.png</key>
-            <key type="filename">all-assets/marker-2.png</key>
             <key type="filename">all-assets/player-f.png</key>
             <key type="filename">all-assets/player-m.png</key>
             <key type="filename">all-assets/rocks-1.png</key>
@@ -239,8 +255,6 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -255,19 +269,33 @@
             <key type="filename">all-assets/arrow.png</key>
             <key type="filename">all-assets/attack-fx-4.png</key>
             <key type="filename">all-assets/attack-fx-5.png</key>
+            <key type="filename">all-assets/clear-radar.png</key>
+            <key type="filename">all-assets/enemy-4.png</key>
             <key type="filename">all-assets/gears.png</key>
+            <key type="filename">all-assets/reveal-tile.png</key>
             <key type="filename">all-assets/tile-blank.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
                 <rect>19,19,38,38</rect>
                 <key>scale9Paddings</key>
                 <rect>19,19,38,38</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">all-assets/all-assets.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>174,135,348,271</rect>
+                <key>scale9Paddings</key>
+                <rect>174,135,348,271</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -314,8 +342,6 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -329,8 +355,6 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -344,8 +368,6 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>

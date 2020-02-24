@@ -11,13 +11,15 @@ import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
 import PauseMenu from "../hud/pause-menu";
-import InventoryMenu from "../hud/inventory";
+import InventoryMenu, { INVETORY_EVENTS } from "../hud/inventory";
 import DialogueManager from "../hud/dialogue-manager";
 import Player from "../player";
 import ToastManager from "../hud/toast-manager";
 import Tile from "../level/tile";
 import Door from "../level/door";
+import Compass from "../hud/compass";
 import { Point } from "../../helpers/common-interfaces";
+import { INVENTORY_ITEMS } from "../hud/inventory-toggle";
 
 export default class GameManager {
   private level: Level;
@@ -26,6 +28,7 @@ export default class GameManager {
   private pauseMenu: PauseMenu;
   private inventoryMenu: InventoryMenu;
   private dialogueManager: DialogueManager;
+  private compass: Compass;
   private mobProxy: MobXProxy;
   private proxy: EventProxy;
 
@@ -71,16 +74,60 @@ export default class GameManager {
   }
 
   enableInteractivity() {
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectPrimary);
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectSecondary);
     this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
+
+    this.inventoryMenu.events.on(INVETORY_EVENTS.SELECT, this.onInventorySelect);
+    this.inventoryMenu.events.on(INVETORY_EVENTS.DESELECT, this.onInventoryDeselect);
   }
 
   disableInteractivity() {
-    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
-    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForAttack);
+    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectPrimary);
+    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectSecondary);
     this.level.events.off(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
+
+    this.inventoryMenu.events.off(INVETORY_EVENTS.SELECT, this.onInventorySelect);
+    this.inventoryMenu.events.off(INVETORY_EVENTS.DESELECT, this.onInventoryDeselect);
   }
+
+  onInventorySelect = async (type: INVENTORY_ITEMS) => {
+    this.disableInteractivity();
+    store.setGameState(GAME_MODES.SKILL_MODE);
+
+    switch (type) {
+      case INVENTORY_ITEMS.COMPASS:
+        if (this.compass) {
+          this.toastManager.setMessage("A compass is already active.");
+          this.inventoryMenu.deselectAll();
+        } else {
+          this.compass = new Compass(this.scene, this.player, this.level);
+          store.setHasCompass(false);
+        }
+        this.disableInteractivity();
+        store.setGameState(GAME_MODES.IDLE_MODE);
+        break;
+      case INVENTORY_ITEMS.REVEAL_IN_RADAR:
+        const success = await this.clearTilesInRadar();
+        if (success) {
+          store.setHasClearRadar(false);
+        } else {
+          this.toastManager.setMessage("No tiles can be revealed.");
+          this.inventoryMenu.deselectAll();
+        }
+        this.disableInteractivity();
+        store.setGameState(GAME_MODES.IDLE_MODE);
+        break;
+      case INVENTORY_ITEMS.REVEAL_TILE:
+        // NOTE(rex): This is handled by onTileSelectPrimary.
+        break;
+    }
+  };
+
+  onInventoryDeselect = async (type: INVENTORY_ITEMS) => {
+    this.disableInteractivity();
+    store.setGameState(GAME_MODES.IDLE_MODE);
+  };
 
   onExitSelect = async (door: Door) => {
     const playerGridPos = this.player.getGridPosition();
@@ -106,7 +153,6 @@ export default class GameManager {
     this.disableInteractivity();
     store.addMove();
 
-    // TODO: open door and move through it.
     await this.movePlayerAlongPath(path);
     const { x, y } = this.level.gridXYToWorldXY(exitGridPos);
     const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
@@ -116,7 +162,26 @@ export default class GameManager {
     store.nextLevel();
   };
 
+  onTileSelectPrimary = async (tile: Tile) => {
+    if (store.gameState === GAME_MODES.SKILL_MODE) {
+      this.onTileSelectForReveal(tile);
+    } else {
+      this.onTileSelectForMove(tile);
+    }
+  };
+
+  onTileSelectSecondary = async (tile: Tile) => {
+    if (store.gameState === GAME_MODES.SKILL_MODE) {
+      store.setGameState(GAME_MODES.IDLE_MODE);
+      this.inventoryMenu.deselectAll();
+    } else {
+      this.onTileSelectForAttack(tile);
+    }
+  };
+
   onTileSelectForAttack = async (tile: Tile) => {
+    if (store.gameState === GAME_MODES.SKILL_MODE) return;
+
     const playerGridPos = this.player.getGridPosition();
     const tileGridPos = tile.getGridPosition();
 
@@ -151,19 +216,6 @@ export default class GameManager {
     }
 
     const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
-
-    // If the player can reveal a tile they can't directly interact with, reveal it and return to idle flow.
-    const canRevealDistantTile = !path && store.hasRevealTile && !tile.isRevealed;
-    if (canRevealDistantTile) {
-      this.level.disableAllTiles();
-
-      await tile.flipToFront();
-      store.setHasRevealTile(false);
-
-      this.level.enableAllTiles();
-      return;
-    }
-
     const isValidMove = path && (!tile.isRevealed || tile.type !== TILE_TYPES.WALL);
     if (!isValidMove) {
       this.toastManager.setMessage("You can't move there.");
@@ -173,6 +225,76 @@ export default class GameManager {
     this.disableInteractivity();
     await this.runMoveFlow(tile, path);
   };
+
+  onTileSelectForReveal = async (tile: Tile) => {
+    const playerGridPos = this.player.getGridPosition();
+    const tileGridPos = tile.getGridPosition();
+
+    // Don't interact with the current tile on which player is standing.
+    if (playerGridPos.x === tileGridPos.x && playerGridPos.y === tileGridPos.y) {
+      return;
+    }
+
+    const canRevealDistantTile = store.hasRevealTile && !tile.isRevealed;
+
+    if (!canRevealDistantTile) {
+      this.toastManager.setMessage("You can't reveal that tile.");
+      return;
+    }
+
+    this.disableInteractivity();
+    this.level.disableAllTiles();
+
+    await tile.flipToFront();
+    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
+    if (shouldGetCoin) {
+      const { x, y } = tile.getPosition();
+      const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
+      const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
+      await Promise.all([
+        attackAnim.fadeout().then(() => attackAnim.destroy()),
+        tile.playTileDestructionAnimation()
+      ]);
+      const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
+      await coinAnim.play();
+      coinAnim.destroy();
+      store.addGold();
+    }
+
+    store.setHasRevealTile(false);
+
+    this.level.enableAllTiles();
+    store.setGameState(GAME_MODES.IDLE_MODE);
+    return;
+  };
+
+  async clearTilesInRadar() {
+    const playerPos = this.player.getGridPosition();
+    const tiles = this.level.getNeighboringTiles(playerPos.x, playerPos.y);
+
+    if (tiles.map(tile => !tile.isRevealed).filter(revealed => revealed).length === 0) {
+      return Promise.resolve(false);
+    }
+
+    return tiles.map(async tile => {
+      await tile.flipToFront();
+      const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
+      if (shouldGetCoin) {
+        const { x, y } = tile.getPosition();
+        const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
+        const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
+        await Promise.all([
+          attackAnim.fadeout().then(() => attackAnim.destroy()),
+          tile.playTileDestructionAnimation()
+        ]);
+        const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
+        await coinAnim.play();
+        coinAnim.destroy();
+        store.addGold();
+      }
+      return Promise.resolve(true);
+    });
+  }
 
   async runMoveFlow(tile: Tile, path: Point[]) {
     // disable tiles, start the move
@@ -332,9 +454,14 @@ export default class GameManager {
   async startLevel() {
     if (this.dialogueManager.isOpen()) this.dialogueManager.close();
     this.radar.setVisible(false);
+    if (this.compass) {
+      this.compass.destroy();
+      this.compass = null;
+    }
     await this.player.fadePlayerOut();
 
     if (this.level) {
+      this.disableInteractivity();
       this.level.disableAllTiles();
       await this.level.fadeLevelOut();
       this.level.destroy();

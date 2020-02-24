@@ -168,6 +168,10 @@ export default class LevelData {
     return this.hasTileOfType(TILE.KEY);
   }
 
+  getKeyPosition() {
+    return this.getPositionOf(TILE.KEY);
+  }
+
   /**
    * Calculate the bounding box of all the non-empty tiles within a layer of the map.
    *
