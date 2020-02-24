@@ -35,6 +35,8 @@ export default class TextButton {
     this.isPressed = false;
     this.events = new Events.EventEmitter();
 
+    this.enabled = true;
+
     this.text = scene.add
       .text(x, y, text, textStyle)
       .setOrigin(origin.x, origin.y)
@@ -76,15 +78,18 @@ export default class TextButton {
   enableInteractivity() {
     this.isHovered = this.hitTest();
     this.isPressed = false;
+    this.enabled = true;
     this.updateTextStyle();
     this.text.on("pointerdown", this.onPointerDown, this);
     this.text.on("pointerup", this.onPointerUp, this);
     this.text.on("pointerover", this.onPointerOver, this);
     this.text.on("pointerout", this.onPointerOut, this);
   }
-
+  
   disableInteractivity() {
     this.reset();
+    this.enabled = false;
+    this.updateTextStyle();
     this.text.off("pointerdown", this.onPointerDown, this);
     this.text.off("pointerup", this.onPointerUp, this);
     this.text.off("pointerover", this.onPointerOver, this);
@@ -99,13 +104,20 @@ export default class TextButton {
   reset() {
     this.isHovered = false;
     this.isPressed = false;
+    this.enabled = true;
     this.updateTextStyle();
   }
 
   updateTextStyle() {
-    if (this.isPressed) this.text.setAlpha(0.8);
-    else if (this.isHovered) this.text.setAlpha(0.9);
-    else this.text.setAlpha(1);
+    if (!this.enabled) {
+      if (this.isPressed) this.text.setAlpha(0.4);
+      else if (this.isHovered) this.text.setAlpha(0.45);
+      else this.text.setAlpha(0.5);
+    } else {
+      if (this.isPressed) this.text.setAlpha(0.8);
+      else if (this.isHovered) this.text.setAlpha(0.9);
+      else this.text.setAlpha(1);
+    }
   }
 
   onPointerOver() {

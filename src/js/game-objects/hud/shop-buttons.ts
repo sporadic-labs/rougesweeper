@@ -75,13 +75,13 @@ export default class ShopButtons {
   enable() {
     this.active = true;
     this.buttonFadePoser.moveToPose("FadeIn");
-    this.button.setVisible(true);
+    this.button.enableInteractivity();
   }
 
   disable() {
     this.active = false;
     this.buttonFadePoser.moveToPose("FadeOut");
-    this.button.setVisible(false);
+    this.button.disableInteractivity();
   }
 
   reset() {

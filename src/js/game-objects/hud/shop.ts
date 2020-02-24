@@ -15,11 +15,6 @@ const titleStyle = {
   fontSize: 30,
   fontStyle: "bold"
 };
-const itemTextStyle = {
-  ...baseTextStyle,
-  lineSpacing: 8,
-  fontSize: 22
-};
 
 export default class Shop {
   scene: Phaser.Scene;
