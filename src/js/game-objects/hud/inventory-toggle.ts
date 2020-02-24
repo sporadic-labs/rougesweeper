@@ -81,6 +81,7 @@ export default class InventoryToggle {
     this.fadePoser = new TweenPoser(scene, this.sprite, { duration: 100 });
     this.fadePoser.definePose("FadeIn", { alpha: 1 });
     this.fadePoser.definePose("FadeOut", { alpha: 0.32 });
+    this.fadePoser.setToPose("FadeOut");
 
     this.enableInteractive();
 
@@ -135,8 +136,6 @@ export default class InventoryToggle {
 
   onPointerDown = () => {
     if (this.active) {
-      // this.selected = true;
-      // this.magnifyPoser.moveToPose("Select");
       if (this.cb) this.cb(this);
     } else {
       console.warn("Not allowed to select this particular item right now!");

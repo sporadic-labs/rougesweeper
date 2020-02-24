@@ -69,7 +69,6 @@ export default class InventoryMenu {
         this.onPointerDown
       )
     ];
-    console.log(this.icons);
 
     const iconSpacing = 6;
     const iconHeight = this.icons[0].height;
