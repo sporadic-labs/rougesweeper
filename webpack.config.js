@@ -12,7 +12,7 @@ module.exports = function(env, argv) {
   return {
     mode: isDev ? "development" : "production",
     context: path.resolve(__dirname, "src"),
-    entry: "./js/main.js",
+    entry: "./js/main.ts",
     cache: true,
     output: {
       path: path.resolve(__dirname, "public"),

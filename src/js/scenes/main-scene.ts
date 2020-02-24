@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { Scene } from "phaser";
 import Player from "../game-objects/player/index";
 import GameManager from "../game-objects/game-manager/index";
 import TechIndicator from "../game-objects/hud/tech-indicator";
@@ -7,7 +7,7 @@ import PauseToggle from "../game-objects/hud/pause-toggle";
 import LevelIndicator from "../game-objects/hud/level-indicator";
 import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
-import Shop from "../game-objects/hud/shop.ts";
+import Shop from "../game-objects/hud/shop";
 
 const titleStyle = {
   align: "center",
@@ -16,20 +16,18 @@ const titleStyle = {
   fontStyle: "bold"
 };
 
-export default class Scene extends Phaser.Scene {
+export default class MainScene extends Scene {
   create() {
     store.startNewGame();
+
+    const width = Number(this.game.config.width);
+    const height = Number(this.game.config.height);
 
     const player = new Player(this, 0, 0);
     const toastManager = new ToastManager(this);
     const gameManager = new GameManager(this, player, toastManager);
     const gameTitle = this.add
-      .text(
-        this.game.config.width * 0.91,
-        this.game.config.height * 0.92,
-        "SpyWare\n(or whatever...)",
-        titleStyle
-      )
+      .text(width * 0.91, height * 0.92, "SpyWare\n(or whatever...)", titleStyle)
       .setOrigin(0.5, 0);
 
     new Shop(this, store);

@@ -1,15 +1,18 @@
-import Phaser from "phaser";
+import Phaser, { Scene } from "phaser";
 import TextButton, { BUTTON_EVENTS } from "../game-objects/hud/text-button";
 import { SCENE_NAME } from "./index";
 import store from "../store/index";
 
-export default class GameOverScene extends Phaser.Scene {
-  init(data) {
+export default class GameOverScene extends Scene {
+  private didPlayerWin = false;
+
+  init(data: { didPlayerWin: boolean }) {
     this.didPlayerWin = data.didPlayerWin;
   }
 
   create() {
-    const { width, height } = this.game.config;
+    const width = Number(this.game.config.width);
+    const height = Number(this.game.config.height);
     let y = height / 2;
     const gameOverText = this.add
       .text(width / 2, y - 90, this.didPlayerWin ? "You Win!" : "Game Over!", {

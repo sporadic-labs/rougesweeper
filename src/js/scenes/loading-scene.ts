@@ -1,5 +1,5 @@
-import Phaser from "phaser";
-import { SCENE_NAME } from "./index.js";
+import Phaser, { Scene } from "phaser";
+import { SCENE_NAME } from "./index";
 import { loadLevels, loadDialogue } from "../store/levels";
 
 const textStyle = {
@@ -9,14 +9,18 @@ const textStyle = {
   fontStyle: "bold"
 };
 
-export default class LoadingScene extends Phaser.Scene {
+export default class LoadingScene extends Scene {
+  private text: Phaser.GameObjects.Text;
   preload() {
-    const { width, height } = this.game.config;
+    const width = Number(this.game.config.width);
+    const height = Number(this.game.config.height);
+
     this.text = this.add
       .text(width / 2, height / 2 + 75, "Loading...", textStyle)
       .setOrigin(0.5, 0);
+
     const loadingBar = this.add.graphics();
-    this.load.on("progress", value => {
+    this.load.on("progress", (value: number) => {
       loadingBar.clear();
       loadingBar.fillStyle(0xffffff, 1);
       loadingBar.fillRect(width / 2 - 375, height / 2 - 25, 750 * value, 50);

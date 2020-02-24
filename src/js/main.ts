@@ -1,14 +1,14 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import "../css/main.scss";
-import Phaser from "phaser";
+import Phaser, { Game } from "phaser";
 import { SCENE_NAME, installScenes } from "./scenes";
 import disableRightClickMenu from "./helpers/disable-right-click-menu";
 import { gameWidth, gameHeight } from "./game-dimensions";
 import PhaserTiledExternalTilesetPlugin from "./plugins/phaser-tiled-json-external-loader";
 
 const containerId = "game-container";
-const game = new Phaser.Game({
+const game = new Game({
   type: Phaser.AUTO,
   backgroundColor: "#a79279",
   scale: {
@@ -27,7 +27,6 @@ const game = new Phaser.Game({
       }
     ]
   },
-  pixelArt: false,
   physics: {
     default: "arcade",
     arcade: {
