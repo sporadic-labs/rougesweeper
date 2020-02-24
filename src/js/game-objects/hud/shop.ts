@@ -4,6 +4,7 @@ import GAME_MODES from "../game-manager/events";
 import MobXProxy from "../../helpers/mobx-proxy";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
+import ShopButton from "./shop-buttons";
 
 const baseTextStyle = {
   align: "center",
@@ -29,10 +30,10 @@ export default class Shop {
     clearRadar: 4,
     revealTile: 3
   };
-  buyHeartButton: TextButton;
-  buyCompassButton: TextButton;
-  buyClearRadarButton: TextButton;
-  buyRevealTileButton: TextButton;
+  buyHeartButton: ShopButton;
+  buyCompassButton: ShopButton;
+  buyClearRadarButton: ShopButton;
+  buyRevealTileButton: ShopButton;
   leaveButton: TextButton;
   container: Phaser.GameObjects.Container;
   mobProxy: MobXProxy;
@@ -64,44 +65,58 @@ export default class Shop {
     leaveButton.events.on("DOWN", this.closeShop);
     this.leaveButton = leaveButton;
 
-    const y = r.centerY;
+    const y = r.centerY - 12;
     const x1 = r.x + r.width * (1 / 8);
     const x2 = r.x + r.width * (3 / 8);
     const x3 = r.x + r.width * (5 / 8);
     const x4 = r.x + r.width * (7 / 8);
-    const buyHeartText = scene.add
-      .text(x1, y - 40, `Reduce alert\n(max 3)\nCost: ${this.costs.heart} tech`, itemTextStyle)
-      .setOrigin(0.5, 0.5);
-    const buyHeartButton = new TextButton(scene, x1, y + 40, "Buy");
-    buyHeartButton.events.on("DOWN", this.buyHealth);
+
+    const buyHeartButton = new ShopButton(
+      scene,
+      x1,
+      y,
+      "all-assets",
+      "alarm-on",
+      "Buy",
+      `Reduce alert\n(max 3)\nCost: ${this.costs.heart} tech`,
+      this.buyHealth
+    );
     this.buyHeartButton = buyHeartButton;
-    const buyCompassText = scene.add
-      .text(x2, y - 40, `Buy compass\nfor level\nCost: ${this.costs.compass} tech`, itemTextStyle)
-      .setOrigin(0.5, 0.5);
-    const buyCompassButton = new TextButton(scene, x2, y + 40, "Buy");
-    buyCompassButton.events.on("DOWN", this.buyCompass);
+
+    const buyCompassButton = new ShopButton(
+      scene,
+      x2,
+      y,
+      "all-assets",
+      "compass",
+      "Buy",
+      `Buy compass\nfor level\nCost: ${this.costs.compass} tech`,
+      this.buyCompass
+    );
     this.buyCompassButton = buyCompassButton;
-    const buyClearRadar = scene.add
-      .text(
-        x3,
-        y - 40,
-        `Buy {RADAR CLEAR}\n(max 1)\nCost: ${this.costs.clearRadar} tech`,
-        itemTextStyle
-      )
-      .setOrigin(0.5, 0.5);
-    const buyClearRadarButton = new TextButton(scene, x3, y + 40, "Buy");
-    buyClearRadarButton.events.on("DOWN", this.buyClearRadar);
+
+    const buyClearRadarButton = new ShopButton(
+      scene,
+      x3,
+      y,
+      "all-assets",
+      "clear-radar",
+      "Buy",
+      `Buy {RADAR CLEAR}\n(max 1)\nCost: ${this.costs.clearRadar} tech`,
+      this.buyClearRadar
+    );
     this.buyClearRadarButton = buyClearRadarButton;
-    const buyRevealTile = scene.add
-      .text(
-        x4,
-        y - 40,
-        `Buy {REVEAL TILE}\n(max 1)\nCost: ${this.costs.revealTile} tech`,
-        itemTextStyle
-      )
-      .setOrigin(0.5, 0.5);
-    const buyRevealTileButton = new TextButton(scene, x4, y + 40, "Buy");
-    buyRevealTileButton.events.on("DOWN", this.buyRevealTile);
+
+    const buyRevealTileButton = new ShopButton(
+      scene,
+      x4,
+      y,
+      "all-assets",
+      "reveal-tile",
+      "Buy",
+      `Buy {REVEAL TILE}\n(max 1)\nCost: ${this.costs.revealTile} tech`,
+      this.buyRevealTile
+    );
     this.buyRevealTileButton = buyRevealTileButton;
 
     this.container = scene.add
@@ -109,14 +124,10 @@ export default class Shop {
         background,
         title,
         leaveButton.text,
-        buyHeartText,
-        buyHeartButton.text,
-        buyCompassText,
-        buyCompassButton.text,
-        buyClearRadar,
-        buyClearRadarButton.text,
-        buyRevealTile,
-        buyRevealTileButton.text
+        buyHeartButton.container,
+        buyCompassButton.container,
+        buyClearRadarButton.container,
+        buyRevealTileButton.container
       ])
       .setDepth(DEPTHS.MENU)
       .setVisible(false);
@@ -165,10 +176,11 @@ export default class Shop {
     const canBuyRevealTile = !hasRevealTile && goldCount >= costs.revealTile;
     const canBuyClearRadar = !hasClearRadar && goldCount >= costs.clearRadar;
     const canBuyCompass = !hasCompass && goldCount >= costs.compass;
-    buyHeartButton.setVisible(canBuyHeart);
-    buyRevealTileButton.setVisible(canBuyRevealTile);
-    buyClearRadarButton.setVisible(canBuyClearRadar);
-    buyCompassButton.setVisible(canBuyCompass);
+
+    canBuyHeart ? buyHeartButton.enable() : buyHeartButton.disable();
+    canBuyCompass ? buyCompassButton.enable() : buyCompassButton.disable();
+    canBuyClearRadar ? buyClearRadarButton.enable() : buyClearRadarButton.disable();
+    canBuyRevealTile ? buyRevealTileButton.enable() : buyRevealTileButton.disable();
   }
 
   closeShop = () => {
@@ -218,7 +230,11 @@ export default class Shop {
 
   destroy() {
     this.mobProxy.destroy();
-    this.container.destroy();
     this.proxy.removeAll();
+    this.container.destroy();
+    this.buyHeartButton.destroy();
+    this.buyCompassButton.destroy();
+    this.buyClearRadarButton.destroy();
+    this.buyRevealTileButton.destroy();
   }
 }
