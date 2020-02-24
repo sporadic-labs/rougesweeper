@@ -97,14 +97,24 @@ export default class GameManager {
 
     switch (type) {
       case INVENTORY_ITEMS.COMPASS:
-        this.compass = new Compass(this.scene, this.player, this.level);
-        store.setHasCompass(false);
+        if (this.compass) {
+          this.toastManager.setMessage("A compass is already active.");
+          this.inventoryMenu.deselectAll();
+        } else {
+          this.compass = new Compass(this.scene, this.player, this.level);
+          store.setHasCompass(false);
+        }
         this.disableInteractivity();
         store.setGameState(GAME_MODES.IDLE_MODE);
         break;
       case INVENTORY_ITEMS.REVEAL_IN_RADAR:
-        await this.clearTilesInRadar();
-        store.setHasClearRadar(false);
+        const success = await this.clearTilesInRadar();
+        if (success) {
+          store.setHasClearRadar(false);
+        } else {
+          this.toastManager.setMessage("No tiles can be revealed.");
+          this.inventoryMenu.deselectAll();
+        }
         this.disableInteractivity();
         store.setGameState(GAME_MODES.IDLE_MODE);
         break;
@@ -262,6 +272,10 @@ export default class GameManager {
     const playerPos = this.player.getGridPosition();
     const tiles = this.level.getNeighboringTiles(playerPos.x, playerPos.y);
 
+    if (tiles.map(tile => !tile.isRevealed).filter(revealed => revealed).length === 0) {
+      return Promise.resolve(false);
+    }
+
     return tiles.map(async tile => {
       await tile.flipToFront();
       const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
@@ -278,7 +292,7 @@ export default class GameManager {
         coinAnim.destroy();
         store.addGold();
       }
-      return Promise.resolve();
+      return Promise.resolve(true);
     });
   }
 
