@@ -6,10 +6,11 @@ import resizeEvent from "./resize-listener";
  * "quit" the game without navigating away from the page, this function does NOT have a way to
  * unsubscribe and clean up after itself.
  *
- * @export
- * @param {string} rootId
+ * @param rootId
+ * @param minSize
+ * @param maxSize
  */
-export default function makeGameResponsive(rootId, minSize = 0, maxSize = Number.MAX_SAFE_INTEGER) {
+export default function makeGameResponsive(rootId: string, minSize: number, maxSize: number) {
   const rootElement = document.getElementById(rootId);
   const resize = () => resizeToFitWindow(rootElement, minSize, maxSize);
 
@@ -17,7 +18,7 @@ export default function makeGameResponsive(rootId, minSize = 0, maxSize = Number
   resizeEvent.addListener(resize);
 }
 
-function resizeToFitWindow(root, minSize, maxSize) {
+function resizeToFitWindow(root: HTMLElement, minSize: number, maxSize: number) {
   const width = window.innerWidth;
   const height = window.innerHeight;
 

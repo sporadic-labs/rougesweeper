@@ -4,16 +4,18 @@
 
 import throttle from "lodash.throttle";
 
-class ResizeEvent {
-  listeners = [];
-  listeningForResize = false;
+type ResizeCallback = () => void;
 
-  addListener(cb) {
+class ResizeEvent {
+  private listeners: ResizeCallback[];
+  private listeningForResize = false;
+
+  addListener(cb: ResizeCallback) {
     this.listeners.push(cb);
     this.updateSubscription();
   }
 
-  removeListener(cb) {
+  removeListener(cb: ResizeCallback) {
     this.listeners = this.listeners.filter(fn => fn !== cb);
     this.updateSubscription();
   }
