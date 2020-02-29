@@ -51,7 +51,7 @@ export default class CoinCollectAnimation {
   }
 
   destroy() {
-    this?.destroy();
+    this.timeline.destroy();
     this.sprite.destroy();
   }
 }
