@@ -3,11 +3,13 @@ import TILE_TYPES, { default as TILE, tileTypeToDebugCharacter } from "./tile-ty
 import { create2DArray } from "../../helpers/array-utils";
 import logger from "../../helpers/logger";
 import { Point } from "../../helpers/common-interfaces";
+import { neighborOffsets } from "./neighbor-offsets";
 
 const noopFilter = (x: number, y: number) => true;
 type TiledObject = Phaser.Types.Tilemaps.TiledObject;
 
 class DataTile {
+  public isReachable = false;
   constructor(public type: TILE, public phaserTile: Tilemaps.Tile) {}
 }
 
@@ -131,7 +133,37 @@ export default class LevelData {
       enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
     }
 
+    this.updateReachability();
     this.debugDump();
+  }
+
+  /**
+   * Determine which tiles can actually be reached by the player and updated DataTile#isReachable
+   * accordingly.
+   */
+  private updateReachability() {
+    for (let boardX = 0; boardX < this.width; boardX++) {
+      for (let boardY = 0; boardY < this.height; boardY++) {
+        const tile: DataTile = this.getTileAt(boardX, boardY);
+        if (!tile) continue;
+        if (tile.type !== TILE_TYPES.WALL) {
+          tile.isReachable = true;
+          continue;
+        }
+        let isSurrounded = true;
+        neighborOffsets.forEach(([dx, dy]) => {
+          const nx = boardX + dx;
+          const ny = boardY + dy;
+          if (this.hasTileAt(nx, ny)) {
+            const neighborTile = this.getTileAt(nx, ny);
+            if (neighborTile.type !== TILE_TYPES.WALL) {
+              isSurrounded = false;
+            }
+          }
+        });
+        tile.isReachable = !isSurrounded;
+      }
+    }
   }
 
   /**
@@ -391,6 +423,14 @@ export default class LevelData {
 
   getTileAt(boardX: number, boardY: number) {
     return this.tiles[boardY][boardX];
+  }
+
+  hasTileAt(boardX: number, boardY: number) {
+    if (boardY >= 0 && boardY < this.height && boardX >= 0 && boardX < this.width) {
+      return this.tiles[boardY][boardX] !== undefined;
+    } else {
+      return false;
+    }
   }
 
   hasTileOfType(tileType: TILE) {
