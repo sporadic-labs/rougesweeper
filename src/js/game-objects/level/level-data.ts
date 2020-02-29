@@ -1,11 +1,10 @@
-import { Math as PMath, Tilemaps, Geom } from "phaser";
+import { Tilemaps, Geom } from "phaser";
 import TILE_TYPES, { default as TILE, tileTypeToDebugCharacter } from "./tile-types";
 import { create2DArray } from "../../helpers/array-utils";
 import logger from "../../helpers/logger";
 import { Point } from "../../helpers/common-interfaces";
 import { neighborOffsets } from "./neighbor-offsets";
 
-const noopFilter = (x: number, y: number) => true;
 type TiledObject = Phaser.Types.Tilemaps.TiledObject;
 
 class DataTile {
