@@ -150,6 +150,42 @@ export default class Level {
     );
   }
 
+  onTileFlip(tile: Tile) {
+    // Avoid expensive checks on every tile when we are fading out and flipping all the tiles.
+    if (this.state !== LEVEL_STATE.RUNNING) return;
+
+    // If the revealed tile is a wall, then it's time to check its neighbors to see if they are
+    // unreachable and need to be flipped now.
+    console.log("Tile flip: ", tile.getGridPosition().x, tile.getGridPosition().y);
+    if (tile.isRevealed && tile.type === TILE_TYPES.WALL) {
+      console.log("Tile flip - check neighbors");
+
+      const { x, y } = tile.getGridPosition();
+      this.getNeighboringTiles(x, y).forEach(tile => {
+        if (!tile.isReachable) {
+          const neighborPos = tile.getGridPosition();
+          const shouldFlip = this.checkIfNeighborsAreRevealed(neighborPos.x, neighborPos.y);
+          if (shouldFlip) {
+            tile.flipToFront();
+          }
+        }
+      });
+    }
+  }
+
+  /**
+   * Check if all reachable locations around a given tile are revealed.
+   * @param gridX
+   * @param gridY
+   */
+  checkIfNeighborsAreRevealed(gridX: number, gridY: number) {
+    let areAllRevealed = true;
+    this.getNeighboringTiles(gridX, gridY).forEach(tile => {
+      if (tile.isReachable && !tile.isRevealed) areAllRevealed = false;
+    });
+    return areAllRevealed;
+  }
+
   highlightTiles(playerPos: Point) {
     this.forEachTile((tile: Tile) => {
       if (tile.isRevealed || this.isTileInPlayerRange(playerPos, tile.getGridPosition())) {

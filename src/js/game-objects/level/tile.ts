@@ -254,6 +254,7 @@ export default class Tile {
     return new Promise(resolve => {
       this.flipEffect.events.once("complete", () => {
         resolve();
+        this.level.onTileFlip(this);
       });
       this.flipEffect.flipToFront();
     });
@@ -266,6 +267,7 @@ export default class Tile {
     return new Promise(resolve => {
       this.flipEffect.events.once("complete", () => {
         resolve();
+        this.level.onTileFlip(this);
       });
       this.flipEffect.flipToBack();
     });
