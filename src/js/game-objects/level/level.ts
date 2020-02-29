@@ -15,8 +15,6 @@ import { LevelEmitter } from "./events";
 import { neighborOffsets } from "./neighbor-offsets";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
-const isPointInArray = (p1: Point, array: Point[]) =>
-  array.some(p2 => p1.x === p2.x && p1.y === p2.y);
 
 export default class Level {
   public events: LevelEmitter = new EventEmitter();
