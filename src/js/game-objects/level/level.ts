@@ -74,7 +74,7 @@ export default class Level {
       row.map((dataTile, x) => {
         if (!dataTile || !dataTile.type) return undefined;
 
-        const { type, phaserTile } = dataTile;
+        const { type, phaserTile, isReachable } = dataTile;
         const { frameName } = phaserTile.properties;
 
         const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
@@ -132,7 +132,8 @@ export default class Level {
           frameName,
           this.gridXToWorldX(x),
           this.gridYToWorldY(y),
-          this.events,
+          this,
+          isReachable,
           dialogueData
         );
         tile.setGridPosition(x, y);

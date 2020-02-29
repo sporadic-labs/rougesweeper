@@ -10,6 +10,7 @@ import createAttackAnimation from "./tile-animations/attack-animation";
 import { TileDialogueEntry } from "../hud/dialogue-manager";
 import BezierEasing from "bezier-easing";
 import TweenPoser from "../components/tween-poser";
+import Level from "./level";
 
 type FadePoses = "FadeOut" | "FadeIn";
 type MagnifyPoses = "ZoomIn" | "ZoomOut";
@@ -37,7 +38,8 @@ export default class Tile {
     private frameName: string,
     private x: number,
     private y: number,
-    private levelEvents: LevelEmitter,
+    private level: Level,
+    public isReachable: boolean,
     private dialogueData: TileDialogueEntry
   ) {
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
@@ -227,17 +229,17 @@ export default class Tile {
 
   onPointerDown = (pointer: Input.Pointer) => {
     const event = pointer.primaryDown ? EVENTS.TILE_SELECT_PRIMARY : EVENTS.TILE_SELECT_SECONDARY;
-    this.levelEvents.emit(event, this);
+    this.level.events.emit(event, this);
   };
 
   onHoverStart = () => {
     this.tileMagnifyPoser.moveToPose("ZoomIn");
-    this.levelEvents.emit(EVENTS.TILE_OVER, this);
+    this.level.events.emit(EVENTS.TILE_OVER, this);
   };
 
   onHoverEnd = () => {
     this.tileMagnifyPoser.moveToPose("ZoomOut");
-    this.levelEvents.emit(EVENTS.TILE_OUT, this);
+    this.level.events.emit(EVENTS.TILE_OUT, this);
   };
 
   flipToFront() {
