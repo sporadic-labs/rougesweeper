@@ -1,12 +1,11 @@
 import DEPTHS from "../depths";
+import { Scene, GameObjects, Tweens } from "phaser";
 
 export default class CoinCollectAnimation {
-  /**
-   * @param {Phaser.Scene} scene
-   * @param {number} x
-   * @param {number} y
-   */
-  constructor(scene, x, y) {
+  private sprite: GameObjects.Sprite;
+  private timeline: Tweens.Timeline;
+
+  constructor(private scene: Scene, x: number, y: number) {
     this.scene = scene;
 
     this.sprite = scene.add
@@ -19,7 +18,7 @@ export default class CoinCollectAnimation {
     this.setPosition(x, y);
   }
 
-  setPosition(x, y) {
+  setPosition(x: number, y: number) {
     const cx = x + this.sprite.width / 2;
     this.sprite.x = cx;
     this.sprite.y = y;
@@ -28,8 +27,8 @@ export default class CoinCollectAnimation {
   play() {
     return new Promise(resolve => {
       this.sprite.setVisible(true);
-      this.timeline = this.scene.tweens
-        .createTimeline()
+      this.timeline = this.scene.tweens.createTimeline();
+      this.timeline
         .add({
           targets: this.sprite,
           ease: Phaser.Math.Easing.Quadratic.Out,
@@ -52,7 +51,7 @@ export default class CoinCollectAnimation {
   }
 
   destroy() {
-    if (this.timeline) this.timeline.destroy();
+    this?.destroy();
     this.sprite.destroy();
   }
 }
