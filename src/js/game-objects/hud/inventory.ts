@@ -79,7 +79,6 @@ export default class InventoryMenu {
     const iconStartY = this.text.y + this.text.height + 15;
 
     this.icons.forEach((icon, i) => {
-      icon.setInactive();
       icon.setPosition(bgWidth / 2, iconStartY + iconHeight / 2 + (iconHeight + iconSpacing) * i);
     });
 

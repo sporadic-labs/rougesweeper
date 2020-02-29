@@ -67,6 +67,7 @@ export default class InventoryToggle {
     this.sprite = scene.add
       .sprite(x, y, assetSheet, key)
       .setOrigin(0.5, 0.5)
+      .setAlpha(0.32) // TODO(rex): Fix TweenPoser to set properties directly if the duration is 0
       .setDepth(DEPTHS.HUD);
 
     this.cb = cb;
