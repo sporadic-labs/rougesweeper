@@ -242,25 +242,31 @@ export default class Tile {
     this.level.events.emit(EVENTS.TILE_OUT, this);
   };
 
-  flipToFront() {
+  async flipToFront(): Promise<void> {
+    if (this.isRevealed) return;
     this.isRevealed = true;
+    if (!this.isCurrentlyBlank && this.tileContents) {
+      this.flipEffect.events.once("halfway", () => {
+        this.tileContents.setVisible(true);
+        this.contentsMagnifyPoser.moveToPose("ZoomIn");
+      });
+    }
     return new Promise(resolve => {
-      if (!this.isCurrentlyBlank && this.tileContents) {
-        this.flipEffect.events.once("halfway", () => {
-          this.tileContents.setVisible(true);
-          this.contentsMagnifyPoser.moveToPose("ZoomIn");
-        });
-      }
-      this.flipEffect.events.once("complete", resolve);
+      this.flipEffect.events.once("complete", () => {
+        resolve();
+      });
       this.flipEffect.flipToFront();
     });
   }
 
-  flipToBack() {
+  async flipToBack(): Promise<void> {
+    if (!this.isRevealed) return;
     this.isRevealed = false;
     this.tileContents?.setVisible(false);
     return new Promise(resolve => {
-      this.flipEffect.events.once("complete", resolve);
+      this.flipEffect.events.once("complete", () => {
+        resolve();
+      });
       this.flipEffect.flipToBack();
     });
   }
