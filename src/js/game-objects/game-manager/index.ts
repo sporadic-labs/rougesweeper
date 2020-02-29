@@ -428,6 +428,7 @@ export default class GameManager {
     this.radar.closeRadar();
     const lastPoint = path[path.length - 1];
     const worldPath = path.map(p => this.level.gridXYToWorldXY(p));
+    this.level.unhighlightTiles(this.player.getPosition());
     await this.player.movePlayerAlongPath(worldPath);
     this.player.setGridPosition(lastPoint.x, lastPoint.y);
     this.level.highlightTiles(this.player.getGridPosition());
@@ -443,6 +444,7 @@ export default class GameManager {
     this.radar.closeRadar();
     const worldX = this.level.gridXToWorldX(gridX);
     const worldY = this.level.gridYToWorldY(gridY);
+    this.level.unhighlightTiles(this.player.getPosition());
     await this.player.movePlayerTo(worldX, worldY, moveInstantly);
     this.player.setGridPosition(gridX, gridY);
     this.level.highlightTiles(this.player.getGridPosition());

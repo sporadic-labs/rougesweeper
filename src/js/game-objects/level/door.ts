@@ -36,7 +36,7 @@ export default class Door {
     private doorPlacement = DOOR_PLACEMENT.LEFT,
     tileKey: string
   ) {
-    const tileBack = scene.add.sprite(0, 0, "all-assets", "tile-back");
+    const tileBack = scene.add.sprite(0, 0, "all-assets", "tile-back-disabled");
     const tileFront = scene.add.sprite(0, 0, "all-assets", tileKey);
     this.tileFlipEffect = new FlipEffect(scene, tileFront, tileBack);
     this.tileFlipEffect.setToBack();
@@ -77,7 +77,6 @@ export default class Door {
     this.doorMagnifyEffect = new MagnifyEffect(scene, this.doorSprite, 1.0, 1.1, 100);
     this.tileMagnifyEffect = new MagnifyEffect(scene, this.tileContainer, 1.0, 1.1, 100);
     this.tileFadeEffect = new FadeEffect(scene, this.tileContainer, 1, 0.6, 100);
-    this.tileFadeEffect.setToEnd();
     this.enableInteractive();
   }
 
@@ -177,11 +176,16 @@ export default class Door {
   }
 
   highlightTile() {
-    this.tileFadeEffect.fadeIn();
+    if (!this.isCurrentlyOpen) {
+      setTimeout(() => {
+        (this.tileContainer.getAt(0) as Phaser.GameObjects.Sprite).setFrame("tile-back");
+      }, 100);
+    }
   }
 
   unhighlightTile() {
-    this.tileFadeEffect.fadeOut();
+    if (!this.isCurrentlyOpen)
+      (this.tileContainer.getAt(0) as Phaser.GameObjects.Sprite).setFrame("tile-back-disabled");
   }
 
   destroy() {

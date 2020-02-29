@@ -51,7 +51,7 @@ export default class Tile {
     this.gridY = 0;
 
     this.frontSprite = scene.add.sprite(0, 0, "all-assets", tileKey);
-    this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back");
+    this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back-disabled");
 
     // Add the front and back tile to a container for easy access.
     this.container = scene.add.container(x, y, [this.backSprite, this.frontSprite]);
@@ -90,6 +90,7 @@ export default class Tile {
       FadeIn: { alpha: 1 },
       FadeOut: { alpha: 0.6 }
     });
+    this.tileFadePoser.setToPose("FadeIn");
   }
 
   removeTileContents() {
@@ -287,11 +288,15 @@ export default class Tile {
   }
 
   highlight = () => {
-    this.tileFadePoser.moveToPose("FadeIn");
+    if (!this.isRevealed) {
+      setTimeout(() => {
+        this.backSprite.setFrame("tile-back");
+      }, 100);
+    }
   };
 
   unhighlight = () => {
-    this.tileFadePoser.moveToPose("FadeOut");
+    this.backSprite.setFrame("tile-back-disabled");
   };
 
   getDialogueData() {

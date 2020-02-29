@@ -203,6 +203,26 @@ export default class Level {
     }
   }
 
+  unhighlightTiles(playerPos: Point) {
+    this.forEachTile((tile: Tile) => {
+      if (tile.isRevealed) {
+        tile.highlight();
+      } else {
+        tile.unhighlight();
+      }
+    });
+    if (this.exit.isTileFlipped || Distance(this.exitGridPosition, playerPos) <= 1.5) {
+      this.exit.highlightTile();
+    } else {
+      this.exit.unhighlightTile();
+    }
+    if (this.entrance.isTileFlipped || Distance(this.entranceGridPosition, playerPos) <= 1.5) {
+      this.entrance.highlightTile();
+    } else {
+      this.entrance.unhighlightTile();
+    }
+  }
+
   isNeighboringScrambleEnemy(x: number, y: number) {
     const tiles = this.getNeighboringTiles(x, y);
     for (const tile of tiles) {
@@ -375,17 +395,6 @@ export default class Level {
 
   async fadeLevelIn() {
     this.state = LEVEL_STATE.TRANSITION_IN;
-    const promises: Promise<void>[] = [];
-    // Staggered fade in from left to right of floor
-    this.tiles.forEach((row, y) =>
-      row.forEach((tile, x) => {
-        if (tile) {
-          const p = tile.fadeTileIn(250, x * 50);
-          promises.push(p);
-        }
-      })
-    );
-    await Promise.all(promises);
     await this.entrance.open();
 
     const start = this.getStartingGridPosition();
