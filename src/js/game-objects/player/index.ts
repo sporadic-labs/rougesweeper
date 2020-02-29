@@ -1,10 +1,18 @@
-import { Math as PMath } from "phaser";
+import { Math as PMath, Scene, GameObjects, Tweens } from "phaser";
 import PathTween from "./path-tween";
 import DEPTHS from "../depths";
+import { Point } from "../../helpers/common-interfaces";
 
 export default class Player {
-  /** @param {Phaser.Scene} scene */
-  constructor(scene, x, y) {
+  private moveSpeedMs = 80 / 150; // px / ms, where moving 1 tile = 80px
+  private sprite: GameObjects.Sprite;
+  private gridX = 0;
+  private gridY = 0;
+  private pathTween: PathTween;
+  private moveTween: Tweens.Tween;
+  private fadeTween: Tweens.Tween;
+
+  constructor(private scene: Scene, x: number, y: number) {
     this.scene = scene;
     this.sprite = scene.add
       .sprite(x, y, "all-assets", "player-m")
@@ -12,17 +20,13 @@ export default class Player {
       .setOrigin(0.5, 0.7)
       .setAlpha(0)
       .setDepth(DEPTHS.PLAYER);
-
-    this.moveSpeedMs = 80 / 150; // px/ms, where moving 1 tile = 80px
-    this.gridX = 0;
-    this.gridY = 0;
   }
 
-  setPosition(x, y) {
+  setPosition(x: number, y: number) {
     this.sprite.setPosition(x, y);
   }
 
-  async movePlayerAlongPath(points) {
+  async movePlayerAlongPath(points: Point[]) {
     let dist = 0;
     for (let i = 1; i < points.length; i++) {
       const p1 = points[i - 1];
@@ -33,7 +37,7 @@ export default class Player {
     this.pathTween = new PathTween(
       this.scene,
       points,
-      ({ x, y }) => {
+      ({ x, y }: Point) => {
         this.sprite.setDepth(DEPTHS.BOARD + (y / 75) * 4 + 2);
         this.sprite.setPosition(x, y);
       },
@@ -42,7 +46,7 @@ export default class Player {
     return this.pathTween.play();
   }
 
-  movePlayerTo(x, y, moveInstantly = false) {
+  movePlayerTo(x: number, y: number, moveInstantly = false) {
     return new Promise(resolve => {
       if (this.moveTween) this.moveTween.stop();
       this.sprite.setDepth(DEPTHS.BOARD + (y / 75) * 4 + 2);
@@ -72,7 +76,7 @@ export default class Player {
     return this.sprite.getTopCenter();
   }
 
-  setGridPosition(x, y) {
+  setGridPosition(x: number, y: number) {
     this.gridX = x;
     this.gridY = y;
   }
