@@ -1,36 +1,31 @@
 import DEPTHS from "../depths";
-import { Scene, GameObjects, Tweens, Types } from "phaser";
+import { Scene, GameObjects, Tweens } from "phaser";
+import TweenPoser from "../components/tween-poser";
+
+type FadePoses = "FadeOut" | "FadeIn";
 
 export default class AttackAnimation {
   private sprite: GameObjects.Sprite;
   private tween: Tweens.Tween;
+  private fadePoser: TweenPoser<FadePoses>;
 
   constructor(private scene: Scene, key: string, x: number, y: number) {
     this.scene = scene;
 
     this.sprite = scene.add.sprite(0, 0, "all-assets", key).setOrigin(0.5, 0.5);
     this.sprite.setDepth(DEPTHS.ABOVE_PLAYER);
-    this.sprite.setVisible(false);
-    this.sprite.setAlpha(0);
+
+    this.fadePoser = new TweenPoser(scene, this.sprite, { duration: 600, ease: "Quad.easeOut" });
+    this.fadePoser.definePose("FadeIn", { alpha: 1 });
+    this.fadePoser.definePose("FadeOut", { alpha: 0 });
+    this.fadePoser.setToPose("FadeIn");
 
     this.setPosition(x, y);
   }
 
-  fadeout(delay = 0): Promise<void> {
-    setTimeout(() => {
-      this.sprite.setVisible(true);
-    }, delay);
+  fadeout(): Promise<void> {
     return new Promise(resolve => {
-      this.tween?.stop();
-      this.tween = this.scene.tweens.add({
-        targets: this.sprite,
-        alpha: 0,
-        duration: 600,
-        delay: delay,
-        ease: "Quad.easeOut",
-        onComplete: () => resolve,
-        callbackScope: this
-      });
+      this.fadePoser.moveToPose("FadeOut", { onComplete: () => resolve() });
     });
   }
 
@@ -41,7 +36,7 @@ export default class AttackAnimation {
   }
 
   destroy() {
-    this.tween?.stop();
+    this.fadePoser.destroy();
     this.sprite.destroy();
   }
 }
