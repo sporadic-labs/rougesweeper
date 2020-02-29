@@ -4,7 +4,7 @@ import DEPTHS from "../depths";
 import { Point } from "../../helpers/common-interfaces";
 
 export default class Player {
-  private moveSpeedMs = 80 / 150; // px / ms, where moving 1 tile = 80px
+  private moveSpeedMs = 80 / 125; // px / ms, where moving 1 tile = 80px
   private sprite: GameObjects.Sprite;
   private gridX = 0;
   private gridY = 0;
