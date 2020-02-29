@@ -326,8 +326,8 @@ export default class GameManager {
 
     // if you can move to the tile, move
     const shouldMoveToTile = tile.type !== TILE_TYPES.WALL;
+    const tileGridPos = tile.getGridPosition();
     if (shouldMoveToTile) {
-      const tileGridPos = tile.getGridPosition();
       await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
     }
 
@@ -337,10 +337,11 @@ export default class GameManager {
 
     // update the radar
     await this.radar.update();
-    if (this.radar.getEnemyCount() === 0) {
+    const isTileScrambled = this.level.isTileScrambled(tileGridPos.x, tileGridPos.y);
+    if (this.radar.getEnemyCount() === 0 && !isTileScrambled) {
       this.level
         .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
-        .map(tile => tile.flipToFront());
+        .forEach(tile => tile.flipToFront());
     }
 
     // if the tile is the EXIT, check if the player has the correct conditions to finish the level
