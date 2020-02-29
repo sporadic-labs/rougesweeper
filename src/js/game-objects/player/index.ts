@@ -5,6 +5,7 @@ import { Point } from "../../helpers/common-interfaces";
 
 export default class Player {
   private moveSpeedMs = 80 / 125; // px / ms, where moving 1 tile = 80px
+  private maxMoveDurationMs = 500; // Max ms to use for a move tween
   private sprite: GameObjects.Sprite;
   private gridX = 0;
   private gridY = 0;
@@ -33,7 +34,7 @@ export default class Player {
       const p2 = points[i];
       dist += PMath.Distance.Between(p1.x, p1.y, p2.x, p2.y);
     }
-    const duration = dist / this.moveSpeedMs;
+    const duration = Math.min(dist / this.moveSpeedMs, this.maxMoveDurationMs);
     this.pathTween = new PathTween(
       this.scene,
       points,
@@ -55,7 +56,7 @@ export default class Player {
         resolve();
       } else {
         const dist = PMath.Distance.Between(this.sprite.x, this.sprite.y, x, y);
-        const duration = dist / this.moveSpeedMs;
+        const duration = Math.min(dist / this.moveSpeedMs, this.maxMoveDurationMs);
         this.moveTween = this.scene.tweens.add({
           targets: this.sprite,
           x,
