@@ -156,10 +156,7 @@ export default class Level {
 
     // If the revealed tile is a wall, then it's time to check its neighbors to see if they are
     // unreachable and need to be flipped now.
-    console.log("Tile flip: ", tile.getGridPosition().x, tile.getGridPosition().y);
     if (tile.isRevealed && tile.type === TILE_TYPES.WALL) {
-      console.log("Tile flip - check neighbors");
-
       const { x, y } = tile.getGridPosition();
       this.getNeighboringTiles(x, y).forEach(tile => {
         if (!tile.isReachable) {
