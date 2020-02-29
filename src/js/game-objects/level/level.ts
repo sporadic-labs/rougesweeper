@@ -12,20 +12,11 @@ import DialogueManager from "../hud/dialogue-manager";
 import { Point } from "../../helpers/common-interfaces";
 import EventEmitter from "../../helpers/event-emitter";
 import { LevelEmitter } from "./events";
+import { neighborOffsets } from "./neighbor-offsets";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 const isPointInArray = (p1: Point, array: Point[]) =>
   array.some(p2 => p1.x === p2.x && p1.y === p2.y);
-const neighborOffsets = [
-  [1, 0],
-  [1, 1],
-  [0, 1],
-  [-1, 1],
-  [-1, 0],
-  [-1, -1],
-  [0, -1],
-  [1, -1]
-];
 
 export default class Level {
   public events: LevelEmitter = new EventEmitter();
