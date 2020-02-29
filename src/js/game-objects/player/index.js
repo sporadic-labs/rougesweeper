@@ -23,9 +23,12 @@ export default class Player {
   }
 
   async movePlayerAlongPath(points) {
-    const start = points[0];
-    const end = points[points.length - 1];
-    const dist = PMath.Distance.Between(start.x, start.y, end.x, end.y);
+    let dist = 0;
+    for (let i = 1; i < points.length; i++) {
+      const p1 = points[i - 1];
+      const p2 = points[i];
+      dist += PMath.Distance.Between(p1.x, p1.y, p2.x, p2.y);
+    }
     const duration = dist / this.moveSpeedMs;
     this.pathTween = new PathTween(
       this.scene,
