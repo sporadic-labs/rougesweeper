@@ -15,6 +15,25 @@ export default class CoinCollectAnimation {
     this.sprite.setDepth(DEPTHS.ABOVE_PLAYER);
     this.sprite.setVisible(false);
 
+    this.timeline = this.scene.tweens.createTimeline();
+    this.timeline
+      .add({
+        targets: this.sprite,
+        ease: Phaser.Math.Easing.Quadratic.Out,
+        duration: 200,
+        scaleX: 1.05,
+        scaleY: 1.05,
+        y: "-=30"
+      })
+      .add({
+        targets: this.sprite,
+        duration: 200,
+        ease: Phaser.Math.Easing.Quadratic.In,
+        scaleX: 0.5,
+        scaleY: 0.5,
+        y: "+=30"
+      });
+
     this.setPosition(x, y);
   }
 
@@ -27,26 +46,7 @@ export default class CoinCollectAnimation {
   play() {
     return new Promise(resolve => {
       this.sprite.setVisible(true);
-      this.timeline = this.scene.tweens.createTimeline();
-      this.timeline
-        .add({
-          targets: this.sprite,
-          ease: Phaser.Math.Easing.Quadratic.Out,
-          duration: 200,
-          scaleX: 1.05,
-          scaleY: 1.05,
-          y: "-=30"
-        })
-        .add({
-          targets: this.sprite,
-          duration: 200,
-          ease: Phaser.Math.Easing.Quadratic.In,
-          scaleX: 0.5,
-          scaleY: 0.5,
-          y: "+=30"
-        })
-        .on("complete", resolve)
-        .play();
+      this.timeline.on("complete", resolve).play();
     });
   }
 
