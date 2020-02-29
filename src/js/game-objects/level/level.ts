@@ -237,6 +237,18 @@ export default class Level {
     return false;
   }
 
+  isTileScrambled(x: number, y: number) {
+    const scrambleEnemyPositions = this.data.getAllPositionsOf(TILE_TYPES.SCRAMBLE_ENEMY);
+    console.log(scrambleEnemyPositions);
+
+    for (let pos of scrambleEnemyPositions) {
+      const scrambleTile = this.getTileFromGrid(pos.x, pos.y);
+      if (scrambleTile.isRevealed) continue;
+      else if (pos.x === x || pos.y === y) return true;
+    }
+    return false;
+  }
+
   countNeighboringEnemies(x: number, y: number) {
     const enemyCount = this.getNeighboringTiles(x, y).reduce((count, tile) => {
       const isEnemy = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
