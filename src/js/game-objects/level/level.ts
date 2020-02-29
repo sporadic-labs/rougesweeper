@@ -16,6 +16,12 @@ import { neighborOffsets } from "./neighbor-offsets";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 
+enum LEVEL_STATE {
+  TRANSITION_IN = "TRANSITION_IN",
+  RUNNING = "RUNNING",
+  TRANSITION_OUT = "TRANSITION_OUT"
+}
+
 export default class Level {
   public events: LevelEmitter = new EventEmitter();
   public exitWorldPosition: Point;
@@ -33,6 +39,7 @@ export default class Level {
   private tileHeight: number;
   private background: GameObjects.Rectangle;
   private tiles: Tile[][];
+  private state: LEVEL_STATE = LEVEL_STATE.TRANSITION_IN;
 
   constructor(private scene: Scene, levelKey: string, dialogueManager: DialogueManager) {
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
@@ -318,6 +325,7 @@ export default class Level {
   }
 
   fadeLevelOut() {
+    this.state = LEVEL_STATE.TRANSITION_OUT;
     const tilePromises: Promise<void>[] = [];
     // Flip all to the front, then half a second later, kick off the fade out from left to right
     this.tiles.forEach((row, y) =>
@@ -333,6 +341,7 @@ export default class Level {
   }
 
   async fadeLevelIn() {
+    this.state = LEVEL_STATE.TRANSITION_IN;
     const promises: Promise<void>[] = [];
     // Staggered fade in from left to right of floor
     this.tiles.forEach((row, y) =>
@@ -349,6 +358,7 @@ export default class Level {
     const start = this.getStartingGridPosition();
     this.tiles[start.y][start.x].flipToFront();
     this.getNeighboringTiles(start.x, start.y).map(tile => tile.flipToFront());
+    this.state = LEVEL_STATE.RUNNING;
   }
 
   destroy() {
