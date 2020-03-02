@@ -246,7 +246,7 @@ export default class GameManager {
     this.level.disableAllTiles();
 
     await tile.flipToFront();
-    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
+    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
     if (shouldGetCoin) {
       const { x, y } = tile.getPosition();
       const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
@@ -278,7 +278,8 @@ export default class GameManager {
 
     return tiles.map(async tile => {
       await tile.flipToFront();
-      const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
+      const shouldGetCoin =
+        tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
       if (shouldGetCoin) {
         const { x, y } = tile.getPosition();
         const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
@@ -314,6 +315,7 @@ export default class GameManager {
       // Apply any effect that need to be immediate.
       switch (tile.type) {
         case TILE_TYPES.ENEMY:
+        case TILE_TYPES.SCRAMBLE_ENEMY:
           store.removeHealth();
           break;
         case TILE_TYPES.GOLD:
@@ -388,7 +390,7 @@ export default class GameManager {
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
     store.removeGold();
-    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY;
+    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
     const { x, y } = tile.getPosition();
     const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
     const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
