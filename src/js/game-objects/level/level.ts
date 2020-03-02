@@ -148,11 +148,15 @@ export default class Level {
         return tile;
       })
     );
+
+    this.setScrambleableTiles();
   }
 
   onTileFlip(tile: Tile) {
     // Avoid expensive checks on every tile when we are fading out and flipping all the tiles.
     if (this.state !== LEVEL_STATE.RUNNING) return;
+
+    if (tile.isRevealed && tile.type === TILE_TYPES.SCRAMBLE_ENEMY) this.setScrambleableTiles();
 
     // If the revealed tile is a wall, then it's time to check its neighbors to see if they are
     // unreachable and need to be flipped now.
@@ -221,6 +225,34 @@ export default class Level {
     } else {
       this.entrance.unhighlightTile();
     }
+  }
+
+  setScrambleableTiles(): void {
+    const scrambleEnemyPositions = this.data.getAllPositionsOf(TILE_TYPES.SCRAMBLE_ENEMY);
+    scrambleEnemyPositions.forEach(pos => {
+      const tile = this.getTileFromGrid(pos.x, pos.y);
+      const show = !tile.isRevealed;
+      const tilesToBottom = this.data.getGridHeight() - tile.gridY;
+      const tilesToRight = this.data.getGridWidth() - tile.gridX;
+      const xMax = tilesToRight > tile.gridX ? tilesToRight : tile.gridX;
+      const yMax = tilesToBottom > tile.gridY ? tilesToBottom : tile.gridY;
+      for (let i = 0; i < xMax; i += 1) {
+        const minTile = this.getTileFromGrid(tile.gridX - i, tile.gridY);
+        if (minTile && minTile.type !== TILE_TYPES.WALL && minTile.getCanScramble() !== show)
+          minTile.setCanScramble(show);
+        const maxTile = this.getTileFromGrid(tile.gridX + i, tile.gridY);
+        if (maxTile && maxTile.type !== TILE_TYPES.WALL && maxTile.getCanScramble() !== show)
+          maxTile.setCanScramble(show);
+      }
+      for (let i = 0; i < yMax; i += 1) {
+        const minTile = this.getTileFromGrid(tile.gridX, tile.gridY - i);
+        if (minTile && minTile.type !== TILE_TYPES.WALL && minTile.getCanScramble() !== show)
+          minTile.setCanScramble(show);
+        const maxTile = this.getTileFromGrid(tile.gridX, tile.gridY + i);
+        if (maxTile && maxTile.type !== TILE_TYPES.WALL && maxTile.getCanScramble() !== show)
+          maxTile.setCanScramble(show);
+      }
+    });
   }
 
   isNeighboringScrambleEnemy(x: number, y: number) {

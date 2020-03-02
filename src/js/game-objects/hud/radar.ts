@@ -258,10 +258,11 @@ class Radar {
       }
       const { x, y } = this.player.getGridPosition();
       this.enemyCount = this.level.countNeighboringEnemies(x, y);
-      const inRangeOfScrambleEnemy = this.level.isTileScrambled(x, y);
-      if (inRangeOfScrambleEnemy && !this.isScrambling) {
+      const shouldScramble = this.level.getTileFromGrid(x, y).getCanScramble();
+      // const inRangeOfScrambleEnemy = this.level.isTileScrambled(x, y);
+      if (shouldScramble && !this.isScrambling) {
         this.startScrambleRadar();
-      } else if (!inRangeOfScrambleEnemy && this.isScrambling) {
+      } else if (!shouldScramble && this.isScrambling) {
         this.stopScrambleRadar();
       }
       const tiles = this.level.getNeighboringTiles(x, y);

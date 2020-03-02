@@ -23,6 +23,7 @@ export default class Tile {
   public dialoguePlayedCounter = 0;
   private backSprite: GameObjects.Sprite;
   private frontSprite: GameObjects.Sprite;
+  private scrambleSprite: GameObjects.Sprite;
   private tileContents?: GameObjects.Sprite;
   private container: GameObjects.Container;
   private flipEffect: FlipEffect;
@@ -30,6 +31,7 @@ export default class Tile {
   private tileFadePoser: TweenPoser<FadePoses>;
   private tileMagnifyPoser: TweenPoser<MagnifyPoses>;
   private contentsMagnifyPoser: TweenPoser<MagnifyPoses>;
+  private canScramble = false;
 
   constructor(
     private scene: Scene,
@@ -52,6 +54,10 @@ export default class Tile {
 
     this.frontSprite = scene.add.sprite(0, 0, "all-assets", tileKey);
     this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back-disabled");
+
+    this.scrambleSprite = scene.add.sprite(x, y, "all-assets", "arrow");
+    this.scrambleSprite.setDepth(DEPTHS.BOARD + (y / 75) * 4);
+    this.scrambleSprite.setAlpha(0);
 
     // Add the front and back tile to a container for easy access.
     this.container = scene.add.container(x, y, [this.backSprite, this.frontSprite]);
@@ -204,6 +210,16 @@ export default class Tile {
     return { x: this.gridX, y: this.gridY };
   }
 
+  getCanScramble(): boolean {
+    return this.canScramble;
+  }
+
+  setCanScramble(canScramble: boolean): void {
+    this.canScramble = canScramble;
+    if (canScramble && this.isRevealed) this.scrambleSprite.setAlpha(1);
+    else this.scrambleSprite.setAlpha(0);
+  }
+
   /**
    * Enable user interactivity for the tile.
    */
@@ -256,6 +272,7 @@ export default class Tile {
       this.flipEffect.events.once("complete", () => {
         resolve();
         this.level.onTileFlip(this);
+        if (this.canScramble) this.scrambleSprite.setAlpha(1);
       });
       this.flipEffect.flipToFront();
     });
