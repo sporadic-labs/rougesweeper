@@ -1,7 +1,7 @@
 import { Math as PMath } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
 import MobXProxy from "../../helpers/mobx-proxy";
-import DEPTHS from "../depths";
+import DEPTHS, { yPositionToDepth } from "../depths";
 import Level from "../level/level";
 import Player from "../player";
 import store from "../../store";
@@ -23,7 +23,7 @@ export default class Compass {
    * @param {Phaser.Scene} scene
    */
   constructor(private scene: Phaser.Scene, private player: Player, private level: Level) {
-    this.playerOffset = 75;
+    this.playerOffset = 55;
     this.angleOffset = Math.PI / 2; // Graphic points up, so it's off by 90 deg
 
     this.sprite = scene.add
@@ -58,6 +58,10 @@ export default class Compass {
       center.x + this.playerOffset * Math.cos(angle),
       center.y + this.playerOffset * Math.sin(angle)
     );
+    // Position based on z + 0.5 places it above the player when pointing down and below the player
+    // when pointing up. It also ensures the compass will be on top of the underlying board tile.
+    const z = yPositionToDepth(this.sprite.y) + 0.5;
+    this.sprite.setDepth(z);
   }
 
   destroy() {
