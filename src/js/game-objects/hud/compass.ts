@@ -51,7 +51,7 @@ export default class Compass {
     if (this.target === COMPASS_TARGETS.KEY) target = this.level.getKeyWorldPosition();
     else if (this.target === COMPASS_TARGETS.DOOR) target = this.level.getExitWorldPosition();
     if (!target) return;
-    const center = this.level.gridXYToWorldXY(this.player.getGridPosition());
+    const center = this.player.getPosition();
     const angle = PMath.Angle.BetweenPoints(center, target);
     this.sprite.rotation = angle + this.angleOffset;
     this.sprite.setPosition(
