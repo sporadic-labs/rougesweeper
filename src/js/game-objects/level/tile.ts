@@ -3,7 +3,7 @@ import TILE_TYPES from "./tile-types";
 import EVENTS, { LevelEmitter } from "./events";
 import FlipEffect from "../components/flip-effect";
 import AttackAnimation from "../player/attack-animation";
-import DEPTHS from "../depths";
+import DEPTHS, { yPositionToDepth } from "../depths";
 import createPickupAnimation from "./tile-animations/pickup-animation";
 import createDisappearAnimation from "./tile-animations/disappear-animation";
 import createAttackAnimation from "./tile-animations/attack-animation";
@@ -56,7 +56,7 @@ export default class Tile {
     this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back-disabled");
 
     this.scrambleSprite = scene.add.sprite(x, y, "all-assets", "arrow");
-    this.scrambleSprite.setDepth(DEPTHS.BOARD + (y / 75) * 4);
+    this.scrambleSprite.setDepth(yPositionToDepth(y));
     this.scrambleSprite.setAlpha(0);
 
     // Add the front and back tile to a container for easy access.
@@ -67,7 +67,7 @@ export default class Tile {
 
     if (!this.isCurrentlyBlank && type !== TILE_TYPES.ENTRANCE) {
       this.tileContents = scene.add.sprite(x, y - 20, "all-assets", frameName);
-      this.tileContents.setDepth(DEPTHS.BOARD + (y / 75) * 4);
+      this.tileContents.setDepth(yPositionToDepth(y));
     }
 
     this.isRevealed = false;
