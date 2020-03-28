@@ -11,7 +11,7 @@ import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
 import PauseMenu from "../hud/pause-menu";
-import InventoryMenu, { INVETORY_EVENTS } from "../hud/inventory";
+import InventoryMenu, { INVENTORY_EVENTS } from "../hud/inventory";
 import DialogueManager from "../hud/dialogue-manager";
 import Player from "../player";
 import ToastManager from "../hud/toast-manager";
@@ -78,8 +78,8 @@ export default class GameManager {
     this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectSecondary);
     this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
 
-    this.inventoryMenu.events.on(INVETORY_EVENTS.SELECT, this.onInventorySelect);
-    this.inventoryMenu.events.on(INVETORY_EVENTS.DESELECT, this.onInventoryDeselect);
+    this.inventoryMenu.events.on(INVENTORY_EVENTS.SELECT, this.onInventorySelect);
+    this.inventoryMenu.events.on(INVENTORY_EVENTS.DESELECT, this.onInventoryDeselect);
   }
 
   disableInteractivity() {
@@ -87,8 +87,8 @@ export default class GameManager {
     this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectSecondary);
     this.level.events.off(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
 
-    this.inventoryMenu.events.off(INVETORY_EVENTS.SELECT, this.onInventorySelect);
-    this.inventoryMenu.events.off(INVETORY_EVENTS.DESELECT, this.onInventoryDeselect);
+    this.inventoryMenu.events.off(INVENTORY_EVENTS.SELECT, this.onInventorySelect);
+    this.inventoryMenu.events.off(INVENTORY_EVENTS.DESELECT, this.onInventoryDeselect);
   }
 
   onInventorySelect = async (type: INVENTORY_ITEMS) => {
