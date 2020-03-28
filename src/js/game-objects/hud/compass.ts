@@ -28,7 +28,7 @@ export default class Compass {
 
     this.sprite = scene.add
       .sprite(0, 0, "all-assets", "arrow")
-      .setDepth(DEPTHS.ABOVE_GROUND)
+      .setDepth(DEPTHS.BELOW_PLAYER)
       .setAlpha(0.95);
 
     if (store.hasKey) this.target = COMPASS_TARGETS.DOOR;
