@@ -27,7 +27,6 @@ export default class ShopButtons {
   active: boolean;
   container: Phaser.GameObjects.Container;
   buttonFadePoser: TweenPoser<FadePoses>;
-  mobProxy: MobXProxy;
   proxy: EventProxy;
   cb: Function;
 
@@ -92,7 +91,6 @@ export default class ShopButtons {
     this.button.destroy();
     this.text.destroy();
     this.sprite.destroy();
-    this.mobProxy.destroy();
     this.container.destroy();
     this.proxy.removeAll();
   }
