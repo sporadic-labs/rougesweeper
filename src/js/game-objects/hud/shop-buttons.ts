@@ -1,7 +1,5 @@
 import EventProxy from "../../helpers/event-proxy";
-import store, { GameStore } from "../../store";
-import GAME_MODES from "../game-manager/events";
-import MobXProxy from "../../helpers/mobx-proxy";
+import { GameStore } from "../../store";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
 import TweenPoser from "../components/tween-poser";
