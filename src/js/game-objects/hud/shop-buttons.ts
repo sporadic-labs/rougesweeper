@@ -1,7 +1,5 @@
 import EventProxy from "../../helpers/event-proxy";
-import store, { GameStore } from "../../store";
-import GAME_MODES from "../game-manager/events";
-import MobXProxy from "../../helpers/mobx-proxy";
+import { GameStore } from "../../store";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
 import TweenPoser from "../components/tween-poser";
@@ -27,7 +25,6 @@ export default class ShopButtons {
   active: boolean;
   container: Phaser.GameObjects.Container;
   buttonFadePoser: TweenPoser<FadePoses>;
-  mobProxy: MobXProxy;
   proxy: EventProxy;
   cb: Function;
 
@@ -92,7 +89,6 @@ export default class ShopButtons {
     this.button.destroy();
     this.text.destroy();
     this.sprite.destroy();
-    this.mobProxy.destroy();
     this.container.destroy();
     this.proxy.removeAll();
   }

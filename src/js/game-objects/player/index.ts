@@ -1,6 +1,6 @@
 import { Math as PMath, Scene, GameObjects, Tweens } from "phaser";
 import PathTween from "./path-tween";
-import DEPTHS from "../depths";
+import DEPTHS, { yPositionToDepth } from "../depths";
 import { Point } from "../../helpers/common-interfaces";
 
 export default class Player {
@@ -23,6 +23,11 @@ export default class Player {
       .setDepth(DEPTHS.PLAYER);
   }
 
+  private updateDepthFromPosition() {
+    const z = yPositionToDepth(this.sprite.y) + 0.5;
+    this.sprite.setDepth(z);
+  }
+
   setPosition(x: number, y: number) {
     this.sprite.setPosition(x, y);
   }
@@ -39,8 +44,8 @@ export default class Player {
       this.scene,
       points,
       ({ x, y }: Point) => {
-        this.sprite.setDepth(DEPTHS.BOARD + (y / 75) * 4 + 2);
         this.sprite.setPosition(x, y);
+        this.updateDepthFromPosition();
       },
       { duration, ease: "Quad.easeOut" }
     );
@@ -50,7 +55,7 @@ export default class Player {
   movePlayerTo(x: number, y: number, moveInstantly = false) {
     return new Promise(resolve => {
       if (this.moveTween) this.moveTween.stop();
-      this.sprite.setDepth(DEPTHS.BOARD + (y / 75) * 4 + 2);
+      this.updateDepthFromPosition();
       if (moveInstantly) {
         this.setPosition(x, y);
         resolve();

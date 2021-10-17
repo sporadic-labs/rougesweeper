@@ -203,6 +203,14 @@ export default class LevelData {
     return this.getPositionOf(TILE.KEY);
   }
 
+  getGridWidth() {
+    return this.tiles[0].length
+  }
+
+  getGridHeight() {
+    return this.tiles.length
+  }
+
   /**
    * Calculate the bounding box of all the non-empty tiles within a layer of the map.
    *

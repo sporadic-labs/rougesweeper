@@ -7,7 +7,7 @@ import store, { GameStore } from "../../store/index";
 import InventoryToggle, { INVENTORY_ITEMS } from "./inventory-toggle";
 import GAME_MODES from "../game-manager/events";
 
-export enum INVETORY_EVENTS {
+export enum INVENTORY_EVENTS {
   SELECT = "SELECT",
   DESELECT = "DESELECT"
 }
@@ -158,10 +158,10 @@ export default class InventoryMenu {
       if (icon.type === toggle.type) {
         if (icon.selected) {
           icon.setDeselected();
-          this.events.emit(INVETORY_EVENTS.DESELECT, toggle.type);
+          this.events.emit(INVENTORY_EVENTS.DESELECT, toggle.type);
         } else {
           icon.setSelected();
-          this.events.emit(INVETORY_EVENTS.SELECT, toggle.type);
+          this.events.emit(INVENTORY_EVENTS.SELECT, toggle.type);
         }
       } else {
         icon.setDeselected();
