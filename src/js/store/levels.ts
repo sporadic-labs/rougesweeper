@@ -2,19 +2,19 @@
  * Level and tile data for tilemaps and dialogue info.
  */
 const levelData = [
-  { level: "level-1-floor-1", title: "Headquarters", subtitle: "Floor 1", tiles: [{ x: 2, y: 2 }] },
-  { level: "level-1-floor-2", title: "Headquarters", subtitle: "Floor 2", tiles: [{ x: 1, y: 2 }] },
-  { level: "level-1-floor-3", title: "Headquarters", subtitle: "Floor 3", tiles: [{ x: 2, y: 3 }] },
-  { level: "level-2-floor-1", title: "Warehouse", subtitle: "Floor 1", tiles: [] },
-  { level: "level-2-floor-2", title: "Warehouse", subtitle: "Floor 2", tiles: [] },
-  { level: "level-2-floor-3", title: "Warehouse", subtitle: "Floor 3", tiles: [] },
-  { level: "level-2-floor-4", title: "Warehouse", subtitle: "Floor 4", tiles: [] },
-  { level: "level-3-floor-1", title: "Laboratory", subtitle: "Floor 1", tiles: [] },
-  { level: "level-3-floor-2", title: "Laboratory", subtitle: "Floor 2", tiles: [] },
-  { level: "level-3-floor-3", title: "Laboratory", subtitle: "Floor 3", tiles: [] },
-  { level: "level-4-floor-1", title: "Skyscraper", subtitle: "Floor 1", tiles: [] },
-  { level: "level-4-floor-2", title: "Skyscraper", subtitle: "Floor 2", tiles: [] },
-  { level: "level-4-floor-3", title: "Skyscraper", subtitle: "Floor 3", tiles: [] }
+  { level: "level-1-floor-1", title: "Headquarters", subtitle: "Floor 1-1", tiles: [{ x: 2, y: 2 }] },
+  { level: "level-1-floor-2", title: "Headquarters", subtitle: "Floor 1-2", tiles: [{ x: 1, y: 2 }] },
+  { level: "level-1-floor-3", title: "Headquarters", subtitle: "Floor 1-3", tiles: [{ x: 2, y: 3 }] },
+  { level: "level-2-floor-1", title: "Warehouse", subtitle: "Floor 2-1", tiles: [] },
+  { level: "level-2-floor-2", title: "Warehouse", subtitle: "Floor 2-2", tiles: [] },
+  { level: "level-2-floor-3", title: "Warehouse", subtitle: "Floor 2-3", tiles: [] },
+  { level: "level-2-floor-4", title: "Warehouse", subtitle: "Floor 2-4", tiles: [] },
+  { level: "level-3-floor-1", title: "Laboratory", subtitle: "Floor 3-1", tiles: [] },
+  { level: "level-3-floor-2", title: "Laboratory", subtitle: "Floor 3-2", tiles: [] },
+  { level: "level-3-floor-3", title: "Laboratory", subtitle: "Floor 3-3", tiles: [] },
+  { level: "level-4-floor-1", title: "Skyscraper", subtitle: "Floor 4-1", tiles: [] },
+  { level: "level-4-floor-2", title: "Skyscraper", subtitle: "Floor 4-2", tiles: [] },
+  { level: "level-4-floor-3", title: "Skyscraper", subtitle: "Floor 4-3", tiles: [] }
 ];
 
 /**
