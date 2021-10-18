@@ -150,6 +150,10 @@ export default class Level {
     );
 
     this.setScrambleableTiles();
+
+    // NOTE(rex): Make this less fragile...
+    const isTutorialLevel = levelKey === "level-1-floor-1"
+    if (isTutorialLevel) this.forEachTile((t) => t.flipToFront())
   }
 
   onTileFlip(tile: Tile) {
