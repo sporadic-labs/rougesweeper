@@ -1,8 +1,8 @@
 module.exports = {
-  parser: "babel-eslint",
-  plugins: ["react", "prettier"],
   // Enable core eslint rules, see: http://eslint.org/docs/rules/
-  extends: ["eslint:recommended", "plugin:react/recommended", "prettier", "prettier/react"],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint", "prettier"],
   // Additional rules
   rules: {
     "no-var": 1,
