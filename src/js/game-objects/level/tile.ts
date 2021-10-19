@@ -7,10 +7,10 @@ import DEPTHS, { yPositionToDepth } from "../depths";
 import createPickupAnimation from "./tile-animations/pickup-animation";
 import createDisappearAnimation from "./tile-animations/disappear-animation";
 import createAttackAnimation from "./tile-animations/attack-animation";
-import { TileDialogueEntry } from "../hud/dialogue-manager";
 import BezierEasing from "bezier-easing";
 import TweenPoser from "../components/tween-poser";
 import Level from "./level";
+import { DialogueData } from "../../../resources/dialogue/types";
 
 type FadePoses = "FadeOut" | "FadeIn";
 type MagnifyPoses = "ZoomIn" | "ZoomOut";
@@ -42,7 +42,7 @@ export default class Tile {
     private y: number,
     private level: Level,
     public isReachable: boolean,
-    private dialogueData: TileDialogueEntry
+    private dialogueData: DialogueData
   ) {
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
 

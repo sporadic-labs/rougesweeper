@@ -8,6 +8,8 @@ import DEPTHS from "../depths";
 import Tile from "../level/tile";
 import { GameStore } from "../../store/index";
 import { getDialogueKey } from "../../store/levels";
+import { level1Floor1 } from "../../../resources/dialogue/level-1-floor-1";
+import { DialogueEntry, DialogueData, DialogueCondition } from "../../../resources/dialogue/types";
 
 const baseTextStyle = {
   fill: "#ffffff"
@@ -22,21 +24,6 @@ const textStyle = {
   ...baseTextStyle,
   fontSize: 22
 };
-
-export interface TileDialogueEntry {
-  level: string;
-  x: number;
-  y: number;
-  entries: DialogueEntry[];
-  repeat: number; // -1 for infinite repeat
-  condition: () => boolean;
-}
-
-export interface DialogueEntry {
-  title: string;
-  imageKey: string;
-  text: string[];
-}
 
 enum DIALOGUE_STATES {
   EMPTY = "EMPTY",
@@ -148,14 +135,19 @@ export default class DialogueManager {
     return this.isCurrentlyOpen;
   }
 
-  getDialogueDataForTile(level: string, x: number, y: number): TileDialogueEntry {
-    const key = getDialogueKey(level, { x, y });
-    return this.scene.cache.json.get(`${key}`);
+  getDialogueDataForTile(level: string, x: number, y: number): DialogueData | null {
+    if (level === "level-1-floor-1") {
+      const data = level1Floor1.find(d => d.position.x === x && d.position.y === y);
+      return data ? data : null;
+    } else {
+      const key = getDialogueKey(level, { x, y });
+      return this.scene.cache.json.get(`${key}`);
+    }
   }
 
   playDialogueFromTile(tile: Tile) {
-    const data: TileDialogueEntry = tile.getDialogueData();
-    if (data && (data.repeat < 0 || data.repeat >= tile.dialoguePlayedCounter)) {
+    const data = tile.getDialogueData();
+    if (data && data.repeat !== null && data.repeat >= tile.dialoguePlayedCounter) {
       this.setDialoguePages(data.entries);
       if (this.isCurrentlyOpen) this.close();
       this.open();
