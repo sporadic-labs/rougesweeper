@@ -51,7 +51,7 @@ export default class DialogueManager {
   private proxy: EventProxy;
   private container: Phaser.GameObjects.Container;
   private previousGameState: GAME_MODES;
-  private isCurrentlyOpen: boolean = false;
+  private isCurrentlyOpen = false;
   private controls: TextButton[];
 
   private state: DIALOGUE_STATES = DIALOGUE_STATES.CLOSED;
@@ -62,11 +62,11 @@ export default class DialogueManager {
   private line: string[] = [];
   private word: string[] = [];
 
-  private characterIndex: number = 0;
-  private wordIndex: number = 0;
-  private lineIndex: number = 0;
-  private pageIndex: number = 0;
-  private charactersPerSecond: number = 200;
+  private characterIndex = 0;
+  private wordIndex = 0;
+  private lineIndex = 0;
+  private pageIndex = 0;
+  private charactersPerSecond = 200;
 
   private title: Phaser.GameObjects.Text;
   private text: Phaser.GameObjects.Text;

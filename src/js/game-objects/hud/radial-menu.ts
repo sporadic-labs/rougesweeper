@@ -130,7 +130,7 @@ class RadialMenu {
   private graphic: Phaser.GameObjects.Graphics;
   private container: Phaser.GameObjects.Container;
   private menuIcons: RadialMenuIcon[];
-  private radius: number = 30;
+  private radius = 30;
   private mobProxy = new MobXProxy();
   private proxy = new EventProxy();
   private tween?: Phaser.Tweens.Tween;

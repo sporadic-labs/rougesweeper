@@ -275,7 +275,7 @@ export default class Level {
 
   isTileScrambled(x: number, y: number) {
     const scrambleEnemyPositions = this.data.getAllPositionsOf(TILE_TYPES.SCRAMBLE_ENEMY);
-    for (let pos of scrambleEnemyPositions) {
+    for (const pos of scrambleEnemyPositions) {
       const scrambleTile = this.getTileFromGrid(pos.x, pos.y);
       if (scrambleTile.isRevealed) continue;
       else if (pos.x === x || pos.y === y) return true;

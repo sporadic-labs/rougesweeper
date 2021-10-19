@@ -67,7 +67,7 @@ export default class DebugMenu {
   gameStore: GameStore;
   proxy: EventProxy;
   container: Phaser.GameObjects.Container;
-  isOpen: boolean = false;
+  isOpen = false;
   levelSelectButtons: LevelSelectButton[];
   closeButton: TextButton;
 

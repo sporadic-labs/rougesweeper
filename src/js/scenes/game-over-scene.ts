@@ -13,7 +13,7 @@ export default class GameOverScene extends Scene {
   create() {
     const width = Number(this.game.config.width);
     const height = Number(this.game.config.height);
-    let y = height / 2;
+    const y = height / 2;
     const gameOverText = this.add
       .text(width / 2, y - 90, this.didPlayerWin ? "You Win!" : "Game Over!", {
         fontSize: 50

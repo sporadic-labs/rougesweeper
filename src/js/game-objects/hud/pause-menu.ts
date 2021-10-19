@@ -21,7 +21,7 @@ export default class PauseMenu {
   mobProxy: MobXProxy;
   proxy: EventProxy;
   container: Phaser.GameObjects.Container;
-  isOpen: boolean = false;
+  isOpen = false;
   closeButton: TextButton;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {

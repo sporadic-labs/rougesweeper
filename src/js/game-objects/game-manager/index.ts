@@ -427,7 +427,7 @@ export default class GameManager {
    * @param {*} path
    * @param {*} duration
    */
-  async movePlayerAlongPath(path: Point[], duration: number = 200) {
+  async movePlayerAlongPath(path: Point[], duration = 200) {
     this.radar.closeRadar();
     const lastPoint = path[path.length - 1];
     const worldPath = path.map(p => this.level.gridXYToWorldXY(p));

@@ -10,7 +10,7 @@ type PointCallback = (p: Point) => void;
  */
 class PathTween {
   private path: Phaser.Curves.Path;
-  private fractionComplete: number = 0;
+  private fractionComplete = 0;
   private tween: Tweens.Tween;
 
   /**

@@ -24,7 +24,7 @@ export default class Door {
   private doorMagnifyEffect: MagnifyEffect;
   private tileMagnifyEffect: MagnifyEffect;
   private tileFadeEffect: FadeEffect;
-  public isTileFlipped: boolean = false;
+  public isTileFlipped = false;
 
   constructor(
     private scene: Scene,
