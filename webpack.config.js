@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require("webpack");
 
-module.exports = function(env, argv) {
+module.exports = function (env, argv) {
   const isDev = argv.mode === "development";
 
   return {
@@ -59,13 +59,19 @@ module.exports = function(env, argv) {
       }),
 
       // Instead of using imports & file loader for Phaser assets, just copy over all resources
-      new CopyWebpackPlugin([
+      new CopyWebpackPlugin(
         {
-          from: "./resources",
-          to: "resources/",
-          ignore: ["atlases/assets/**/*", "**/*.tps"]
+          patterns: [
+            {
+              from: "resources",
+              to: "resources",
+              globOptions: {
+                ignore: ["atlases/assets/**/*", "**/*.tps"]
+              }
+            }
+          ]
         }
-      ]),
+      ),
 
       new webpack.DefinePlugin({
         "typeof CANVAS_RENDERER": JSON.stringify(true),
