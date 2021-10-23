@@ -5,7 +5,7 @@ import FlipEffect from "../components/flip-effect";
 import { MagnifyEffect } from "../components/magnify-effect";
 import FadeEffect from "../components/fade-effect";
 
-const SPRITE_ANIMATION_COMPLETE = Animations.Events.SPRITE_ANIMATION_COMPLETE;
+const SPRITE_ANIMATION_COMPLETE = Animations.Events.ANIMATION_COMPLETE;
 const makeAnimCompletePromise = (sprite: GameObjects.Sprite) => {
   return new Promise(resolve => {
     sprite.once(SPRITE_ANIMATION_COMPLETE, resolve);
@@ -88,13 +88,13 @@ export default class Door {
    * Open door and flip tile to revealed state.
    */
   open() {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       if (!this.isCurrentlyOpen) {
         this.isCurrentlyOpen = true;
         const p1 = this.flipTileToFront();
         const p2 = makeAnimCompletePromise(this.doorSprite);
         this.doorSprite.play(`${this.doorPrefix}-open`);
-        Promise.all([p1, p2]).then(resolve);
+        Promise.all([p1, p2]).then(() => resolve());
       } else {
         resolve();
       }
@@ -105,10 +105,10 @@ export default class Door {
    * Close door, without re-hiding the tile.
    */
   close() {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       if (this.isCurrentlyOpen) {
         this.isCurrentlyOpen = false;
-        makeAnimCompletePromise(this.doorSprite).then(resolve);
+        makeAnimCompletePromise(this.doorSprite).then(() => resolve());
         this.doorSprite.play(`${this.doorPrefix}-close`);
       } else {
         resolve();

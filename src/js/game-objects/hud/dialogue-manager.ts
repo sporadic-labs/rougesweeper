@@ -10,17 +10,17 @@ import { GameStore } from "../../store/index";
 import { getDialogueKey } from "../../store/levels";
 
 const baseTextStyle = {
-  fill: "#ffffff"
+  color: "#ffffff"
 };
 const titleStyle = {
   ...baseTextStyle,
   align: "center",
-  fontSize: 30,
+  fontSize: "30",
   fontStyle: "bold"
 };
 const textStyle = {
   ...baseTextStyle,
-  fontSize: 22
+  fontSize: "22"
 };
 
 export interface TileDialogueEntry {

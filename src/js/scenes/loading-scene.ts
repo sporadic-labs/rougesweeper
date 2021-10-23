@@ -3,9 +3,9 @@ import { SCENE_NAME } from "./index";
 import { loadLevels, loadDialogue } from "../store/levels";
 
 const textStyle = {
-  fill: "#ffffff",
+  color: "#ffffff",
   align: "center",
-  fontSize: 30,
+  fontSize: "30",
   fontStyle: "bold"
 };
 

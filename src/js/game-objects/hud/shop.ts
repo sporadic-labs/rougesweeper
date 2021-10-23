@@ -8,11 +8,11 @@ import ShopButton from "./shop-buttons";
 
 const baseTextStyle = {
   align: "center",
-  fill: "#ffffff"
+  color: "#ffffff"
 };
 const titleStyle = {
   ...baseTextStyle,
-  fontSize: 30,
+  fontSize: "30",
   fontStyle: "bold"
 };
 

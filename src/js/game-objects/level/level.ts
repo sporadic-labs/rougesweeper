@@ -54,7 +54,7 @@ export default class Level {
         tileSet = this.map.addTilesetImage("decorations");
         depth = DEPTHS.BOARD;
       }
-      const layer = this.map.createDynamicLayer(layerData.name, tileSet);
+      const layer = this.map.createLayer(layerData.name, tileSet);
       layer.setPosition(
         gameCenter.x - layer.displayWidth / 2,
         gameCenter.y - layer.displayHeight / 2
@@ -152,8 +152,8 @@ export default class Level {
     this.setScrambleableTiles();
 
     // NOTE(rex): Make this less fragile...
-    const isTutorialLevel = levelKey === "level-1-floor-1"
-    if (isTutorialLevel) this.forEachTile((t) => t.flipToFront())
+    const isTutorialLevel = levelKey === "level-1-floor-1";
+    if (isTutorialLevel) this.forEachTile(t => t.flipToFront());
   }
 
   onTileFlip(tile: Tile) {

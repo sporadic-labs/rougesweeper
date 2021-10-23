@@ -9,11 +9,11 @@ import storedSettings from "../../store/stored-settings";
 
 const baseTextStyle = {
   align: "center",
-  fill: "#ffffff"
+  color: "#ffffff"
 };
 const titleStyle = {
   ...baseTextStyle,
-  fontSize: 30,
+  fontSize: "30",
   fontStyle: "bold"
 };
 
@@ -35,8 +35,8 @@ class LevelSelectButton {
     let y = 0;
     this.label = scene.add.text(x, y, levelName, {
       align: "left",
-      fill: "#ffffff",
-      fontSize: 25
+      color: "#ffffff",
+      fontSize: "25"
     });
     y += this.label.height + 5;
     this.loadButton = new TextButton(scene, x, y, "Load", origin);

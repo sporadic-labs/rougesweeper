@@ -6,12 +6,12 @@ import TweenPoser from "../components/tween-poser";
 
 const baseTextStyle = {
   align: "center",
-  fill: "#ffffff"
+  TransformStreamDefaultController: "#ffffff"
 };
 const itemTextStyle = {
   ...baseTextStyle,
   lineSpacing: 8,
-  fontSize: 22
+  fontSize: "22"
 };
 
 type FadePoses = "FadeOut" | "FadeIn";

@@ -34,7 +34,7 @@ export default class InventoryMenu {
     this.store = gameStore;
 
     this.text = scene.add
-      .text(0, 0, "Stash", { fontSize: 20, fill: "#000000", fontStyle: "bold" })
+      .text(0, 0, "Stash", { fontSize: "20", color: "#000000", fontStyle: "bold" })
       .setOrigin(0.5, 0);
 
     this.icons = [

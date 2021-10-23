@@ -43,7 +43,7 @@ class Radar {
       .setOrigin(0.5, 1);
     this.text = scene.add
       .text(0, 0, "0", {
-        fontSize: 29,
+        fontSize: "29",
         fontStyle: "bold",
         color: "#fff"
       })
@@ -250,7 +250,7 @@ class Radar {
    *
    * @returns {Promise<[void, void]>}
    */
-  async update(): Promise<[void, void]> {
+  async update(): Promise<void> {
     return new Promise(resolve => {
       if (!this.level) {
         resolve();
@@ -270,7 +270,7 @@ class Radar {
       if (playerTile) tiles.push(playerTile);
       const p1 = this.updateShapeFromTiles(tiles, true);
       const p2 = this.setDangerCount(true);
-      Promise.all([p1, p2]).then(resolve);
+      Promise.all([p1, p2]).then(() => resolve());
     });
   }
 

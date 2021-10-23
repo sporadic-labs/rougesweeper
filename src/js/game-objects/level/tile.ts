@@ -105,7 +105,7 @@ export default class Tile {
   }
 
   playTileEffectAnimation(playerX: number, playerY: number) {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       if (
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||
@@ -146,7 +146,7 @@ export default class Tile {
   }
 
   playTileDestructionAnimation() {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       if (
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||

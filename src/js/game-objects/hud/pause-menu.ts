@@ -4,14 +4,15 @@ import TextButton from "./text-button";
 import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
+
 const baseTextStyle = {
   align: "center",
-  fill: "#ffffff",
-  fontSize: 20
+  color: "#ffffff",
+  fontSize: "20"
 };
 const titleStyle = {
   ...baseTextStyle,
-  fontSize: 30,
+  fontSize: "30",
   fontStyle: "bold"
 };
 
