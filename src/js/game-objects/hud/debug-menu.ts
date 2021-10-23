@@ -133,14 +133,14 @@ export default class DebugMenu {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
     this.proxy.on(
       scene.input.keyboard,
-      "keydown_D",
+      "keydown-D",
       () => {
         if (this.isOpen) this.close();
         else if (gameStore.gameState !== GAME_MODES.MENU_MODE) this.open();
       },
       this
     );
-    this.proxy.on(scene.input.keyboard, "keydown_G", () => gameStore.addGold(), this);
+    this.proxy.on(scene.input.keyboard, "keydown-G", () => gameStore.addGold(), this);
   }
 
   loadLevel(i: number) {

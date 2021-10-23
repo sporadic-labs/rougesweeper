@@ -63,7 +63,7 @@ export default class PauseMenu {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
     this.proxy.on(
       scene.input.keyboard,
-      "keydown_P",
+      "keydown-P",
       () => {
         if (this.isOpen) this.close();
         else if (gameStore.gameState !== GAME_MODES.MENU_MODE) gameStore.setPauseMenuOpen(true);

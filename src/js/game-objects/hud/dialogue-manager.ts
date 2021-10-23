@@ -126,12 +126,12 @@ export default class DialogueManager {
       .setDepth(DEPTHS.DIALOGUE)
       .setVisible(false);
 
-    scene.input.keyboard.on("keydown_M", () => {
+    scene.input.keyboard.on("keydown-M", () => {
       if (this.isCurrentlyOpen) this.close();
       else this.open();
     });
 
-    scene.input.keyboard.on("keydown_N", () => {
+    scene.input.keyboard.on("keydown-N", () => {
       this.nextState();
     });
 
