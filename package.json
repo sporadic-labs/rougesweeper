@@ -9,11 +9,8 @@
   "license": "MIT",
   "homepage": "https://github.com/sporadic-labs/phaser-3-sandbox.git#readme.md",
   "devDependencies": {
-    "@babel/core": "^7.8.3",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "@babel/preset-react": "^7.8.3",
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "babel-eslint": "^10.0.3",
