@@ -204,11 +204,11 @@ export default class LevelData {
   }
 
   getGridWidth() {
-    return this.tiles[0].length
+    return this.tiles[0].length;
   }
 
   getGridHeight() {
-    return this.tiles.length
+    return this.tiles.length;
   }
 
   /**
