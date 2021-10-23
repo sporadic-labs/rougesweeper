@@ -104,7 +104,7 @@ export default class Player {
         ease: Phaser.Math.Easing.Quadratic.In,
         duration: 150,
         onComplete: () => {
-          return () => resolve();
+          resolve();
         }
       });
     });
