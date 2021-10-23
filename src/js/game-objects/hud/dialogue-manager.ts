@@ -15,12 +15,12 @@ const baseTextStyle = {
 const titleStyle = {
   ...baseTextStyle,
   align: "center",
-  fontSize: "30",
+  fontSize: "30px",
   fontStyle: "bold"
 };
 const textStyle = {
   ...baseTextStyle,
-  fontSize: "22"
+  fontSize: "22px"
 };
 
 export interface TileDialogueEntry {

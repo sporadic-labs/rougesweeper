@@ -12,7 +12,7 @@ const baseTextStyle = {
 };
 const titleStyle = {
   ...baseTextStyle,
-  fontSize: "30",
+  fontSize: "30px",
   fontStyle: "bold"
 };
 

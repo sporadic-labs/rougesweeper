@@ -13,7 +13,7 @@ const baseTextStyle = {
 };
 const titleStyle = {
   ...baseTextStyle,
-  fontSize: "30",
+  fontSize: "30px",
   fontStyle: "bold"
 };
 
@@ -36,7 +36,7 @@ class LevelSelectButton {
     this.label = scene.add.text(x, y, levelName, {
       align: "left",
       color: "#ffffff",
-      fontSize: "25"
+      fontSize: "25px"
     });
     y += this.label.height + 5;
     this.loadButton = new TextButton(scene, x, y, "Load", origin);

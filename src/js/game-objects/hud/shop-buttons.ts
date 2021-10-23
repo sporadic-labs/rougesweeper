@@ -11,7 +11,7 @@ const baseTextStyle = {
 const itemTextStyle = {
   ...baseTextStyle,
   lineSpacing: 8,
-  fontSize: "22"
+  fontSize: "22px"
 };
 
 type FadePoses = "FadeOut" | "FadeIn";

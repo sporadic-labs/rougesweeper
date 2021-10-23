@@ -8,11 +8,11 @@ import { GameStore } from "../../store/index";
 const baseTextStyle = {
   align: "center",
   color: "#ffffff",
-  fontSize: "20"
+  fontSize: "20px"
 };
 const titleStyle = {
   ...baseTextStyle,
-  fontSize: "30",
+  fontSize: "30px",
   fontStyle: "bold"
 };
 

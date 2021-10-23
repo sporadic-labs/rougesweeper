@@ -12,7 +12,7 @@ import Shop from "../game-objects/hud/shop";
 const titleStyle = {
   align: "center",
   color: "#ffffff",
-  fontSize: "30",
+  fontSize: "30px",
   fontStyle: "bold"
 };
 

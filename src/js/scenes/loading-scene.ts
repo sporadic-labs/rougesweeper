@@ -5,7 +5,7 @@ import { loadLevels, loadDialogue } from "../store/levels";
 const textStyle = {
   color: "#ffffff",
   align: "center",
-  fontSize: "30",
+  fontSize: "30px",
   fontStyle: "bold"
 };
 

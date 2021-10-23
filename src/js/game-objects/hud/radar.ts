@@ -43,7 +43,7 @@ class Radar {
       .setOrigin(0.5, 1);
     this.text = scene.add
       .text(0, 0, "0", {
-        fontSize: "29",
+        fontSize: "29px",
         fontStyle: "bold",
         color: "#fff"
       })
