@@ -85,7 +85,7 @@ export default class TextButton {
     this.text.on("pointerover", this.onPointerOver, this);
     this.text.on("pointerout", this.onPointerOut, this);
   }
-  
+
   disableInteractivity() {
     this.reset();
     this.enabled = false;
