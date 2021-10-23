@@ -48,8 +48,6 @@
     "printWidth": 100
   },
   "scripts": {
-    "update-types": "curl https://raw.githubusercontent.com/photonstorm/phaser3-docs/master/typescript/phaser.d.ts --create-dirs --location --output ./types/phaser.d.ts",
-    "postinstall": "npm run update-types",
     "build": "webpack --mode production",
     "dev": "webpack-dev-server --mode development --open",
     "dev:production": "webpack-dev-server --mode production --open",
