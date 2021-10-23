@@ -55,7 +55,8 @@
     "predeploy": "npm run clean && npm run build",
     "deploy": "gh-pages --dist public --dest .",
     "prettier": "prettier --write ./src/js/**/*.{ts,js,jsx,json}",
-    "check-types": "tsc --noEmit --project tsconfig.json"
+    "check-types": "tsc --noEmit --project tsconfig.json",
+    "lint": "eslint --fix --config .eslintrc.js src"
   },
   "repository": {
     "type": "git",
