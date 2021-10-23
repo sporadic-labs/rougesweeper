@@ -54,7 +54,8 @@
     "clean": "rm -rf ./public",
     "predeploy": "npm run clean && npm run build",
     "deploy": "gh-pages --dist public --dest .",
-    "prettier": "prettier --write ./src/js/**/*.{js,jsx,json}"
+    "prettier": "prettier --write ./src/js/**/*.{js,jsx,json}",
+    "check-types": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
