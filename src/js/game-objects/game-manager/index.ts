@@ -138,11 +138,6 @@ export default class GameManager {
       return;
     }
 
-    if (!this.level.exit.isOpen()) {
-      this.toastManager.setMessage("That door is locked - find the key.");
-      return;
-    }
-
     const path = this.level.findPathBetween(playerGridPos, exitGridPos, true);
 
     if (!path) {
@@ -154,12 +149,21 @@ export default class GameManager {
     store.addMove();
 
     await this.movePlayerAlongPath(path);
-    const { x, y } = this.level.gridXYToWorldXY(exitGridPos);
-    const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
-    await coinAnim.play();
-    coinAnim.destroy();
-    store.addGold();
-    store.nextLevel();
+    this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
+
+    if (this.level.exit.isOpen()) {
+      const { x, y } = this.level.gridXYToWorldXY(exitGridPos);
+      const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
+      await coinAnim.play();
+      coinAnim.destroy();
+      store.addGold();
+      store.nextLevel();
+      return;
+    } else {
+      this.toastManager.setMessage("That door is locked - find the key.");
+    }
+
+    this.enableInteractivity();
   };
 
   onTileSelectPrimary = async (tile: Tile) => {
@@ -332,6 +336,8 @@ export default class GameManager {
     if (shouldMoveToTile) {
       await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
     }
+
+    this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
 
     // if there is dialogue, play it
     const playerGridPos = this.player.getGridPosition();

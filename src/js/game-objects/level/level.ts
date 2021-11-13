@@ -11,8 +11,9 @@ import getTilesetName from "./get-tileset-name";
 import DialogueManager from "../hud/dialogue-manager";
 import { Point } from "../../helpers/common-interfaces";
 import EventEmitter from "../../helpers/event-emitter";
-import { LevelEmitter } from "./events";
+import LEVEL_EVENTS, { LevelEmitter } from "./events";
 import { neighborOffsets } from "./neighbor-offsets";
+import TutorialLogic from "./tutorial-logic";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 
@@ -40,6 +41,7 @@ export default class Level {
   private background: GameObjects.Rectangle;
   private tiles: Tile[][];
   private state: LEVEL_STATE = LEVEL_STATE.TRANSITION_IN;
+  private tutorialLogic: TutorialLogic;
 
   constructor(private scene: Scene, levelKey: string, dialogueManager: DialogueManager) {
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
@@ -151,9 +153,7 @@ export default class Level {
 
     this.setScrambleableTiles();
 
-    // NOTE(rex): Make this less fragile...
-    const isTutorialLevel = levelKey === "level-1-floor-1";
-    if (isTutorialLevel) this.forEachTile(t => t.flipToFront());
+    this.tutorialLogic = new TutorialLogic(this.scene, this, levelKey);
   }
 
   onTileFlip(tile: Tile) {
@@ -447,6 +447,7 @@ export default class Level {
     this.tiles[start.y][start.x].flipToFront();
     this.getNeighboringTiles(start.x, start.y).map(tile => tile.flipToFront());
     this.state = LEVEL_STATE.RUNNING;
+    this.events.emit(LEVEL_EVENTS.LEVEL_START, this);
   }
 
   destroy() {
