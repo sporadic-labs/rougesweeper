@@ -44,7 +44,7 @@ export default class TutorialLogic {
         this.dialogueManager.playDialogue({
           title: "Tutorial",
           imageKey: "marker-2",
-          text: ["Hello you need a key"]
+          text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."]
         });
         this.level.forEachTile(t => {
           t.flipToBack();
@@ -59,7 +59,7 @@ export default class TutorialLogic {
       this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "marker-2",
-        text: ["Hello tutorial is starting"]
+        text: ["I need to get to the next level..."]
       });
       this.level.forEachTile(t => t.flipToFront());
     }
