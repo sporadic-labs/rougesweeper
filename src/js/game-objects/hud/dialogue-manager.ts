@@ -156,11 +156,18 @@ export default class DialogueManager {
   playDialogueFromTile(tile: Tile) {
     const data: TileDialogueEntry = tile.getDialogueData();
     if (data && (data.repeat < 0 || data.repeat >= tile.dialoguePlayedCounter)) {
-      this.setDialoguePages(data.entries);
-      if (this.isCurrentlyOpen) this.close();
-      this.open();
+      this.playDialogue(data.entries);
       tile.dialoguePlayedCounter++;
     }
+  }
+
+  playDialogue(dialogueEntryOrEntries: DialogueEntry[] | DialogueEntry) {
+    const entries = Array.isArray(dialogueEntryOrEntries)
+      ? dialogueEntryOrEntries
+      : [dialogueEntryOrEntries];
+    this.setDialoguePages(entries);
+    if (this.isCurrentlyOpen) this.close();
+    this.open();
   }
 
   nextState() {

@@ -153,7 +153,7 @@ export default class Level {
 
     this.setScrambleableTiles();
 
-    this.tutorialLogic = new TutorialLogic(this.scene, this, levelKey);
+    this.tutorialLogic = new TutorialLogic(scene, dialogueManager, this, levelKey);
   }
 
   onTileFlip(tile: Tile) {
