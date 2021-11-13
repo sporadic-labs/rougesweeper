@@ -104,7 +104,7 @@ export default class Level {
             this.gridXToWorldX(x),
             this.gridYToWorldY(y),
             this.events,
-            phaserTile.properties.frameName,
+            frameName,
             isOpen,
             DOOR_PLACEMENT.RIGHT,
             tileKey
@@ -126,7 +126,7 @@ export default class Level {
             this.gridXToWorldX(x),
             this.gridYToWorldY(y),
             this.events,
-            phaserTile.properties.frameName,
+            frameName,
             isOpen,
             DOOR_PLACEMENT.LEFT,
             tileKey
