@@ -141,6 +141,14 @@ export default class Shop {
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
+    this.proxy.on(
+      scene.input.keyboard,
+      "keydown-L",
+      () => {
+        this.gameStore.isShopOpen = !this.gameStore.isShopOpen;
+      },
+      this
+    );
   }
 
   openShop = () => {
