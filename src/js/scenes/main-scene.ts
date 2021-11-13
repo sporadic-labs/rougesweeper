@@ -8,6 +8,7 @@ import LevelIndicator from "../game-objects/hud/level-indicator";
 import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
 import Shop from "../game-objects/hud/shop";
+import AmmoIndicator from "../game-objects/hud/ammo-indicator";
 
 const titleStyle = {
   align: "center",
@@ -33,6 +34,7 @@ export default class MainScene extends Scene {
     new Shop(this, store);
     new TechIndicator(this, store);
     new AlertIndicator(this, store);
+    new AmmoIndicator(this, store);
     new PauseToggle(this, store);
     new LevelIndicator(this, store);
   }
