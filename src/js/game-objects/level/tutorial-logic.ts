@@ -11,6 +11,8 @@ export default class TutorialLogic {
   private level: Level;
   private levelKey: string;
 
+  private hasFinishedFloor1Tutorial = false;
+
   constructor(scene: Phaser.Scene, level: Level, levelKey: string) {
     this.scene = scene;
     this.level = level;
@@ -21,7 +23,6 @@ export default class TutorialLogic {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
 
     const isTutorialLevel = levelKey === "level-1-floor-1";
-    console.log("tut");
     if (isTutorialLevel) {
       this.level.events.addListener(LEVEL_EVENTS.LEVEL_START, this.onLevelStart, this);
       this.level.events.addListener(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitClick, this);
@@ -30,7 +31,8 @@ export default class TutorialLogic {
 
   async onExitClick() {
     // Hide everything when you touched the locked door
-    if (this.levelKey === "level-1-floor-1") {
+    if (this.levelKey === "level-1-floor-1" && !this.hasFinishedFloor1Tutorial) {
+      this.hasFinishedFloor1Tutorial = true;
       this.level.events.once(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, () => {
         this.level.forEachTile(t => {
           t.flipToBack();
