@@ -25,9 +25,9 @@ export default class AlertIndicator {
       scene.add.image(0, 0, "all-assets", FRAMES.UNFILLED)
     ];
 
-    const iconSpacing = 6;
+    const iconSpacing = 0;
     const iconHeight = this.icons[0].height;
-    const bgPadding = { x: 4, y: 25 };
+    const bgPadding = { x: 4, y: 24 };
     const bgWidth = 96;
 
     this.text.setPosition(bgWidth / 2, bgPadding.y);
@@ -46,7 +46,7 @@ export default class AlertIndicator {
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.08), [this.background, this.text, ...this.icons])
+      .container(fractionToX(0.83), fractionToY(0.03), [this.background, this.text, ...this.icons])
       .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.playerHealth, true);
