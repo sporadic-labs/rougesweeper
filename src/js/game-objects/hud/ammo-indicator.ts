@@ -35,12 +35,13 @@ export default class AmmoIndicator {
             .text(0, 0, "Ammo", { fontSize: "20px", color: "#000000", fontStyle: "bold" })
             .setOrigin(0.5, 0);
 
+
         this.icons = [
-            scene.add.image(0, 0, "all-assets", FRAMES.EMPTY),
-            scene.add.image(0, 0, "all-assets", FRAMES.EMPTY),
-            scene.add.image(0, 0, "all-assets", FRAMES.EMPTY),
-            scene.add.image(0, 0, "all-assets", FRAMES.EMPTY),
-            scene.add.image(0, 0, "all-assets", FRAMES.EMPTY)
+            scene.add.image(0, 0, "all-assets", FRAMES.FULL),
+            scene.add.image(0, 0, "all-assets", FRAMES.FULL),
+            scene.add.image(0, 0, "all-assets", FRAMES.FULL),
+            scene.add.image(0, 0, "all-assets", FRAMES.FULL),
+            scene.add.image(0, 0, "all-assets", FRAMES.FULL)
         ];
 
         const iconSpacing = -24;
@@ -67,18 +68,18 @@ export default class AmmoIndicator {
             .container(fractionToX(0.12), fractionToY(0.03), [this.background, this.text, ...this.icons])
             .setDepth(DEPTHS.HUD);
 
-        this.updateText(gameStore.playerHealth);
-        this.dispose = autorun(() => this.updateText(gameStore.playerHealth));
+        this.updateText(gameStore.playerAmmo);
+        this.dispose = autorun(() => this.updateText(gameStore.playerAmmo));
 
         this.eventProxy = new EventProxy();
         this.eventProxy.on(scene.events, "shutdown", this.destroy, this);
         this.eventProxy.on(scene.events, "destroy", this.destroy, this);
     }
 
-    updateText(playerHealth: number) {
-        const alertLevel = 4 - playerHealth;
+    updateText(playerAmmo: number) {
+        const ammoAmount = playerAmmo;
         this.icons.forEach((icon, i) => {
-            const frame = i < alertLevel ? FRAMES.FULL : FRAMES.EMPTY;
+            const frame = i < ammoAmount ? FRAMES.FULL : FRAMES.EMPTY;
             icon.setFrame(frame);
         });
     }

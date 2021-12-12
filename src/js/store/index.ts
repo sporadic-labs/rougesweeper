@@ -8,6 +8,8 @@ class GameStore {
   @observable gameState: GAME_MODES;
   @observable dangerCount: number;
   @observable goldCount: number;
+  @observable maxPlayerAmmo: number;
+  @observable playerAmmo: number;
   @observable maxPlayerHealth: number;
   @observable playerHealth: number;
   @observable isShopOpen: boolean;
@@ -24,6 +26,8 @@ class GameStore {
     this.previousGameState = this.gameState;
     this.dangerCount = 0;
     this.goldCount = storedSettings.startingGold;
+    this.maxPlayerAmmo = 5;
+    this.playerAmmo = 5;
     this.maxPlayerHealth = 4;
     this.playerHealth = this.maxPlayerHealth;
     this.isShopOpen = false;
@@ -52,8 +56,14 @@ class GameStore {
   @action removeGold(amt = 1) {
     if (this.goldCount > 0) this.goldCount -= amt;
   }
-  @action addHealth(amt = 1) {
+  @action addAmmo(amt = 1) {
     if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
+  }
+  @action removeAmmo(amt = 1) {
+    if (this.playerAmmo > 0) this.playerAmmo -= amt;
+  }
+  @action addHealth(amt = 1) {
+    if (this.playerAmmo <= this.maxPlayerAmmo) this.playerAmmo += amt;
   }
   @action removeHealth(amt = 1) {
     if (this.playerHealth > 0) this.playerHealth -= amt;

@@ -201,8 +201,8 @@ export default class GameManager {
       return;
     }
 
-    if (store.goldCount === 0) {
-      this.toastManager.setMessage("Not enough tech to hack anything!");
+    if (store.playerAmmo === 0) {
+      this.toastManager.setMessage("Not enough ammo to hack anything!");
       return;
     }
 
@@ -395,7 +395,7 @@ export default class GameManager {
 
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
-    store.removeGold();
+    store.removeAmmo();
     const shouldGetCoin = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
     const { x, y } = tile.getPosition();
     const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
