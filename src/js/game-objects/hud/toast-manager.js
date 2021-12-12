@@ -40,7 +40,7 @@ export default class ToastManager {
     const container = this.scene.add.container(this.x, this.y, [textShadow, textObject]);
 
     this.messages.push(container);
-    this.messages.forEach((m, i) => m.setDepth(DEPTHS.HUD + i));
+    this.messages.forEach((m, i) => m.setDepth(DEPTHS.TOAST + i));
     this.tweenToast();
     this.tweenLastToastOut();
   }

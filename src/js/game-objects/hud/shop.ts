@@ -5,6 +5,7 @@ import MobXProxy from "../../helpers/mobx-proxy";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
 import ShopButton from "./shop-buttons";
+import ToastManager from "./toast-manager";
 
 const baseTextStyle = {
   align: "center",
@@ -19,12 +20,15 @@ const titleStyle = {
 export default class Shop {
   scene: Phaser.Scene;
   gameStore: GameStore;
+  toastManager: ToastManager;
   costs = {
+    ammo: 1,
     heart: 3,
     compass: 5,
     clearRadar: 4,
     revealTile: 3,
   };
+  buyAmmoButton: ShopButton;
   buyHeartButton: ShopButton;
   buyCompassButton: ShopButton;
   buyClearRadarButton: ShopButton;
@@ -34,9 +38,10 @@ export default class Shop {
   mobProxy: MobXProxy;
   proxy: EventProxy;
 
-  constructor(scene: Phaser.Scene, gameStore: GameStore) {
+  constructor(scene: Phaser.Scene, gameStore: GameStore, toastManager: ToastManager) {
     this.scene = scene;
     this.gameStore = gameStore;
+    this.toastManager = toastManager;
 
     const width = Number(scene.game.config.width);
     const height = Number(scene.game.config.height);
@@ -61,55 +66,68 @@ export default class Shop {
     this.leaveButton = leaveButton;
 
     const y = r.centerY - 12;
-    const x1 = r.x + r.width * (1 / 8);
-    const x2 = r.x + r.width * (3 / 8);
-    const x3 = r.x + r.width * (5 / 8);
-    const x4 = r.x + r.width * (7 / 8);
+    const x1 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (0 / 8));
+    const x2 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (2 / 8));
+    const x3 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (4 / 8));
+    const x4 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (6 / 8));
+    const x5 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (8 / 8));
 
-    const buyHeartButton = new ShopButton(
+    const buyAmmoButton = new ShopButton(
       scene,
       x1,
       y,
       "all-assets",
+      "ammo-full",
+      "Buy",
+      `Refill Ammo\nCost: ${this.costs.ammo} tech`,
+      this.buyAmmoRefill
+    );
+    this.buyAmmoButton = buyAmmoButton;
+
+    const buyHeartButton = new ShopButton(
+      scene,
+      x2,
+      y,
+      "all-assets",
       "alarm-on",
       "Buy",
-      `Reduce alert\n(max 3)\nCost: ${this.costs.heart} tech`,
+      `Reduce Alert\n(max 3)\nCost: ${this.costs.heart} tech`,
       this.buyHealth
     );
     this.buyHeartButton = buyHeartButton;
 
     const buyCompassButton = new ShopButton(
       scene,
-      x2,
+      x3,
       y,
       "all-assets",
       "compass",
       "Buy",
-      `Buy compass\nfor level\nCost: ${this.costs.compass} tech`,
+      `Buy Compass\nfor level\nCost: ${this.costs.compass} tech`,
       this.buyCompass
     );
     this.buyCompassButton = buyCompassButton;
 
     const buyClearRadarButton = new ShopButton(
       scene,
-      x3,
+      x4,
       y,
       "all-assets",
       "clear-radar",
       "Buy",
-      `Buy {RADAR CLEAR}\n(max 1)\nCost: ${this.costs.clearRadar} tech`,
+      `Buy EMP\n(max 1)\nCost: ${this.costs.clearRadar} tech`,
       this.buyClearRadar
     );
     this.buyClearRadarButton = buyClearRadarButton;
 
     const buyRevealTileButton = new ShopButton(
       scene,
-      x4,
+      x5,
       y,
       "all-assets",
       "reveal-tile",
       "Buy",
-      `Buy {REVEAL TILE}\n(max 1)\nCost: ${this.costs.revealTile} tech`,
+      `Buy Sniper\n(max 1)\nCost: ${this.costs.revealTile} tech`,
       this.buyRevealTile
     );
     this.buyRevealTileButton = buyRevealTileButton;
@@ -119,6 +137,7 @@ export default class Shop {
         background,
         title,
         leaveButton.text,
+        buyAmmoButton.container,
         buyHeartButton.container,
         buyCompassButton.container,
         buyClearRadarButton.container,
@@ -162,18 +181,21 @@ export default class Shop {
     const {
       gameStore,
       costs,
+      buyAmmoButton,
       buyHeartButton,
       buyRevealTileButton,
       buyClearRadarButton,
       buyCompassButton,
     } = this;
-    const { goldCount, playerHealth, maxPlayerHealth, hasRevealTile, hasClearRadar, hasCompass } =
+    const { goldCount, playerHealth, maxPlayerHealth, hasRevealTile, hasClearRadar, hasCompass, playerAmmo, maxPlayerAmmo } =
       gameStore;
+    const canRefillAmmo = playerAmmo < maxPlayerAmmo && goldCount >= costs.ammo;
     const canBuyHeart = playerHealth < maxPlayerHealth && goldCount >= costs.heart;
     const canBuyRevealTile = !hasRevealTile && goldCount >= costs.revealTile;
     const canBuyClearRadar = !hasClearRadar && goldCount >= costs.clearRadar;
     const canBuyCompass = !hasCompass && goldCount >= costs.compass;
 
+    canRefillAmmo ? buyAmmoButton.enable() : buyAmmoButton.disable();
     canBuyHeart ? buyHeartButton.enable() : buyHeartButton.disable();
     canBuyCompass ? buyCompassButton.enable() : buyCompassButton.disable();
     canBuyClearRadar ? buyClearRadarButton.enable() : buyClearRadarButton.disable();
@@ -186,28 +208,59 @@ export default class Shop {
     this.gameStore.goToPreviousGameState();
   };
 
+  buyAmmoRefill = () => {
+    const { gameStore, costs } = this;
+    if (gameStore.goldCount >= costs.ammo) {
+      gameStore.removeGold(costs.ammo);
+      gameStore.setAmmo(gameStore.maxPlayerAmmo);
+      this.toastManager.setMessage("Ammo refilled!")
+    } else {
+      this.toastManager.setMessage("Not enough Tech!")
+    }
+  };
+
   buyClearRadar = () => {
     const { gameStore, costs } = this;
-    gameStore.removeGold(costs.clearRadar);
-    gameStore.setHasClearRadar(true);
+    if (gameStore.goldCount >= costs.clearRadar) {
+      gameStore.removeGold(costs.clearRadar);
+      gameStore.setHasClearRadar(true);
+      this.toastManager.setMessage("EMP acquired!")
+    } else {
+      this.toastManager.setMessage("Not enough Tech!")
+    }
   };
 
   buyRevealTile = () => {
     const { gameStore, costs } = this;
-    gameStore.removeGold(costs.revealTile);
-    gameStore.setHasRevealTile(true);
+    if (gameStore.goldCount >= costs.revealTile) {
+      gameStore.removeGold(costs.revealTile);
+      gameStore.setHasRevealTile(true);
+      this.toastManager.setMessage("Sniper acquired!")
+    } else {
+      this.toastManager.setMessage("Not enough Tech!")
+    }
   };
 
   buyHealth = () => {
     const { gameStore, costs } = this;
-    gameStore.removeGold(costs.heart);
-    gameStore.addHealth(1);
+    if (gameStore.goldCount >= costs.heart) {
+      gameStore.removeGold(costs.heart);
+      gameStore.addHealth(1);
+      this.toastManager.setMessage("Alert level cleared!")
+    } else {
+      this.toastManager.setMessage("Not enough Tech!")
+    }
   };
 
   buyCompass = () => {
     const { gameStore, costs } = this;
-    gameStore.removeGold(costs.compass);
-    gameStore.setHasCompass(true);
+    if (gameStore.goldCount >= costs.compass) {
+      gameStore.removeGold(costs.compass);
+      gameStore.setHasCompass(true);
+      this.toastManager.setMessage("Compass acquired!")
+    } else {
+      this.toastManager.setMessage("Not enough Tech!")
+    }
   };
 
   resetButtons() {

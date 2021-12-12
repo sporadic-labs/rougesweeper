@@ -13,6 +13,7 @@ const DEPTHS = {
   HUD: 600,
   DIALOGUE: 700,
   MENU: 800,
+  TOAST: 850
 };
 
 /**

@@ -31,7 +31,7 @@ export default class MainScene extends Scene {
       .text(width * 0.91, height * 0.92, "SpyWare\n(or whatever...)", titleStyle)
       .setOrigin(0.5, 0);
 
-    new Shop(this, store);
+    new Shop(this, store, toastManager);
     new TechIndicator(this, store);
     new AlertIndicator(this, store);
     new AmmoIndicator(this, store);

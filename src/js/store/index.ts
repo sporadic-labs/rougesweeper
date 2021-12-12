@@ -57,8 +57,12 @@ class GameStore {
   removeGold(amt = 1) {
     if (this.goldCount > 0) this.goldCount -= amt;
   }
+  setAmmo(amt = 1) {
+    if (this.playerAmmo <= this.maxPlayerAmmo) this.playerAmmo = amt;
+    else this.playerAmmo = this.maxPlayerAmmo
+  }
   addAmmo(amt = 1) {
-    if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
+    if (this.playerAmmo <= this.maxPlayerAmmo) this.playerAmmo += amt;
   }
   removeAmmo(amt = 1) {
     if (this.playerAmmo > 0) this.playerAmmo -= amt;
