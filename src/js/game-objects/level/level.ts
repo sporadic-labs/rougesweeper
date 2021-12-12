@@ -42,8 +42,15 @@ export default class Level {
   private tiles: Tile[][];
   private state: LEVEL_STATE = LEVEL_STATE.TRANSITION_IN;
   private tutorialLogic: TutorialLogic;
+  private tileKey: string;
 
-  constructor(private scene: Scene, levelKey: string, dialogueManager: DialogueManager) {
+  constructor(
+    private scene: Scene,
+    private levelKey: string,
+    private dialogueManager: DialogueManager
+  ) {
+    this.tileKey = getTileFrame(levelKey);
+
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
     const tilesSetImage = this.map.addTilesetImage(getTilesetName(levelKey));
@@ -78,10 +85,12 @@ export default class Level {
       .setDepth(DEPTHS.GROUND)
       .setOrigin(0.5, 0.5);
 
-    const tileKey = getTileFrame(levelKey);
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((dataTile, x) => {
-        if (!dataTile || !dataTile.type) return undefined;
+        // TODO: remove the shop from the tile creation here and create it
+        // later. We can drop this when we remove the shop from all tilemap
+        // files.
+        if (!dataTile || !dataTile.type || dataTile.type === TILE_TYPES.SHOP) return undefined;
 
         const { type, phaserTile, isReachable } = dataTile;
         const { frameName } = phaserTile.properties;
@@ -107,7 +116,7 @@ export default class Level {
             frameName,
             isOpen,
             DOOR_PLACEMENT.RIGHT,
-            tileKey
+            this.tileKey
           );
           return;
         } else if (type === TILE_TYPES.ENTRANCE) {
@@ -129,14 +138,14 @@ export default class Level {
             frameName,
             isOpen,
             DOOR_PLACEMENT.LEFT,
-            tileKey
+            this.tileKey
           );
           return;
         }
 
         const tile = new Tile(
           scene,
-          tileKey,
+          this.tileKey,
           type,
           frameName,
           this.gridXToWorldX(x),
@@ -151,9 +160,35 @@ export default class Level {
       })
     );
 
+    const hasShop = !levelKey.match(/level-1-floor-[1,2]/);
+    if (hasShop) {
+      const x = this.exitGridPosition.x - 1;
+      const y = this.exitGridPosition.y - 1;
+      this.createShop(x, y);
+    }
+
     this.setScrambleableTiles();
 
     this.tutorialLogic = new TutorialLogic(scene, dialogueManager, this, levelKey);
+  }
+
+  createShop(x: number, y: number) {
+    // TODO: check for out of bounds and check for overriding a tile.
+    const dialogueData = this.dialogueManager.getDialogueDataForTile(this.levelKey, x, y);
+    const tile = new Tile(
+      this.scene,
+      this.tileKey,
+      TILE_TYPES.SHOP,
+      "shop",
+      this.gridXToWorldX(x),
+      this.gridYToWorldY(y),
+      this,
+      true,
+      dialogueData
+    );
+    tile.setGridPosition(x, y);
+    tile.enableInteractive();
+    this.tiles[y][x] = tile;
   }
 
   onTileFlip(tile: Tile) {
