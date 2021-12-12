@@ -12,7 +12,6 @@ import {
   ObservableMap,
   IObjectDidChange,
   ISetDidChange,
-  IArrayChange,
   IArraySplice,
   IMapDidChange
 } from "mobx";
@@ -37,7 +36,7 @@ export default class MobXProxy {
   ): Lambda;
   observe<T>(
     observableArray: IObservableArray<T>,
-    listener: (change: IArrayChange<T> | IArraySplice<T>) => void,
+    listener: (change: IArraySplice<T>) => void,
     fireImmediately?: boolean
   ): Lambda;
   observe<V>(

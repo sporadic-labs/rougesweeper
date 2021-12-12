@@ -1,25 +1,25 @@
-import { observable, action, computed } from "mobx";
+import { makeAutoObservable } from "mobx";
 import GAME_MODES from "../game-objects/game-manager/events";
 import { levelKeys } from "./levels";
 import storedSettings from "./stored-settings";
 
 class GameStore {
-  @observable previousGameState: GAME_MODES;
-  @observable gameState: GAME_MODES;
-  @observable dangerCount: number;
-  @observable goldCount: number;
-  @observable maxPlayerAmmo: number;
-  @observable playerAmmo: number;
-  @observable maxPlayerHealth: number;
-  @observable playerHealth: number;
-  @observable isShopOpen: boolean;
-  @observable moveCount: number;
-  @observable hasCompass: boolean;
-  @observable hasRevealTile: boolean;
-  @observable hasClearRadar: boolean;
-  @observable levelIndex: number;
-  @observable hasKey: boolean;
-  @observable pauseMenuOpen: boolean;
+  previousGameState: GAME_MODES;
+  gameState: GAME_MODES;
+  dangerCount: number;
+  goldCount: number;
+  maxPlayerHealth: number;
+  playerHealth: number;
+  isShopOpen: boolean;
+  moveCount: number;
+  hasCompass: boolean;
+  hasRevealTile: boolean;
+  hasClearRadar: boolean;
+  levelIndex: number;
+  hasKey: boolean;
+  pauseMenuOpen: boolean;
+  maxPlayerAmmo: number;
+  playerAmmo: number;
 
   constructor() {
     this.gameState = GAME_MODES.IDLE_MODE;
@@ -38,70 +38,71 @@ class GameStore {
     this.levelIndex = storedSettings.startingLevel;
     this.hasKey = false;
     this.pauseMenuOpen = false;
+    makeAutoObservable(this);
   }
 
-  @action setGameState(state: GAME_MODES) {
+  setGameState(state: GAME_MODES) {
     this.previousGameState = this.gameState;
     this.gameState = state;
   }
-  @action goToPreviousGameState() {
+  goToPreviousGameState() {
     this.gameState = this.previousGameState;
   }
-  @action setDangerCount(count: number) {
+  setDangerCount(count: number) {
     this.dangerCount = count;
   }
-  @action addGold(amt = 1) {
+  addGold(amt = 1) {
     if (this.goldCount >= 0) this.goldCount += amt;
   }
-  @action removeGold(amt = 1) {
+  removeGold(amt = 1) {
     if (this.goldCount > 0) this.goldCount -= amt;
   }
-  @action addAmmo(amt = 1) {
+  addAmmo(amt = 1) {
     if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
   }
-  @action removeAmmo(amt = 1) {
+  removeAmmo(amt = 1) {
     if (this.playerAmmo > 0) this.playerAmmo -= amt;
   }
-  @action addHealth(amt = 1) {
-    if (this.playerAmmo <= this.maxPlayerAmmo) this.playerAmmo += amt;
+  addHealth(amt = 1) {
+    if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
   }
-  @action removeHealth(amt = 1) {
+  removeHealth(amt = 1) {
     if (this.playerHealth > 0) this.playerHealth -= amt;
   }
-  @action setShopOpen(isShopOpen: boolean) {
+  setShopOpen(isShopOpen: boolean) {
     this.isShopOpen = isShopOpen;
   }
-  @action setHasCompass(hasCompass: boolean) {
+  setHasCompass(hasCompass: boolean) {
     this.hasCompass = hasCompass;
   }
-  @action setHasRevealTile(hasRevealTile: boolean) {
+  setHasRevealTile(hasRevealTile: boolean) {
     this.hasRevealTile = hasRevealTile;
   }
-  @action setHasClearRadar(hasClearRadar: boolean) {
+  setHasClearRadar(hasClearRadar: boolean) {
     this.hasClearRadar = hasClearRadar;
   }
-  @action setHasKey(hasKey: boolean) {
+  setHasKey(hasKey: boolean) {
     this.hasKey = hasKey;
   }
-  @action addMove(amt = 1) {
+  addMove(amt = 1) {
     if (this.moveCount >= 0) this.moveCount += amt;
   }
-  @action nextLevel() {
+  nextLevel() {
     if (this.levelIndex < levelKeys.length) this.levelIndex += 1;
   }
-  @action setLevelByIndex(levelIndex: number) {
+  setLevelByIndex(levelIndex: number) {
     if (levelIndex >= 0 && levelIndex < levelKeys.length) this.levelIndex = levelIndex;
   }
 
-  @computed get level() {
+  get level() {
     return levelKeys[this.levelIndex];
   }
 
-  @action setPauseMenuOpen(pauseMenuOpen: boolean) {
+  setPauseMenuOpen(pauseMenuOpen: boolean) {
     this.pauseMenuOpen = pauseMenuOpen;
   }
 
-  @action startNewGame() {
+  startNewGame() {
     this.playerHealth = this.maxPlayerHealth;
     this.goldCount = storedSettings.startingGold;
     this.levelIndex = storedSettings.startingLevel;
