@@ -36,7 +36,7 @@ class Radar {
     this.scene = scene;
     this.player = player;
     this.areaGraphic = scene.add.graphics({
-      fillStyle: { color: 0xfc3f3f, alpha: 0.25 }
+      fillStyle: { color: 0xfc3f3f, alpha: 0.25 },
     });
     this.labelBackgroundSprite = scene.add
       .sprite(0, 0, "all-assets", "radar-pin")
@@ -45,7 +45,7 @@ class Radar {
       .text(0, 0, "0", {
         fontSize: "29px",
         fontStyle: "bold",
-        color: "#fff"
+        color: "#fff",
       })
       .setOrigin(0.5, 0.5);
     this.text.y = -this.labelBackgroundSprite.displayHeight * (22 / 38);
@@ -83,7 +83,7 @@ class Radar {
     let maxX: number = Number.MIN_SAFE_INTEGER;
     let minY: number = Number.MAX_SAFE_INTEGER;
     let maxY: number = Number.MIN_SAFE_INTEGER;
-    tiles.map(tile => {
+    tiles.map((tile) => {
       const { left, right, top, bottom } = tile.getBounds(this.reusableRect);
       if (left < minX) minX = left;
       if (right > maxX) maxX = right;
@@ -107,7 +107,7 @@ class Radar {
   }
 
   closeRadar(): Promise<void> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (this.isOpen) {
         this.isOpen = false;
         this.openTween?.stop();
@@ -117,7 +117,7 @@ class Radar {
           scaleY: 0,
           duration: 150,
           ease: Phaser.Math.Easing.Circular.Out,
-          onComplete: () => resolve()
+          onComplete: () => resolve(),
         });
       } else {
         resolve();
@@ -126,7 +126,7 @@ class Radar {
   }
 
   private openRadar(): Promise<void> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (!this.isOpen) {
         this.isOpen = true;
         this.openTween?.stop();
@@ -136,7 +136,7 @@ class Radar {
           scaleY: 1,
           duration: 300,
           ease: BezierEasing(0.31, 0.68, 0.02, 1.47), // https://cubic-bezier.com/#.17,.67,.83,.67
-          onComplete: () => resolve()
+          onComplete: () => resolve(),
         });
       } else {
         resolve();
@@ -157,7 +157,7 @@ class Radar {
       duration: 500,
       yoyo: true,
       repeat: -1,
-      easing: Phaser.Math.Easing.Bounce.InOut
+      easing: Phaser.Math.Easing.Bounce.InOut,
     });
     if (w !== this.w || h !== this.h) {
       this.w = w;
@@ -173,7 +173,7 @@ class Radar {
 
   private setDangerCount(shouldAnimateUpdate: boolean): Promise<void> {
     const count = this.isScrambling ? this.scrambledEnemyCount : this.enemyCount;
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (!shouldAnimateUpdate) {
         this.text.setText(`${count}`);
         resolve();
@@ -199,7 +199,7 @@ class Radar {
               this.labelContainer.scaleY = scale;
             }
           },
-          onComplete: () => resolve()
+          onComplete: () => resolve(),
         });
       }
     });
@@ -222,7 +222,7 @@ class Radar {
         this.scrambledEnemyCount = newEnemyCount;
         this.setDangerCount(false);
       },
-      callbackScope: this
+      callbackScope: this,
     });
 
     this.labelBackgroundSprite.setFrame("radar-pin-scrambled");
@@ -251,7 +251,7 @@ class Radar {
    * @returns {Promise<[void, void]>}
    */
   async update(): Promise<void> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (!this.level) {
         resolve();
         return;

@@ -9,7 +9,7 @@ import GAME_MODES from "../game-manager/events";
 
 export enum INVENTORY_EVENTS {
   SELECT = "SELECT",
-  DESELECT = "DESELECT"
+  DESELECT = "DESELECT",
 }
 
 export default class InventoryMenu {
@@ -67,7 +67,7 @@ export default class InventoryMenu {
         "all-assets",
         "reveal-tile",
         this.onPointerDown
-      )
+      ),
     ];
 
     const iconSpacing = 6;
@@ -94,7 +94,7 @@ export default class InventoryMenu {
       .container(fractionToX(0.12), fractionToY(0.42), [
         this.background,
         this.text,
-        ...this.icons.map(icon => icon.sprite)
+        ...this.icons.map((icon) => icon.sprite),
       ])
       .setDepth(DEPTHS.HUD);
 
@@ -121,7 +121,7 @@ export default class InventoryMenu {
    * Enable user interactivity for the tile.
    */
   enableInteractive() {
-    this.icons.forEach(icon => {
+    this.icons.forEach((icon) => {
       icon.enableInteractive();
     });
   }
@@ -133,20 +133,20 @@ export default class InventoryMenu {
     /* NOTE(rex): This handles the edge case of onHoverEnd never triggering,
      * since the gameManager disables interactivity when the move action kicks off.
      */
-    this.icons.forEach(icon => {
+    this.icons.forEach((icon) => {
       icon.disableInteractive();
     });
   }
 
   getSelected() {
-    return this.icons.find(icon => icon.selected);
+    return this.icons.find((icon) => icon.selected);
   }
 
   /**
    * Deselect any selected icons from your inventory.
    */
   deselectAll() {
-    this.icons.forEach(icon => icon.setDeselected());
+    this.icons.forEach((icon) => icon.setDeselected());
   }
 
   /**
@@ -154,7 +154,7 @@ export default class InventoryMenu {
    * @param toggle
    */
   onPointerDown = (toggle: InventoryToggle) => {
-    this.icons.forEach(icon => {
+    this.icons.forEach((icon) => {
       if (icon.type === toggle.type) {
         if (icon.selected) {
           icon.setDeselected();
@@ -171,7 +171,7 @@ export default class InventoryMenu {
 
   destroy() {
     this.events.destroy();
-    this.icons.forEach(icon => icon.destroy());
+    this.icons.forEach((icon) => icon.destroy());
     this.container.destroy();
     this.mobxProxy.destroy();
     this.eventProxy.removeAll();

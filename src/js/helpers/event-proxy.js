@@ -61,7 +61,7 @@ export default class EventProxy {
   }
 
   off(eventEmitter, eventName, listener, context) {
-    this.listeners = this.listeners.filter(eventListener => {
+    this.listeners = this.listeners.filter((eventListener) => {
       if (eventListener.doesMatch(eventEmitter, eventName, listener, context)) {
         eventListener.destroy();
         return false;
@@ -72,7 +72,7 @@ export default class EventProxy {
 
   debugDump() {
     logger.log(
-      `[${this.listeners.map(listener => `\n\tEvent "${listener.eventName}"`).join(",")}\n]`
+      `[${this.listeners.map((listener) => `\n\tEvent "${listener.eventName}"`).join(",")}\n]`
     );
   }
 
@@ -82,7 +82,7 @@ export default class EventProxy {
    * @memberof EventProxy
    */
   removeAll() {
-    this.listeners.forEach(listener => listener.destroy());
+    this.listeners.forEach((listener) => listener.destroy());
     this.listeners = [];
   }
 }

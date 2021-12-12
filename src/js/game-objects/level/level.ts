@@ -20,7 +20,7 @@ const Distance = Phaser.Math.Distance.BetweenPoints;
 enum LEVEL_STATE {
   TRANSITION_IN = "TRANSITION_IN",
   RUNNING = "RUNNING",
-  TRANSITION_OUT = "TRANSITION_OUT"
+  TRANSITION_OUT = "TRANSITION_OUT",
 }
 
 export default class Level {
@@ -48,7 +48,7 @@ export default class Level {
     this.map = scene.add.tilemap(levelKey);
     const tilesSetImage = this.map.addTilesetImage(getTilesetName(levelKey));
 
-    this.map.layers.forEach(layerData => {
+    this.map.layers.forEach((layerData) => {
       // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
       let tileSet = tilesSetImage;
       let depth = DEPTHS.BOARD;
@@ -92,7 +92,7 @@ export default class Level {
           // Find the center world position of the whole door (which is 2 tall) from the top tile.
           this.exitWorldPosition = {
             x: phaserTile.getCenterX(),
-            y: phaserTile.getBottom()
+            y: phaserTile.getBottom(),
           };
           this.exitGridPosition = { x, y };
           // All doors are two tall, so remove both tiles.
@@ -114,7 +114,7 @@ export default class Level {
           // Find the center world position of the whole door (which is 2 tall) from the top tile.
           this.entranceWorldPosition = {
             x: phaserTile.getCenterX(),
-            y: phaserTile.getBottom()
+            y: phaserTile.getBottom(),
           };
           this.entranceGridPosition = { x, y };
           // All doors are two tall, so remove both tiles.
@@ -166,7 +166,7 @@ export default class Level {
     // unreachable and need to be flipped now.
     if (tile.isRevealed && tile.type === TILE_TYPES.WALL) {
       const { x, y } = tile.getGridPosition();
-      this.getNeighboringTiles(x, y).forEach(tile => {
+      this.getNeighboringTiles(x, y).forEach((tile) => {
         if (!tile.isReachable) {
           const neighborPos = tile.getGridPosition();
           const shouldFlip = this.checkIfNeighborsAreRevealed(neighborPos.x, neighborPos.y);
@@ -185,7 +185,7 @@ export default class Level {
    */
   checkIfNeighborsAreRevealed(gridX: number, gridY: number) {
     let areAllRevealed = true;
-    this.getNeighboringTiles(gridX, gridY).forEach(tile => {
+    this.getNeighboringTiles(gridX, gridY).forEach((tile) => {
       if (tile.isReachable && !tile.isRevealed) areAllRevealed = false;
     });
     return areAllRevealed;
@@ -233,7 +233,7 @@ export default class Level {
 
   setScrambleableTiles(): void {
     const scrambleEnemyPositions = this.data.getAllPositionsOf(TILE_TYPES.SCRAMBLE_ENEMY);
-    scrambleEnemyPositions.forEach(pos => {
+    scrambleEnemyPositions.forEach((pos) => {
       const tile = this.getTileFromGrid(pos.x, pos.y);
       const show = !tile.isRevealed;
       const tilesToBottom = this.data.getGridHeight() - tile.gridY;
@@ -318,7 +318,7 @@ export default class Level {
     const exitPos = this.data.exitPosition;
     return {
       x: this.gridXToWorldX(exitPos.x),
-      y: this.gridYToWorldY(exitPos.y)
+      y: this.gridYToWorldY(exitPos.y),
     };
   }
 
@@ -326,14 +326,14 @@ export default class Level {
     const keyPos = this.data.getKeyPosition();
     return {
       x: this.gridXToWorldX(keyPos.x),
-      y: this.gridYToWorldY(keyPos.y)
+      y: this.gridYToWorldY(keyPos.y),
     };
   }
 
   gridXYToWorldXY(pos: Point) {
     return {
       x: this.gridXToWorldX(pos.x),
-      y: this.gridYToWorldY(pos.y)
+      y: this.gridYToWorldY(pos.y),
     };
   }
 
@@ -365,11 +365,11 @@ export default class Level {
   }
 
   enableAllTiles() {
-    this.forEachTile(tile => tile.enableInteractive());
+    this.forEachTile((tile) => tile.enableInteractive());
   }
 
   disableAllTiles() {
-    this.forEachTile(tile => tile.disableInteractive());
+    this.forEachTile((tile) => tile.disableInteractive());
   }
 
   /**
@@ -377,8 +377,8 @@ export default class Level {
    * @param {function} cb
    */
   forEachTile(cb: (t: Tile) => void) {
-    this.tiles.forEach(row => {
-      row.forEach(tile => {
+    this.tiles.forEach((row) => {
+      row.forEach((tile) => {
         if (tile) cb(tile);
       });
     });
@@ -445,14 +445,14 @@ export default class Level {
 
     const start = this.getStartingGridPosition();
     this.tiles[start.y][start.x].flipToFront();
-    this.getNeighboringTiles(start.x, start.y).map(tile => tile.flipToFront());
+    this.getNeighboringTiles(start.x, start.y).map((tile) => tile.flipToFront());
     this.state = LEVEL_STATE.RUNNING;
     this.events.emit(LEVEL_EVENTS.LEVEL_START, this);
   }
 
   destroy() {
-    this.tiles.forEach(row =>
-      row.forEach(tile => {
+    this.tiles.forEach((row) =>
+      row.forEach((tile) => {
         if (tile) tile.destroy();
       })
     );

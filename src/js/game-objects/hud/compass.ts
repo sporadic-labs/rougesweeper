@@ -8,7 +8,7 @@ import store from "../../store";
 
 enum COMPASS_TARGETS {
   KEY = "KEY",
-  DOOR = "DOOR"
+  DOOR = "DOOR",
 }
 
 export default class Compass {

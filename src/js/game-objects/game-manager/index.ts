@@ -257,7 +257,7 @@ export default class GameManager {
       const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
       await Promise.all([
         attackAnim.fadeout().then(() => attackAnim.destroy()),
-        tile.playTileDestructionAnimation()
+        tile.playTileDestructionAnimation(),
       ]);
       const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
       await coinAnim.play();
@@ -276,11 +276,11 @@ export default class GameManager {
     const playerPos = this.player.getGridPosition();
     const tiles = this.level.getNeighboringTiles(playerPos.x, playerPos.y);
 
-    if (tiles.map(tile => !tile.isRevealed).filter(revealed => revealed).length === 0) {
+    if (tiles.map((tile) => !tile.isRevealed).filter((revealed) => revealed).length === 0) {
       return Promise.resolve(false);
     }
 
-    return tiles.map(async tile => {
+    return tiles.map(async (tile) => {
       await tile.flipToFront();
       const shouldGetCoin =
         tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
@@ -290,7 +290,7 @@ export default class GameManager {
         const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
         await Promise.all([
           attackAnim.fadeout().then(() => attackAnim.destroy()),
-          tile.playTileDestructionAnimation()
+          tile.playTileDestructionAnimation(),
         ]);
         const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
         await coinAnim.play();
@@ -349,7 +349,7 @@ export default class GameManager {
     if (this.radar.getEnemyCount() === 0 && !isTileScrambled) {
       this.level
         .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
-        .forEach(tile => tile.flipToFront());
+        .forEach((tile) => tile.flipToFront());
     }
 
     // if the tile is the EXIT, check if the player has the correct conditions to finish the level
@@ -402,7 +402,7 @@ export default class GameManager {
     const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
     await Promise.all([
       attackAnim.fadeout().then(() => attackAnim.destroy()),
-      tile.playTileDestructionAnimation()
+      tile.playTileDestructionAnimation(),
     ]);
     if (shouldGetCoin) {
       const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
@@ -421,7 +421,7 @@ export default class GameManager {
     if (this.radar.getEnemyCount() === 0) {
       this.level
         .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
-        .map(tile => tile.flipToFront());
+        .map((tile) => tile.flipToFront());
     }
 
     this.level.enableAllTiles();
@@ -436,7 +436,7 @@ export default class GameManager {
   async movePlayerAlongPath(path: Point[], duration = 200) {
     this.radar.closeRadar();
     const lastPoint = path[path.length - 1];
-    const worldPath = path.map(p => this.level.gridXYToWorldXY(p));
+    const worldPath = path.map((p) => this.level.gridXYToWorldXY(p));
     this.level.unhighlightTiles(this.player.getPosition());
     await this.player.movePlayerAlongPath(worldPath);
     this.player.setGridPosition(lastPoint.x, lastPoint.y);

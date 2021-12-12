@@ -8,10 +8,7 @@ export default class CoinCollectAnimation {
   constructor(private scene: Scene, x: number, y: number) {
     this.scene = scene;
 
-    this.sprite = scene.add
-      .sprite(0, 0, "all-assets", "tech-1")
-      .setOrigin(0.5, 0.5)
-      .setScale(0.5);
+    this.sprite = scene.add.sprite(0, 0, "all-assets", "tech-1").setOrigin(0.5, 0.5).setScale(0.5);
     this.sprite.setDepth(DEPTHS.ABOVE_PLAYER);
     this.sprite.setVisible(false);
 
@@ -23,7 +20,7 @@ export default class CoinCollectAnimation {
         duration: 200,
         scaleX: 1.05,
         scaleY: 1.05,
-        y: "-=30"
+        y: "-=30",
       })
       .add({
         targets: this.sprite,
@@ -31,7 +28,7 @@ export default class CoinCollectAnimation {
         ease: Phaser.Math.Easing.Quadratic.In,
         scaleX: 0.5,
         scaleY: 0.5,
-        y: "+=30"
+        y: "+=30",
       });
 
     this.setPosition(x, y);
@@ -44,7 +41,7 @@ export default class CoinCollectAnimation {
   }
 
   play() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.sprite.setVisible(true);
       this.timeline.on("complete", resolve).play();
     });

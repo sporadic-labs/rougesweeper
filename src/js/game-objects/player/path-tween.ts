@@ -29,7 +29,7 @@ class PathTween {
 
     const [firstPoint, ...otherPoints] = points;
     this.path = new Phaser.Curves.Path(firstPoint.x, firstPoint.y);
-    otherPoints.forEach(p => this.path.lineTo(p.x, p.y));
+    otherPoints.forEach((p) => this.path.lineTo(p.x, p.y));
 
     this.tween = scene.tweens.create({
       targets: this,
@@ -38,12 +38,12 @@ class PathTween {
       onUpdate: () => {
         const p = this.path.getPoint(this.fractionComplete);
         onUpdate(p);
-      }
+      },
     });
   }
 
   play(): Promise<void> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.tween.on(TWEEN_COMPLETE, resolve);
       this.tween.play();
     });

@@ -7,7 +7,7 @@ const textStyle = {
   fill: "#585e5e",
   align: "center",
   fontSize: 30,
-  fontStyle: "bold"
+  fontStyle: "bold",
 };
 
 export default class TechIndicator {
@@ -44,7 +44,7 @@ export default class TechIndicator {
         this.background,
         this.title,
         this.sprite,
-        this.text
+        this.text,
       ])
       .setDepth(DEPTHS.HUD);
 

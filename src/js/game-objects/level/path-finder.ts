@@ -4,7 +4,7 @@ import logger from "../../helpers/logger";
 
 enum LOCATION {
   WALKABLE = 0,
-  UNWALKABLE = 1
+  UNWALKABLE = 1,
 }
 
 interface Point {
@@ -55,13 +55,13 @@ export default class PathFinder {
 
   findPath(start: Point, end: Point): Point[] | null {
     let path: Point[] | null = null;
-    this.easyStar.findPath(start.x, start.y, end.x, end.y, p => (path = p));
+    this.easyStar.findPath(start.x, start.y, end.x, end.y, (p) => (path = p));
     this.easyStar.calculate();
     return path;
   }
 
   dump() {
-    const string = this.grid.map(row => row.join(" ")).join("\n");
+    const string = this.grid.map((row) => row.join(" ")).join("\n");
     logger.log(string);
   }
 }

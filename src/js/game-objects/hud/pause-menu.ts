@@ -8,12 +8,12 @@ import { GameStore } from "../../store/index";
 const baseTextStyle = {
   align: "center",
   color: "#ffffff",
-  fontSize: "20px"
+  fontSize: "20px",
 };
 const titleStyle = {
   ...baseTextStyle,
   fontSize: "30px",
-  fontStyle: "bold"
+  fontStyle: "bold",
 };
 
 export default class PauseMenu {
@@ -48,7 +48,7 @@ export default class PauseMenu {
       .setOrigin(0.5, 0);
 
     const closeButton = new TextButton(scene, r.centerX, r.bottom - 30, "Close", {
-      origin: { x: 0.5, y: 1 }
+      origin: { x: 0.5, y: 1 },
     });
     closeButton.events.on("DOWN", this.close);
     this.closeButton = closeButton;

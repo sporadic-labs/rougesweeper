@@ -78,23 +78,23 @@ export default class Tile {
     this.tileMagnifyPoser = new TweenPoser(scene, this.container, { duration: 100 });
     this.tileMagnifyPoser.definePoses({
       ZoomIn: { scaleX: 1.1, scaleY: 1.1 },
-      ZoomOut: { scaleX: 1, scaleY: 1 }
+      ZoomOut: { scaleX: 1, scaleY: 1 },
     });
 
     this.contentsMagnifyPoser = new TweenPoser(scene, this.tileContents, {
       duration: 250,
-      ease: BezierEasing(0.31, 0.68, 0.02, 1.47) // https://cubic-bezier.com/#.17,.67,.83,.67
+      ease: BezierEasing(0.31, 0.68, 0.02, 1.47), // https://cubic-bezier.com/#.17,.67,.83,.67
     });
     this.contentsMagnifyPoser.definePoses({
       ZoomIn: { scaleX: 1.2, scaleY: 1.2 },
-      ZoomOut: { scaleX: 0, scaleY: 0 }
+      ZoomOut: { scaleX: 0, scaleY: 0 },
     });
     this.contentsMagnifyPoser.setToPose("ZoomOut");
 
     this.tileFadePoser = new TweenPoser(scene, this.container, { duration: 100 });
     this.tileFadePoser.definePoses({
       FadeIn: { alpha: 1 },
-      FadeOut: { alpha: 0.6 }
+      FadeOut: { alpha: 0.6 },
     });
     this.tileFadePoser.setToPose("FadeIn");
   }
@@ -105,7 +105,7 @@ export default class Tile {
   }
 
   playTileEffectAnimation(playerX: number, playerY: number) {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       if (
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||
@@ -146,7 +146,7 @@ export default class Tile {
   }
 
   playTileDestructionAnimation() {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       if (
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||
@@ -177,7 +177,7 @@ export default class Tile {
         duration,
         scaleX: 0.9,
         scaleY: 0.9,
-        onComplete: resolve
+        onComplete: resolve,
       });
     });
   }
@@ -190,7 +190,7 @@ export default class Tile {
       this.tileFadePoser.moveToPose("FadeIn", {
         delay,
         duration,
-        onComplete: resolve
+        onComplete: resolve,
       });
     });
   }
@@ -268,7 +268,7 @@ export default class Tile {
         this.contentsMagnifyPoser.moveToPose("ZoomIn");
       });
     }
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.flipEffect.events.once("complete", () => {
         resolve();
         this.level.onTileFlip(this);
@@ -282,7 +282,7 @@ export default class Tile {
     if (!this.isRevealed) return;
     this.isRevealed = false;
     this.tileContents?.setVisible(false);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.flipEffect.events.once("complete", () => {
         resolve();
         this.level.onTileFlip(this);

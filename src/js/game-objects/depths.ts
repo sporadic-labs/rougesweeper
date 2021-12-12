@@ -12,7 +12,7 @@ const DEPTHS = {
   ABOVE_PLAYER: 500,
   HUD: 600,
   DIALOGUE: 700,
-  MENU: 800
+  MENU: 800,
 };
 
 /**

@@ -8,7 +8,7 @@ enum TILE_TYPES {
   GOLD = "GOLD",
   SHOP = "SHOP",
   WALL = "WALL",
-  KEY = "KEY"
+  KEY = "KEY",
 }
 
 type DebugMap = { [T in TILE_TYPES]: string };
@@ -22,7 +22,7 @@ const tileTypeToDebugCharacter: DebugMap = {
   [TILE_TYPES.GOLD]: "g",
   [TILE_TYPES.WALL]: "W",
   [TILE_TYPES.EXIT]: "X",
-  [TILE_TYPES.BLANK]: "."
+  [TILE_TYPES.BLANK]: ".",
 };
 
 export { tileTypeToDebugCharacter };

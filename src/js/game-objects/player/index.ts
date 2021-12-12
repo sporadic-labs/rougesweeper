@@ -53,7 +53,7 @@ export default class Player {
   }
 
   movePlayerTo(x: number, y: number, moveInstantly = false) {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       if (this.moveTween) this.moveTween.stop();
       this.updateDepthFromPosition();
       if (moveInstantly) {
@@ -68,7 +68,7 @@ export default class Player {
           y,
           duration,
           ease: "Quad.easeOut",
-          onComplete: resolve
+          onComplete: resolve,
         });
       }
     });
@@ -95,7 +95,7 @@ export default class Player {
    * Fade the Player out, destroy it, and resolve a promise when the whole mess is done!
    */
   fadePlayerOut() {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       if (this.fadeTween) this.fadeTween.stop();
       this.fadeTween = this.scene.add.tween({
         targets: this.sprite,
@@ -105,7 +105,7 @@ export default class Player {
         duration: 150,
         onComplete: () => {
           resolve();
-        }
+        },
       });
     });
   }
@@ -115,7 +115,7 @@ export default class Player {
    */
   fadePlayerIn() {
     this.setPosition(this.getPosition().x, this.getPosition().y - 50);
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       if (this.fadeTween) this.fadeTween.stop();
       this.fadeTween = this.scene.add.tween({
         targets: this.sprite,
@@ -125,7 +125,7 @@ export default class Player {
         duration: 250,
         onComplete: () => {
           return resolve();
-        }
+        },
       });
     });
   }

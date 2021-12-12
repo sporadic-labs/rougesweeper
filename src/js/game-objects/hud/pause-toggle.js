@@ -62,7 +62,7 @@ export default class PauseToggle {
       targets: this.sprite,
       scaleX: 1.05,
       scaleY: 1.05,
-      duration: 100
+      duration: 100,
     });
   };
 
@@ -72,7 +72,7 @@ export default class PauseToggle {
       targets: this.sprite,
       scaleX: 1,
       scaleY: 1,
-      duration: 100
+      duration: 100,
     });
   };
 
@@ -83,7 +83,7 @@ export default class PauseToggle {
       scaleX: 0.95,
       scaleY: 0.95,
       opacity: 0.95,
-      duration: 100
+      duration: 100,
     });
     this.gameStore.setPauseMenuOpen(true);
   };
@@ -95,7 +95,7 @@ export default class PauseToggle {
       scaleX: 1.05,
       scaleY: 1.05,
       opacity: 1.0,
-      duration: 100
+      duration: 100,
     });
   };
 

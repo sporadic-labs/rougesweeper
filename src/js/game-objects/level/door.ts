@@ -7,14 +7,14 @@ import FadeEffect from "../components/fade-effect";
 
 const SPRITE_ANIMATION_COMPLETE = Animations.Events.ANIMATION_COMPLETE;
 const makeAnimCompletePromise = (sprite: GameObjects.Sprite) => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     sprite.once(SPRITE_ANIMATION_COMPLETE, resolve);
   });
 };
 
 export enum DOOR_PLACEMENT {
   LEFT = "LEFT",
-  RIGHT = "RIGHT"
+  RIGHT = "RIGHT",
 }
 
 export default class Door {
@@ -60,18 +60,18 @@ export default class Door {
       frames: scene.anims.generateFrameNames("all-assets", {
         prefix: `${doorPrefix}-`,
         start: 1,
-        end: 7
+        end: 7,
       }),
-      frameRate: 24
+      frameRate: 24,
     });
     scene.anims.create({
       key: `${doorPrefix}-close`,
       frames: scene.anims.generateFrameNames("all-assets", {
         prefix: `${doorPrefix}-`,
         start: 7,
-        end: 1
+        end: 1,
       }),
-      frameRate: 24
+      frameRate: 24,
     });
 
     this.doorMagnifyEffect = new MagnifyEffect(scene, this.doorSprite, 1.0, 1.1, 100);
@@ -88,7 +88,7 @@ export default class Door {
    * Open door and flip tile to revealed state.
    */
   open() {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       if (!this.isCurrentlyOpen) {
         this.isCurrentlyOpen = true;
         const p1 = this.flipTileToFront();
@@ -105,7 +105,7 @@ export default class Door {
    * Close door, without re-hiding the tile.
    */
   close() {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       if (this.isCurrentlyOpen) {
         this.isCurrentlyOpen = false;
         makeAnimCompletePromise(this.doorSprite).then(() => resolve());
@@ -160,7 +160,7 @@ export default class Door {
   };
 
   flipTileToFront() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.isTileFlipped = true;
       this.tileFlipEffect.events.once("complete", resolve);
       this.tileFlipEffect.flipToFront();
@@ -168,7 +168,7 @@ export default class Door {
   }
 
   flipTileToBack() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.isTileFlipped = false;
       this.tileFlipEffect.events.once("complete", resolve);
       this.tileFlipEffect.flipToBack();

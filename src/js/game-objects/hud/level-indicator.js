@@ -8,7 +8,7 @@ const textStyle = {
   fill: "#ffffff",
   align: "center",
   fontSize: 26,
-  fontStyle: "bold"
+  fontStyle: "bold",
 };
 export default class LevelIndicator {
   /**
@@ -33,7 +33,7 @@ export default class LevelIndicator {
   }
 
   updateText(level) {
-    const levelData = allLevelData.find(data => data.level === level);
+    const levelData = allLevelData.find((data) => data.level === level);
     if (levelData) {
       this.text.setText(`${levelData.title}\n${levelData.subtitle}`);
     }

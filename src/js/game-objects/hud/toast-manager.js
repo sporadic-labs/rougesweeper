@@ -7,7 +7,7 @@ const style = {
   fontWeight: 600,
   backgroundColor: "#E5E0D6",
   fill: "#3C3E42",
-  padding: { left: 20, right: 20, top: 10, bottom: 10 }
+  padding: { left: 20, right: 20, top: 10, bottom: 10 },
 };
 
 export default class ToastManager {
@@ -52,9 +52,9 @@ export default class ToastManager {
       targets: message,
       tweens: [
         { y: message.getBounds().height, duration: 200, ease: Phaser.Math.Easing.Cubic.Out },
-        { y: 0, duration: 200, ease: Phaser.Math.Easing.Cubic.In, delay: 4000 }
+        { y: 0, duration: 200, ease: Phaser.Math.Easing.Cubic.In, delay: 4000 },
       ],
-      onComplete: () => this.onTweenComplete(message)
+      onComplete: () => this.onTweenComplete(message),
     });
   }
 
@@ -67,20 +67,20 @@ export default class ToastManager {
         y: 0,
         duration: 200,
         ease: Phaser.Math.Easing.Cubic.In,
-        onComplete: () => this.onTweenComplete(message)
+        onComplete: () => this.onTweenComplete(message),
       });
     }
   }
 
   onTweenComplete(message) {
-    this.messages = this.messages.filter(m => m !== message);
+    this.messages = this.messages.filter((m) => m !== message);
     this.scene.tweens.killTweensOf(message);
     message.destroy();
   }
 
   destroy() {
     this.proxy.removeAll();
-    this.messages.forEach(message => {
+    this.messages.forEach((message) => {
       this.scene.tweens.killTweensOf(message);
       message.destroy();
     });

@@ -15,6 +15,6 @@ export default function createTileDisappearAnimation(
     ease: Phaser.Math.Easing.Quadratic.In,
     scaleX: 0.25,
     scaleY: 0.25,
-    angle: 720
+    angle: 720,
   });
 }

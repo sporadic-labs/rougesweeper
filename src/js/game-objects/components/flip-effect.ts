@@ -78,7 +78,7 @@ export default class FlipEffect {
       onUpdate: this.onFlipUpdate,
       onUpdateScope: this,
       onComplete: this.onFlipComplete,
-      onCompleteScope: this
+      onCompleteScope: this,
     });
     return this;
   }
@@ -97,7 +97,7 @@ export default class FlipEffect {
       onUpdate: this.onFlipUpdate,
       onUpdateScope: this,
       onComplete: this.onFlipComplete,
-      onCompleteScope: this
+      onCompleteScope: this,
     });
     return this;
   }

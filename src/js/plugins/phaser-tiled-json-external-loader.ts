@@ -20,14 +20,13 @@ declare module "phaser" {
 
 export default class PhaserTiledExternalTilesetPlugin extends Plugins.BasePlugin {
   init() {
-    Loader.FileTypesManager.register("tilemapTiledJSONExternal", function(
-      this: Loader.LoaderPlugin,
-      key: string,
-      url: string
-    ) {
-      const multifile = new TiledFile(this, key, url);
-      this.addFile(multifile.files);
-    });
+    Loader.FileTypesManager.register(
+      "tilemapTiledJSONExternal",
+      function (this: Loader.LoaderPlugin, key: string, url: string) {
+        const multifile = new TiledFile(this, key, url);
+        this.addFile(multifile.files);
+      }
+    );
   }
 }
 
@@ -88,13 +87,13 @@ class TiledFile extends Loader.MultiFile {
         tilemapFile.data.tilesets[index] = {
           ...tilemapFile.data.tilesets[index],
           ...file.data,
-          source: undefined // Avoid throwing in tilemap creator
+          source: undefined, // Avoid throwing in tilemap creator
         };
       }
 
       this.loader.cacheManager.tilemap.add(tilemapFile.key, {
         format: Phaser.Tilemaps.Formats.TILED_JSON,
-        data: tilemapFile.data
+        data: tilemapFile.data,
       });
 
       this.complete = true;

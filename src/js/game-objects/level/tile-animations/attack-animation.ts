@@ -16,14 +16,14 @@ export default function createAttackAnimation(
       ease: Phaser.Math.Easing.Quadratic.InOut,
       duration: 200,
       x: "+=10",
-      angle: 5
+      angle: 5,
     })
     .add({
       targets: target,
       duration: 150,
       ease: Phaser.Math.Easing.Quadratic.In,
       x: "-=10",
-      angle: -10
+      angle: -10,
     })
     .add({
       targets: target,
@@ -32,6 +32,6 @@ export default function createAttackAnimation(
       scaleX: 0.5,
       scaleY: 0.5,
       x: "+=0",
-      angle: 0
+      angle: 0,
     });
 }

@@ -24,7 +24,7 @@ export default class AttackAnimation {
   }
 
   fadeout(): Promise<void> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.fadePoser.moveToPose("FadeOut", { onComplete: () => resolve() });
     });
   }

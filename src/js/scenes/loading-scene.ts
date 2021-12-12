@@ -6,7 +6,7 @@ const textStyle = {
   color: "#ffffff",
   align: "center",
   fontSize: "30px",
-  fontStyle: "bold"
+  fontStyle: "bold",
 };
 
 export default class LoadingScene extends Scene {

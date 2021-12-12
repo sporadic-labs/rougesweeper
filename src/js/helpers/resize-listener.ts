@@ -16,7 +16,7 @@ class ResizeEvent {
   }
 
   removeListener(cb: ResizeCallback) {
-    this.listeners = this.listeners.filter(fn => fn !== cb);
+    this.listeners = this.listeners.filter((fn) => fn !== cb);
     this.updateSubscription();
   }
 
@@ -32,7 +32,7 @@ class ResizeEvent {
 
   emit = throttle(
     () => {
-      this.listeners.forEach(cb => cb());
+      this.listeners.forEach((cb) => cb());
     },
     100,
     { trailing: true }

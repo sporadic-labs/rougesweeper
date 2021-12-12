@@ -5,7 +5,7 @@ import DEPTHS from "../depths";
 
 const FRAMES = {
   FILLED: "alarm-on",
-  UNFILLED: "alarm-off"
+  UNFILLED: "alarm-off",
 };
 
 export default class AlertIndicator {
@@ -22,7 +22,7 @@ export default class AlertIndicator {
     this.icons = [
       scene.add.image(0, 0, "all-assets", FRAMES.UNFILLED),
       scene.add.image(0, 0, "all-assets", FRAMES.UNFILLED),
-      scene.add.image(0, 0, "all-assets", FRAMES.UNFILLED)
+      scene.add.image(0, 0, "all-assets", FRAMES.UNFILLED),
     ];
 
     const iconSpacing = 0;

@@ -27,7 +27,7 @@ export default class FadeEffect {
       alpha: this.startAlpha,
       duration: this.duration,
       ...this.additionalTweenConfig,
-      ...additionalTweenConfig
+      ...additionalTweenConfig,
     });
   }
 
@@ -38,7 +38,7 @@ export default class FadeEffect {
       alpha: this.endAlpha,
       duration: this.duration,
       ...this.additionalTweenConfig,
-      ...additionalTweenConfig
+      ...additionalTweenConfig,
     });
   }
 

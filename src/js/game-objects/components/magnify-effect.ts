@@ -22,7 +22,7 @@ export class MagnifyEffect {
       scaleY: this.endScale,
       duration: this.duration,
       ...this.additionalTweenConfig,
-      ...additionalTweenConfig
+      ...additionalTweenConfig,
     });
   }
 
@@ -34,7 +34,7 @@ export class MagnifyEffect {
       scaleY: this.startScale,
       duration: this.duration,
       ...this.additionalTweenConfig,
-      ...additionalTweenConfig
+      ...additionalTweenConfig,
     });
   }
 

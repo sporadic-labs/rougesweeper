@@ -8,7 +8,7 @@ import TweenPoser from "../components/tween-poser";
 export enum INVENTORY_ITEMS {
   COMPASS = "COMPASS",
   REVEAL_IN_RADAR = "REVEAL_IN_RADAR",
-  REVEAL_TILE = "REVEAL_TILE"
+  REVEAL_TILE = "REVEAL_TILE",
 }
 
 type FadePoses = "FadeOut" | "FadeIn";

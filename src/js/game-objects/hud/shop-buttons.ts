@@ -6,12 +6,12 @@ import TweenPoser from "../components/tween-poser";
 
 const baseTextStyle = {
   align: "center",
-  TransformStreamDefaultController: "#ffffff"
+  TransformStreamDefaultController: "#ffffff",
 };
 const itemTextStyle = {
   ...baseTextStyle,
   lineSpacing: 8,
-  fontSize: "22px"
+  fontSize: "22px",
 };
 
 type FadePoses = "FadeOut" | "FadeIn";
@@ -56,7 +56,7 @@ export default class ShopButtons {
     this.buttonFadePoser = new TweenPoser(scene, this.button, { duration: 100 });
     this.buttonFadePoser.definePoses({
       FadeIn: { alpha: 1 },
-      FadeOut: { alpha: 0.6 }
+      FadeOut: { alpha: 0.6 },
     });
     this.buttonFadePoser.setToPose("FadeOut");
 

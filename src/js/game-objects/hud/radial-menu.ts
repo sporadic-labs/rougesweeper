@@ -7,17 +7,17 @@ import EventEmitter from "../../helpers/event-emitter";
 enum RadialOption {
   MOVE = "MOVE",
   HACK = "HACK",
-  CLOSE = "CLOSE"
+  CLOSE = "CLOSE",
 }
 
 enum MenuEvents {
   VALID_OPTION_SELECT = "VALID_OPTION_SELECT",
   INVALID_OPTION_SELECT = "INVALID_OPTION_SELECT",
-  MENU_CLOSE = "MENU_CLOSE"
+  MENU_CLOSE = "MENU_CLOSE",
 }
 
 const tweenCompletePromise = (tween: Phaser.Tweens.Tween) => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     tween.once(Phaser.Tweens.Events.TWEEN_COMPLETE, resolve);
   });
 };
@@ -55,7 +55,7 @@ class RadialMenuIcon {
 
     const circleGraphic = scene.add.graphics({
       fillStyle: { color: 0xf7f7db },
-      lineStyle: { width: 4, color: 0xea5e5e }
+      lineStyle: { width: 4, color: 0xea5e5e },
     });
     circleGraphic.fillCircle(0, 0, this.radius);
     circleGraphic.strokeCircle(0, 0, this.radius);
@@ -63,7 +63,7 @@ class RadialMenuIcon {
     const textLabel = scene.add.text(0, 0, label, {
       fontFamily: "monospace",
       fontSize: "13px",
-      color: "black"
+      color: "black",
     });
     textLabel.setOrigin(0.5, 0.5);
 
@@ -93,7 +93,7 @@ class RadialMenuIcon {
       x: this.endX,
       y: this.endY,
       alpha: this.isEnabled ? 0.95 : 0.5,
-      duration: 250
+      duration: 250,
     });
     return tweenCompletePromise(this.tween);
   }
@@ -109,7 +109,7 @@ class RadialMenuIcon {
       duration: 250,
       onComplete: () => {
         this.container.setVisible(true);
-      }
+      },
     });
     return tweenCompletePromise(this.tween);
   }
@@ -139,7 +139,7 @@ class RadialMenu {
     this.scene = scene;
 
     this.graphic = scene.add.graphics({
-      lineStyle: { width: 15, color: 0xea5e5e, alpha: 0.95 }
+      lineStyle: { width: 15, color: 0xea5e5e, alpha: 0.95 },
     });
     this.graphic.strokeCircle(0, 0, this.radius);
 
@@ -160,7 +160,7 @@ class RadialMenu {
   }
 
   setEnabledOptions(options: RadialOption[]) {
-    this.menuIcons.forEach(icon => {
+    this.menuIcons.forEach((icon) => {
       const isEnabled = options.includes(icon.type);
       icon.setEnabled(isEnabled);
       icon.events.removeAllListeners();
@@ -184,7 +184,7 @@ class RadialMenu {
   }
 
   open() {
-    this.menuIcons.forEach(icon => icon.open());
+    this.menuIcons.forEach((icon) => icon.open());
     if (this.tween) this.tween.stop();
     this.graphic.setScale(0);
     this.container.setVisible(true);
@@ -192,13 +192,13 @@ class RadialMenu {
       targets: this.graphic,
       scaleX: 1,
       scaleY: 1,
-      duration: 250
+      duration: 250,
     });
     return tweenCompletePromise(this.tween);
   }
 
   close() {
-    this.menuIcons.forEach(icon => icon.close());
+    this.menuIcons.forEach((icon) => icon.close());
     if (this.tween) this.tween.stop();
     this.tween = this.scene.tweens.add({
       targets: this.graphic,
@@ -207,14 +207,14 @@ class RadialMenu {
       duration: 250,
       onComplete: () => {
         this.container.setVisible(false);
-      }
+      },
     });
     return tweenCompletePromise(this.tween);
   }
 
   destroy() {
     if (this.tween) this.tween.stop();
-    this.menuIcons.forEach(icon => icon.destroy());
+    this.menuIcons.forEach((icon) => icon.destroy());
     this.events.destroy();
     this.graphic.destroy();
     this.mobProxy.destroy();

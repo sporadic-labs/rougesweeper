@@ -8,12 +8,12 @@ import ShopButton from "./shop-buttons";
 
 const baseTextStyle = {
   align: "center",
-  color: "#ffffff"
+  color: "#ffffff",
 };
 const titleStyle = {
   ...baseTextStyle,
   fontSize: "30px",
-  fontStyle: "bold"
+  fontStyle: "bold",
 };
 
 export default class Shop {
@@ -23,7 +23,7 @@ export default class Shop {
     heart: 3,
     compass: 5,
     clearRadar: 4,
-    revealTile: 3
+    revealTile: 3,
   };
   buyHeartButton: ShopButton;
   buyCompassButton: ShopButton;
@@ -55,7 +55,7 @@ export default class Shop {
       .setOrigin(0.5, 0);
 
     const leaveButton = new TextButton(scene, r.centerX, r.bottom - 30, "Leave Shop", {
-      origin: { x: 0.5, y: 1 }
+      origin: { x: 0.5, y: 1 },
     });
     leaveButton.events.on("DOWN", this.closeShop);
     this.leaveButton = leaveButton;
@@ -122,7 +122,7 @@ export default class Shop {
         buyHeartButton.container,
         buyCompassButton.container,
         buyClearRadarButton.container,
-        buyRevealTileButton.container
+        buyRevealTileButton.container,
       ])
       .setDepth(DEPTHS.MENU)
       .setVisible(false);
@@ -165,16 +165,10 @@ export default class Shop {
       buyHeartButton,
       buyRevealTileButton,
       buyClearRadarButton,
-      buyCompassButton
+      buyCompassButton,
     } = this;
-    const {
-      goldCount,
-      playerHealth,
-      maxPlayerHealth,
-      hasRevealTile,
-      hasClearRadar,
-      hasCompass
-    } = gameStore;
+    const { goldCount, playerHealth, maxPlayerHealth, hasRevealTile, hasClearRadar, hasCompass } =
+      gameStore;
     const canBuyHeart = playerHealth < maxPlayerHealth && goldCount >= costs.heart;
     const canBuyRevealTile = !hasRevealTile && goldCount >= costs.revealTile;
     const canBuyClearRadar = !hasClearRadar && goldCount >= costs.clearRadar;
@@ -222,7 +216,7 @@ export default class Shop {
       buyRevealTileButton,
       buyClearRadarButton,
       buyCompassButton,
-      leaveButton
+      leaveButton,
     } = this;
     buyHeartButton.reset();
     buyRevealTileButton.reset();

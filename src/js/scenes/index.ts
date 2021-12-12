@@ -5,7 +5,7 @@ import GameOverScene from "./game-over-scene";
 enum SCENE_NAME {
   LOADING = "LOADING",
   MAIN = "MAIN",
-  GAME_OVER = "GAME_OVER"
+  GAME_OVER = "GAME_OVER",
 }
 
 /**

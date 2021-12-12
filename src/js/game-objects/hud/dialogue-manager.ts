@@ -10,17 +10,17 @@ import { GameStore } from "../../store/index";
 import { getDialogueKey } from "../../store/levels";
 
 const baseTextStyle = {
-  color: "#ffffff"
+  color: "#ffffff",
 };
 const titleStyle = {
   ...baseTextStyle,
   align: "center",
   fontSize: "30px",
-  fontStyle: "bold"
+  fontStyle: "bold",
 };
 const textStyle = {
   ...baseTextStyle,
-  fontSize: "22px"
+  fontSize: "22px",
 };
 
 export interface TileDialogueEntry {
@@ -42,7 +42,7 @@ enum DIALOGUE_STATES {
   EMPTY = "EMPTY",
   WRITING = "WRITING",
   OPEN = "OPEN",
-  CLOSED = "CLOSED"
+  CLOSED = "CLOSED",
 }
 
 export default class DialogueManager {
@@ -105,11 +105,11 @@ export default class DialogueManager {
     this.sprite = scene.add.sprite(r.x + 36, r.centerY, "all-assets", "player-m").setOrigin(0, 0.5);
 
     const continueButton = new TextButton(scene, r.right - 172, r.bottom - 20, "Next", {
-      origin: { x: 0.5, y: 1 }
+      origin: { x: 0.5, y: 1 },
     });
     continueButton.events.on("DOWN", this.nextState, this);
     const skipButton = new TextButton(scene, r.right - 64, r.bottom - 20, "Skip", {
-      origin: { x: 0.5, y: 1 }
+      origin: { x: 0.5, y: 1 },
     });
     skipButton.events.on("DOWN", this.close, this);
     this.controls = [continueButton, skipButton];
@@ -121,7 +121,7 @@ export default class DialogueManager {
         this.text,
         this.sprite,
         continueButton.text,
-        skipButton.text
+        skipButton.text,
       ])
       .setDepth(DEPTHS.DIALOGUE)
       .setVisible(false);
@@ -209,14 +209,14 @@ export default class DialogueManager {
       this.scene.time.addEvent({
         callback: this.nextWord,
         delay: this.characterDelayMs,
-        callbackScope: this
+        callbackScope: this,
       });
     } else {
       //  Get the next line after the lineDelay amount of ms has elapsed
       this.scene.time.addEvent({
         callback: this.nextCharacter,
         delay: this.characterDelayMs,
-        callbackScope: this
+        callbackScope: this,
       });
     }
   }
@@ -238,7 +238,7 @@ export default class DialogueManager {
       this.scene.time.addEvent({
         callback: this.nextLine,
         delay: this.characterDelayMs,
-        callbackScope: this
+        callbackScope: this,
       });
     } else {
       this.wordIndex++;
@@ -246,7 +246,7 @@ export default class DialogueManager {
       this.scene.time.addEvent({
         callback: this.nextCharacter,
         delay: this.characterDelayMs,
-        callbackScope: this
+        callbackScope: this,
       });
     }
   }
@@ -273,7 +273,7 @@ export default class DialogueManager {
     this.scene.time.addEvent({
       callback: this.nextWord,
       delay: this.characterDelayMs,
-      callbackScope: this
+      callbackScope: this,
     });
 
     //  Advance to the next line
@@ -348,7 +348,7 @@ export default class DialogueManager {
 
   resetButtons() {
     // Manually call this when closing menu because of bug where button stays in pressed state
-    this.controls.forEach(btn => btn.reset());
+    this.controls.forEach((btn) => btn.reset());
   }
 
   setDialoguePages(entries: DialogueEntry[]) {

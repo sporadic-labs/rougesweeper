@@ -4,7 +4,7 @@ enum LOG_LEVEL {
   ALL = 3,
   WARN = 2,
   ERROR = 1,
-  OFF = 0
+  OFF = 0,
 }
 
 class Logger {

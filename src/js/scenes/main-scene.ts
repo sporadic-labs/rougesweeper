@@ -14,7 +14,7 @@ const titleStyle = {
   align: "center",
   color: "#ffffff",
   fontSize: "30px",
-  fontStyle: "bold"
+  fontStyle: "bold",
 };
 
 export default class MainScene extends Scene {

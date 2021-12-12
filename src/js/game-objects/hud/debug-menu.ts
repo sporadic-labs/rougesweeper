@@ -9,12 +9,12 @@ import storedSettings from "../../store/stored-settings";
 
 const baseTextStyle = {
   align: "center",
-  color: "#ffffff"
+  color: "#ffffff",
 };
 const titleStyle = {
   ...baseTextStyle,
   fontSize: "30px",
-  fontStyle: "bold"
+  fontStyle: "bold",
 };
 
 /**
@@ -36,7 +36,7 @@ class LevelSelectButton {
     this.label = scene.add.text(x, y, levelName, {
       align: "left",
       color: "#ffffff",
-      fontSize: "25px"
+      fontSize: "25px",
     });
     y += this.label.height + 5;
     this.loadButton = new TextButton(scene, x, y, "Load", origin);
@@ -46,7 +46,7 @@ class LevelSelectButton {
     this.container = scene.add.container(top, left, [
       this.label,
       this.loadButton.text,
-      this.setStartingLevelButton.text
+      this.setStartingLevelButton.text,
     ]);
   }
 
@@ -90,7 +90,7 @@ export default class DebugMenu {
     const title = scene.add.text(r.centerX, r.y + 25, "Debug Menu", titleStyle).setOrigin(0.5, 0);
 
     const closeButton = new TextButton(scene, r.centerX, r.bottom - 30, "Close", {
-      origin: { x: 0.5, y: 1 }
+      origin: { x: 0.5, y: 1 },
     });
     closeButton.events.on("DOWN", this.close);
     this.closeButton = closeButton;
@@ -123,7 +123,7 @@ export default class DebugMenu {
         background,
         title,
         closeButton.text,
-        ...this.levelSelectButtons.map(b => b.container)
+        ...this.levelSelectButtons.map((b) => b.container),
       ])
       .setDepth(DEPTHS.MENU)
       .setVisible(false);
@@ -163,7 +163,7 @@ export default class DebugMenu {
 
   resetButtons() {
     // Manually call this when closing menu because of bug where button stays in pressed state
-    this.levelSelectButtons.forEach(b => b.reset());
+    this.levelSelectButtons.forEach((b) => b.reset());
     this.closeButton.reset();
   }
 

@@ -16,23 +16,23 @@ const game = new Game({
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: gameWidth,
     height: gameHeight,
-    parent: containerId
+    parent: containerId,
   },
   plugins: {
     global: [
       {
         key: "PhaserTiledExternalTilesetPlugin",
         plugin: PhaserTiledExternalTilesetPlugin,
-        start: true
-      }
-    ]
+        start: true,
+      },
+    ],
   },
   physics: {
     default: "arcade",
     arcade: {
-      debug: false
-    }
-  }
+      debug: false,
+    },
+  },
 });
 
 disableRightClickMenu(`#${containerId}`);

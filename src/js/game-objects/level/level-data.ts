@@ -87,7 +87,7 @@ export default class LevelData {
 
     // Locate the top tile of the exit door from the "Decorations" layer.
     this.map.setLayer("Decorations");
-    const exitTile = this.map.findTile(tile => tile.properties.doorExit);
+    const exitTile = this.map.findTile((tile) => tile.properties.doorExit);
     if (!exitTile) {
       throw new Error(`No exit door (w/ property "doorExit") found in the "Decorations" layer`);
     }
@@ -100,7 +100,7 @@ export default class LevelData {
 
     // Locate the top tile of the entrance door from the "Decorations" layer.
     this.map.setLayer("Decorations");
-    const entranceTile = this.map.findTile(tile => tile.properties.doorEntrance);
+    const entranceTile = this.map.findTile((tile) => tile.properties.doorEntrance);
     if (!entranceTile) {
       throw new Error(`No exit door (w/ property "doorEntrance") found in the "Decorations" layer`);
     }
@@ -310,11 +310,11 @@ export default class LevelData {
         new Geom.Point(topLeft.x, topLeft.y),
         new Geom.Point(topRight.x, topRight.y),
         new Geom.Point(bottomRight.x, bottomRight.y),
-        new Geom.Point(bottomLeft.x, bottomLeft.y)
+        new Geom.Point(bottomLeft.x, bottomLeft.y),
       ]);
     } else if (tiledObject.polygon) {
       return new Phaser.Geom.Polygon(
-        tiledObject.polygon.map(point => {
+        tiledObject.polygon.map((point) => {
           const mapX = (x + point.x) / tileWidth;
           const mapY = (y + point.y) / tileHeight;
           const boardPos = this.tilemapPositionToBoardPosition(mapX, mapY);
@@ -337,7 +337,7 @@ export default class LevelData {
    */
   generateKeyPosition(objectLayer: Tilemaps.ObjectLayer) {
     const obj = objectLayer.objects.find(
-      obj => obj.polygon !== undefined || obj.rectangle === true
+      (obj) => obj.polygon !== undefined || obj.rectangle === true
     );
     const polygon = this.tiledShapeToPhaserPoly(obj);
     const blanks = this.getBlanksWithin(polygon);
@@ -360,14 +360,14 @@ export default class LevelData {
   generateEnemyPositions(objectLayer: Tilemaps.ObjectLayer) {
     // Find the spawning polygons
     const spawnRegions = objectLayer.objects.filter(
-      obj => obj.polygon !== undefined || obj.rectangle === true
+      (obj) => obj.polygon !== undefined || obj.rectangle === true
     );
-    const spawnPolygons = spawnRegions.map(obj => this.tiledShapeToPhaserPoly(obj));
+    const spawnPolygons = spawnRegions.map((obj) => this.tiledShapeToPhaserPoly(obj));
 
     // Count enemy tile objects within each region
-    const enemyTiles = objectLayer.objects.filter(obj => obj.gid !== undefined);
+    const enemyTiles = objectLayer.objects.filter((obj) => obj.gid !== undefined);
     const enemyCounts = Array(spawnRegions.length).fill(0);
-    enemyTiles.map(enemyTile => {
+    enemyTiles.map((enemyTile) => {
       const x = enemyTile.x / this.tileWidth + 0.5;
       const y = enemyTile.y / this.tileHeight - 0.5;
       const boardPos = this.tilemapPositionToBoardPosition(x, y);
@@ -408,7 +408,7 @@ export default class LevelData {
    */
   getBlanksWithin(polygon: Geom.Polygon) {
     const blanks = this.getAllPositionsOf(TILE.BLANK);
-    return blanks.filter(p => polygon.contains(p.x + 0.5, p.y + 0.5));
+    return blanks.filter((p) => polygon.contains(p.x + 0.5, p.y + 0.5));
   }
 
   /**
@@ -464,16 +464,16 @@ export default class LevelData {
   }
 
   debugDump() {
-    const debugTiles = this.tiles.map(row =>
-      row.map(tile => (tile ? tileTypeToDebugCharacter[tile.type] : " "))
+    const debugTiles = this.tiles.map((row) =>
+      row.map((tile) => (tile ? tileTypeToDebugCharacter[tile.type] : " "))
     );
-    const grid = debugTiles.map(row => row.join(" ")).join("\n");
+    const grid = debugTiles.map((row) => row.join(" ")).join("\n");
     const flatTiles = this.tiles.flat(1);
-    const numTiles = flatTiles.filter(t => t && t.type !== undefined).length;
-    const numEnemy = flatTiles.filter(t => t && t.type === TILE.ENEMY).length;
-    const numBlank = flatTiles.filter(t => t && t.type === TILE.BLANK).length;
-    const numGold = flatTiles.filter(t => t && t.type === TILE.GOLD).length;
-    const numWall = flatTiles.filter(t => t && t.type === TILE.WALL).length;
+    const numTiles = flatTiles.filter((t) => t && t.type !== undefined).length;
+    const numEnemy = flatTiles.filter((t) => t && t.type === TILE.ENEMY).length;
+    const numBlank = flatTiles.filter((t) => t && t.type === TILE.BLANK).length;
+    const numGold = flatTiles.filter((t) => t && t.type === TILE.GOLD).length;
+    const numWall = flatTiles.filter((t) => t && t.type === TILE.WALL).length;
     const stats =
       `Num tiles: ${numTiles}\n` +
       `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(2)}%)\n` +

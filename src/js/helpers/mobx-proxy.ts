@@ -13,7 +13,7 @@ import {
   IObjectDidChange,
   ISetDidChange,
   IArraySplice,
-  IMapDidChange
+  IMapDidChange,
 } from "mobx";
 
 /**
@@ -25,7 +25,7 @@ export default class MobXProxy {
 
   disposeAndRemove(disposer: Lambda) {
     disposer();
-    this.disposers = this.disposers.filter(d => d !== disposer);
+    this.disposers = this.disposers.filter((d) => d !== disposer);
   }
 
   // Pulled directly from MobX.
@@ -85,7 +85,7 @@ export default class MobXProxy {
   }
 
   destroy() {
-    this.disposers.forEach(dispose => dispose());
+    this.disposers.forEach((dispose) => dispose());
     this.disposers = [];
   }
 }

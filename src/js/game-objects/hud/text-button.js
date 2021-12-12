@@ -7,14 +7,14 @@ const defaultStyle = {
   fontWeight: 600,
   backgroundColor: "#E5E0D6",
   fill: "#3C3E42",
-  padding: { left: 20, right: 20, top: 10, bottom: 10 }
+  padding: { left: 20, right: 20, top: 10, bottom: 10 },
 };
 
 export const BUTTON_EVENTS = {
   DOWN: "DOWN",
   OVER: "OVER",
   UP: "UP",
-  OUT: "OUT"
+  OUT: "OUT",
 };
 
 /**
