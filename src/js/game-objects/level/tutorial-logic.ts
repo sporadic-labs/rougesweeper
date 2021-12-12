@@ -5,6 +5,7 @@ import EventProxy from "../../helpers/event-proxy";
 import Level from "./level";
 import LEVEL_EVENTS from "./events";
 import DialogueManager from "../hud/dialogue-manager";
+import store from "../../store";
 
 export default class TutorialLogic {
   private scene: Phaser.Scene;
@@ -40,13 +41,20 @@ export default class TutorialLogic {
     // Hide everything when you touched the locked door
     if (this.levelKey === "level-1-floor-1" && !this.hasFinishedFloor1Tutorial) {
       this.hasFinishedFloor1Tutorial = true;
+
+      if (store.hasKey) {
+        return;
+      }
+
       this.level.events.once(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, () => {
         this.dialogueManager.playDialogue({
           title: "Tutorial",
           imageKey: "marker-2",
-          text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."]
+          text: [
+            "Ah! I must have tripped the security alarm. I need to find a key to get through.",
+          ],
         });
-        this.level.forEachTile(t => {
+        this.level.forEachTile((t) => {
           t.flipToBack();
         });
       });
@@ -59,9 +67,9 @@ export default class TutorialLogic {
       this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "marker-2",
-        text: ["I need to get to the next level..."]
+        text: ["I need to get to the next level..."],
       });
-      this.level.forEachTile(t => t.flipToFront());
+      this.level.forEachTile((t) => t.flipToFront());
     }
   }
 
