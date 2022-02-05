@@ -322,6 +322,7 @@ export default class Tile {
 
   destroy() {
     this.tileMagnifyPoser.destroy();
+    this.scrambleSprite.destroy();
     this.tileFadePoser.destroy();
     this.contentsMagnifyPoser.destroy();
     this.container.destroy();
