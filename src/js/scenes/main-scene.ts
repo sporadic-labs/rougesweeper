@@ -9,9 +9,10 @@ import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
 import Shop from "../game-objects/hud/shop";
 import AmmoIndicator from "../game-objects/hud/ammo-indicator";
+import ShopToggle from "../game-objects/hud/shop-toggle";
 
 const titleStyle = {
-  align: "center",
+  align: "left",
   color: "#ffffff",
   fontSize: "30px",
   fontStyle: "bold",
@@ -28,7 +29,7 @@ export default class MainScene extends Scene {
     const toastManager = new ToastManager(this);
     const gameManager = new GameManager(this, player, toastManager);
     const gameTitle = this.add
-      .text(width * 0.91, height * 0.92, "SpyWare\n(or whatever...)", titleStyle)
+      .text(width * 0.9, height * 0.48, "SpyWare\n(or whatever...)", titleStyle)
       .setOrigin(0.5, 0);
 
     new Shop(this, store, toastManager);
@@ -37,5 +38,6 @@ export default class MainScene extends Scene {
     new AmmoIndicator(this, store);
     new PauseToggle(this, store);
     new LevelIndicator(this, store);
+    new ShopToggle(this, store);
   }
 }

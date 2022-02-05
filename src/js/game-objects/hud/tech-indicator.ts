@@ -2,19 +2,32 @@ import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
+import { GameStore } from "../../store";
 
 const textStyle = {
-  fill: "#585e5e",
+  color: "#585e5e",
   align: "center",
-  fontSize: 30,
+  fontSize: "30px",
   fontStyle: "bold",
 };
 
 export default class TechIndicator {
+  scene: Phaser.Scene;
+  gameStore: GameStore;
+  
+  title: Phaser.GameObjects.Text;
+  sprite: Phaser.GameObjects.Sprite;
+  text: Phaser.GameObjects.Text;
+  background: Phaser.GameObjects.Shape;
+  container: Phaser.GameObjects.Container;
+
+  proxy: EventProxy;
+  private dispose: any;
+
   /**
    * @param {Phaser.Scene} scene
    */
-  constructor(scene, gameStore) {
+  constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
 
     const bgPadding = { x: 4, y: 25 };
@@ -22,7 +35,7 @@ export default class TechIndicator {
     const iconSpacing = 6;
 
     this.title = scene.add
-      .text(bgWidth / 2, bgPadding.y, "Tech", { fontSize: 20, fill: "#000000", fontStyle: "bold" })
+      .text(bgWidth / 2, bgPadding.y, "Tech", { fontSize: "20px", color: "#000000", fontStyle: "bold" })
       .setOrigin(0.5, 0);
 
     this.sprite = scene.add
@@ -40,7 +53,7 @@ export default class TechIndicator {
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.76), [
+      .container(fractionToX(0.12), fractionToY(0.8), [
         this.background,
         this.title,
         this.sprite,
@@ -48,7 +61,7 @@ export default class TechIndicator {
       ])
       .setDepth(DEPTHS.HUD);
 
-    this.updateText(gameStore.goldCount, true);
+    this.updateText(gameStore.goldCount);
     this.dispose = autorun(() => this.updateText(gameStore.goldCount));
 
     this.proxy = new EventProxy();
@@ -56,8 +69,8 @@ export default class TechIndicator {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
-  updateText(goldCount) {
-    this.text.setText(goldCount);
+  updateText(goldCount: number) {
+    this.text.setText(`${goldCount}`);
   }
 
   destroy() {
