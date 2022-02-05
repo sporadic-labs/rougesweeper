@@ -31,6 +31,7 @@ export default class Tile {
   private tileFadePoser: TweenPoser<FadePoses>;
   private tileMagnifyPoser: TweenPoser<MagnifyPoses>;
   private contentsMagnifyPoser: TweenPoser<MagnifyPoses>;
+  private scramblePoser: TweenPoser<FadePoses>;
   private canScramble = false;
 
   constructor(
@@ -57,7 +58,6 @@ export default class Tile {
 
     this.scrambleSprite = scene.add.sprite(x, y, "all-assets", "scramble-1");
     this.scrambleSprite.setDepth(yPositionToDepth(y));
-    this.scrambleSprite.setAlpha(0);
     this.scrambleSprite.setScale(1.25);
 
     // Add the front and back tile to a container for easy access.
@@ -76,7 +76,14 @@ export default class Tile {
     this.flipEffect.setToBack();
     this.tileContents?.setVisible(false);
 
-    this.tileMagnifyPoser = new TweenPoser(scene, this.container, { duration: 100 });
+    this.scramblePoser = new TweenPoser(scene, this.scrambleSprite, { duration: 100 });
+    this.scramblePoser.definePoses({
+      FadeIn: { alpha: 1 },
+      FadeOut: { alpha: 0 },
+    });
+    this.scramblePoser.setToPose("FadeOut");
+
+    this.tileMagnifyPoser = new TweenPoser(scene, this.container, { duration: 50 });
     this.tileMagnifyPoser.definePoses({
       ZoomIn: { scaleX: 1.1, scaleY: 1.1 },
       ZoomOut: { scaleX: 1, scaleY: 1 },
@@ -103,6 +110,7 @@ export default class Tile {
   removeTileContents() {
     this.tileContents?.setVisible(false);
     this.isCurrentlyBlank = true;
+    this.level.onTileContentsUpdated(this);
   }
 
   playTileEffectAnimation(playerX: number, playerY: number) {
@@ -273,7 +281,6 @@ export default class Tile {
       this.flipEffect.events.once("complete", () => {
         resolve();
         this.level.onTileFlip(this);
-        if (this.canScramble) this.scrambleSprite.setAlpha(1);
       });
       this.flipEffect.flipToFront();
     });
@@ -290,6 +297,14 @@ export default class Tile {
       });
       this.flipEffect.flipToBack();
     });
+  }
+
+  scramble() {
+    this.scramblePoser.moveToPose("FadeIn");
+  }
+
+  clearScramble() {
+    this.scramblePoser.moveToPose("FadeOut");
   }
 
   getPosition() {
@@ -321,7 +336,12 @@ export default class Tile {
     return this.dialogueData;
   }
 
+  getCurrentTileType() {
+    return this.isCurrentlyBlank ? TILE_TYPES.BLANK : this.type;
+  }
+
   destroy() {
+    this.scramblePoser.destroy();
     this.tileMagnifyPoser.destroy();
     this.scrambleSprite.destroy();
     this.tileFadePoser.destroy();

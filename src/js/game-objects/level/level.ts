@@ -167,8 +167,6 @@ export default class Level {
       this.createShop(x, y);
     }
 
-    this.setScrambleableTiles();
-
     this.tutorialLogic = new TutorialLogic(scene, dialogueManager, this, levelKey);
   }
 
@@ -191,11 +189,33 @@ export default class Level {
     this.tiles[y][x] = tile;
   }
 
+  onTileContentsUpdated(tile: Tile) {
+    if (tile.isCurrentlyBlank && tile.type === TILE_TYPES.SCRAMBLE_ENEMY) {
+      if (!this.isTileScrambled(tile.gridX, tile.gridY)) {
+        tile.clearScramble();
+      }
+      for (let x = 0; x < this.data.width; x++) {
+        const t = this.getTileFromGrid(x, tile.gridY);
+        if (t && !this.isTileScrambled(t.gridX, t.gridY)) {
+          t.clearScramble();
+        }
+      }
+      for (let y = 0; y < this.data.height; y++) {
+        const t = this.getTileFromGrid(tile.gridX, y);
+        if (t && !this.isTileScrambled(t.gridX, t.gridY)) {
+          t.clearScramble();
+        }
+      }
+    }
+  }
+
   onTileFlip(tile: Tile) {
     // Avoid expensive checks on every tile when we are fading out and flipping all the tiles.
     if (this.state !== LEVEL_STATE.RUNNING) return;
 
-    if (tile.isRevealed && tile.type === TILE_TYPES.SCRAMBLE_ENEMY) this.setScrambleableTiles();
+    if (this.isTileScrambled(tile.gridX, tile.gridY)) {
+      tile.scramble();
+    }
 
     // If the revealed tile is a wall, then it's time to check its neighbors to see if they are
     // unreachable and need to be flipped now.
@@ -266,34 +286,6 @@ export default class Level {
     }
   }
 
-  setScrambleableTiles(): void {
-    const scrambleEnemyPositions = this.data.getAllPositionsOf(TILE_TYPES.SCRAMBLE_ENEMY);
-    scrambleEnemyPositions.forEach((pos) => {
-      const tile = this.getTileFromGrid(pos.x, pos.y);
-      const show = !tile.isRevealed;
-      const tilesToBottom = this.data.getGridHeight() - tile.gridY;
-      const tilesToRight = this.data.getGridWidth() - tile.gridX;
-      const xMax = tilesToRight > tile.gridX ? tilesToRight : tile.gridX;
-      const yMax = tilesToBottom > tile.gridY ? tilesToBottom : tile.gridY;
-      for (let i = 0; i < xMax; i += 1) {
-        const minTile = this.getTileFromGrid(tile.gridX - i, tile.gridY);
-        if (minTile && minTile.type !== TILE_TYPES.WALL && minTile.getCanScramble() !== show)
-          minTile.setCanScramble(show);
-        const maxTile = this.getTileFromGrid(tile.gridX + i, tile.gridY);
-        if (maxTile && maxTile.type !== TILE_TYPES.WALL && maxTile.getCanScramble() !== show)
-          maxTile.setCanScramble(show);
-      }
-      for (let i = 0; i < yMax; i += 1) {
-        const minTile = this.getTileFromGrid(tile.gridX, tile.gridY - i);
-        if (minTile && minTile.type !== TILE_TYPES.WALL && minTile.getCanScramble() !== show)
-          minTile.setCanScramble(show);
-        const maxTile = this.getTileFromGrid(tile.gridX, tile.gridY + i);
-        if (maxTile && maxTile.type !== TILE_TYPES.WALL && maxTile.getCanScramble() !== show)
-          maxTile.setCanScramble(show);
-      }
-    });
-  }
-
   isNeighboringScrambleEnemy(x: number, y: number) {
     const tiles = this.getNeighboringTiles(x, y);
     for (const tile of tiles) {
@@ -309,12 +301,42 @@ export default class Level {
   }
 
   isTileScrambled(x: number, y: number) {
-    const scrambleEnemyPositions = this.data.getAllPositionsOf(TILE_TYPES.SCRAMBLE_ENEMY);
-    for (const pos of scrambleEnemyPositions) {
-      const scrambleTile = this.getTileFromGrid(pos.x, pos.y);
-      if (scrambleTile.isRevealed) continue;
-      else if (pos.x === x || pos.y === y) return true;
+    const checkTile = (x: number, y: number) => {
+      const tile = this.getTileFromGrid(x, y);
+      if (!tile) return "continue";
+      const type = tile.getCurrentTileType();
+      if (type === TILE_TYPES.WALL) return "blocked";
+      if (type === TILE_TYPES.SCRAMBLE_ENEMY) return "scrambled";
+      return "continue";
+    };
+
+    const result = checkTile(x, y);
+    // If target tile is a wall, no scramble possible.
+    if (result === "blocked") return false;
+    if (result === "scrambled") return true;
+
+    for (let i = 1; i <= x; i++) {
+      const result = checkTile(x - i, y);
+      // Stop looking in this direction when you hit a wall.
+      if (result === "blocked") break;
+      if (result === "scrambled") return true;
     }
+    for (let i = 1; i < this.data.width - x; i++) {
+      const result = checkTile(x + i, y);
+      if (result === "blocked") break;
+      if (result === "scrambled") return true;
+    }
+    for (let i = 1; i <= y; i++) {
+      const result = checkTile(x, y - i);
+      if (result === "blocked") break;
+      if (result === "scrambled") return true;
+    }
+    for (let i = 1; i < this.data.height - y; i++) {
+      const result = checkTile(x, y + i);
+      if (result === "blocked") break;
+      if (result === "scrambled") return true;
+    }
+
     return false;
   }
 

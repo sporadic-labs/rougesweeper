@@ -258,8 +258,7 @@ class Radar {
       }
       const { x, y } = this.player.getGridPosition();
       this.enemyCount = this.level.countNeighboringEnemies(x, y);
-      const shouldScramble = this.level.getTileFromGrid(x, y).getCanScramble();
-      // const inRangeOfScrambleEnemy = this.level.isTileScrambled(x, y);
+      const shouldScramble = this.level.isTileScrambled(x, y);
       if (shouldScramble && !this.isScrambling) {
         this.startScrambleRadar();
       } else if (!shouldScramble && this.isScrambling) {
