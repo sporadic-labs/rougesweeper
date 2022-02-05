@@ -220,6 +220,7 @@
             <key type="filename">all-assets/shelves-1.png</key>
             <key type="filename">all-assets/shelves-2.png</key>
             <key type="filename">all-assets/shield-switch-1.png</key>
+            <key type="filename">all-assets/shop-button.png</key>
             <key type="filename">all-assets/shop.png</key>
             <key type="filename">all-assets/stairs-1.png</key>
             <key type="filename">all-assets/stairs-2.png</key>

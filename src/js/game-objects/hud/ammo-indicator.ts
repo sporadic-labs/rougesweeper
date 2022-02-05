@@ -64,7 +64,7 @@ export default class AmmoIndicator {
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.03), [this.background, this.text, ...this.icons])
+      .container(fractionToX(0.83), fractionToY(0.64), [this.background, this.text, ...this.icons])
       .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.playerAmmo);

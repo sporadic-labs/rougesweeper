@@ -91,7 +91,7 @@ export default class InventoryMenu {
       .setOrigin(0, 0);
 
     this.container = scene.add
-      .container(fractionToX(0.12), fractionToY(0.42), [
+      .container(fractionToX(0.12), fractionToY(0.03), [
         this.background,
         this.text,
         ...this.icons.map((icon) => icon.sprite),
