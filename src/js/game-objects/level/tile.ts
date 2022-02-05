@@ -55,9 +55,10 @@ export default class Tile {
     this.frontSprite = scene.add.sprite(0, 0, "all-assets", tileKey);
     this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back-disabled");
 
-    this.scrambleSprite = scene.add.sprite(x, y, "all-assets", "arrow");
+    this.scrambleSprite = scene.add.sprite(x, y, "all-assets", "scramble-1");
     this.scrambleSprite.setDepth(yPositionToDepth(y));
     this.scrambleSprite.setAlpha(0);
+    this.scrambleSprite.setScale(1.25);
 
     // Add the front and back tile to a container for easy access.
     this.container = scene.add.container(x, y, [this.backSprite, this.frontSprite]);
