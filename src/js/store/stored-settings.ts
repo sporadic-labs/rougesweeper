@@ -1,4 +1,4 @@
-import { observable, action, autorun } from "mobx";
+import { observable, action } from "mobx";
 import localStorage from "store";
 
 class StoredSettings {
@@ -11,19 +11,17 @@ class StoredSettings {
     if (!IS_PRODUCTION) {
       this.startingLevel = localStorage.get("startingLevel") ?? this.defaultStartingLevel;
       this.startingGold = localStorage.get("startingGold") ?? this.defaultStartingGold;
-      autorun(() => {
-        localStorage.set("startingLevel", this.startingLevel);
-        localStorage.set("startingGold", this.startingGold);
-      });
     }
   }
 
   @action setStartingLevel(startingLevel: number) {
     this.startingLevel = startingLevel;
+    localStorage.set("startingLevel", this.startingLevel);
   }
 
   @action setStartingGold(startingGold: number) {
     this.startingGold = startingGold;
+    localStorage.set("startingGold", this.startingGold);
   }
 }
 
