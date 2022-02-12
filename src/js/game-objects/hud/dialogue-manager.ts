@@ -52,7 +52,7 @@ export default class DialogueManager {
   private container: Phaser.GameObjects.Container;
   private previousGameState: GAME_MODES;
   private isCurrentlyOpen = false;
-  private controls: TextButton[];
+  private controls: { skipButton: TextButton; doneButton: TextButton; continueButton: TextButton };
 
   private state: DIALOGUE_STATES = DIALOGUE_STATES.CLOSED;
 
@@ -112,7 +112,11 @@ export default class DialogueManager {
       origin: { x: 0.5, y: 1 },
     });
     skipButton.events.on("DOWN", this.close, this);
-    this.controls = [continueButton, skipButton];
+    const doneButton = new TextButton(scene, r.right - 64, r.bottom - 20, "Done", {
+      origin: { x: 0.5, y: 1 },
+    });
+    doneButton.events.on("DOWN", this.close, this);
+    this.controls = { continueButton, doneButton, skipButton };
 
     this.container = scene.add
       .container(0, 0, [
@@ -122,6 +126,7 @@ export default class DialogueManager {
         this.sprite,
         continueButton.text,
         skipButton.text,
+        doneButton.text,
       ])
       .setDepth(DEPTHS.DIALOGUE)
       .setVisible(false);
@@ -171,6 +176,7 @@ export default class DialogueManager {
   }
 
   nextState() {
+    this.updateButtons();
     switch (this.state) {
       case DIALOGUE_STATES.EMPTY:
         this.nextLine();
@@ -307,6 +313,7 @@ export default class DialogueManager {
       this.title.setText(this.currentDialoguePage.title);
     }
 
+    this.updateButtons();
     this.resetButtons();
 
     // Create Event listeners for easy control of the dialogue.
@@ -337,6 +344,18 @@ export default class DialogueManager {
     this.state = DIALOGUE_STATES.CLOSED;
   }
 
+  private updateButtons() {
+    if (this.pageIndex === this.dialoguePages.length - 1) {
+      this.controls.doneButton.setVisible(true);
+      this.controls.skipButton.setVisible(false);
+      this.controls.continueButton.setVisible(false);
+    } else {
+      this.controls.doneButton.setVisible(false);
+      this.controls.skipButton.setVisible(true);
+      this.controls.continueButton.setVisible(true);
+    }
+  }
+
   reset() {
     this.currentDialoguePage = null;
     this.title.setText("");
@@ -348,7 +367,7 @@ export default class DialogueManager {
 
   resetButtons() {
     // Manually call this when closing menu because of bug where button stays in pressed state
-    this.controls.forEach((btn) => btn.reset());
+    Object.values(this.controls).forEach((btn) => btn.reset());
   }
 
   setDialoguePages(entries: DialogueEntry[]) {
