@@ -20,6 +20,7 @@ import Door from "../level/door";
 import Compass from "../hud/compass";
 import { Point } from "../../helpers/common-interfaces";
 import { INVENTORY_ITEMS } from "../hud/inventory-toggle";
+import TutorialLogic from "../level/tutorial-logic";
 
 export default class GameManager {
   private level: Level;
@@ -31,6 +32,7 @@ export default class GameManager {
   private compass: Compass;
   private mobProxy: MobXProxy;
   private proxy: EventProxy;
+  private tutorialLogic: TutorialLogic;
 
   constructor(
     private scene: Phaser.Scene,
@@ -490,6 +492,16 @@ export default class GameManager {
 
     this.level = new Level(this.scene, store.level, this.dialogueManager);
     const playerStartGridPos = this.level.getStartingGridPosition();
+
+    if (this.tutorialLogic) {
+      this.tutorialLogic.destroy();
+    }
+    this.tutorialLogic = new TutorialLogic(
+      this.scene,
+      this.dialogueManager,
+      this.level,
+      store.level
+    );
 
     const enemyCount = this.level.countNeighboringEnemies(
       playerStartGridPos.x,

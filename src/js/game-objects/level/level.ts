@@ -13,7 +13,6 @@ import { Point } from "../../helpers/common-interfaces";
 import EventEmitter from "../../helpers/event-emitter";
 import LEVEL_EVENTS, { LevelEmitter } from "./events";
 import { neighborOffsets } from "./neighbor-offsets";
-import TutorialLogic from "./tutorial-logic";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 
@@ -41,7 +40,6 @@ export default class Level {
   private background: GameObjects.Rectangle;
   private tiles: Tile[][];
   private state: LEVEL_STATE = LEVEL_STATE.TRANSITION_IN;
-  private tutorialLogic: TutorialLogic;
   private tileKey: string;
 
   constructor(
@@ -166,8 +164,6 @@ export default class Level {
       const y = this.exitGridPosition.y - 1;
       this.createShop(x, y);
     }
-
-    this.tutorialLogic = new TutorialLogic(scene, dialogueManager, this, levelKey);
   }
 
   createShop(x: number, y: number) {
