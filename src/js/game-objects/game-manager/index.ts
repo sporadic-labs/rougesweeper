@@ -96,7 +96,7 @@ export default class GameManager {
     store.setGameState(GAME_MODES.SKILL_MODE);
 
     switch (type) {
-      case INVENTORY_ITEMS.COMPASS:
+      case INVENTORY_ITEMS.COMPASS: {
         if (this.compass) {
           this.toastManager.setMessage("A compass is already active.");
           this.inventoryMenu.deselectAll();
@@ -107,7 +107,8 @@ export default class GameManager {
         this.disableInteractivity();
         store.setGameState(GAME_MODES.IDLE_MODE);
         break;
-      case INVENTORY_ITEMS.REVEAL_IN_RADAR:
+      }
+      case INVENTORY_ITEMS.REVEAL_IN_RADAR: {
         const success = await this.clearTilesInRadar();
         if (success) {
           store.setHasClearRadar(false);
@@ -118,9 +119,11 @@ export default class GameManager {
         this.disableInteractivity();
         store.setGameState(GAME_MODES.IDLE_MODE);
         break;
-      case INVENTORY_ITEMS.REVEAL_TILE:
+      }
+      case INVENTORY_ITEMS.REVEAL_TILE: {
         // NOTE(rex): This is handled by onTileSelectPrimary.
         break;
+      }
     }
   };
 
@@ -267,6 +270,9 @@ export default class GameManager {
 
     store.setHasRevealTile(false);
 
+    await this.radar.update();
+    this.flipTilesIfClear();
+
     this.level.enableAllTiles();
     store.setGameState(GAME_MODES.IDLE_MODE);
     return;
@@ -343,14 +349,8 @@ export default class GameManager {
     const playerGridPos = this.player.getGridPosition();
     const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
 
-    // update the radar
     await this.radar.update();
-    const isTileScrambled = this.level.isTileScrambled(tileGridPos.x, tileGridPos.y);
-    if (this.radar.getEnemyCount() === 0 && !isTileScrambled) {
-      this.level
-        .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
-        .forEach((tile) => tile.flipToFront());
-    }
+    this.flipTilesIfClear();
 
     // if the tile is the EXIT, check if the player has the correct conditions to finish the level
     if (currentTile.type === TILE_TYPES.EXIT) {
@@ -416,16 +416,22 @@ export default class GameManager {
       await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
     }
 
-    const playerGridPos = this.player.getGridPosition();
     await this.radar.update();
-    if (this.radar.getEnemyCount() === 0) {
-      this.level
-        .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
-        .map((tile) => tile.flipToFront());
-    }
+    this.flipTilesIfClear();
 
     this.level.enableAllTiles();
     this.startIdleFlow();
+  }
+
+  private flipTilesIfClear() {
+    const playerGridPos = this.player.getGridPosition();
+    const enemyCount = this.level.countNeighboringEnemies(playerGridPos.x, playerGridPos.y);
+    const isTileScrambled = this.level.isTileScrambled(playerGridPos.x, playerGridPos.y);
+    if (enemyCount === 0 && !isTileScrambled) {
+      this.level
+        .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
+        .forEach((tile) => tile.flipToFront());
+    }
   }
 
   /**

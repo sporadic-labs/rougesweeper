@@ -59,7 +59,7 @@ class GameStore {
   }
   setAmmo(amt = 1) {
     if (this.playerAmmo <= this.maxPlayerAmmo) this.playerAmmo = amt;
-    else this.playerAmmo = this.maxPlayerAmmo
+    else this.playerAmmo = this.maxPlayerAmmo;
   }
   addAmmo(amt = 1) {
     if (this.playerAmmo <= this.maxPlayerAmmo) this.playerAmmo += amt;
