@@ -15,6 +15,11 @@ class DataTile {
 type TileProperty = { type?: TILE; frameName?: string };
 type TilesetProperty = { [key: string]: TileProperty };
 type TileTypeToTileIdMap = { [tileType in TILE]?: number };
+type SupportedEnemyTypes = TILE_TYPES.ENEMY | TILE_TYPES.SCRAMBLE_ENEMY;
+interface RandomizedSpawnInfo {
+  polygon: Geom.Polygon;
+  enemies: SupportedEnemyTypes[];
+}
 
 export default class LevelData {
   public topOffset: number;
@@ -33,8 +38,8 @@ export default class LevelData {
     this.tileWidth = map.tileWidth;
     this.tileHeight = map.tileHeight;
 
-    // Create a map that goes from our type property on the tileset in Tiled to our TileType enum in
-    // JS.
+    // Create a map that goes from our type property on the tileset in Tiled to
+    // our TileType enum in JS.
     const tileset = this.map.getTileset("assets");
     const tilesetProperties = tileset.tileProperties as TilesetProperty;
     this.tileTypeToId = {};
@@ -129,7 +134,9 @@ export default class LevelData {
     const enemiesLayer = map.getObjectLayer("Random Enemies");
     if (enemiesLayer) {
       const enemyPositions = this.generateEnemyPositions(enemiesLayer);
-      enemyPositions.forEach(({ x, y }) => this.setTileAt(x, y, TILE.ENEMY));
+      enemyPositions.forEach(({ type, pos }) => {
+        this.setTileAt(pos.x, pos.y, type);
+      });
     }
 
     this.updateReachability();
@@ -362,39 +369,52 @@ export default class LevelData {
     const spawnRegions = objectLayer.objects.filter(
       (obj) => obj.polygon !== undefined || obj.rectangle === true
     );
-    const spawnPolygons = spawnRegions.map((obj) => this.tiledShapeToPhaserPoly(obj));
+
+    const spawns: RandomizedSpawnInfo[] = spawnRegions.map((obj) => ({
+      polygon: this.tiledShapeToPhaserPoly(obj),
+      enemies: [],
+    }));
 
     // Count enemy tile objects within each region
     const enemyTiles = objectLayer.objects.filter((obj) => obj.gid !== undefined);
-    const enemyCounts = Array(spawnRegions.length).fill(0);
     enemyTiles.map((enemyTile) => {
       const x = enemyTile.x / this.tileWidth + 0.5;
       const y = enemyTile.y / this.tileHeight - 0.5;
       const boardPos = this.tilemapPositionToBoardPosition(x, y);
-      let enemyPlaced = false;
-      for (let i = 0; i < spawnPolygons.length; i++) {
-        if (spawnPolygons[i].contains(boardPos.x, boardPos.y)) {
-          enemyPlaced = true;
-          enemyCounts[i] += 1;
-        }
+
+      // TODO: add more types here as we add more enemies.
+      let type: SupportedEnemyTypes = null;
+      if (enemyTile.gid === this.tileTypeToId["SCRAMBLE_ENEMY"]) {
+        type = TILE_TYPES.SCRAMBLE_ENEMY;
+      } else if (enemyTile.gid === this.tileTypeToId["ENEMY"]) {
+        type = TILE_TYPES.ENEMY;
       }
-      if (!enemyPlaced) {
-        throw new Error("Enemy does not fit within any of the spawn polygons.");
+
+      if (type === null) {
+        throw new Error(`Unexpected tile in random enemies layer: ${enemyTile}`);
       }
+
+      const i = spawns.findIndex((s) => s.polygon.contains(boardPos.x, boardPos.y));
+
+      if (i === -1) {
+        throw new Error(`Enemy does not fit within any of the spawn polygons: ${enemyTile}`);
+      }
+
+      spawns[i].enemies.push(type);
     });
 
     // Attempt to find random places for all enemy tiles - inefficient!
-    const enemyPositions: Point[] = [];
-    spawnPolygons.forEach((polygon, i) => {
+    const enemiesToSpawn: Array<{ type: SupportedEnemyTypes; pos: Point }> = [];
+    spawns.forEach((spawnInfo) => {
+      const { polygon, enemies } = spawnInfo;
       const blanks = this.getBlanksWithin(polygon);
       Phaser.Utils.Array.Shuffle(blanks);
-      const count = enemyCounts[i];
-      if (blanks.length < count) {
+      if (blanks.length < enemies.length) {
         throw new Error("Not enough blanks to spawn an enemy in the region.");
       }
-      enemyPositions.push(...blanks.slice(0, count));
+      enemies.forEach((type, i) => enemiesToSpawn.push({ type, pos: blanks[i] }));
     });
-    return enemyPositions;
+    return enemiesToSpawn;
   }
 
   /**
