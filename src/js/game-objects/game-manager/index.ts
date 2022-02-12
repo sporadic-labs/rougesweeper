@@ -370,7 +370,8 @@ export default class GameManager {
     this.level.enableAllTiles();
     this.startIdleFlow();
 
-    this.dialogueManager.playDialogueFromTile(currentTile);
+    // Disabled in favor of using the tutorial class:
+    // this.dialogueManager.playDialogueFromTile(currentTile);
 
     // Apply any effect that need to happen at the end of moving.
     switch (tile.type) {
