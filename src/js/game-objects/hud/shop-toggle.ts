@@ -61,6 +61,13 @@ export default class ShopToggle {
 
         this.mobProxy = new MobXProxy();
         this.mobProxy.observe(gameStore, "gameState", () => {
+            if (gameStore.shopLocked) {
+                this.disableInteractive();
+                this.disabled = true;
+            } else {
+                this.disabled = false;
+            }
+
             if (!this.disabled) {
                 if (gameStore.gameState === GAME_MODES.MENU_MODE) {
                     this.disableInteractive();
@@ -126,7 +133,7 @@ export default class ShopToggle {
             opacity: 0.95,
             duration: 100,
         });
-        this.gameStore.setShopOpen(true);
+        if (this.isInteractive) this.gameStore.setShopOpen(true);
     };
 
     onPointerUp = () => {

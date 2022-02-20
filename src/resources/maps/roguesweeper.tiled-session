@@ -1,5 +1,5 @@
 {
-    "activeFile": "level-3-floor-1.tmx",
+    "activeFile": "level-1-floor-2.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -15,7 +15,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 580,
-                "y": 505.3333333333333
+                "y": 504.66666666666663
             }
         },
         "level-1-floor-1.tmx#hq": {
@@ -47,7 +47,7 @@
             "scale": 0.7823529411764705,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 582.857142857143,
+                "x": 584.1353383458647,
                 "y": 506.1654135338347
             }
         },
@@ -67,7 +67,7 @@
         },
         "level-3-floor-1.tmx": {
             "scale": 0.75,
-            "selectedLayer": 5,
+            "selectedLayer": 4,
             "viewCenter": {
                 "x": 589.3333333333333,
                 "y": 517.3333333333333
@@ -103,7 +103,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 580.3007518796993,
-                "y": 506.1654135338347
+                "y": 505.52631578947376
             }
         },
         "level-4-floor-1.tmx#skyscraper": {
@@ -185,8 +185,6 @@
     "project": "",
     "recentFiles": [
         "level-1-floor-1.tmx",
-        "level-1-floor-2.tmx",
-        "level-1-floor-3.tmx",
         "level-5-floor-3.tmx",
         "level-5-floor-2.tmx",
         "level-5-floor-1.tmx",
@@ -195,6 +193,8 @@
         "level-4-floor-1.tmx",
         "level-3-floor-3.tmx",
         "level-3-floor-2.tmx",
-        "level-3-floor-1.tmx"
+        "level-3-floor-1.tmx",
+        "level-1-floor-3.tmx",
+        "level-1-floor-2.tmx"
     ]
 }

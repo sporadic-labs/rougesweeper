@@ -378,7 +378,7 @@ export default class GameManager {
     // Apply any effect that need to happen at the end of moving.
     switch (tile.type) {
       case TILE_TYPES.SHOP:
-        store.setShopOpen(true);
+        store.setShopUnlockOpen(true);
         break;
       case TILE_TYPES.KEY:
         store.setHasKey(true);

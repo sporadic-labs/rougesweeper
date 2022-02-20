@@ -10,16 +10,28 @@ class GameStore {
   goldCount: number;
   maxPlayerHealth: number;
   playerHealth: number;
-  isShopOpen: boolean;
   moveCount: number;
+  levelIndex: number;
+  hasKey: boolean;
+  maxPlayerAmmo: number;
+  playerAmmo: number;
+
+  // Menu Stuff
+  isShopOpen: boolean;
+  isShopUnlockOpen: boolean;
+  pauseMenuOpen: boolean;
+
+  // Inventory Stuff
   hasCompass: boolean;
   hasRevealTile: boolean;
   hasClearRadar: boolean;
-  levelIndex: number;
-  hasKey: boolean;
-  pauseMenuOpen: boolean;
-  maxPlayerAmmo: number;
-  playerAmmo: number;
+
+  // Inventory Progression stuff.
+  shopLocked: boolean;
+  ammoLocked: boolean;
+  compassLocked: boolean;
+  clearRadarLocked: boolean;
+  revealTileLocked: boolean;
 
   constructor() {
     this.gameState = GAME_MODES.IDLE_MODE;
@@ -30,14 +42,24 @@ class GameStore {
     this.playerAmmo = 5;
     this.maxPlayerHealth = 4;
     this.playerHealth = this.maxPlayerHealth;
-    this.isShopOpen = false;
     this.moveCount = 0;
+    this.levelIndex = storedSettings.startingLevel;
+    this.hasKey = false;
+    
+    this.isShopOpen = false;
+    this.isShopUnlockOpen = false;
+    this.pauseMenuOpen = false;
+    
     this.hasCompass = false;
     this.hasRevealTile = false;
     this.hasClearRadar = false;
-    this.levelIndex = storedSettings.startingLevel;
-    this.hasKey = false;
-    this.pauseMenuOpen = false;
+
+    this.shopLocked = false;
+    this.ammoLocked = true;
+    this.compassLocked = true;
+    this.clearRadarLocked = true;
+    this.revealTileLocked = true;
+
     makeAutoObservable(this);
   }
 
@@ -76,6 +98,9 @@ class GameStore {
   setShopOpen(isShopOpen: boolean) {
     this.isShopOpen = isShopOpen;
   }
+  setShopUnlockOpen(isShopUnlockOpen: boolean) {
+    this.isShopUnlockOpen = isShopUnlockOpen;
+  }
   setHasCompass(hasCompass: boolean) {
     this.hasCompass = hasCompass;
   }
@@ -106,12 +131,38 @@ class GameStore {
     this.pauseMenuOpen = pauseMenuOpen;
   }
 
+  setShopLocked(locked: boolean) {
+    this.shopLocked = locked;
+  }
+
+  setAmmoLocked(locked: boolean) {
+    this.ammoLocked = locked;
+  }
+
+  setClearRadarLocked(locked: boolean) {
+    this.clearRadarLocked = locked;
+  }
+
+  setRevealTileLocked(locked: boolean) {
+    this.revealTileLocked = locked;
+  }
+
+  setCompassLocked(locked: boolean) {
+    this.compassLocked = locked;
+  }
+
   startNewGame() {
     this.playerHealth = this.maxPlayerHealth;
     this.goldCount = storedSettings.startingGold;
     this.levelIndex = storedSettings.startingLevel;
     this.moveCount = 0;
     this.hasKey = false;
+
+    this.shopLocked = false;
+    this.ammoLocked = true;
+    this.clearRadarLocked = true;
+    this.revealTileLocked = true;
+    this.compassLocked = true;
   }
 }
 

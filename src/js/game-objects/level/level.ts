@@ -88,7 +88,8 @@ export default class Level {
         // TODO: remove the shop from the tile creation here and create it
         // later. We can drop this when we remove the shop from all tilemap
         // files.
-        if (!dataTile || !dataTile.type || dataTile.type === TILE_TYPES.SHOP) return undefined;
+        // if (!dataTile || !dataTile.type || dataTile.type === TILE_TYPES.SHOP) return undefined;
+        if (!dataTile || !dataTile.type) return undefined;
 
         const { type, phaserTile, isReachable } = dataTile;
         const { frameName } = phaserTile.properties;

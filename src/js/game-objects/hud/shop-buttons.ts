@@ -27,6 +27,7 @@ export default class ShopButtons {
   buttonFadePoser: TweenPoser<FadePoses>;
   proxy: EventProxy;
   cb: Function;
+  locked: boolean;
 
   constructor(
     scene: Phaser.Scene,
@@ -36,7 +37,8 @@ export default class ShopButtons {
     frame: string,
     buttonLabel: string,
     message: string,
-    cb: Function
+    cb: Function,
+    locked?: boolean,
   ) {
     this.scene = scene;
     this.cb = cb;
@@ -50,6 +52,8 @@ export default class ShopButtons {
     const button = new TextButton(scene, 0, 96, buttonLabel);
     button.events.on("DOWN", this.onButtonPress);
     this.button = button;
+
+    this.locked = locked;
 
     this.container = scene.add.container(x, y, [sprite, text, button.text]).setDepth(DEPTHS.MENU);
 
