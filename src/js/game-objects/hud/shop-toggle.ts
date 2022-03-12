@@ -77,52 +77,52 @@ export default class ShopToggle {
             }
         });
 
-        this.proxy = new EventProxy();
-        this.proxy.on(scene.events, "shutdown", this.destroy, this);
-        this.proxy.on(scene.events, "destroy", this.destroy, this);
-    }
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
 
-    enableInteractive() {
-        if (this.isInteractive) return;
-        this.isInteractive = true;
-        this.sprite.setInteractive();
-        this.sprite.on("pointerover", this.onHoverStart);
-        this.sprite.on("pointerout", this.onHoverEnd);
-        this.sprite.on("pointerdown", this.onPointerDown);
-        this.sprite.on("pointerup", this.onPointerUp);
-        this.sprite.setAlpha(1);
-    }
+  enableInteractive() {
+    if (this.isInteractive) return;
+    this.isInteractive = true;
+    this.sprite.setInteractive();
+    this.sprite.on("pointerover", this.onHoverStart);
+    this.sprite.on("pointerout", this.onHoverEnd);
+    this.sprite.on("pointerdown", this.onPointerDown);
+    this.sprite.on("pointerup", this.onPointerUp);
+    this.sprite.setAlpha(1);
+  }
 
-    disableInteractive() {
-        if (!this.isInteractive) return;
-        this.isInteractive = false;
-        this.sprite.disableInteractive();
-        this.sprite.off("pointerover", this.onHoverStart);
-        this.sprite.off("pointerout", this.onHoverEnd);
-        this.sprite.off("pointerdown", this.onPointerDown);
-        this.sprite.off("pointerup", this.onPointerUp);
-        this.sprite.setAlpha(0.5);
-    }
+  disableInteractive() {
+    if (!this.isInteractive) return;
+    this.isInteractive = false;
+    this.sprite.disableInteractive();
+    this.sprite.off("pointerover", this.onHoverStart);
+    this.sprite.off("pointerout", this.onHoverEnd);
+    this.sprite.off("pointerdown", this.onPointerDown);
+    this.sprite.off("pointerup", this.onPointerUp);
+    this.sprite.setAlpha(0.5);
+  }
 
-    onHoverStart = () => {
-        if (this.tween) this.tween.stop();
-        this.tween = this.scene.add.tween({
-            targets: this.sprite,
-            scaleX: 1.05,
-            scaleY: 1.05,
-            duration: 100,
-        });
-    };
+  onHoverStart = () => {
+    if (this.tween) this.tween.stop();
+    this.tween = this.scene.add.tween({
+      targets: this.sprite,
+      scaleX: 1.05,
+      scaleY: 1.05,
+      duration: 100,
+    });
+  };
 
-    onHoverEnd = () => {
-        if (this.tween) this.tween.stop();
-        this.tween = this.scene.add.tween({
-            targets: this.sprite,
-            scaleX: 1,
-            scaleY: 1,
-            duration: 100,
-        });
-    };
+  onHoverEnd = () => {
+    if (this.tween) this.tween.stop();
+    this.tween = this.scene.add.tween({
+      targets: this.sprite,
+      scaleX: 1,
+      scaleY: 1,
+      duration: 100,
+    });
+  };
 
     onPointerDown = () => {
         if (this.tween) this.tween.stop();
@@ -136,20 +136,20 @@ export default class ShopToggle {
         if (this.isInteractive) this.gameStore.setShopOpen(true);
     };
 
-    onPointerUp = () => {
-        if (this.tween) this.tween.stop();
-        this.tween = this.scene.add.tween({
-            targets: this.sprite,
-            scaleX: 1.05,
-            scaleY: 1.05,
-            opacity: 1.0,
-            duration: 100,
-        });
-    };
+  onPointerUp = () => {
+    if (this.tween) this.tween.stop();
+    this.tween = this.scene.add.tween({
+      targets: this.sprite,
+      scaleX: 1.05,
+      scaleY: 1.05,
+      opacity: 1.0,
+      duration: 100,
+    });
+  };
 
-    destroy() {
-        if (this.tween) this.tween.stop();
-        this.sprite.destroy();
-        this.proxy.removeAll();
-    }
+  destroy() {
+    if (this.tween) this.tween.stop();
+    this.sprite.destroy();
+    this.proxy.removeAll();
+  }
 }

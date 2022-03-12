@@ -68,6 +68,11 @@ export default class Shop {
     let buttonCount =4;
 
     const y = r.centerY - 12;
+    const x1 = r.x + r.width * 0.1 + r.width * 0.8 * (0 / 8);
+    const x2 = r.x + r.width * 0.1 + r.width * 0.8 * (2 / 8);
+    const x3 = r.x + r.width * 0.1 + r.width * 0.8 * (4 / 8);
+    const x4 = r.x + r.width * 0.1 + r.width * 0.8 * (6 / 8);
+    const x5 = r.x + r.width * 0.1 + r.width * 0.8 * (8 / 8);
     const getXPosition = (r: Phaser.Geom.Rectangle, buttonIndex: number, buttonTotal: number): number => (r.x + (r.width * 0.2)) + ((r.width * 0.8) * (buttonIndex / buttonTotal));
 
     const x1 = getXPosition(r, 0, buttonCount)
@@ -182,6 +187,21 @@ export default class Shop {
       buyClearRadarButton,
       buyRevealTileButton,
     } = this;
+    const {
+      goldCount,
+      playerHealth,
+      maxPlayerHealth,
+      hasRevealTile,
+      hasClearRadar,
+      hasCompass,
+      playerAmmo,
+      maxPlayerAmmo,
+    } = gameStore;
+    const canRefillAmmo = playerAmmo < maxPlayerAmmo && goldCount >= costs.ammo;
+    const canBuyHeart = playerHealth < maxPlayerHealth && goldCount >= costs.heart;
+    const canBuyRevealTile = !hasRevealTile && goldCount >= costs.revealTile;
+    const canBuyClearRadar = !hasClearRadar && goldCount >= costs.clearRadar;
+    const canBuyCompass = !hasCompass && goldCount >= costs.compass;
     const { goldCount, hasRevealTile, hasClearRadar, hasCompass, playerAmmo, maxPlayerAmmo, ammoLocked, clearRadarLocked, revealTileLocked, compassLocked } = gameStore;
 
     const canRefillAmmo = playerAmmo < maxPlayerAmmo && goldCount >= costs.ammo && !ammoLocked;
@@ -207,10 +227,11 @@ export default class Shop {
     const { gameStore, costs } = this;
     if (gameStore.goldCount >= costs.ammo) {
       gameStore.setAmmo(gameStore.maxPlayerAmmo);
+      this.toastManager.setMessage("Ammo refilled!");
       gameStore.removeGold(costs.ammo);
       this.toastManager.setMessage("Ammo refilled!")
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -218,10 +239,11 @@ export default class Shop {
     const { gameStore, costs } = this;
     if (gameStore.goldCount >= costs.clearRadar) {
       gameStore.setHasClearRadar(true);
+      this.toastManager.setMessage("EMP acquired!");
       gameStore.removeGold(costs.clearRadar);
       this.toastManager.setMessage("EMP acquired!")
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -229,10 +251,22 @@ export default class Shop {
     const { gameStore, costs } = this;
     if (gameStore.goldCount >= costs.revealTile) {
       gameStore.setHasRevealTile(true);
+      this.toastManager.setMessage("Sniper acquired!");
       gameStore.removeGold(costs.revealTile);
       this.toastManager.setMessage("Sniper acquired!")
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
+    }
+  };
+
+  buyHealth = () => {
+    const { gameStore, costs } = this;
+    if (gameStore.goldCount >= costs.heart) {
+      gameStore.removeGold(costs.heart);
+      gameStore.addHealth(1);
+      this.toastManager.setMessage("Alert level cleared!");
+    } else {
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -240,10 +274,11 @@ export default class Shop {
     const { gameStore, costs } = this;
     if (gameStore.goldCount >= costs.compass) {
       gameStore.setHasCompass(true);
+      this.toastManager.setMessage("Compass acquired!");
       gameStore.removeGold(costs.compass);
       this.toastManager.setMessage("Compass acquired!")
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
