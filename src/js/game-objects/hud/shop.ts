@@ -1,6 +1,6 @@
 import EventProxy from "../../helpers/event-proxy";
 import store, { GameStore } from "../../store";
-import GAME_MODES from "../game-manager/events";
+import GAME_MODES from "../game-manager/game-modes";
 import MobXProxy from "../../helpers/mobx-proxy";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
@@ -65,12 +65,16 @@ export default class Shop {
 
     // Figure out the total number of buttons we want based on what is unlocked.
     const { ammoLocked, clearRadarLocked, revealTileLocked, compassLocked } = gameStore;
-    let buttonCount =4;
+    let buttonCount = 4;
 
     const y = r.centerY - 12;
-    const getXPosition = (r: Phaser.Geom.Rectangle, buttonIndex: number, buttonTotal: number): number => (r.x + (r.width * 0.2)) + ((r.width * 0.8) * (buttonIndex / buttonTotal));
+    const getXPosition = (
+      r: Phaser.Geom.Rectangle,
+      buttonIndex: number,
+      buttonTotal: number
+    ): number => r.x + r.width * 0.2 + r.width * 0.8 * (buttonIndex / buttonTotal);
 
-    const x1 = getXPosition(r, 0, buttonCount)
+    const x1 = getXPosition(r, 0, buttonCount);
     const buyAmmoButton = new ShopButton(
       scene,
       x1,
@@ -84,7 +88,7 @@ export default class Shop {
     );
     this.buyAmmoButton = buyAmmoButton;
 
-    const x2 = getXPosition(r, 1, buttonCount)
+    const x2 = getXPosition(r, 1, buttonCount);
     const buyCompassButton = new ShopButton(
       scene,
       x2,
@@ -98,7 +102,7 @@ export default class Shop {
     );
     this.buyCompassButton = buyCompassButton;
 
-    const x3 = getXPosition(r, 2, buttonCount)
+    const x3 = getXPosition(r, 2, buttonCount);
     const buyClearRadarButton = new ShopButton(
       scene,
       x3,
@@ -112,7 +116,7 @@ export default class Shop {
     );
     this.buyClearRadarButton = buyClearRadarButton;
 
-    const x4 = getXPosition(r, 3, buttonCount)
+    const x4 = getXPosition(r, 3, buttonCount);
     const buyRevealTileButton = new ShopButton(
       scene,
       x4,
@@ -133,8 +137,8 @@ export default class Shop {
       buyAmmoButton.container,
       buyCompassButton.container,
       buyClearRadarButton.container,
-      buyRevealTileButton.container
-    ]
+      buyRevealTileButton.container,
+    ];
 
     this.container = scene.add
       .container(0, 0, buttonContainer)
@@ -182,7 +186,18 @@ export default class Shop {
       buyClearRadarButton,
       buyRevealTileButton,
     } = this;
-    const { goldCount, hasRevealTile, hasClearRadar, hasCompass, playerAmmo, maxPlayerAmmo, ammoLocked, clearRadarLocked, revealTileLocked, compassLocked } = gameStore;
+    const {
+      goldCount,
+      hasRevealTile,
+      hasClearRadar,
+      hasCompass,
+      playerAmmo,
+      maxPlayerAmmo,
+      ammoLocked,
+      clearRadarLocked,
+      revealTileLocked,
+      compassLocked,
+    } = gameStore;
 
     const canRefillAmmo = playerAmmo < maxPlayerAmmo && goldCount >= costs.ammo && !ammoLocked;
     canRefillAmmo ? buyAmmoButton.enable() : buyAmmoButton.disable();
@@ -208,9 +223,9 @@ export default class Shop {
     if (gameStore.goldCount >= costs.ammo) {
       gameStore.setAmmo(gameStore.maxPlayerAmmo);
       gameStore.removeGold(costs.ammo);
-      this.toastManager.setMessage("Ammo refilled!")
+      this.toastManager.setMessage("Ammo refilled!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -219,9 +234,9 @@ export default class Shop {
     if (gameStore.goldCount >= costs.clearRadar) {
       gameStore.setHasClearRadar(true);
       gameStore.removeGold(costs.clearRadar);
-      this.toastManager.setMessage("EMP acquired!")
+      this.toastManager.setMessage("EMP acquired!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -230,9 +245,9 @@ export default class Shop {
     if (gameStore.goldCount >= costs.revealTile) {
       gameStore.setHasRevealTile(true);
       gameStore.removeGold(costs.revealTile);
-      this.toastManager.setMessage("Sniper acquired!")
+      this.toastManager.setMessage("Sniper acquired!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -241,9 +256,9 @@ export default class Shop {
     if (gameStore.goldCount >= costs.compass) {
       gameStore.setHasCompass(true);
       gameStore.removeGold(costs.compass);
-      this.toastManager.setMessage("Compass acquired!")
+      this.toastManager.setMessage("Compass acquired!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 

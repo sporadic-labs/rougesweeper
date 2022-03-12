@@ -1,5 +1,5 @@
 import EventProxy from "../../helpers/event-proxy";
-import GAME_MODES from "../game-manager/events";
+import GAME_MODES from "../game-manager/game-modes";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";

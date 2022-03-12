@@ -1,5 +1,5 @@
 import EventProxy from "../../helpers/event-proxy";
-import GAME_MODES from "../game-manager/events";
+import GAME_MODES from "../game-manager/game-modes";
 import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";

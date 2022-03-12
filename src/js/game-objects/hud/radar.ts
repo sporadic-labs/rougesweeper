@@ -2,7 +2,6 @@ import Phaser from "phaser";
 import BezierEasing from "bezier-easing";
 import Tile from "../level/tile";
 import EventProxy from "../../helpers/event-proxy";
-import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
 import globalLogger from "../../helpers/logger";
 import Player from "../player";

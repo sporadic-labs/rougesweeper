@@ -1,63 +1,68 @@
 import EventProxy from "../../helpers/event-proxy";
 import store, { GameStore } from "../../store";
-import GAME_MODES from "../game-manager/events";
+import GAME_MODES from "../game-manager/game-modes";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
 
 export default class ShopToggle {
-    scene: Phaser.Scene;
-    gameStore: GameStore;
-    mobProxy: MobXProxy;
-    proxy: EventProxy;
+  scene: Phaser.Scene;
+  gameStore: GameStore;
+  mobProxy: MobXProxy;
+  proxy: EventProxy;
 
-    isInteractive: boolean;
-    disabled: boolean;
+  isInteractive: boolean;
+  disabled: boolean;
 
-    title: Phaser.GameObjects.Text;
-    sprite: Phaser.GameObjects.Sprite;
-    text: Phaser.GameObjects.Text;
-    background: Phaser.GameObjects.Shape;
-    container: Phaser.GameObjects.Container;
+  title: Phaser.GameObjects.Text;
+  sprite: Phaser.GameObjects.Sprite;
+  text: Phaser.GameObjects.Text;
+  background: Phaser.GameObjects.Shape;
+  container: Phaser.GameObjects.Container;
 
-    tween: Phaser.Tweens.Tween;
+  tween: Phaser.Tweens.Tween;
 
-    /**
-     * @param {Phaser.Scene} scene
-     */
-    constructor(scene: Phaser.Scene, gameStore: GameStore) {
-        this.scene = scene;
-        this.gameStore = gameStore;
-        const x = fractionToX(0.12);
-        const y = fractionToY(0.48);
+  /**
+   * @param {Phaser.Scene} scene
+   */
+  constructor(scene: Phaser.Scene, gameStore: GameStore) {
+    this.scene = scene;
+    this.gameStore = gameStore;
+    const x = fractionToX(0.12);
+    const y = fractionToY(0.48);
 
-        const bgPadding = { x: 4, y: 25 };
-        const bgWidth = 96;
-        const iconSpacing = 6;
+    const bgPadding = { x: 4, y: 25 };
+    const bgWidth = 96;
+    const iconSpacing = 6;
 
-        this.title = scene.add
-            .text(bgWidth / 2, bgPadding.y, "Shop", { fontSize: "20px", color: "#000000", fontStyle: "bold" })
-            .setOrigin(0.5, 0);
+    this.title = scene.add
+      .text(bgWidth / 2, bgPadding.y, "Shop", {
+        fontSize: "20px",
+        color: "#000000",
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5, 0);
 
-        this.sprite = scene.add
-            .sprite(bgWidth / 2, this.title.y + this.title.height + iconSpacing, "all-assets", "shop-button")
-            .setOrigin(0.5, 0);
+    this.sprite = scene.add
+      .sprite(
+        bgWidth / 2,
+        this.title.y + this.title.height + iconSpacing,
+        "all-assets",
+        "shop-button"
+      )
+      .setOrigin(0.5, 0);
 
-        const bgHeight = this.sprite.y + this.sprite.height + bgPadding.y;
-        this.background = scene.add
-            .rectangle(0, 0, bgWidth, bgHeight, 0xffffff)
-            .setStrokeStyle(8, 0x585e5e, 1)
-            .setOrigin(0, 0);
+    const bgHeight = this.sprite.y + this.sprite.height + bgPadding.y;
+    this.background = scene.add
+      .rectangle(0, 0, bgWidth, bgHeight, 0xffffff)
+      .setStrokeStyle(8, 0x585e5e, 1)
+      .setOrigin(0, 0);
 
-        this.container = scene.add
-            .container(x, y, [
-                this.background,
-                this.title,
-                this.sprite
-            ])
-            .setDepth(DEPTHS.HUD);
+    this.container = scene.add
+      .container(x, y, [this.background, this.title, this.sprite])
+      .setDepth(DEPTHS.HUD);
 
-        this.enableInteractive();
+    this.enableInteractive();
 
         this.mobProxy = new MobXProxy();
         this.mobProxy.observe(gameStore, "gameState", () => {

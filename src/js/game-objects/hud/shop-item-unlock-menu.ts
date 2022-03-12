@@ -1,6 +1,6 @@
 import EventProxy from "../../helpers/event-proxy";
 import store, { GameStore } from "../../store";
-import GAME_MODES from "../game-manager/events";
+import GAME_MODES from "../game-manager/game-modes";
 import MobXProxy from "../../helpers/mobx-proxy";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
@@ -66,11 +66,11 @@ export default class ShopItemUnlockMenu {
     this.leaveButton = leaveButton;
 
     const y = r.centerY - 12;
-    const x1 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (0 / 8));
-    const x2 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (2 / 8));
-    const x3 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (4 / 8));
-    const x4 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (6 / 8));
-    const x5 = (r.x + (r.width * 0.1)) + ((r.width * 0.8) * (8 / 8));
+    const x1 = r.x + r.width * 0.1 + r.width * 0.8 * (0 / 8);
+    const x2 = r.x + r.width * 0.1 + r.width * 0.8 * (2 / 8);
+    const x3 = r.x + r.width * 0.1 + r.width * 0.8 * (4 / 8);
+    const x4 = r.x + r.width * 0.1 + r.width * 0.8 * (6 / 8);
+    const x5 = r.x + r.width * 0.1 + r.width * 0.8 * (8 / 8);
 
     const reduceAlertButton = new ShopButton(
       scene,
@@ -200,7 +200,15 @@ export default class ShopItemUnlockMenu {
       unlockClearRadarButton,
       unlockCompassButton,
     } = this;
-    const { goldCount, playerHealth, maxPlayerHealth, ammoLocked, clearRadarLocked, revealTileLocked, compassLocked } = gameStore;
+    const {
+      goldCount,
+      playerHealth,
+      maxPlayerHealth,
+      ammoLocked,
+      clearRadarLocked,
+      revealTileLocked,
+      compassLocked,
+    } = gameStore;
 
     // NOTE(rex): This is available at all consoles.
     const canBuyHeart = playerHealth < maxPlayerHealth && goldCount >= costs.heart;
@@ -224,9 +232,9 @@ export default class ShopItemUnlockMenu {
       gameStore.setAmmo(gameStore.maxPlayerAmmo);
       gameStore.setAmmoLocked(false);
       gameStore.removeGold(costs.ammo);
-      this.toastManager.setMessage("Ammo refill unlocked!")
+      this.toastManager.setMessage("Ammo refill unlocked!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -236,9 +244,9 @@ export default class ShopItemUnlockMenu {
       gameStore.setHasClearRadar(true);
       gameStore.setClearRadarLocked(false);
       gameStore.removeGold(costs.clearRadar);
-      this.toastManager.setMessage("EMP unlocked!")
+      this.toastManager.setMessage("EMP unlocked!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -246,11 +254,11 @@ export default class ShopItemUnlockMenu {
     const { gameStore, costs } = this;
     if (gameStore.goldCount >= costs.revealTile) {
       gameStore.setHasRevealTile(true);
-      gameStore.setRevealTileLocked(false)
+      gameStore.setRevealTileLocked(false);
       gameStore.removeGold(costs.revealTile);
-      this.toastManager.setMessage("Sniper unlocked!")
+      this.toastManager.setMessage("Sniper unlocked!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -259,9 +267,9 @@ export default class ShopItemUnlockMenu {
     if (gameStore.goldCount >= costs.heart) {
       gameStore.addHealth(1);
       gameStore.removeGold(costs.heart);
-      this.toastManager.setMessage("Alert level cleared!")
+      this.toastManager.setMessage("Alert level cleared!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 
@@ -271,9 +279,9 @@ export default class ShopItemUnlockMenu {
       gameStore.setHasCompass(true);
       gameStore.setCompassLocked(false);
       gameStore.removeGold(costs.compass);
-      this.toastManager.setMessage("Compass unlocked!")
+      this.toastManager.setMessage("Compass unlocked!");
     } else {
-      this.toastManager.setMessage("Not enough Tech!")
+      this.toastManager.setMessage("Not enough Tech!");
     }
   };
 

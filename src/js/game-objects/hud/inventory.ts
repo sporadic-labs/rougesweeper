@@ -5,7 +5,7 @@ import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
 import store, { GameStore } from "../../store/index";
 import InventoryToggle, { INVENTORY_ITEMS } from "./inventory-toggle";
-import GAME_MODES from "../game-manager/events";
+import GAME_MODES from "../game-manager/game-modes";
 
 export enum INVENTORY_EVENTS {
   SELECT = "SELECT",

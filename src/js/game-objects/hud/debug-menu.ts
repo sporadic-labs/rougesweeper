@@ -1,6 +1,6 @@
 import Phaser, { Scene, GameObjects } from "phaser";
 import EventProxy from "../../helpers/event-proxy";
-import GAME_MODES from "../game-manager/events";
+import GAME_MODES from "../game-manager/game-modes";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";

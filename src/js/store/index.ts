@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import GAME_MODES from "../game-objects/game-manager/events";
+import GAME_MODES from "../game-objects/game-manager/game-modes";
 import { levelKeys } from "./levels";
 import storedSettings from "./stored-settings";
 

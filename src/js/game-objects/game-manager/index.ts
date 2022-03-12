@@ -2,7 +2,7 @@ import LEVEL_EVENTS from "../level/events";
 import TILE_TYPES from "../level/tile-types";
 import Level from "../level/level";
 import store from "../../store";
-import GAME_MODES from "./events";
+import GAME_MODES from "./game-modes";
 import AttackAnimation from "../player/attack-animation";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { SCENE_NAME } from "../../scenes/index";
