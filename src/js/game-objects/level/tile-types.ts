@@ -9,6 +9,7 @@ enum TILE_TYPES {
   SHOP = "SHOP",
   WALL = "WALL",
   KEY = "KEY",
+  PLACEHOLDER_PICKUP = "PLACEHOLDER_PICKUP",
 }
 
 type DebugMap = { [T in TILE_TYPES]: string };
@@ -23,6 +24,7 @@ const tileTypeToDebugCharacter: DebugMap = {
   [TILE_TYPES.WALL]: "W",
   [TILE_TYPES.EXIT]: "X",
   [TILE_TYPES.BLANK]: ".",
+  [TILE_TYPES.PLACEHOLDER_PICKUP]: "!",
 };
 
 export { tileTypeToDebugCharacter };
