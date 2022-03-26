@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="7" nextobjectid="10">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="12">
  <editorsettings>
   <export target="level-1-floor-3.json" format="json"/>
  </editorsettings>
@@ -49,7 +49,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,81,81,0,0,0,0,91,82,68,0,0,0,0,
+0,0,0,81,81,0,0,0,0,91,82,0,0,0,0,0,
 0,0,0,0,82,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,91,0,0,0,0,0,0,
 0,0,0,58,0,0,0,0,99,100,0,0,0,0,0,0,
@@ -89,5 +89,9 @@
   <object id="7" x="448.647" y="224.962" width="299.098" height="145.714"/>
   <object id="8" gid="59" x="525.406" y="301.308" width="75" height="75"/>
   <object id="9" gid="59" x="599.541" y="748.677" width="75" height="75"/>
+ </objectgroup>
+ <objectgroup id="7" name="Random Key">
+  <object id="10" x="525.886" y="228.269" width="369.854" height="520.107"/>
+  <object id="11" gid="68" x="600.132" y="300.943" width="75" height="75"/>
  </objectgroup>
 </map>
