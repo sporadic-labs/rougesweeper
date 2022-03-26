@@ -1,15 +1,20 @@
 export default function getTilesetName(levelKey: string): string {
-  const levelKeyParts = levelKey.split("-");
-  switch (levelKeyParts[1]) {
-    case "1":
+  switch (levelKey.slice(0, 8)) {
+    case "level-01":
+    case "level-02":
+    case "level-03":
       return "hq";
-    case "2":
+    case "level-04":
+    case "level-05":
+    case "level-06":
       return "warehouse";
-    case "3":
+    case "level-07":
+    case "level-08":
+    case "level-09":
       return "lab";
-    case "4":
+    case "level-10":
       return "skyscraper";
-    case "5":
+    case "level-11":
       return "temple";
     default:
       throw Error(

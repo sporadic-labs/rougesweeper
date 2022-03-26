@@ -1,35 +1,38 @@
 /**
  * Level and tile data for tilemaps and dialogue info.
  */
-const levelData = [
+const levelData: Array<{
+  level: string;
+  title: string;
+  subtitle: string;
+  tiles: Array<{ x: number; y: number }>;
+}> = [
   {
-    level: "level-1-floor-1",
+    level: "level-01",
     title: "Headquarters",
-    subtitle: "Floor 1-1",
-    tiles: [{ x: 2, y: 2 }],
+    subtitle: "Floor 1",
+    tiles: [],
   },
   {
-    level: "level-1-floor-2",
+    level: "level-02",
     title: "Headquarters",
-    subtitle: "Floor 1-2",
-    tiles: [{ x: 1, y: 2 }],
+    subtitle: "Floor 2",
+    tiles: [],
   },
   {
-    level: "level-1-floor-3",
+    level: "level-03",
     title: "Headquarters",
-    subtitle: "Floor 1-3",
-    tiles: [{ x: 2, y: 3 }],
+    subtitle: "Floor 3",
+    tiles: [],
   },
-  { level: "level-2-floor-1", title: "Warehouse", subtitle: "Floor 2-1", tiles: [] },
-  { level: "level-2-floor-2", title: "Warehouse", subtitle: "Floor 2-2", tiles: [] },
-  { level: "level-2-floor-3", title: "Warehouse", subtitle: "Floor 2-3", tiles: [] },
-  { level: "level-2-floor-4", title: "Warehouse", subtitle: "Floor 2-4", tiles: [] },
-  { level: "level-3-floor-1", title: "Laboratory", subtitle: "Floor 3-1", tiles: [] },
-  { level: "level-3-floor-2", title: "Laboratory", subtitle: "Floor 3-2", tiles: [] },
-  { level: "level-3-floor-3", title: "Laboratory", subtitle: "Floor 3-3", tiles: [] },
-  { level: "level-4-floor-1", title: "Skyscraper", subtitle: "Floor 4-1", tiles: [] },
-  { level: "level-4-floor-2", title: "Skyscraper", subtitle: "Floor 4-2", tiles: [] },
-  { level: "level-4-floor-3", title: "Skyscraper", subtitle: "Floor 4-3", tiles: [] },
+  { level: "level-03", title: "Laboratory", subtitle: "Floor 3", tiles: [] },
+  { level: "level-04", title: "Laboratory", subtitle: "Floor 4", tiles: [] },
+  { level: "level-05", title: "Laboratory", subtitle: "Floor 5", tiles: [] },
+  { level: "level-07", title: "Warehouse", subtitle: "Floor 7", tiles: [] },
+  { level: "level-08", title: "Warehouse", subtitle: "Floor 8", tiles: [] },
+  { level: "level-09", title: "Warehouse", subtitle: "Floor 9", tiles: [] },
+  { level: "level-10", title: "Skyscraper", subtitle: "Floor 10", tiles: [] },
+  { level: "level-11", title: "Temple", subtitle: "Floor 11", tiles: [] },
 ];
 
 /**
@@ -50,7 +53,7 @@ function loadLevels(scene: Phaser.Scene) {
   scene.load.image("temple", "maps/tilesets/temple.png");
   scene.load.image("decorations", "maps/tilesets/decorations.png");
   levelData.forEach(({ level }) =>
-    scene.load.tilemapTiledJSONExternal(level, `maps/${level}.json`)
+    scene.load.tilemapTiledJSONExternal(level, `maps-v2/${level}.json`)
   );
 }
 
