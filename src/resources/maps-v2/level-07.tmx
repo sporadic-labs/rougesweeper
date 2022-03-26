@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="17">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="17">
  <editorsettings>
   <export target="level-2-floor-1.json" format="json"/>
  </editorsettings>
@@ -80,7 +80,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="5" name="Random Enemies">
+ <objectgroup id="5" name="Random Enemies" visible="0">
   <object id="5" x="375" y="375" width="150" height="225"/>
   <object id="6" x="525" y="300" width="225" height="375"/>
   <object id="7" x="750" y="300" width="150" height="375"/>
@@ -91,8 +91,9 @@
   <object id="15" x="375" y="300" width="75" height="75"/>
   <object id="16" gid="158" x="375" y="375" width="75" height="75"/>
  </objectgroup>
- <objectgroup id="7" name="Random Key">
+ <objectgroup id="7" name="Random Key" visible="0">
   <object id="1" gid="166" x="825" y="375" width="75" height="75"/>
   <object id="2" x="825" y="225" width="75" height="525"/>
  </objectgroup>
+ <objectgroup id="8" name="Scramble Enemies"/>
 </map>

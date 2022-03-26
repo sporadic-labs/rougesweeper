@@ -4,3 +4,7 @@ public
 
 # Ignore files used for publishing to gh-pages!
 .publish
+
+# ignore tiled session
+src/resources/roguesweeper.tiled-session
+src/resources/maps-v2/roguesweeper.tiled-session
