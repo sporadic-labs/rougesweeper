@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="17">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="25">
  <editorsettings>
-  <export target="level-2-floor-1.json" format="json"/>
+  <export target="level-07.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="warehouse" tilewidth="75" tileheight="75" tilecount="42" columns="6">
   <image source="tilesets/warehouse.png" width="450" height="525"/>
@@ -49,13 +49,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,173,0,174,0,174,0,174,0,174,0,0,0,0,
+0,0,0,174,174,0,0,0,0,0,175,175,0,0,0,0,
+0,0,0,0,185,193,0,0,0,0,193,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,155,0,0,0,0,194,185,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,155,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,173,0,173,0,173,0,173,0,173,0,0,0,0,
+0,0,0,0,193,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,176,176,0,0,0,0,0,175,176,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -80,20 +80,27 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="5" name="Random Enemies" visible="0">
-  <object id="5" x="375" y="375" width="150" height="225"/>
-  <object id="6" x="525" y="300" width="225" height="375"/>
+ <objectgroup id="7" name="Random Key">
+  <object id="1" gid="166" x="825" y="375" width="75" height="75"/>
+  <object id="2" x="674.747" y="225" width="225.253" height="525"/>
+ </objectgroup>
+ <objectgroup id="5" name="Random Enemies">
+  <object id="5" x="375" y="229.081" width="150" height="515.393"/>
+  <object id="6" x="525" y="229.208" width="225" height="516.585"/>
   <object id="7" x="750" y="300" width="150" height="375"/>
   <object id="8" gid="157" x="450" y="525" width="75" height="75"/>
   <object id="9" gid="157" x="525" y="675" width="75" height="75"/>
   <object id="10" gid="157" x="525" y="375" width="75" height="75"/>
   <object id="11" gid="157" x="750" y="525" width="75" height="75"/>
-  <object id="15" x="375" y="300" width="75" height="75"/>
-  <object id="16" gid="158" x="375" y="375" width="75" height="75"/>
+  <object id="23" gid="157" x="825.511" y="669.353" width="75" height="75"/>
+  <object id="24" gid="157" x="376.196" y="302.388" width="75" height="75"/>
  </objectgroup>
- <objectgroup id="7" name="Random Key" visible="0">
-  <object id="1" gid="166" x="825" y="375" width="75" height="75"/>
-  <object id="2" x="825" y="225" width="75" height="525"/>
+ <objectgroup id="8" name="Scramble Enemies">
+  <object id="17" x="527.331" y="372.744" width="296.172" height="78.0161"/>
+  <object id="18" x="377.078" y="522.997" width="294.728" height="75.1266"/>
+  <object id="19" x="676.14" y="229.714" width="72.2371" height="517.218"/>
+  <object id="20" gid="158" x="673.813" y="298.054" width="75" height="75"/>
+  <object id="21" gid="158" x="527.894" y="445.417" width="75" height="75"/>
+  <object id="22" gid="158" x="379.086" y="597.115" width="75" height="75"/>
  </objectgroup>
- <objectgroup id="8" name="Scramble Enemies"/>
 </map>

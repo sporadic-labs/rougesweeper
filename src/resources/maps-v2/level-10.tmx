@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="51">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="51">
  <tileset firstgid="1" name="skyscraper" tilewidth="75" tileheight="75" tilecount="91" columns="13">
   <image source="tilesets/skyscraper.png" width="975" height="525"/>
  </tileset>
@@ -46,13 +46,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,111,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,110,0,0,0,0,0,0,0,0,
-0,0,0,120,119,0,0,129,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,92,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,154,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -94,8 +94,5 @@
   <object id="48" gid="94" x="675" y="600" width="75" height="75"/>
   <object id="49" gid="94" x="750" y="675" width="75" height="75"/>
  </objectgroup>
- <objectgroup color="#15e606" id="6" name="Shield" opacity="0.7">
-  <object id="31" x="375" y="375" width="150" height="75"/>
-  <object id="50" gid="153" x="600" y="750" width="75" height="75"/>
- </objectgroup>
+ <objectgroup id="8" name="Scramble Enemies"/>
 </map>
