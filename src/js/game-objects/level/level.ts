@@ -6,8 +6,7 @@ import PathFinder from "./path-finder";
 import DEPTHS from "../depths";
 import { gameCenter } from "../../game-dimensions";
 import Door, { DOOR_PLACEMENT } from "./door";
-import getTileFrame from "./get-tile-frame";
-import getTilesetName from "./get-tileset-name";
+import { getTilesetName, getTileFrame } from "./get-map-asset-names";
 import DialogueManager from "../hud/dialogue-manager";
 import { Point } from "../../helpers/common-interfaces";
 import EventEmitter from "../../helpers/event-emitter";
@@ -51,7 +50,8 @@ export default class Level {
 
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
-    const tilesSetImage = this.map.addTilesetImage(getTilesetName(levelKey));
+
+    const tilesSetImage = this.map.addTilesetImage(getTilesetName(this.map));
 
     this.map.layers.forEach((layerData) => {
       // TODO: standardize Tiled structure. Ignoring the dynamic gameboard stuff.
