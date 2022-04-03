@@ -95,13 +95,14 @@ export default class DebugMenu {
     closeButton.events.on("DOWN", this.close);
     this.closeButton = closeButton;
 
+    console.log(levelKeys)
+
     const levelSelectButtons = levelKeys.map((name, i) => {
-      const level = i + 1;
-      const floor = i % 3;
-      const col = floor - 1; // Floor starts at 1.
-      const row = level - 1; // Level starts at 1.
-      const y = r.y + 100 + row * 100;
-      const x = r.x + 70 + col * 300;
+      const col = i % 3;
+      const row = Math.floor(i / 3)
+
+      const y = r.y + 125 + row * 100;
+      const x = r.x + 100 + col * 300;
       const levelButton = new LevelSelectButton(scene, name, x, y);
       levelButton.loadButton.events.on("DOWN", () => {
         this.loadLevel(i);
