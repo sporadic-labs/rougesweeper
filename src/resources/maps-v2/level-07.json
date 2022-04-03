@@ -78,8 +78,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":225.253,
-                 "x":674.747,
+                 "width":225,
+                 "x":675,
                  "y":225
                 }],
          "opacity":1,
@@ -94,7 +94,7 @@
          "name":"Random Enemies",
          "objects":[
                 {
-                 "height":515.393,
+                 "height":525,
                  "id":5,
                  "name":"",
                  "rotation":0,
@@ -102,10 +102,10 @@
                  "visible":true,
                  "width":150,
                  "x":375,
-                 "y":229.081
+                 "y":225
                 }, 
                 {
-                 "height":516.585,
+                 "height":525,
                  "id":6,
                  "name":"",
                  "rotation":0,
@@ -113,7 +113,7 @@
                  "visible":true,
                  "width":225,
                  "x":525,
-                 "y":229.208
+                 "y":225
                 }, 
                 {
                  "height":375,
@@ -183,8 +183,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":825.511,
-                 "y":669.353
+                 "x":825,
+                 "y":675
                 }, 
                 {
                  "gid":157,
@@ -195,8 +195,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":376.196,
-                 "y":302.388
+                 "x":375,
+                 "y":300
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -210,37 +210,37 @@
          "name":"Scramble Enemies",
          "objects":[
                 {
-                 "height":78.0161,
+                 "height":75,
                  "id":17,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":296.172,
-                 "x":527.331,
-                 "y":372.744
+                 "width":300,
+                 "x":525,
+                 "y":375
                 }, 
                 {
-                 "height":75.1266,
+                 "height":75,
                  "id":18,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":294.728,
-                 "x":377.078,
-                 "y":522.997
+                 "width":300,
+                 "x":375,
+                 "y":525
                 }, 
                 {
-                 "height":517.218,
+                 "height":525,
                  "id":19,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":72.2371,
-                 "x":676.14,
-                 "y":229.714
+                 "width":75,
+                 "x":675,
+                 "y":225
                 }, 
                 {
                  "gid":158,
@@ -251,8 +251,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":673.813,
-                 "y":298.054
+                 "x":675,
+                 "y":300
                 }, 
                 {
                  "gid":158,
@@ -263,8 +263,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":527.894,
-                 "y":445.417
+                 "x":525,
+                 "y":450
                 }, 
                 {
                  "gid":158,
@@ -275,8 +275,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":379.086,
-                 "y":597.115
+                 "x":375,
+                 "y":600
                 }],
          "opacity":1,
          "type":"objectgroup",
