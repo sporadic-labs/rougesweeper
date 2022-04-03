@@ -56,11 +56,45 @@
         }, 
         {
          "draworder":"topdown",
+         "id":7,
+         "name":"Random Key",
+         "objects":[
+                {
+                 "gid":166,
+                 "height":75,
+                 "id":1,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":75,
+                 "x":825,
+                 "y":375
+                }, 
+                {
+                 "height":525,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":225.253,
+                 "x":674.747,
+                 "y":225
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":5,
          "name":"Random Enemies",
          "objects":[
                 {
-                 "height":515.39327809546,
+                 "height":515.393,
                  "id":5,
                  "name":"",
                  "rotation":0,
@@ -68,10 +102,10 @@
                  "visible":true,
                  "width":150,
                  "x":375,
-                 "y":229.080989613724
+                 "y":229.081
                 }, 
                 {
-                 "height":516.584782355001,
+                 "height":516.585,
                  "id":6,
                  "name":"",
                  "rotation":0,
@@ -79,7 +113,7 @@
                  "visible":true,
                  "width":225,
                  "x":525,
-                 "y":229.2076088225
+                 "y":229.208
                 }, 
                 {
                  "height":375,
@@ -149,8 +183,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":825.51137822383,
-                 "y":669.352549889135
+                 "x":825.511,
+                 "y":669.353
                 }, 
                 {
                  "gid":157,
@@ -161,42 +195,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":376.196405648267,
-                 "y":302.387909907807
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":7,
-         "name":"Random Key",
-         "objects":[
-                {
-                 "gid":166,
-                 "height":75,
-                 "id":1,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":75,
-                 "x":825,
-                 "y":375
-                }, 
-                {
-                 "height":525,
-                 "id":2,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":225.253238417552,
-                 "x":674.746761582448,
-                 "y":225
+                 "x":376.196,
+                 "y":302.388
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -210,37 +210,37 @@
          "name":"Scramble Enemies",
          "objects":[
                 {
-                 "height":78.0161045629595,
+                 "height":78.0161,
                  "id":17,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":296.172248803828,
-                 "x":527.331077138523,
-                 "y":372.743610689695
+                 "width":296.172,
+                 "x":527.331,
+                 "y":372.744
                 }, 
                 {
-                 "height":75.1266192087759,
+                 "height":75.1266,
                  "id":18,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":294.727506126736,
-                 "x":377.077838720971,
-                 "y":522.996849107247
+                 "width":294.728,
+                 "x":377.078,
+                 "y":522.997
                 }, 
                 {
-                 "height":517.21787839888,
+                 "height":517.218,
                  "id":19,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":72.2371338545921,
-                 "x":676.139572878982,
-                 "y":229.714085657603
+                 "width":72.2371,
+                 "x":676.14,
+                 "y":229.714
                 }, 
                 {
                  "gid":158,
@@ -251,8 +251,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":673.813397129187,
-                 "y":298.053681876532
+                 "x":673.813,
+                 "y":298.054
                 }, 
                 {
                  "gid":158,
@@ -263,8 +263,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":527.894386742911,
-                 "y":445.4174349399
+                 "x":527.894,
+                 "y":445.417
                 }, 
                 {
                  "gid":158,
@@ -275,8 +275,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":379.085891002451,
-                 "y":597.115416034543
+                 "x":379.086,
+                 "y":597.115
                 }],
          "opacity":1,
          "type":"objectgroup",
