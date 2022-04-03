@@ -95,8 +95,6 @@ export default class DebugMenu {
     closeButton.events.on("DOWN", this.close);
     this.closeButton = closeButton;
 
-    console.log(levelKeys)
-
     const levelSelectButtons = levelKeys.map((name, i) => {
       const col = i % 3;
       const row = Math.floor(i / 3)
