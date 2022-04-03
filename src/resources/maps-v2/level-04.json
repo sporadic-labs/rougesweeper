@@ -85,7 +85,7 @@
                 }],
          "opacity":0.67,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -202,7 +202,7 @@
                 }],
          "opacity":0.64,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -213,9 +213,20 @@
          "name":"Scramble Enemies",
          "objects":[
                 {
+                 "height":75,
+                 "id":31,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":75,
+                 "x":525,
+                 "y":375
+                }, 
+                {
                  "gid":34,
                  "height":75,
-                 "id":30,
+                 "id":32,
                  "name":"",
                  "rotation":0,
                  "type":"",
@@ -231,7 +242,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":31,
+ "nextobjectid":33,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

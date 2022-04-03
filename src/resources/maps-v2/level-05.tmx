@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="29">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="33">
  <tileset firstgid="1" name="lab" tilewidth="75" tileheight="75" tilecount="30" columns="5">
   <image source="tilesets/lab.png" width="375" height="450"/>
  </tileset>
@@ -77,11 +77,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup color="#0a16fa" id="4" name="Random Key" opacity="0.67">
+ <objectgroup color="#0a16fa" id="4" name="Random Key" visible="0" opacity="0.67">
   <object id="1" x="450" y="600" width="225" height="150"/>
   <object id="19" gid="42" x="525" y="675" width="75" height="75"/>
  </objectgroup>
- <objectgroup color="#e51418" id="5" name="Random Enemies" opacity="0.69">
+ <objectgroup color="#e51418" id="5" name="Random Enemies" visible="0" opacity="0.69">
   <object id="3" x="375" y="300" width="150" height="150"/>
   <object id="4" x="675" y="450" width="150" height="150"/>
   <object id="5" x="675" y="225" width="150" height="150"/>
@@ -92,7 +92,9 @@
   <object id="24" gid="33" x="750" y="600" width="75" height="75"/>
  </objectgroup>
  <objectgroup color="#15e606" id="6" name="Scramble Enemies" opacity="0.72">
-  <object id="27" gid="34" x="600" y="375" width="75" height="75"/>
-  <object id="28" gid="34" x="450" y="600" width="75" height="75"/>
+  <object id="29" x="600" y="300" width="75" height="75"/>
+  <object id="30" x="450" y="525" width="75" height="75"/>
+  <object id="31" gid="34" x="600" y="375" width="75" height="75"/>
+  <object id="32" gid="34" x="450" y="600" width="75" height="75"/>
  </objectgroup>
 </map>
