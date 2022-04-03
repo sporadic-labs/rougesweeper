@@ -81,27 +81,27 @@
 </data>
  </layer>
  <objectgroup id="7" name="Random Key">
-  <object id="1" x="598.123" y="228.269" width="297.617" height="522.997"/>
-  <object id="2" gid="54" x="750.385" y="303.833" width="75" height="75"/>
+  <object id="1" x="600" y="225" width="300" height="525"/>
+  <object id="2" gid="54" x="750" y="300" width="75" height="75"/>
  </objectgroup>
  <objectgroup id="6" name="Random Enemies">
-  <object id="3" x="378.523" y="294.728" width="221.046" height="229.714"/>
-  <object id="5" x="599.568" y="449.315" width="226.825" height="223.935"/>
-  <object id="8" x="676.14" y="226.825" width="221.046" height="221.046"/>
-  <object id="9" gid="45" x="444.099" y="361.622" width="75" height="75"/>
-  <object id="10" gid="45" x="525.005" y="513.32" width="75" height="75"/>
-  <object id="11" gid="45" x="597.242" y="516.21" width="75" height="75"/>
-  <object id="12" gid="45" x="754.719" y="595.671" width="75" height="75"/>
-  <object id="13" gid="45" x="594.353" y="672.242" width="75" height="75"/>
-  <object id="14" gid="45" x="670.924" y="367.401" width="75" height="75"/>
+  <object id="3" x="375" y="300" width="225" height="225"/>
+  <object id="5" x="600" y="450" width="225" height="225"/>
+  <object id="8" x="675" y="225" width="225" height="225"/>
+  <object id="9" gid="45" x="450" y="375" width="75" height="75"/>
+  <object id="10" gid="45" x="525" y="525" width="75" height="75"/>
+  <object id="11" gid="45" x="600" y="525" width="75" height="75"/>
+  <object id="12" gid="45" x="750" y="600" width="75" height="75"/>
+  <object id="13" gid="45" x="600" y="675" width="75" height="75"/>
+  <object id="14" gid="45" x="675" y="375" width="75" height="75"/>
  </objectgroup>
  <objectgroup id="5" name="Scramble Enemies">
-  <object id="15" x="375.633" y="527.331" width="372.744" height="70.7924"/>
-  <object id="16" x="377.078" y="296.172" width="371.299" height="75.1266"/>
-  <object id="17" x="748.377" y="225.38" width="145.919" height="525.886"/>
-  <object id="18" gid="46" x="526.45" y="368.846" width="75" height="75"/>
-  <object id="19" gid="46" x="825.511" y="370.291" width="75" height="75"/>
-  <object id="20" gid="46" x="748.94" y="448.307" width="75" height="75"/>
-  <object id="21" gid="46" x="449.878" y="594.226" width="75" height="75"/>
+  <object id="15" x="375" y="525" width="375" height="75"/>
+  <object id="16" x="375" y="300" width="375" height="75"/>
+  <object id="17" x="750" y="225" width="150" height="525"/>
+  <object id="18" gid="46" x="525" y="375" width="75" height="75"/>
+  <object id="19" gid="46" x="825" y="375" width="75" height="75"/>
+  <object id="20" gid="46" x="750" y="450" width="75" height="75"/>
+  <object id="21" gid="46" x="450" y="600" width="75" height="75"/>
  </objectgroup>
 </map>
