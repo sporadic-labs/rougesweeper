@@ -7,11 +7,11 @@ export default function getTilesetName(levelKey: string): string {
     case "level-04":
     case "level-05":
     case "level-06":
-      return "warehouse";
+      return "lab";
     case "level-07":
     case "level-08":
     case "level-09":
-      return "lab";
+      return "warehouse";
     case "level-10":
       return "skyscraper";
     case "level-11":
