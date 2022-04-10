@@ -477,20 +477,31 @@ export default class Level {
     return this.pathFinder.findPath(playerPos, tilePos);
   }
 
-  fadeLevelOut() {
+  async fadeLevelOut() {
     this.state = LEVEL_STATE.TRANSITION_OUT;
     const tilePromises: Promise<void>[] = [];
+    tilePromises.push(this.flipAllTiles("front"));
     // Flip all to the front, then half a second later, kick off the fade out from left to right
     this.tiles.forEach((row, y) =>
       row.forEach((tile, x) => {
         if (tile) {
-          tile.flipToFront();
-          const p = tile.fadeTileOut(250, 500 + x * 50);
-          tilePromises.push(p);
+          tilePromises.push(tile.fadeTileOut(250, 500 + x * 50));
         }
       })
     );
-    return Promise.all(tilePromises);
+    await Promise.all(tilePromises);
+  }
+
+  async flipAllTiles(flipDirection: "front" | "back" = "front") {
+    const tilePromises: Promise<void>[] = [];
+    this.tiles.forEach((row) =>
+      row.forEach((tile) => {
+        if (tile) {
+          tilePromises.push(flipDirection === "front" ? tile.flipToFront() : tile.flipToBack());
+        }
+      })
+    );
+    await Promise.all(tilePromises);
   }
 
   async fadeLevelIn() {

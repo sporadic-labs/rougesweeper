@@ -3,6 +3,7 @@ import TILE_TYPES from "../level/tile-types";
 import Level from "../level/level";
 import store from "../../store";
 import GAME_MODES from "./game-modes";
+import { makeGameEmitter, GAME_EVENTS } from "./events";
 import AttackAnimation from "../player/attack-animation";
 import MobXProxy from "../../helpers/mobx-proxy";
 import { SCENE_NAME } from "../../scenes/index";
@@ -21,6 +22,7 @@ import Compass from "../hud/compass";
 import { Point } from "../../helpers/common-interfaces";
 import { INVENTORY_ITEMS } from "../hud/inventory-toggle";
 import TutorialLogic from "../level/tutorial-logic";
+import EventEmitter from "../../helpers/event-emitter";
 
 export default class GameManager {
   private level: Level;
@@ -33,6 +35,7 @@ export default class GameManager {
   private mobProxy: MobXProxy;
   private proxy: EventProxy;
   private tutorialLogic: TutorialLogic;
+  public events = makeGameEmitter();
 
   constructor(
     private scene: Phaser.Scene,
@@ -155,6 +158,7 @@ export default class GameManager {
 
     await this.movePlayerAlongPath(path);
     this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
+    this.events.emit(GAME_EVENTS.EXIT_SELECT, door);
 
     if (this.level.exit.isOpen()) {
       const { x, y } = this.level.gridXYToWorldXY(exitGridPos);
@@ -500,7 +504,8 @@ export default class GameManager {
       this.scene,
       this.dialogueManager,
       this.level,
-      store.level
+      store.level,
+      this.events
     );
 
     const enemyCount = this.level.countNeighboringEnemies(
@@ -521,10 +526,13 @@ export default class GameManager {
     this.radar.setVisible(true);
     this.radar.update();
 
+    this.events.emit(GAME_EVENTS.LEVEL_START, this.level);
+
     this.startIdleFlow();
   }
 
   destroy() {
+    this.events.destroy();
     this.mobProxy.destroy();
     this.proxy.removeAll();
   }
