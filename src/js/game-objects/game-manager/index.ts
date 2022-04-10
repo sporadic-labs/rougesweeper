@@ -337,6 +337,9 @@ export default class GameManager {
         case TILE_TYPES.GOLD:
           store.addGold();
           break;
+        case TILE_TYPES.PICKUP:
+          console.log("Do something useful w/ this pickup!")
+          break;
       }
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
