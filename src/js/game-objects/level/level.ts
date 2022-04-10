@@ -158,32 +158,6 @@ export default class Level {
         return tile;
       })
     );
-
-    const hasShop = !levelKey.match(/level-1-floor-[1,2]/);
-    if (hasShop) {
-      const x = this.exitGridPosition.x - 1;
-      const y = this.exitGridPosition.y - 1;
-      this.createShop(x, y);
-    }
-  }
-
-  createShop(x: number, y: number) {
-    // TODO: check for out of bounds and check for overriding a tile.
-    const dialogueData = this.dialogueManager.getDialogueDataForTile(this.levelKey, x, y);
-    const tile = new Tile(
-      this.scene,
-      this.tileKey,
-      TILE_TYPES.SHOP,
-      "shop",
-      this.gridXToWorldX(x),
-      this.gridYToWorldY(y),
-      this,
-      true,
-      dialogueData
-    );
-    tile.setGridPosition(x, y);
-    tile.enableInteractive();
-    this.tiles[y][x] = tile;
   }
 
   onTileContentsUpdated(tile: Tile) {
