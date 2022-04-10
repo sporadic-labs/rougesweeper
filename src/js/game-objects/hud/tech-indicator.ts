@@ -14,7 +14,7 @@ const textStyle = {
 export default class TechIndicator {
   scene: Phaser.Scene;
   gameStore: GameStore;
-  
+
   title: Phaser.GameObjects.Text;
   sprite: Phaser.GameObjects.Sprite;
   text: Phaser.GameObjects.Text;
@@ -35,7 +35,11 @@ export default class TechIndicator {
     const iconSpacing = 6;
 
     this.title = scene.add
-      .text(bgWidth / 2, bgPadding.y, "Tech", { fontSize: "20px", color: "#000000", fontStyle: "bold" })
+      .text(bgWidth / 2, bgPadding.y, "Score", {
+        fontSize: "20px",
+        color: "#000000",
+        fontStyle: "bold",
+      })
       .setOrigin(0.5, 0);
 
     this.sprite = scene.add
