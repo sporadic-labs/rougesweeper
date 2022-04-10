@@ -42,6 +42,7 @@ export default class LevelData {
     // our TileType enum in JS.
     const tileset = this.map.getTileset("assets");
     const tilesetProperties = tileset.tileProperties as TilesetProperty;
+    console.log(tilesetProperties)
     this.tileTypeToId = {};
     for (const tileId in tilesetProperties) {
       const props = tilesetProperties[tileId];
@@ -120,6 +121,14 @@ export default class LevelData {
     if (keyLayer) {
       const { x, y } = this.generateKeyPosition(keyLayer);
       this.setTileAt(x, y, TILE.KEY);
+    }
+
+    const pickupLayer = map.getObjectLayer("Random Pickup");
+    if (pickupLayer) {
+      const { x, y } = this.generateKeyPosition(pickupLayer);
+      console.log(x)
+      console.log(y)
+      this.setTileAt(x, y, TILE.PICKUP);
     }
 
     const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
