@@ -65,7 +65,7 @@ export default class Shop {
 
     // Figure out the total number of buttons we want based on what is unlocked.
     const { ammoLocked, clearRadarLocked, revealTileLocked, compassLocked } = gameStore;
-    let buttonCount = 4;
+    const buttonCount = 4;
 
     const y = r.centerY - 12;
     const getXPosition = (

@@ -64,23 +64,23 @@ export default class ShopToggle {
 
     this.enableInteractive();
 
-        this.mobProxy = new MobXProxy();
-        this.mobProxy.observe(gameStore, "gameState", () => {
-            if (gameStore.shopLocked) {
-                this.disableInteractive();
-                this.disabled = true;
-            } else {
-                this.disabled = false;
-            }
+    this.mobProxy = new MobXProxy();
+    this.mobProxy.observe(gameStore, "gameState", () => {
+      if (gameStore.shopLocked) {
+        this.disableInteractive();
+        this.disabled = true;
+      } else {
+        this.disabled = false;
+      }
 
-            if (!this.disabled) {
-                if (gameStore.gameState === GAME_MODES.MENU_MODE) {
-                    this.disableInteractive();
-                } else {
-                    this.enableInteractive();
-                }
-            }
-        });
+      if (!this.disabled) {
+        if (gameStore.gameState === GAME_MODES.MENU_MODE) {
+          this.disableInteractive();
+        } else {
+          this.enableInteractive();
+        }
+      }
+    });
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
@@ -129,17 +129,17 @@ export default class ShopToggle {
     });
   };
 
-    onPointerDown = () => {
-        if (this.tween) this.tween.stop();
-        this.tween = this.scene.add.tween({
-            targets: this.sprite,
-            scaleX: 0.95,
-            scaleY: 0.95,
-            opacity: 0.95,
-            duration: 100,
-        });
-        if (this.isInteractive) this.gameStore.setShopOpen(true);
-    };
+  onPointerDown = () => {
+    if (this.tween) this.tween.stop();
+    this.tween = this.scene.add.tween({
+      targets: this.sprite,
+      scaleX: 0.95,
+      scaleY: 0.95,
+      opacity: 0.95,
+      duration: 100,
+    });
+    if (this.isInteractive) this.gameStore.setShopOpen(true);
+  };
 
   onPointerUp = () => {
     if (this.tween) this.tween.stop();

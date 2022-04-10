@@ -3,7 +3,6 @@
  */
 import EventProxy from "../../helpers/event-proxy";
 import Level from "./level";
-import LEVEL_EVENTS from "./events";
 import DialogueManager from "../hud/dialogue-manager";
 import store from "../../store";
 import { GameEmitter, GAME_EVENTS } from "../game-manager/events";
