@@ -176,7 +176,31 @@ export default class ItemSwitcher {
   private updateState() {
     const item = allItems[this.currentItemIndex];
     this.weaponSprite.setFrame(item);
-    this.ammoText.setText(`${this.gameStore.playerAmmo}/5`);
+
+    let currentAmmo: number;
+    let maxAmmo: number;
+    switch (item) {
+      case ITEM.HACK:
+        currentAmmo = this.gameStore.playerAmmo;
+        maxAmmo = 5;
+        break;
+      case ITEM.CLEAR_RADAR:
+        currentAmmo = this.gameStore.hasClearRadar ? 1 : 0;
+        maxAmmo = 1;
+        break;
+      case ITEM.COMPASS:
+        currentAmmo = this.gameStore.hasCompass ? 1 : 0;
+        maxAmmo = 1;
+        break;
+      case ITEM.REVEAL_TILE:
+        currentAmmo = this.gameStore.hasRevealTile ? 1 : 0;
+        maxAmmo = 1;
+        break;
+      default:
+        throw new Error("Unrecognized item type");
+    }
+    this.ammoText.setText(`${currentAmmo}/${maxAmmo}`);
+
     this.leftButton.setEnabled(this.currentItemIndex > 0);
     this.rightButton.setEnabled(this.currentItemIndex < allItems.length - 1);
   }
