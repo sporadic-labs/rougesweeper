@@ -9,8 +9,8 @@ import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
 import Shop from "../game-objects/hud/shop";
 import ShopUnlock from "../game-objects/hud/shop-item-unlock-menu";
-import AmmoIndicator from "../game-objects/hud/ammo-indicator";
 import ShopToggle from "../game-objects/hud/shop-toggle";
+import ItemSwitcher from "../game-objects/hud/item-switcher";
 
 const titleStyle = {
   align: "left",
@@ -37,7 +37,7 @@ export default class MainScene extends Scene {
     new ShopUnlock(this, store, toastManager);
     new TechIndicator(this, store);
     new AlertIndicator(this, store);
-    new AmmoIndicator(this, store);
+    new ItemSwitcher(this, store);
     new PauseToggle(this, store);
     new LevelIndicator(this, store);
     new ShopToggle(this, store);
