@@ -104,28 +104,33 @@ class ArrowButton {
   }
 }
 
+// Use the frame names for the all-assets texture
+const enum ITEM {
+  HACK = "tech-2",
+  CLEAR_RADAR = "clear-radar",
+  COMPASS = "compass",
+  REVEAL_TILE = "reveal-tile",
+}
+
+const allItems = [ITEM.HACK, ITEM.CLEAR_RADAR, ITEM.COMPASS, ITEM.REVEAL_TILE];
+
 export default class ItemSwitcher {
-  scene: Phaser.Scene;
-  gameStore: GameStore;
-
-  ammoText: Phaser.GameObjects.Text;
-  weaponSprite: Phaser.GameObjects.Sprite;
-  leftButton: ArrowButton;
-  rightButton: ArrowButton;
-  background: Phaser.GameObjects.Shape;
-  container: Phaser.GameObjects.Container;
-
-  proxy: EventProxy;
+  private currentItemIndex = 0;
+  private ammoText: Phaser.GameObjects.Text;
+  private weaponSprite: Phaser.GameObjects.Sprite;
+  private leftButton: ArrowButton;
+  private rightButton: ArrowButton;
+  private background: Phaser.GameObjects.Shape;
+  private container: Phaser.GameObjects.Container;
+  private proxy: EventProxy;
   private dispose: IReactionDisposer;
 
-  constructor(scene: Phaser.Scene, gameStore: GameStore) {
-    this.scene = scene;
-
+  constructor(private scene: Phaser.Scene, private gameStore: GameStore) {
     const size = 96;
     const padding = 12;
 
     this.weaponSprite = scene.add
-      .sprite(size * 0.5, padding, "all-assets", "clear-radar")
+      .sprite(size * 0.5, padding, "all-assets", allItems[this.currentItemIndex])
       .setDisplaySize(size * 0.47, size * 0.47)
       .setOrigin(0.5, 0);
 
@@ -138,6 +143,8 @@ export default class ItemSwitcher {
 
     this.leftButton = new ArrowButton(scene, size * 0.2, size * 0.4, "left");
     this.rightButton = new ArrowButton(scene, size * 0.8, size * 0.4, "right");
+    this.leftButton.events.addListener("pointerdown", this.onArrowButtonClick);
+    this.rightButton.events.addListener("pointerdown", this.onArrowButtonClick);
     this.container = scene.add
       // TODO: we should align placement of UI.
       .container(fractionToX(0.83), fractionToY(0.98) - size, [
@@ -149,19 +156,29 @@ export default class ItemSwitcher {
       ])
       .setDepth(DEPTHS.HUD);
 
-    this.leftButton.setEnabled(false);
-    this.rightButton.setEnabled(false);
-
-    this.updateText(gameStore.playerAmmo);
-    this.dispose = autorun(() => this.updateText(gameStore.playerAmmo));
+    this.dispose = autorun(() => this.updateState());
+    this.updateState();
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
-  updateText(ammo: number) {
-    this.ammoText.setText(`${ammo}/5`);
+  private onArrowButtonClick = (arrowButton: ArrowButton) => {
+    if (arrowButton === this.leftButton && this.currentItemIndex > 0) {
+      this.currentItemIndex -= 1;
+    } else if (arrowButton === this.rightButton && this.currentItemIndex < allItems.length - 1) {
+      this.currentItemIndex += 1;
+    }
+    this.updateState();
+  };
+
+  private updateState() {
+    const item = allItems[this.currentItemIndex];
+    this.weaponSprite.setFrame(item);
+    this.ammoText.setText(`${this.gameStore.playerAmmo}/5`);
+    this.leftButton.setEnabled(this.currentItemIndex > 0);
+    this.rightButton.setEnabled(this.currentItemIndex < allItems.length - 1);
   }
 
   destroy() {
