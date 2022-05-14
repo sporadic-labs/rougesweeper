@@ -35,14 +35,12 @@ class ArrowButton {
 
     this.poser = new TweenPoser(scene, this.triangle, {
       duration: 100,
-      scaleX: 1,
-      scaleY: 1,
       alpha: 1,
     });
     this.poser.definePoses({
-      Default: {},
+      Default: { scaleX: 1, scaleY: 1 },
       Hover: { scaleX: 1.25, scaleY: 1.25 },
-      Disabled: { alpha: 0.5 },
+      Disabled: { scaleX: 1, scaleY: 1, alpha: 0.5 },
     });
     this.poser.setToPose("Default");
 
