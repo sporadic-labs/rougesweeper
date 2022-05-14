@@ -117,6 +117,7 @@ const allItems = [ITEM.HACK, ITEM.CLEAR_RADAR, ITEM.COMPASS, ITEM.REVEAL_TILE];
 export default class ItemSwitcher {
   private currentItemIndex = 0;
   private ammoText: Phaser.GameObjects.Text;
+  private nameText: Phaser.GameObjects.Text;
   private weaponSprite: Phaser.GameObjects.Sprite;
   private leftButton: ArrowButton;
   private rightButton: ArrowButton;
@@ -126,29 +127,35 @@ export default class ItemSwitcher {
   private dispose: IReactionDisposer;
 
   constructor(private scene: Phaser.Scene, private gameStore: GameStore) {
-    const size = 96;
+    const size = { x: 96, y: 110 };
     const padding = 12;
 
     this.weaponSprite = scene.add
-      .sprite(size * 0.5, padding, "all-assets", allItems[this.currentItemIndex])
-      .setDisplaySize(size * 0.47, size * 0.47)
+      .sprite(size.x * 0.5, size.y * 0.25, "all-assets", allItems[this.currentItemIndex])
+      .setDisplaySize(size.x * 0.47, size.x * 0.47)
       .setOrigin(0.5, 0);
 
-    this.ammoText = scene.add.text(size * 0.5, size - padding, "5/5", textStyle).setOrigin(0.5, 1);
+    this.nameText = scene.add
+      .text(size.x * 0.5, padding, "Name", { ...textStyle, fontSize: "18px" })
+      .setOrigin(0.5, 0);
+    this.ammoText = scene.add
+      .text(size.x * 0.5, size.y - padding, "5/5", textStyle)
+      .setOrigin(0.5, 1);
 
     this.background = scene.add
-      .rectangle(0, 0, size, size, 0xffffff)
+      .rectangle(0, 0, size.x, size.y, 0xffffff)
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0, 0);
 
-    this.leftButton = new ArrowButton(scene, size * 0.2, size * 0.4, "left");
-    this.rightButton = new ArrowButton(scene, size * 0.8, size * 0.4, "right");
+    this.leftButton = new ArrowButton(scene, size.x * 0.2, size.y * 0.47, "left");
+    this.rightButton = new ArrowButton(scene, size.x * 0.8, size.y * 0.47, "right");
     this.leftButton.events.addListener("pointerdown", this.onArrowButtonClick);
     this.rightButton.events.addListener("pointerdown", this.onArrowButtonClick);
     this.container = scene.add
       // TODO: we should align placement of UI.
-      .container(fractionToX(0.83), fractionToY(0.98) - size, [
+      .container(fractionToX(0.83), fractionToY(0.98) - size.y, [
         this.background,
+        this.nameText,
         this.ammoText,
         this.weaponSprite,
         this.leftButton.getSprite(),
@@ -179,26 +186,32 @@ export default class ItemSwitcher {
 
     let currentAmmo: number;
     let maxAmmo: number;
+    let name: string;
     switch (item) {
       case ITEM.HACK:
+        name = "Hack";
         currentAmmo = this.gameStore.playerAmmo;
         maxAmmo = 5;
         break;
       case ITEM.CLEAR_RADAR:
+        name = "Clear";
         currentAmmo = this.gameStore.hasClearRadar ? 1 : 0;
         maxAmmo = 1;
         break;
       case ITEM.COMPASS:
+        name = "Compass";
         currentAmmo = this.gameStore.hasCompass ? 1 : 0;
         maxAmmo = 1;
         break;
       case ITEM.REVEAL_TILE:
+        name = "Reveal";
         currentAmmo = this.gameStore.hasRevealTile ? 1 : 0;
         maxAmmo = 1;
         break;
       default:
         throw new Error("Unrecognized item type");
     }
+    this.nameText.setText(name);
     this.ammoText.setText(`${currentAmmo}/${maxAmmo}`);
 
     this.leftButton.setEnabled(this.currentItemIndex > 0);
