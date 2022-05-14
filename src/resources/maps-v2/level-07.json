@@ -56,6 +56,40 @@
         }, 
         {
          "draworder":"topdown",
+         "id":9,
+         "name":"Random Pickup",
+         "objects":[
+                {
+                 "height":525,
+                 "id":25,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":525,
+                 "x":375,
+                 "y":225
+                }, 
+                {
+                 "gid":168,
+                 "height":75,
+                 "id":26,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":75,
+                 "x":375,
+                 "y":750
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":7,
          "name":"Random Key",
          "objects":[
@@ -284,8 +318,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":9,
- "nextobjectid":25,
+ "nextlayerid":10,
+ "nextobjectid":27,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

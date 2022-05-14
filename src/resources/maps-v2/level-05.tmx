@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="33">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="35">
  <editorsettings>
   <export target="level-05..tmx" format="tmx"/>
  </editorsettings>
@@ -7,7 +7,7 @@
   <image source="tilesets/lab.png" width="375" height="450"/>
  </tileset>
  <tileset firstgid="31" source="assets.json"/>
- <tileset firstgid="94" source="decorations.json"/>
+ <tileset firstgid="103" source="decorations.json"/>
  <layer id="1" name="Board" width="16" height="14" offsetx="-38" offsety="-38">
   <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -66,25 +66,29 @@
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,156,156,0,154,155,0,184,185,0,0,0,0,
-0,0,182,0,0,0,0,0,0,0,0,0,0,183,0,0,
-0,0,196,0,0,0,0,0,0,0,0,0,0,197,0,0,
+0,0,0,0,165,165,0,163,164,0,193,194,0,0,0,0,
+0,0,191,0,0,0,0,0,0,0,0,0,0,192,0,0,
+0,0,205,0,0,0,0,0,0,0,0,0,0,206,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,178,0,0,0,0,0,0,0,0,0,0,179,0,0,
-0,0,192,0,0,0,0,0,0,0,0,0,0,193,0,0,
+0,0,187,0,0,0,0,0,0,0,0,0,0,188,0,0,
+0,0,201,0,0,0,0,0,0,0,0,0,0,202,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,170,0,0,0,0,0,0,0,0,0,0,171,0,0,
+0,0,179,0,0,0,0,0,0,0,0,0,0,180,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,168,169,0,198,199,0,200,157,0,0,0,0,
+0,0,0,0,177,178,0,207,208,0,209,166,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup color="#0a16fa" id="4" name="Random Key" visible="0" opacity="0.67">
+ <objectgroup id="8" name="Random Pickup">
+  <object id="33" x="375" y="225" width="525" height="525"/>
+  <object id="34" gid="44" x="750" y="750" width="75" height="75"/>
+ </objectgroup>
+ <objectgroup color="#0a16fa" id="4" name="Random Key" opacity="0.67">
   <object id="1" x="450" y="600" width="225" height="150"/>
   <object id="19" gid="42" x="525" y="675" width="75" height="75"/>
  </objectgroup>
- <objectgroup color="#e51418" id="5" name="Random Enemies" visible="0" opacity="0.69">
+ <objectgroup color="#e51418" id="5" name="Random Enemies" opacity="0.69">
   <object id="3" x="375" y="300" width="150" height="150"/>
   <object id="4" x="675" y="450" width="150" height="150"/>
   <object id="5" x="675" y="225" width="150" height="150"/>
