@@ -1,11 +1,11 @@
 { "columns":9,
  "image":"tilesets\/all-assets.png",
- "imageheight":541,
+ "imageheight":618,
  "imagewidth":695,
  "margin":2,
  "name":"assets",
  "spacing":2,
- "tilecount":63,
+ "tilecount":72,
  "tiledversion":"1.8.2",
  "tileheight":75,
  "tiles":[
@@ -76,11 +76,25 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"TENTACLE_ENEMY"
                 }]
         }, 
         {
          "id":5,
+         "properties":[
+                {
+                 "name":"frameName",
+                 "type":"string",
+                 "value":"enemy-4"
+                }, 
+                {
+                 "name":"type",
+                 "type":"string",
+                 "value":"BOSS_ENEMY"
+                }]
+        }, 
+        {
+         "id":6,
          "properties":[
                 {
                  "name":"frameName",
@@ -90,11 +104,11 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"FX"
                 }]
         }, 
         {
-         "id":6,
+         "id":7,
          "properties":[
                 {
                  "name":"frameName",
@@ -104,11 +118,11 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"FX"
                 }]
         }, 
         {
-         "id":7,
+         "id":8,
          "properties":[
                 {
                  "name":"frameName",
@@ -118,21 +132,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
-                }]
-        }, 
-        {
-         "id":8,
-         "properties":[
-                {
-                 "name":"frameName",
-                 "type":"string",
-                 "value":""
-                }, 
-                {
-                 "name":"type",
-                 "type":"string",
-                 "value":""
+                 "value":"FX"
                 }]
         }, 
         {
@@ -141,12 +141,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"marker-1"
+                 "value":"clear-radar"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"EMP"
                 }]
         }, 
         {
@@ -155,12 +155,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"marker-2"
+                 "value":"reveal-tile"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"SNIPER"
                 }]
         }, 
         {
@@ -216,7 +216,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"COMPASS"
                 }]
         }, 
         {
@@ -225,12 +225,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"stairs-1"
+                 "value":"scramble-1"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"EXIT"
+                 "value":"FX"
                 }]
         }, 
         {
@@ -239,12 +239,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"stairs-2"
+                 "value":"attack-fx-4"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"EXIT"
+                 "value":"FX"
                 }]
         }, 
         {
@@ -253,12 +253,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"attack-fx-5"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"FX"
                 }]
         }, 
         {
@@ -645,12 +645,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"ammo-empty"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -659,12 +659,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"ammo-full"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -673,12 +673,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"arrow"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -687,12 +687,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"gears"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -701,12 +701,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"alarm-off"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -715,12 +715,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":""
+                 "value":"alarm-on"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -869,12 +869,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"shield-switch-1"
+                 "value":"shop-button"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"SHIELD_CONTROL"
+                 "value":"HUD"
                 }]
         }, 
         {

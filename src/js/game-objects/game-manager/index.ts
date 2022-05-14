@@ -23,6 +23,7 @@ import { Point } from "../../helpers/common-interfaces";
 import { INVENTORY_ITEMS } from "../hud/inventory-toggle";
 import TutorialLogic from "../level/tutorial-logic";
 import EventEmitter from "../../helpers/event-emitter";
+import RandomPickupManager from "../level/random-pickup-manager";
 
 export default class GameManager {
   private level: Level;
@@ -35,6 +36,7 @@ export default class GameManager {
   private mobProxy: MobXProxy;
   private proxy: EventProxy;
   private tutorialLogic: TutorialLogic;
+  private randomPickupManager: RandomPickupManager;
   public events = makeGameEmitter();
 
   constructor(
@@ -49,6 +51,8 @@ export default class GameManager {
     this.pauseMenu = new PauseMenu(scene, store);
     this.inventoryMenu = new InventoryMenu(scene, store);
     this.dialogueManager = new DialogueManager(scene, store);
+
+    this.randomPickupManager = new RandomPickupManager()
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -337,10 +341,19 @@ export default class GameManager {
         case TILE_TYPES.GOLD:
           store.addGold();
           break;
-        case TILE_TYPES.PICKUP:
-          console.log("Do something useful w/ this pickup!")
+        case TILE_TYPES.COMPASS:
+          store.setHasCompass(true);
           break;
-      }
+        case TILE_TYPES.SNIPER:
+          store.setHasRevealTile(true);
+          break;
+        case TILE_TYPES.EMP:
+          store.setHasClearRadar(true);
+          break;
+        case TILE_TYPES.ALERT_AMMO:
+          store.setAmmo(store.maxPlayerAmmo);
+          break;
+        }
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
     }
@@ -497,7 +510,7 @@ export default class GameManager {
     store.setGameState(GAME_MODES.IDLE_MODE);
     store.setHasKey(false);
 
-    this.level = new Level(this.scene, store.level, this.dialogueManager);
+    this.level = new Level(this.scene, store.level, this.dialogueManager, this.randomPickupManager);
     const playerStartGridPos = this.level.getStartingGridPosition();
 
     if (this.tutorialLogic) {

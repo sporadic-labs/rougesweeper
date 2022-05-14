@@ -4,6 +4,7 @@ import { create2DArray } from "../../helpers/array-utils";
 import logger from "../../helpers/logger";
 import { Point } from "../../helpers/common-interfaces";
 import { neighborOffsets } from "./neighbor-offsets";
+import RandomPickupManager from "./random-pickup-manager";
 
 type TiledObject = Phaser.Types.Tilemaps.TiledObject;
 
@@ -22,6 +23,7 @@ interface RandomizedSpawnInfo {
 }
 
 export default class LevelData {
+  public levelKey: string;
   public topOffset: number;
   public leftOffset: number;
   public width: number;
@@ -33,16 +35,18 @@ export default class LevelData {
   private tileHeight: number;
   private tileTypeToId: TileTypeToTileIdMap;
 
-  constructor(private map: Tilemaps.Tilemap) {
+  constructor(levelKey: string, private map: Tilemaps.Tilemap, private randomPickupManager: RandomPickupManager) {
+    this.levelKey = levelKey;
     this.map = map;
     this.tileWidth = map.tileWidth;
     this.tileHeight = map.tileHeight;
+
+    this.randomPickupManager = randomPickupManager
 
     // Create a map that goes from our type property on the tileset in Tiled to
     // our TileType enum in JS.
     const tileset = this.map.getTileset("assets");
     const tilesetProperties = tileset.tileProperties as TilesetProperty;
-    console.log(tilesetProperties)
     this.tileTypeToId = {};
     for (const tileId in tilesetProperties) {
       const props = tilesetProperties[tileId];
@@ -126,9 +130,8 @@ export default class LevelData {
     const pickupLayer = map.getObjectLayer("Random Pickup");
     if (pickupLayer) {
       const { x, y } = this.generateKeyPosition(pickupLayer);
-      console.log(x)
-      console.log(y)
-      this.setTileAt(x, y, TILE.PICKUP);
+      const pickupType = this.randomPickupManager.getPickupTypeForLevelFromKey(this.levelKey)
+      this.setTileAt(x, y, pickupType);
     }
 
     const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");

@@ -10,7 +10,10 @@ enum TILE_TYPES {
   WALL = "WALL",
   KEY = "KEY",
   PICKUP = "PICKUP",
-  PLACEHOLDER_PICKUP = "PLACEHOLDER_PICKUP",
+  COMPASS = "COMPASS",
+  EMP = "EMP",
+  SNIPER = "SNIPER",
+  ALERT_AMMO = "ALERT_AMMO",
 }
 
 type DebugMap = { [T in TILE_TYPES]: string };
@@ -26,7 +29,10 @@ const tileTypeToDebugCharacter: DebugMap = {
   [TILE_TYPES.EXIT]: "X",
   [TILE_TYPES.BLANK]: ".",
   [TILE_TYPES.PICKUP]: "8",
-  [TILE_TYPES.PLACEHOLDER_PICKUP]: "!",
+  [TILE_TYPES.COMPASS]: "8",
+  [TILE_TYPES.EMP]: "8",
+  [TILE_TYPES.SNIPER]: "8",
+  [TILE_TYPES.ALERT_AMMO]: "8",
 };
 
 export { tileTypeToDebugCharacter };

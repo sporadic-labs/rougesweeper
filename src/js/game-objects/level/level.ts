@@ -12,6 +12,7 @@ import { Point } from "../../helpers/common-interfaces";
 import EventEmitter from "../../helpers/event-emitter";
 import LEVEL_EVENTS, { LevelEmitter } from "./events";
 import { neighborOffsets } from "./neighbor-offsets";
+import RandomPickupManager from "./random-pickup-manager";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 
@@ -44,12 +45,15 @@ export default class Level {
   constructor(
     private scene: Scene,
     private levelKey: string,
-    private dialogueManager: DialogueManager
+    private dialogueManager: DialogueManager,
+    private randomPickupManager: RandomPickupManager
   ) {
     this.tileKey = getTileFrame(levelKey);
 
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
+
+    this.randomPickupManager = randomPickupManager
 
     const tilesSetImage = this.map.addTilesetImage(getTilesetName(this.map));
 
@@ -69,7 +73,7 @@ export default class Level {
       layer.setDepth(depth);
     });
 
-    this.data = new LevelData(this.map);
+    this.data = new LevelData(levelKey, this.map, this.randomPickupManager);
     this.pathFinder = new PathFinder(this.data.width, this.data.height);
     this.left = this.map.tileToWorldX(this.data.leftOffset);
     this.top = this.map.tileToWorldY(this.data.topOffset);
