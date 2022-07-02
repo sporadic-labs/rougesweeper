@@ -2,9 +2,9 @@
 <data version="1.0">
     <struct type="Settings">
         <key>fileFormatVersion</key>
-        <int>4</int>
+        <int>5</int>
         <key>texturePackerVersion</key>
-        <string>5.5.0</string>
+        <string>6.0.1</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -37,16 +37,20 @@
         <filename>all-assets.png</filename>
         <key>flipPVR</key>
         <false/>
-        <key>pvrCompressionQuality</key>
-        <enum type="SettingsBase::PvrCompressionQuality">PVR_QUALITY_NORMAL</enum>
+        <key>pvrQualityLevel</key>
+        <uint>3</uint>
+        <key>astcQualityLevel</key>
+        <uint>2</uint>
+        <key>basisUniversalQualityLevel</key>
+        <uint>2</uint>
         <key>atfCompressData</key>
         <false/>
         <key>mipMapMinSize</key>
         <uint>32768</uint>
-        <key>etc1CompressionQuality</key>
-        <enum type="SettingsBase::Etc1CompressionQuality">ETC1_QUALITY_LOW_PERCEPTUAL</enum>
-        <key>etc2CompressionQuality</key>
-        <enum type="SettingsBase::Etc2CompressionQuality">ETC2_QUALITY_LOW_PERCEPTUAL</enum>
+        <key>etc1QualityLevel</key>
+        <uint>40</uint>
+        <key>etc2QualityLevel</key>
+        <uint>40</uint>
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
         <key>jxrColorFormat</key>
@@ -193,6 +197,8 @@
             <key type="filename">all-assets/bookcase-cabinet.png</key>
             <key type="filename">all-assets/cabinet-1.png</key>
             <key type="filename">all-assets/cabinet-plant.png</key>
+            <key type="filename">all-assets/compass-icon.png</key>
+            <key type="filename">all-assets/compass-pickup-v2.png</key>
             <key type="filename">all-assets/compass.png</key>
             <key type="filename">all-assets/computer-1.png</key>
             <key type="filename">all-assets/computer-2.png</key>
@@ -204,6 +210,8 @@
             <key type="filename">all-assets/desk-6.png</key>
             <key type="filename">all-assets/desk-drinks.png</key>
             <key type="filename">all-assets/desk-science.png</key>
+            <key type="filename">all-assets/emp-icon.png</key>
+            <key type="filename">all-assets/emp-pickup-v2.png</key>
             <key type="filename">all-assets/enemy-1.png</key>
             <key type="filename">all-assets/enemy-2.png</key>
             <key type="filename">all-assets/enemy-3.png</key>
@@ -222,6 +230,8 @@
             <key type="filename">all-assets/shield-switch-1.png</key>
             <key type="filename">all-assets/shop-button.png</key>
             <key type="filename">all-assets/shop.png</key>
+            <key type="filename">all-assets/sniper-icon.png</key>
+            <key type="filename">all-assets/sniper-pickup-v2.png</key>
             <key type="filename">all-assets/stairs-1.png</key>
             <key type="filename">all-assets/stairs-2.png</key>
             <key type="filename">all-assets/statue-tree.png</key>
@@ -236,6 +246,9 @@
             <key type="filename">all-assets/tile-warehouse.png</key>
             <key type="filename">all-assets/trash.png</key>
             <key type="filename">all-assets/watercooler.png</key>
+            <key type="filename">all-assets/weapon-icon-v1.png</key>
+            <key type="filename">all-assets/weapon-icon-v2.png</key>
+            <key type="filename">all-assets/weapon-refill-v1.png</key>
             <key type="filename">all-assets/workbench-1.png</key>
             <key type="filename">all-assets/workbench-2.png</key>
             <struct type="IndividualSpriteSettings">
@@ -273,6 +286,21 @@
                 <rect>19,19,38,38</rect>
                 <key>scale9Paddings</key>
                 <rect>19,19,38,38</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">all-assets/all-assets.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>174,155,347,309</rect>
+                <key>scale9Paddings</key>
+                <rect>174,155,347,309</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
