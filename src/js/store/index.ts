@@ -126,7 +126,7 @@ class GameStore {
     this.items = {
       hack: {
         key: "hack",
-        imageKey: "tech-2",
+        imageKey: "weapon-icon-v2",
         label: "Hack",
         ammo: 5,
         capacity: 5,
@@ -134,7 +134,7 @@ class GameStore {
       },
       revealTile: {
         key: "revealTile",
-        imageKey: "reveal-tile",
+        imageKey: "sniper-pickup-v2",
         label: "Reveal",
         ammo: 1, // Should be 0 to start, testing
         capacity: 1,
@@ -142,7 +142,7 @@ class GameStore {
       },
       clearRadar: {
         key: "clearRadar",
-        imageKey: "clear-radar",
+        imageKey: "emp-pickup-v2",
         label: "Clear",
         ammo: 1, // Should be 0 to start, testing
         capacity: 1,
@@ -150,7 +150,7 @@ class GameStore {
       },
       compass: {
         key: "compass",
-        imageKey: "compass",
+        imageKey: "compass-pickup-v2",
         label: "Compass",
         ammo: 1, // Should be 0 to start, testing
         capacity: 1,
