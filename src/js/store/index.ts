@@ -4,12 +4,15 @@ import { levelKeys } from "./levels";
 import storedSettings from "./stored-settings";
 
 interface Item {
+  key: ItemKey;
+  imageKey: string;
+  label: string;
   hasUnlocked: boolean;
   ammo: number;
   capacity: number;
 }
 
-export type ItemName = "hack" | "revealTile" | "clearRadar" | "compass";
+export type ItemKey = "hack" | "revealTile" | "clearRadar" | "compass";
 
 class GameStore {
   previousGameState: GAME_MODES;
@@ -26,11 +29,8 @@ class GameStore {
   pauseMenuOpen: boolean;
 
   // Inventory Stuff
-  hack: Item;
-  revealTile: Item;
-  clearRadar: Item;
-  compass: Item;
-  activeItem: ItemName;
+  items: Record<ItemKey, Item>;
+  activeItemKey: ItemKey;
 
   constructor() {
     this.startNewGame();
@@ -53,27 +53,20 @@ class GameStore {
   removeGold(amt = 1) {
     if (this.goldCount > 0) this.goldCount -= amt;
   }
-  getAmmoForActiveItem() {
-    return this[this.activeItem].ammo;
+  setAmmo(itemName: ItemKey, amt: number) {
+    this.items[itemName].ammo = Math.max(Math.min(amt, this.items[itemName].capacity), 0);
   }
-  getActiveItemInfo() {
-    return {
-      name: this.activeItem,
-      ammo: this[this.activeItem].ammo,
-      capacity: this[this.activeItem].capacity,
-    };
+  addAmmo(itemName: ItemKey, amt: number) {
+    this.setAmmo(itemName, this.items[itemName].ammo + amt);
   }
-  setAmmo(itemName: ItemName, amt: number) {
-    this[itemName].ammo = Math.max(Math.min(amt, this[itemName].capacity), 0);
+  removeAmmo(itemName: ItemKey, amt: number) {
+    this.setAmmo(itemName, this.items[itemName].ammo - amt);
   }
-  addAmmo(itemName: ItemName, amt: number) {
-    this.setAmmo(itemName, this[itemName].ammo + amt);
+  unlockItem(itemName: ItemKey) {
+    this.items[itemName].hasUnlocked = true;
   }
-  removeAmmo(itemName: ItemName, amt: number) {
-    this.setAmmo(itemName, this[itemName].ammo - amt);
-  }
-  unlockItem(itemName: ItemName) {
-    this[itemName].hasUnlocked = true;
+  setActiveItem(itemName: ItemKey) {
+    this.activeItemKey = itemName;
   }
   addHealth(amt = 1) {
     if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
@@ -94,8 +87,24 @@ class GameStore {
     if (levelIndex >= 0 && levelIndex < levelKeys.length) this.levelIndex = levelIndex;
   }
 
+  get activeItemInfo() {
+    return this.items[this.activeItemKey];
+  }
+  get activeItemIndex() {
+    const index = this.unlockedItems.findIndex((item) => item.key === this.activeItemKey);
+    if (index === -1) {
+      throw new Error("Active item not found");
+    }
+    return index;
+  }
   get level() {
     return levelKeys[this.levelIndex];
+  }
+  get allItems() {
+    return Object.values(this.items);
+  }
+  get unlockedItems() {
+    return this.allItems.filter((item) => item.hasUnlocked);
   }
 
   setPauseMenuOpen(pauseMenuOpen: boolean) {
@@ -113,26 +122,40 @@ class GameStore {
     this.levelIndex = storedSettings.startingLevel;
     this.hasKey = false;
     this.pauseMenuOpen = false;
-    this.activeItem = "hack";
-    this.hack = {
-      ammo: 5,
-      capacity: 5,
-      hasUnlocked: true,
-    };
-    this.revealTile = {
-      ammo: 0,
-      capacity: 1,
-      hasUnlocked: false,
-    };
-    this.clearRadar = {
-      ammo: 0,
-      capacity: 1,
-      hasUnlocked: false,
-    };
-    this.compass = {
-      ammo: 0,
-      capacity: 1,
-      hasUnlocked: false,
+    this.activeItemKey = "hack";
+    this.items = {
+      hack: {
+        key: "hack",
+        imageKey: "tech-2",
+        label: "Hack",
+        ammo: 5,
+        capacity: 5,
+        hasUnlocked: true,
+      },
+      revealTile: {
+        key: "revealTile",
+        imageKey: "reveal-tile",
+        label: "Reveal",
+        ammo: 1, // Should be 0 to start, testing
+        capacity: 1,
+        hasUnlocked: true, // Should be false to start, testing
+      },
+      clearRadar: {
+        key: "clearRadar",
+        imageKey: "clear-radar",
+        label: "Clear",
+        ammo: 1, // Should be 0 to start, testing
+        capacity: 1,
+        hasUnlocked: true, // Should be false to start, testing
+      },
+      compass: {
+        key: "compass",
+        imageKey: "compass",
+        label: "Compass",
+        ammo: 1, // Should be 0 to start, testing
+        capacity: 1,
+        hasUnlocked: true, // Should be false to start, testing
+      },
     };
   }
 }

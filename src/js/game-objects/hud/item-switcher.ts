@@ -2,10 +2,10 @@ import { autorun, IReactionDisposer } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
-import { GameStore, ItemName } from "../../store";
+import { GameStore } from "../../store";
 import TweenPoser from "../components/tween-poser";
-import { Events } from "matter";
 import EventEmitter from "../../helpers/event-emitter";
+import GAME_MODES from "../game-manager/game-modes";
 
 const textStyle = {
   color: "#585e5e",
@@ -102,23 +102,6 @@ class ArrowButton {
   }
 }
 
-// Use the frame names for the all-assets texture
-const ITEM_FRAME_NAMES: Record<ItemName, string> = {
-  hack: "tech-2",
-  clearRadar: "clear-radar",
-  compass: "compass",
-  revealTile: "reveal-tile",
-};
-
-const ITEM_LABELS: Record<ItemName, string> = {
-  hack: "tech-2",
-  clearRadar: "clear-radar",
-  compass: "compass",
-  revealTile: "reveal-tile",
-};
-
-const ALL_ITEMS = ["hack", "clearRadar", "compass", "revealTitle"];
-
 export default class ItemSwitcher {
   private currentItemIndex = 0;
   private ammoText: Phaser.GameObjects.Text;
@@ -135,18 +118,15 @@ export default class ItemSwitcher {
     const size = { x: 96, y: 110 };
     const padding = 12;
 
-
     this.weaponSprite = scene.add
-      .sprite(size.x * 0.5, size.y * 0.25, "all-assets", ITEM_FRAME_NAMES[gameStore.activeItem]])
+      .sprite(size.x * 0.5, size.y * 0.25, "all-assets", gameStore.activeItemInfo.imageKey)
       .setDisplaySize(size.x * 0.47, size.x * 0.47)
       .setOrigin(0.5, 0);
 
     this.nameText = scene.add
       .text(size.x * 0.5, padding, "", { ...textStyle, fontSize: "18px" })
       .setOrigin(0.5, 0);
-    this.ammoText = scene.add
-      .text(size.x * 0.5, size.y - padding, "", textStyle)
-      .setOrigin(0.5, 1);
+    this.ammoText = scene.add.text(size.x * 0.5, size.y - padding, "", textStyle).setOrigin(0.5, 1);
 
     this.background = scene.add
       .rectangle(0, 0, size.x, size.y, 0xffffff)
@@ -178,53 +158,31 @@ export default class ItemSwitcher {
   }
 
   private onArrowButtonClick = (arrowButton: ArrowButton) => {
-    if (arrowButton === this.leftButton && this.currentItemIndex > 0) {
-      this.currentItemIndex -= 1;
-    } else if (arrowButton === this.rightButton && this.currentItemIndex < ALL_ITEMS.length - 1) {
-      this.currentItemIndex += 1;
+    const items = this.gameStore.unlockedItems;
+    const index = this.gameStore.activeItemIndex;
+    if (arrowButton === this.leftButton && index > 0) {
+      this.gameStore.setActiveItem(items[index - 1].key);
+    } else if (arrowButton === this.rightButton && index < items.length - 1) {
+      this.gameStore.setActiveItem(items[index + 1].key);
     }
-    // TODO: need to let game manager know that the item has switched.
     this.updateState();
   };
 
   private updateState() {
-    this.gameStore.activeItem;
+    // TODO: is this the right thing to do? Should we just always let you
+    // interact with the item switcher?
+    const isActive = this.gameStore.gameState === GAME_MODES.IDLE_MODE;
 
-    const itemInfo = this.gameStore.getActiveItemInfo();
-    this.weaponSprite.setFrame(this.gameStore.activeItem);
+    const { label, ammo, capacity, imageKey } = this.gameStore.activeItemInfo;
+    const items = this.gameStore.unlockedItems;
+    const index = this.gameStore.activeItemIndex;
+    this.weaponSprite.setFrame(imageKey);
 
-    let currentAmmo: number;
-    let maxAmmo: number;
-    let name: string;
-    switch (item) {
-      case ITEM.HACK:
-        name = "Hack";
-        currentAmmo = this.gameStore.hack.ammo;
-        maxAmmo = this.gameStore.hack.capacity;
-        break;
-      case ITEM.CLEAR_RADAR:
-        name = "Clear";
-        currentAmmo = this.gameStore.clearRadar.ammo;
-        maxAmmo = this.gameStore.clearRadar.capacity;
-        break;
-      case ITEM.COMPASS:
-        name = "Compass";
-        currentAmmo = this.gameStore.compass.ammo;
-        maxAmmo = this.gameStore.compass.capacity;
-        break;
-      case ITEM.REVEAL_TILE:
-        name = "Reveal";
-        currentAmmo = this.gameStore.revealTile.ammo;
-        maxAmmo = this.gameStore.revealTile.capacity;
-        break;
-      default:
-        throw new Error("Unrecognized item type");
-    }
-    this.nameText.setText(name);
-    this.ammoText.setText(`${currentAmmo}/${maxAmmo}`);
+    this.nameText.setText(label);
+    this.ammoText.setText(`${ammo}/${capacity}`);
 
-    this.leftButton.setEnabled(this.currentItemIndex > 0);
-    this.rightButton.setEnabled(this.currentItemIndex < allItems.length - 1);
+    this.leftButton.setEnabled(isActive && index > 0);
+    this.rightButton.setEnabled(isActive && index < items.length - 1);
   }
 
   destroy() {

@@ -3,7 +3,6 @@ enum GAME_MODES {
   MOVE_MODE = "MOVE_MODE",
   ATTACK_MODE = "ATTACK_MODE",
   MENU_MODE = "MENU_MODE",
-  SKILL_MODE = "SKILL_MODE",
 }
 
 export default GAME_MODES;

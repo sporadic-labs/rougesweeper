@@ -33,6 +33,7 @@ export default class Tile {
   private contentsMagnifyPoser: TweenPoser<MagnifyPoses>;
   private scramblePoser: TweenPoser<FadePoses>;
   private canScramble = false;
+  private secondarySelectKey: Input.Keyboard.Key;
 
   constructor(
     private scene: Scene,
@@ -105,6 +106,8 @@ export default class Tile {
       FadeOut: { alpha: 0.6 },
     });
     this.tileFadePoser.setToPose("FadeIn");
+
+    this.secondarySelectKey = scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.SHIFT);
   }
 
   removeTileContents() {
@@ -254,7 +257,10 @@ export default class Tile {
   }
 
   onPointerDown = (pointer: Input.Pointer) => {
-    const event = pointer.primaryDown ? EVENTS.TILE_SELECT_PRIMARY : EVENTS.TILE_SELECT_SECONDARY;
+    const event =
+      pointer.rightButtonDown() || this.secondarySelectKey.isDown
+        ? EVENTS.TILE_SELECT_SECONDARY
+        : EVENTS.TILE_SELECT_PRIMARY;
     this.level.events.emit(event, this);
   };
 
