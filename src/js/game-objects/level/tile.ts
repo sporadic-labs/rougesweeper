@@ -122,7 +122,11 @@ export default class Tile {
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||
         this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
-        this.type === TILE_TYPES.KEY
+        this.type === TILE_TYPES.KEY ||
+        this.type === TILE_TYPES.ALERT_AMMO ||
+        this.type === TILE_TYPES.COMPASS ||
+        this.type === TILE_TYPES.EMP ||
+        this.type === TILE_TYPES.SNIPER
       ) {
         if (!this.tileContents) return;
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
@@ -130,7 +134,14 @@ export default class Tile {
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();
 
         // Setup different animations for the Gold vs. the Enemy graphics.
-        if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.KEY) {
+        if (
+          this.type === TILE_TYPES.GOLD ||
+          this.type === TILE_TYPES.KEY ||
+          this.type === TILE_TYPES.ALERT_AMMO ||
+          this.type === TILE_TYPES.COMPASS ||
+          this.type === TILE_TYPES.EMP ||
+          this.type === TILE_TYPES.SNIPER
+        ) {
           this.tileGraphicTimeline = createPickupAnimation(this.scene, this.tileContents);
         } else if (this.type === TILE_TYPES.ENEMY || this.type === TILE_TYPES.SCRAMBLE_ENEMY) {
           this.tileGraphicTimeline = createAttackAnimation(this.scene, this.tileContents);
@@ -162,7 +173,11 @@ export default class Tile {
       if (
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||
-        this.type === TILE_TYPES.SCRAMBLE_ENEMY
+        this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
+        this.type === TILE_TYPES.ALERT_AMMO ||
+        this.type === TILE_TYPES.COMPASS ||
+        this.type === TILE_TYPES.EMP ||
+        this.type === TILE_TYPES.SNIPER
       ) {
         if (!this.tileContents) return;
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
