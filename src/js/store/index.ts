@@ -3,6 +3,14 @@ import GAME_MODES from "../game-objects/game-manager/game-modes";
 import { levelKeys } from "./levels";
 import storedSettings from "./stored-settings";
 
+interface Item {
+  hasUnlocked: boolean;
+  ammo: number;
+  capacity: number;
+}
+
+export type ItemName = "hack" | "revealTile" | "clearRadar" | "compass";
+
 class GameStore {
   previousGameState: GAME_MODES;
   gameState: GAME_MODES;
@@ -15,51 +23,17 @@ class GameStore {
   hasKey: boolean;
   maxPlayerAmmo: number;
   playerAmmo: number;
-
-  // Menu Stuff
-  isShopOpen: boolean;
-  isShopUnlockOpen: boolean;
   pauseMenuOpen: boolean;
 
   // Inventory Stuff
-  hasCompass: boolean;
-  hasRevealTile: boolean;
-  hasClearRadar: boolean;
-
-  // Inventory Progression stuff.
-  shopLocked: boolean;
-  ammoLocked: boolean;
-  compassLocked: boolean;
-  clearRadarLocked: boolean;
-  revealTileLocked: boolean;
+  hack: Item;
+  revealTile: Item;
+  clearRadar: Item;
+  compass: Item;
+  activeItem: ItemName;
 
   constructor() {
-    this.gameState = GAME_MODES.IDLE_MODE;
-    this.previousGameState = this.gameState;
-    this.dangerCount = 0;
-    this.goldCount = storedSettings.startingGold;
-    this.maxPlayerAmmo = 5;
-    this.playerAmmo = 5;
-    this.maxPlayerHealth = 4;
-    this.playerHealth = this.maxPlayerHealth;
-    this.moveCount = 0;
-    this.levelIndex = storedSettings.startingLevel;
-    this.hasKey = false;
-    
-    this.isShopOpen = false;
-    this.isShopUnlockOpen = false;
-    this.pauseMenuOpen = false;
-    
-    this.hasCompass = false;
-    this.hasRevealTile = false;
-    this.hasClearRadar = false;
-
-    this.shopLocked = false;
-    this.ammoLocked = true;
-    this.compassLocked = true;
-    this.clearRadarLocked = true;
-    this.revealTileLocked = true;
-
+    this.startNewGame();
     makeAutoObservable(this);
   }
 
@@ -79,36 +53,33 @@ class GameStore {
   removeGold(amt = 1) {
     if (this.goldCount > 0) this.goldCount -= amt;
   }
-  setAmmo(amt = 1) {
-    if (this.playerAmmo <= this.maxPlayerAmmo) this.playerAmmo = amt;
-    else this.playerAmmo = this.maxPlayerAmmo;
+  getAmmoForActiveItem() {
+    return this[this.activeItem].ammo;
   }
-  addAmmo(amt = 1) {
-    if (this.playerAmmo <= this.maxPlayerAmmo) this.playerAmmo += amt;
+  getActiveItemInfo() {
+    return {
+      name: this.activeItem,
+      ammo: this[this.activeItem].ammo,
+      capacity: this[this.activeItem].capacity,
+    };
   }
-  removeAmmo(amt = 1) {
-    if (this.playerAmmo > 0) this.playerAmmo -= amt;
+  setAmmo(itemName: ItemName, amt: number) {
+    this[itemName].ammo = Math.max(Math.min(amt, this[itemName].capacity), 0);
+  }
+  addAmmo(itemName: ItemName, amt: number) {
+    this.setAmmo(itemName, this[itemName].ammo + amt);
+  }
+  removeAmmo(itemName: ItemName, amt: number) {
+    this.setAmmo(itemName, this[itemName].ammo - amt);
+  }
+  unlockItem(itemName: ItemName) {
+    this[itemName].hasUnlocked = true;
   }
   addHealth(amt = 1) {
     if (this.playerHealth <= this.maxPlayerHealth) this.playerHealth += amt;
   }
   removeHealth(amt = 1) {
     if (this.playerHealth > 0) this.playerHealth -= amt;
-  }
-  setShopOpen(isShopOpen: boolean) {
-    this.isShopOpen = isShopOpen;
-  }
-  setShopUnlockOpen(isShopUnlockOpen: boolean) {
-    this.isShopUnlockOpen = isShopUnlockOpen;
-  }
-  setHasCompass(hasCompass: boolean) {
-    this.hasCompass = hasCompass;
-  }
-  setHasRevealTile(hasRevealTile: boolean) {
-    this.hasRevealTile = hasRevealTile;
-  }
-  setHasClearRadar(hasClearRadar: boolean) {
-    this.hasClearRadar = hasClearRadar;
   }
   setHasKey(hasKey: boolean) {
     this.hasKey = hasKey;
@@ -131,38 +102,38 @@ class GameStore {
     this.pauseMenuOpen = pauseMenuOpen;
   }
 
-  setShopLocked(locked: boolean) {
-    this.shopLocked = locked;
-  }
-
-  setAmmoLocked(locked: boolean) {
-    this.ammoLocked = locked;
-  }
-
-  setClearRadarLocked(locked: boolean) {
-    this.clearRadarLocked = locked;
-  }
-
-  setRevealTileLocked(locked: boolean) {
-    this.revealTileLocked = locked;
-  }
-
-  setCompassLocked(locked: boolean) {
-    this.compassLocked = locked;
-  }
-
   startNewGame() {
-    this.playerHealth = this.maxPlayerHealth;
+    this.gameState = GAME_MODES.IDLE_MODE;
+    this.previousGameState = this.gameState;
+    this.dangerCount = 0;
     this.goldCount = storedSettings.startingGold;
-    this.levelIndex = storedSettings.startingLevel;
+    this.maxPlayerHealth = 4;
+    this.playerHealth = this.maxPlayerHealth;
     this.moveCount = 0;
+    this.levelIndex = storedSettings.startingLevel;
     this.hasKey = false;
-
-    this.shopLocked = false;
-    this.ammoLocked = true;
-    this.clearRadarLocked = true;
-    this.revealTileLocked = true;
-    this.compassLocked = true;
+    this.pauseMenuOpen = false;
+    this.activeItem = "hack";
+    this.hack = {
+      ammo: 5,
+      capacity: 5,
+      hasUnlocked: true,
+    };
+    this.revealTile = {
+      ammo: 0,
+      capacity: 1,
+      hasUnlocked: false,
+    };
+    this.clearRadar = {
+      ammo: 0,
+      capacity: 1,
+      hasUnlocked: false,
+    };
+    this.compass = {
+      ammo: 0,
+      capacity: 1,
+      hasUnlocked: false,
+    };
   }
 }
 

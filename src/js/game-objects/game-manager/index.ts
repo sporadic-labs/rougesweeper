@@ -12,7 +12,6 @@ import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
 import PauseMenu from "../hud/pause-menu";
-import InventoryMenu, { INVENTORY_EVENTS } from "../hud/inventory";
 import DialogueManager from "../hud/dialogue-manager";
 import Player from "../player";
 import ToastManager from "../hud/toast-manager";
@@ -20,7 +19,6 @@ import Tile from "../level/tile";
 import Door from "../level/door";
 import Compass from "../hud/compass";
 import { Point } from "../../helpers/common-interfaces";
-import { INVENTORY_ITEMS } from "../hud/inventory-toggle";
 import TutorialLogic from "../level/tutorial-logic";
 import EventEmitter from "../../helpers/event-emitter";
 import RandomPickupManager from "../level/random-pickup-manager";
@@ -30,7 +28,6 @@ export default class GameManager {
   private radar: Radar;
   private debugMenu: DebugMenu;
   private pauseMenu: PauseMenu;
-  private inventoryMenu: InventoryMenu;
   private dialogueManager: DialogueManager;
   private compass: Compass;
   private mobProxy: MobXProxy;
@@ -49,10 +46,9 @@ export default class GameManager {
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
     this.pauseMenu = new PauseMenu(scene, store);
-    this.inventoryMenu = new InventoryMenu(scene, store);
     this.dialogueManager = new DialogueManager(scene, store);
 
-    this.randomPickupManager = new RandomPickupManager()
+    this.randomPickupManager = new RandomPickupManager();
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -342,18 +338,18 @@ export default class GameManager {
           store.addGold();
           break;
         case TILE_TYPES.COMPASS:
-          store.setHasCompass(true);
+          store.addAmmo("compass", 1);
           break;
         case TILE_TYPES.SNIPER:
-          store.setHasRevealTile(true);
+          store.addAmmo("revealTile", 1);
           break;
         case TILE_TYPES.EMP:
-          store.setHasClearRadar(true);
+          store.addAmmo("clearRadar", 1);
           break;
         case TILE_TYPES.ALERT_AMMO:
-          store.setAmmo(store.maxPlayerAmmo);
+          store.addAmmo("hack", store.hack.capacity);
           break;
-        }
+      }
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
     }

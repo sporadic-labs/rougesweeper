@@ -2,7 +2,7 @@ import { autorun, IReactionDisposer } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
-import { GameStore } from "../../store";
+import { GameStore, ItemName } from "../../store";
 import TweenPoser from "../components/tween-poser";
 import { Events } from "matter";
 import EventEmitter from "../../helpers/event-emitter";
@@ -103,14 +103,21 @@ class ArrowButton {
 }
 
 // Use the frame names for the all-assets texture
-const enum ITEM {
-  HACK = "tech-2",
-  CLEAR_RADAR = "clear-radar",
-  COMPASS = "compass",
-  REVEAL_TILE = "reveal-tile",
-}
+const ITEM_FRAME_NAMES: Record<ItemName, string> = {
+  hack: "tech-2",
+  clearRadar: "clear-radar",
+  compass: "compass",
+  revealTile: "reveal-tile",
+};
 
-const allItems = [ITEM.HACK, ITEM.CLEAR_RADAR, ITEM.COMPASS, ITEM.REVEAL_TILE];
+const ITEM_LABELS: Record<ItemName, string> = {
+  hack: "tech-2",
+  clearRadar: "clear-radar",
+  compass: "compass",
+  revealTile: "reveal-tile",
+};
+
+const ALL_ITEMS = ["hack", "clearRadar", "compass", "revealTitle"];
 
 export default class ItemSwitcher {
   private currentItemIndex = 0;
@@ -128,16 +135,17 @@ export default class ItemSwitcher {
     const size = { x: 96, y: 110 };
     const padding = 12;
 
+
     this.weaponSprite = scene.add
-      .sprite(size.x * 0.5, size.y * 0.25, "all-assets", allItems[this.currentItemIndex])
+      .sprite(size.x * 0.5, size.y * 0.25, "all-assets", ITEM_FRAME_NAMES[gameStore.activeItem]])
       .setDisplaySize(size.x * 0.47, size.x * 0.47)
       .setOrigin(0.5, 0);
 
     this.nameText = scene.add
-      .text(size.x * 0.5, padding, "Name", { ...textStyle, fontSize: "18px" })
+      .text(size.x * 0.5, padding, "", { ...textStyle, fontSize: "18px" })
       .setOrigin(0.5, 0);
     this.ammoText = scene.add
-      .text(size.x * 0.5, size.y - padding, "5/5", textStyle)
+      .text(size.x * 0.5, size.y - padding, "", textStyle)
       .setOrigin(0.5, 1);
 
     this.background = scene.add
@@ -172,15 +180,18 @@ export default class ItemSwitcher {
   private onArrowButtonClick = (arrowButton: ArrowButton) => {
     if (arrowButton === this.leftButton && this.currentItemIndex > 0) {
       this.currentItemIndex -= 1;
-    } else if (arrowButton === this.rightButton && this.currentItemIndex < allItems.length - 1) {
+    } else if (arrowButton === this.rightButton && this.currentItemIndex < ALL_ITEMS.length - 1) {
       this.currentItemIndex += 1;
     }
+    // TODO: need to let game manager know that the item has switched.
     this.updateState();
   };
 
   private updateState() {
-    const item = allItems[this.currentItemIndex];
-    this.weaponSprite.setFrame(item);
+    this.gameStore.activeItem;
+
+    const itemInfo = this.gameStore.getActiveItemInfo();
+    this.weaponSprite.setFrame(this.gameStore.activeItem);
 
     let currentAmmo: number;
     let maxAmmo: number;
@@ -188,23 +199,23 @@ export default class ItemSwitcher {
     switch (item) {
       case ITEM.HACK:
         name = "Hack";
-        currentAmmo = this.gameStore.playerAmmo;
-        maxAmmo = 5;
+        currentAmmo = this.gameStore.hack.ammo;
+        maxAmmo = this.gameStore.hack.capacity;
         break;
       case ITEM.CLEAR_RADAR:
         name = "Clear";
-        currentAmmo = this.gameStore.hasClearRadar ? 1 : 0;
-        maxAmmo = 1;
+        currentAmmo = this.gameStore.clearRadar.ammo;
+        maxAmmo = this.gameStore.clearRadar.capacity;
         break;
       case ITEM.COMPASS:
         name = "Compass";
-        currentAmmo = this.gameStore.hasCompass ? 1 : 0;
-        maxAmmo = 1;
+        currentAmmo = this.gameStore.compass.ammo;
+        maxAmmo = this.gameStore.compass.capacity;
         break;
       case ITEM.REVEAL_TILE:
         name = "Reveal";
-        currentAmmo = this.gameStore.hasRevealTile ? 1 : 0;
-        maxAmmo = 1;
+        currentAmmo = this.gameStore.revealTile.ammo;
+        maxAmmo = this.gameStore.revealTile.capacity;
         break;
       default:
         throw new Error("Unrecognized item type");
