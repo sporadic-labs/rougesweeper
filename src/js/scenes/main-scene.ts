@@ -7,9 +7,6 @@ import PauseToggle from "../game-objects/hud/pause-toggle";
 import LevelIndicator from "../game-objects/hud/level-indicator";
 import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
-import Shop from "../game-objects/hud/shop";
-import ShopUnlock from "../game-objects/hud/shop-item-unlock-menu";
-import ShopToggle from "../game-objects/hud/shop-toggle";
 import ItemSwitcher from "../game-objects/hud/item-switcher";
 
 const titleStyle = {
@@ -33,13 +30,10 @@ export default class MainScene extends Scene {
       .text(width * 0.9, height * 0.46, "SpyWare\n(or whatever...)", titleStyle)
       .setOrigin(0.5, 0);
 
-    new Shop(this, store, toastManager);
-    new ShopUnlock(this, store, toastManager);
     new TechIndicator(this, store);
     new AlertIndicator(this, store);
     new ItemSwitcher(this, store);
     new PauseToggle(this, store);
     new LevelIndicator(this, store);
-    new ShopToggle(this, store);
   }
 }

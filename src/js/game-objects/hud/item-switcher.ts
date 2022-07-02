@@ -4,8 +4,8 @@ import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store";
 import TweenPoser from "../components/tween-poser";
-import { Events } from "matter";
 import EventEmitter from "../../helpers/event-emitter";
+import GAME_MODES from "../game-manager/game-modes";
 
 const textStyle = {
   color: "#585e5e",
@@ -102,16 +102,6 @@ class ArrowButton {
   }
 }
 
-// Use the frame names for the all-assets texture
-const enum ITEM {
-  HACK = "tech-2",
-  CLEAR_RADAR = "clear-radar",
-  COMPASS = "compass",
-  REVEAL_TILE = "reveal-tile",
-}
-
-const allItems = [ITEM.HACK, ITEM.CLEAR_RADAR, ITEM.COMPASS, ITEM.REVEAL_TILE];
-
 export default class ItemSwitcher {
   private currentItemIndex = 0;
   private ammoText: Phaser.GameObjects.Text;
@@ -129,16 +119,14 @@ export default class ItemSwitcher {
     const padding = 12;
 
     this.weaponSprite = scene.add
-      .sprite(size.x * 0.5, size.y * 0.25, "all-assets", allItems[this.currentItemIndex])
+      .sprite(size.x * 0.5, size.y * 0.25, "all-assets", gameStore.activeItemInfo.imageKey)
       .setDisplaySize(size.x * 0.47, size.x * 0.47)
       .setOrigin(0.5, 0);
 
     this.nameText = scene.add
-      .text(size.x * 0.5, padding, "Name", { ...textStyle, fontSize: "18px" })
+      .text(size.x * 0.5, padding, "", { ...textStyle, fontSize: "18px" })
       .setOrigin(0.5, 0);
-    this.ammoText = scene.add
-      .text(size.x * 0.5, size.y - padding, "5/5", textStyle)
-      .setOrigin(0.5, 1);
+    this.ammoText = scene.add.text(size.x * 0.5, size.y - padding, "", textStyle).setOrigin(0.5, 1);
 
     this.background = scene.add
       .rectangle(0, 0, size.x, size.y, 0xffffff)
@@ -170,50 +158,31 @@ export default class ItemSwitcher {
   }
 
   private onArrowButtonClick = (arrowButton: ArrowButton) => {
-    if (arrowButton === this.leftButton && this.currentItemIndex > 0) {
-      this.currentItemIndex -= 1;
-    } else if (arrowButton === this.rightButton && this.currentItemIndex < allItems.length - 1) {
-      this.currentItemIndex += 1;
+    const items = this.gameStore.unlockedItems;
+    const index = this.gameStore.activeItemIndex;
+    if (arrowButton === this.leftButton && index > 0) {
+      this.gameStore.setActiveItem(items[index - 1].key);
+    } else if (arrowButton === this.rightButton && index < items.length - 1) {
+      this.gameStore.setActiveItem(items[index + 1].key);
     }
     this.updateState();
   };
 
   private updateState() {
-    const item = allItems[this.currentItemIndex];
-    this.weaponSprite.setFrame(item);
+    // TODO: is this the right thing to do? Should we just always let you
+    // interact with the item switcher?
+    const isActive = this.gameStore.gameState === GAME_MODES.IDLE_MODE;
 
-    let currentAmmo: number;
-    let maxAmmo: number;
-    let name: string;
-    switch (item) {
-      case ITEM.HACK:
-        name = "Hack";
-        currentAmmo = this.gameStore.playerAmmo;
-        maxAmmo = 5;
-        break;
-      case ITEM.CLEAR_RADAR:
-        name = "Clear";
-        currentAmmo = this.gameStore.hasClearRadar ? 1 : 0;
-        maxAmmo = 1;
-        break;
-      case ITEM.COMPASS:
-        name = "Compass";
-        currentAmmo = this.gameStore.hasCompass ? 1 : 0;
-        maxAmmo = 1;
-        break;
-      case ITEM.REVEAL_TILE:
-        name = "Reveal";
-        currentAmmo = this.gameStore.hasRevealTile ? 1 : 0;
-        maxAmmo = 1;
-        break;
-      default:
-        throw new Error("Unrecognized item type");
-    }
-    this.nameText.setText(name);
-    this.ammoText.setText(`${currentAmmo}/${maxAmmo}`);
+    const { label, ammo, capacity, imageKey } = this.gameStore.activeItemInfo;
+    const items = this.gameStore.unlockedItems;
+    const index = this.gameStore.activeItemIndex;
+    this.weaponSprite.setFrame(imageKey);
 
-    this.leftButton.setEnabled(this.currentItemIndex > 0);
-    this.rightButton.setEnabled(this.currentItemIndex < allItems.length - 1);
+    this.nameText.setText(label);
+    this.ammoText.setText(`${ammo}/${capacity}`);
+
+    this.leftButton.setEnabled(isActive && index > 0);
+    this.rightButton.setEnabled(isActive && index < items.length - 1);
   }
 
   destroy() {

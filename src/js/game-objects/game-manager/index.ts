@@ -12,7 +12,6 @@ import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
 import DebugMenu from "../hud/debug-menu";
 import PauseMenu from "../hud/pause-menu";
-import InventoryMenu, { INVENTORY_EVENTS } from "../hud/inventory";
 import DialogueManager from "../hud/dialogue-manager";
 import Player from "../player";
 import ToastManager from "../hud/toast-manager";
@@ -20,7 +19,6 @@ import Tile from "../level/tile";
 import Door from "../level/door";
 import Compass from "../hud/compass";
 import { Point } from "../../helpers/common-interfaces";
-import { INVENTORY_ITEMS } from "../hud/inventory-toggle";
 import TutorialLogic from "../level/tutorial-logic";
 import EventEmitter from "../../helpers/event-emitter";
 import RandomPickupManager from "../level/random-pickup-manager";
@@ -30,7 +28,6 @@ export default class GameManager {
   private radar: Radar;
   private debugMenu: DebugMenu;
   private pauseMenu: PauseMenu;
-  private inventoryMenu: InventoryMenu;
   private dialogueManager: DialogueManager;
   private compass: Compass;
   private mobProxy: MobXProxy;
@@ -49,10 +46,9 @@ export default class GameManager {
     this.radar.setVisible(false);
     this.debugMenu = new DebugMenu(scene, store);
     this.pauseMenu = new PauseMenu(scene, store);
-    this.inventoryMenu = new InventoryMenu(scene, store);
     this.dialogueManager = new DialogueManager(scene, store);
 
-    this.randomPickupManager = new RandomPickupManager()
+    this.randomPickupManager = new RandomPickupManager();
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -83,63 +79,16 @@ export default class GameManager {
   }
 
   enableInteractivity() {
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectPrimary);
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectSecondary);
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
+    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForActiveItem);
     this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
-
-    this.inventoryMenu.events.on(INVENTORY_EVENTS.SELECT, this.onInventorySelect);
-    this.inventoryMenu.events.on(INVENTORY_EVENTS.DESELECT, this.onInventoryDeselect);
   }
 
   disableInteractivity() {
-    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectPrimary);
-    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectSecondary);
+    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
+    this.level.events.off(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForActiveItem);
     this.level.events.off(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
-
-    this.inventoryMenu.events.off(INVENTORY_EVENTS.SELECT, this.onInventorySelect);
-    this.inventoryMenu.events.off(INVENTORY_EVENTS.DESELECT, this.onInventoryDeselect);
   }
-
-  onInventorySelect = async (type: INVENTORY_ITEMS) => {
-    this.disableInteractivity();
-    store.setGameState(GAME_MODES.SKILL_MODE);
-
-    switch (type) {
-      case INVENTORY_ITEMS.COMPASS: {
-        if (this.compass) {
-          this.toastManager.setMessage("A compass is already active.");
-          this.inventoryMenu.deselectAll();
-        } else {
-          this.compass = new Compass(this.scene, this.player, this.level);
-          store.setHasCompass(false);
-        }
-        this.disableInteractivity();
-        store.setGameState(GAME_MODES.IDLE_MODE);
-        break;
-      }
-      case INVENTORY_ITEMS.REVEAL_IN_RADAR: {
-        const success = await this.clearTilesInRadar();
-        if (success) {
-          store.setHasClearRadar(false);
-        } else {
-          this.toastManager.setMessage("No tiles can be revealed.");
-          this.inventoryMenu.deselectAll();
-        }
-        this.disableInteractivity();
-        store.setGameState(GAME_MODES.IDLE_MODE);
-        break;
-      }
-      case INVENTORY_ITEMS.REVEAL_TILE: {
-        // NOTE(rex): This is handled by onTileSelectPrimary.
-        break;
-      }
-    }
-  };
-
-  onInventoryDeselect = async (type: INVENTORY_ITEMS) => {
-    this.disableInteractivity();
-    store.setGameState(GAME_MODES.IDLE_MODE);
-  };
 
   onExitSelect = async (door: Door) => {
     const playerGridPos = this.player.getGridPosition();
@@ -179,48 +128,48 @@ export default class GameManager {
     this.enableInteractivity();
   };
 
-  onTileSelectPrimary = async (tile: Tile) => {
-    if (store.gameState === GAME_MODES.SKILL_MODE) {
-      this.onTileSelectForReveal(tile);
-    } else {
-      this.onTileSelectForMove(tile);
-    }
-  };
-
-  onTileSelectSecondary = async (tile: Tile) => {
-    if (store.gameState === GAME_MODES.SKILL_MODE) {
-      store.setGameState(GAME_MODES.IDLE_MODE);
-      this.inventoryMenu.deselectAll();
-    } else {
-      this.onTileSelectForAttack(tile);
-    }
-  };
-
-  onTileSelectForAttack = async (tile: Tile) => {
-    if (store.gameState === GAME_MODES.SKILL_MODE) return;
+  onTileSelectForActiveItem = async (tile: Tile) => {
+    // TODO: need to switch game mode while this is happening to prevent multiple actions?
 
     const playerGridPos = this.player.getGridPosition();
     const tileGridPos = tile.getGridPosition();
+    const itemInfo = store.activeItemInfo;
 
-    // Don't interact with the current tile on which player is standing.
-    if (playerGridPos.x === tileGridPos.x && playerGridPos.y === tileGridPos.y) {
+    console.log("Attempting to use item", itemInfo.label);
+
+    if (itemInfo.ammo <= 0) {
+      this.toastManager.setMessage("Not enough ammo!");
       return;
     }
 
-    const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
-    const canAttack = path && !tile.isRevealed;
-    if (!canAttack) {
-      this.toastManager.setMessage("You can't hack that location.");
-      return;
+    if (itemInfo.key === "compass") {
+      // TODO: only allow one active compass
+      this.compass = new Compass(this.scene, this.player, this.level);
+      store.removeAmmo("compass", 1);
+    } else if (itemInfo.key === "clearRadar") {
+      const success = await this.clearTilesInRadar();
+      if (success) {
+        store.removeAmmo("clearRadar", 1);
+      } else {
+        this.toastManager.setMessage(
+          "No tiles to reveal around you - try using in a different spot."
+        );
+      }
+    } else if (itemInfo.key === "revealTile") {
+      // TODO: should we break all item logic out into separate methods?
+      this.onTileSelectForReveal(tile);
+    } else if (itemInfo.key === "hack") {
+      const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
+      const canAttack = path && !tile.isRevealed;
+      if (!canAttack) {
+        this.toastManager.setMessage("You can't hack that location.");
+        return;
+      }
+      this.disableInteractivity();
+      await this.runAttackFlow(tile, path);
+    } else {
+      throw new Error("Unknown active item!");
     }
-
-    if (store.playerAmmo === 0) {
-      this.toastManager.setMessage("Not enough ammo to hack anything!");
-      return;
-    }
-
-    this.disableInteractivity();
-    await this.runAttackFlow(tile, path);
   };
 
   onTileSelectForMove = async (tile: Tile) => {
@@ -252,7 +201,7 @@ export default class GameManager {
       return;
     }
 
-    const canRevealDistantTile = store.hasRevealTile && !tile.isRevealed;
+    const canRevealDistantTile = !tile.isRevealed;
 
     if (!canRevealDistantTile) {
       this.toastManager.setMessage("You can't reveal that tile.");
@@ -278,14 +227,13 @@ export default class GameManager {
       store.addGold();
     }
 
-    store.setHasRevealTile(false);
+    store.removeAmmo("revealTile", 1);
 
     await this.radar.update();
     this.flipTilesIfClear();
 
     this.level.enableAllTiles();
-    store.setGameState(GAME_MODES.IDLE_MODE);
-    return;
+    this.enableInteractivity();
   };
 
   async clearTilesInRadar() {
@@ -342,18 +290,18 @@ export default class GameManager {
           store.addGold();
           break;
         case TILE_TYPES.COMPASS:
-          store.setHasCompass(true);
+          store.addAmmo("compass", 1);
           break;
         case TILE_TYPES.SNIPER:
-          store.setHasRevealTile(true);
+          store.addAmmo("revealTile", 1);
           break;
         case TILE_TYPES.EMP:
-          store.setHasClearRadar(true);
+          store.addAmmo("clearRadar", 1);
           break;
         case TILE_TYPES.ALERT_AMMO:
-          store.setAmmo(store.maxPlayerAmmo);
+          // store.addAmmo("hack", store.hack.capacity);
           break;
-        }
+      }
       const { x, y } = this.player.getPosition();
       await tile.playTileEffectAnimation(x, y);
     }
@@ -398,7 +346,7 @@ export default class GameManager {
     // Apply any effect that need to happen at the end of moving.
     switch (tile.type) {
       case TILE_TYPES.SHOP:
-        store.setShopUnlockOpen(true);
+        // store.setShopUnlockOpen(true);
         break;
       case TILE_TYPES.KEY:
         store.setHasKey(true);
@@ -418,7 +366,7 @@ export default class GameManager {
 
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
-    store.removeAmmo();
+    // store.removeAmmo();
     const shouldGetCoin = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
     const { x, y } = tile.getPosition();
     const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
