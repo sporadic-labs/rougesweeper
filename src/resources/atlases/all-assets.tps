@@ -289,21 +289,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">all-assets/all-assets.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>174,155,347,309</rect>
-                <key>scale9Paddings</key>
-                <rect>174,155,347,309</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">all-assets/hq/hq-door-right-0.png</key>
             <key type="filename">all-assets/hq/hq-door-right-1.png</key>
             <key type="filename">all-assets/hq/hq-door-right-2.png</key>
