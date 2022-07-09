@@ -128,8 +128,8 @@ class GameStore {
         key: "hack",
         imageKey: "weapon-icon-v2",
         label: "Hack",
-        ammo: 20,
-        capacity: 20,
+        ammo: 10,
+        capacity: 10,
         hasUnlocked: true,
       },
       revealTile: {
