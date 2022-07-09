@@ -113,6 +113,8 @@ export default class ItemSwitcher {
   private container: Phaser.GameObjects.Container;
   private proxy: EventProxy;
   private dispose: IReactionDisposer;
+  private leftKey: Phaser.Input.Keyboard.Key;
+  private rightKey: Phaser.Input.Keyboard.Key;
 
   constructor(private scene: Phaser.Scene, private gameStore: GameStore) {
     const size = { x: 96, y: 110 };
@@ -155,17 +157,30 @@ export default class ItemSwitcher {
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
+
+    this.leftKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    this.rightKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    this.proxy.on(this.leftKey, "down", () => this.shiftActiveItem("left"));
+    this.proxy.on(this.rightKey, "down", () => this.shiftActiveItem("right"));
+  }
+
+  private shiftActiveItem(direction: "left" | "right") {
+    const items = this.gameStore.unlockedItems;
+    const index = this.gameStore.activeItemIndex;
+    if (direction === "left") {
+      const newIndex = index > 0 ? index - 1 : items.length - 1;
+      this.gameStore.setActiveItem(items[newIndex].key);
+    } else {
+      const newIndex = index < items.length - 1 ? index + 1 : 0;
+      this.gameStore.setActiveItem(items[newIndex].key);
+    }
   }
 
   private onArrowButtonClick = (arrowButton: ArrowButton) => {
-    const items = this.gameStore.unlockedItems;
-    const index = this.gameStore.activeItemIndex;
     if (arrowButton === this.leftButton) {
-      const newIndex = index > 0 ? index - 1 : items.length - 1;
-      this.gameStore.setActiveItem(items[newIndex].key);
+      this.shiftActiveItem("left");
     } else if (arrowButton === this.rightButton) {
-      const newIndex = index < items.length - 1 ? index + 1 : 0;
-      this.gameStore.setActiveItem(items[newIndex].key);
+      this.shiftActiveItem("right");
     }
     this.updateState();
   };
