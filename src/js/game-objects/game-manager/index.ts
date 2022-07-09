@@ -299,7 +299,7 @@ export default class GameManager {
           store.addAmmo("clearRadar", 1);
           break;
         case TILE_TYPES.ALERT_AMMO:
-          // store.addAmmo("hack", store.hack.capacity);
+          store.addAmmo("hack", 5);
           break;
       }
       const { x, y } = this.player.getPosition();
@@ -366,7 +366,7 @@ export default class GameManager {
 
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
-    // store.removeAmmo();
+    store.removeAmmo("hack", 1);
     const shouldGetCoin = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
     const { x, y } = tile.getPosition();
     const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
