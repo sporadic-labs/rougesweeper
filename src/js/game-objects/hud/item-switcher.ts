@@ -10,7 +10,7 @@ import GAME_MODES from "../game-manager/game-modes";
 const textStyle = {
   color: "#585e5e",
   align: "center",
-  fontSize: "20px",
+  fontSize: "22px",
   fontStyle: "bold",
 };
 
@@ -29,7 +29,7 @@ class ArrowButton {
   constructor(scene: Phaser.Scene, x: number, y: number, direction: "left" | "right") {
     this.events = new EventEmitter();
 
-    const size = 14;
+    const size = 20;
     this.triangle = scene.add.triangle(x, y, 0, size, size, size, 0.5 * size, 0, 0x585e5e, 1);
     this.triangle.setAngle(direction === "left" ? -90 : 90);
 
@@ -117,17 +117,15 @@ export default class ItemSwitcher {
   private rightKey: Phaser.Input.Keyboard.Key;
 
   constructor(private scene: Phaser.Scene, private gameStore: GameStore) {
-    const size = { x: 96, y: 110 };
+    const size = { x: 1.5 * 96, y: 1.5 * 110 };
     const padding = 12;
 
     this.weaponSprite = scene.add
-      .sprite(size.x * 0.5, size.y * 0.25, "all-assets", gameStore.activeItemInfo.imageKey)
-      .setDisplaySize(size.x * 0.47, size.x * 0.47)
+      .sprite(size.x * 0.5, size.y * 0.27, "all-assets", gameStore.activeItemInfo.imageKey)
+      .setDisplaySize(size.x * 0.46, size.x * 0.46)
       .setOrigin(0.5, 0);
 
-    this.nameText = scene.add
-      .text(size.x * 0.5, padding, "", { ...textStyle, fontSize: "18px" })
-      .setOrigin(0.5, 0);
+    this.nameText = scene.add.text(size.x * 0.5, padding, "", textStyle).setOrigin(0.5, 0);
     this.ammoText = scene.add.text(size.x * 0.5, size.y - padding, "", textStyle).setOrigin(0.5, 1);
 
     this.background = scene.add
@@ -135,8 +133,8 @@ export default class ItemSwitcher {
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0, 0);
 
-    this.leftButton = new ArrowButton(scene, size.x * 0.2, size.y * 0.47, "left");
-    this.rightButton = new ArrowButton(scene, size.x * 0.8, size.y * 0.47, "right");
+    this.leftButton = new ArrowButton(scene, size.x * 0.17, size.y * 0.48, "left");
+    this.rightButton = new ArrowButton(scene, size.x * 0.83, size.y * 0.48, "right");
     this.leftButton.events.addListener("pointerdown", this.onArrowButtonClick);
     this.rightButton.events.addListener("pointerdown", this.onArrowButtonClick);
     this.container = scene.add
@@ -192,6 +190,7 @@ export default class ItemSwitcher {
 
     const { label, ammo, capacity, imageKey } = this.gameStore.activeItemInfo;
     this.weaponSprite.setFrame(imageKey);
+    this.weaponSprite.setAlpha(ammo > 0 ? 1 : 0.5);
 
     this.nameText.setText(label);
     this.ammoText.setText(`${ammo}/${capacity}`);
