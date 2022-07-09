@@ -2,7 +2,8 @@ export enum LevelTilesetName {
   hq = "hq",
   lab = "lab",
   warehouse = "warehouse",
-  skyscraper = "skyscrapper",
+  skyscraper = "skyscraper",
+  temple = "temple",
 }
 
 export const levelTilesetNames = Object.values(LevelTilesetName);
