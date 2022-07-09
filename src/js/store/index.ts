@@ -136,7 +136,7 @@ class GameStore {
         key: "revealTile",
         imageKey: "sniper-pickup-v2",
         label: "Reveal",
-        ammo: 1, // Should be 0 to start, testing
+        ammo: 0,
         capacity: 1,
         hasUnlocked: true, // Should be false to start, testing
       },
@@ -144,7 +144,7 @@ class GameStore {
         key: "clearRadar",
         imageKey: "emp-pickup-v2",
         label: "Clear",
-        ammo: 1, // Should be 0 to start, testing
+        ammo: 0,
         capacity: 1,
         hasUnlocked: true, // Should be false to start, testing
       },
@@ -152,7 +152,7 @@ class GameStore {
         key: "compass",
         imageKey: "compass-pickup-v2",
         label: "Compass",
-        ammo: 1, // Should be 0 to start, testing
+        ammo: 0,
         capacity: 1,
         hasUnlocked: true, // Should be false to start, testing
       },
