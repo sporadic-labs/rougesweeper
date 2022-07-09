@@ -1,39 +1,52 @@
 import Phaser from "phaser";
 import TILE_TYPES from "./tile-types";
-import { levelKeys } from "../../store/levels"
+import { levelKeys } from "../../store/levels";
 
 export default class RandomPickupManager {
-  private pickupOrder: Array<TILE_TYPES>
+  // private pickupOrder: Array<Array<TILE_TYPES>> = [];
+  private pickupOrder: { [key: string]: Array<TILE_TYPES>} = {};
 
   constructor() {
-    /*
-     * Generate a list of 9 pickup tiles, where no repeated tiles are next to each other, and there are 2 of each pickup type.
-     */
-    const firstGroup = Phaser.Math.RND.shuffle([TILE_TYPES.COMPASS, TILE_TYPES.EMP, TILE_TYPES.SNIPER])
-    let secondGroup: Array<TILE_TYPES> = Phaser.Math.RND.shuffle([TILE_TYPES.COMPASS, TILE_TYPES.EMP, TILE_TYPES.SNIPER])
-    while (firstGroup[2] === secondGroup[0]) {
-      secondGroup = Phaser.Math.RND.shuffle([TILE_TYPES.COMPASS, TILE_TYPES.EMP, TILE_TYPES.SNIPER])
-    }
+    const pickupList = this.generatePickupList()
 
-    this.pickupOrder = [
-      firstGroup[0],
-      firstGroup[1],
-      TILE_TYPES.ALERT_AMMO,
-      firstGroup[2],
-      secondGroup[0],
-      TILE_TYPES.ALERT_AMMO,
-      secondGroup[1],
-      secondGroup[2],
-      TILE_TYPES.ALERT_AMMO,
-    ]
-  }
-
-  getPickupTypeForLevel(levelIndex: number): TILE_TYPES {
-    return this.pickupOrder[levelIndex]
+    levelKeys.forEach((key, i) => {
+      if (i % 3 === 0) {
+        this.pickupOrder[key] = [TILE_TYPES.ALERT_AMMO, ...pickupList.splice(0, 1)];
+      } else {
+        this.pickupOrder[key] = pickupList.splice(0, 2);
+      }
+    })
   }
 
   getPickupTypeForLevelFromKey(levelKey: string): TILE_TYPES {
-    const levelIndex = levelKeys.findIndex(key => key === levelKey)
-    return this.pickupOrder[levelIndex]
+    return this.pickupOrder[levelKey].shift();
+  }
+
+  private generatePickupList(): Array<TILE_TYPES> {
+    /*
+     * Generate a list of 24 pickup tiles, where no repeated tiles are next to each other, and there are 2 of each pickup type.
+     */
+    let pickupList: Array<TILE_TYPES> = [];
+
+    while (pickupList.length < 24) {
+      let secondGroup: Array<TILE_TYPES> = Phaser.Math.RND.shuffle([
+        TILE_TYPES.COMPASS,
+        TILE_TYPES.EMP,
+        TILE_TYPES.SNIPER,
+        TILE_TYPES.ALERT_AMMO,
+      ]);
+      while (pickupList[pickupList.length - 1] === secondGroup[0]) {
+        secondGroup = Phaser.Math.RND.shuffle([
+          TILE_TYPES.COMPASS,
+          TILE_TYPES.EMP,
+          TILE_TYPES.SNIPER,
+          TILE_TYPES.ALERT_AMMO,
+        ]);
+
+      }
+      pickupList = [...pickupList, ...secondGroup];
+    }
+
+    return pickupList;
   }
 }

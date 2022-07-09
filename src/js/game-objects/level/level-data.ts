@@ -22,6 +22,11 @@ interface RandomizedSpawnInfo {
   enemies: SupportedEnemyTypes[];
 }
 
+interface RandomizedSpawnInfo2 {
+  polygon: Geom.Polygon;
+  objects: TILE_TYPES[];
+}
+
 export default class LevelData {
   public levelKey: string;
   public topOffset: number;
@@ -129,14 +134,15 @@ export default class LevelData {
 
     const pickupLayer = map.getObjectLayer("Random Pickup");
     if (pickupLayer) {
-      const { x, y } = this.generateKeyPosition(pickupLayer);
-      const pickupType = this.randomPickupManager.getPickupTypeForLevelFromKey(this.levelKey)
-      this.setTileAt(x, y, pickupType);
+      const pickupPositions = this.generateObjectPositions(pickupLayer);
+      pickupPositions.forEach(({ type, pos }) => {
+        this.setTileAt(pos.x, pos.y, type);
+      })
     }
 
     const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
     if (scrambleEnemyLayer) {
-      const enemyPositions = this.generateEnemyPositions(scrambleEnemyLayer)
+      const enemyPositions = this.generateObjectPositions(scrambleEnemyLayer)
       enemyPositions.forEach(({ type, pos }) => {
         this.setTileAt(pos.x, pos.y, type);
       });
@@ -144,7 +150,7 @@ export default class LevelData {
 
     const enemiesLayer = map.getObjectLayer("Random Enemies");
     if (enemiesLayer) {
-      const enemyPositions = this.generateEnemyPositions(enemiesLayer);
+      const enemyPositions = this.generateObjectPositions(enemiesLayer);
       enemyPositions.forEach(({ type, pos }) => {
         this.setTileAt(pos.x, pos.y, type);
       });
@@ -365,7 +371,7 @@ export default class LevelData {
   }
 
   /**
-   * Generate an array of locations for the enemy positions based on the given object layer from
+   * Generate an array of locations for the object positions based on the given object layer from
    * Tiled. This expects there to be one or more polygon objects within the layer which defines the
    * spawning regions. This also expects there to be tile objects placed within the bounds of each
    * spawn region, where the number of tile objects indicates how many enemies should be spawned in
@@ -375,57 +381,62 @@ export default class LevelData {
    * @returns {{x,y}|undefined}
    * @memberof LevelData
    */
-  generateEnemyPositions(objectLayer: Tilemaps.ObjectLayer) {
+  generateObjectPositions(objectLayer: Tilemaps.ObjectLayer) {
     // Find the spawning polygons
     const spawnRegions = objectLayer.objects.filter(
       (obj) => obj.polygon !== undefined || obj.rectangle === true
     );
 
-    const spawns: RandomizedSpawnInfo[] = spawnRegions.map((obj) => ({
+    const spawns: RandomizedSpawnInfo2[] = spawnRegions.map((obj) => ({
       polygon: this.tiledShapeToPhaserPoly(obj),
-      enemies: [],
+      objects: [],
     }));
 
-    // Count enemy tile objects within each region
-    const enemyTiles = objectLayer.objects.filter((obj) => obj.gid !== undefined);
-    enemyTiles.map((enemyTile) => {
-      const x = enemyTile.x / this.tileWidth + 0.5;
-      const y = enemyTile.y / this.tileHeight - 0.5;
+    // Count tile objects within each region
+    const objectTiles = objectLayer.objects.filter((obj) => obj.gid !== undefined);
+    objectTiles.map((objectTile) => {
+      const x = objectTile.x / this.tileWidth + 0.5;
+      const y = objectTile.y / this.tileHeight - 0.5;
       const boardPos = this.tilemapPositionToBoardPosition(x, y);
 
-      // TODO: add more types here as we add more enemies.
-      let type: SupportedEnemyTypes = null;
-      if (enemyTile.gid === this.tileTypeToId["SCRAMBLE_ENEMY"]) {
+      // TODO: add more types here as we add more tile types.
+      let type: TILE_TYPES = null;
+      if (objectTile.gid === this.tileTypeToId["SCRAMBLE_ENEMY"]) {
         type = TILE_TYPES.SCRAMBLE_ENEMY;
-      } else if (enemyTile.gid === this.tileTypeToId["ENEMY"]) {
+      } else if (objectTile.gid === this.tileTypeToId["ENEMY"]) {
         type = TILE_TYPES.ENEMY;
+      } else if (objectTile.gid === this.tileTypeToId["KEY"]) {
+        type = TILE_TYPES.KEY;
+      } else if (objectTile.gid === this.tileTypeToId["PICKUP"]) {
+        type = this.randomPickupManager.getPickupTypeForLevelFromKey(this.levelKey);
+        console.log(type)
       }
 
       if (type === null) {
-        throw new Error(`Unexpected tile in random enemies layer: ${enemyTile}`);
+        throw new Error(`Unexpected tile in random object layer: ${objectTile}`);
       }
 
       const i = spawns.findIndex((s) => s.polygon.contains(boardPos.x, boardPos.y));
 
       if (i === -1) {
-        throw new Error(`Enemy does not fit within any of the spawn polygons: ${enemyTile}`);
+        throw new Error(`Object does not fit within any of the spawn polygons: ${objectTile}`);
       }
 
-      spawns[i].enemies.push(type);
+      spawns[i].objects.push(type);
     });
 
-    // Attempt to find random places for all enemy tiles - inefficient!
-    const enemiesToSpawn: Array<{ type: SupportedEnemyTypes; pos: Point }> = [];
+    // Attempt to find random places for all object tiles - inefficient!
+    const objectsToSpawn: Array<{ type: TILE_TYPES; pos: Point }> = [];
     spawns.forEach((spawnInfo) => {
-      const { polygon, enemies } = spawnInfo;
+      const { polygon, objects } = spawnInfo;
       const blanks = this.getBlanksWithin(polygon);
       Phaser.Utils.Array.Shuffle(blanks);
-      if (blanks.length < enemies.length) {
-        throw new Error("Not enough blanks to spawn an enemy in the region.");
+      if (blanks.length < objects.length) {
+        throw new Error("Not enough blanks to spawn an object in the region.");
       }
-      enemies.forEach((type, i) => enemiesToSpawn.push({ type, pos: blanks[i] }));
+      objects.forEach((type, i) => objectsToSpawn.push({ type, pos: blanks[i] }));
     });
-    return enemiesToSpawn;
+    return objectsToSpawn;
   }
 
   /**
