@@ -1,5 +1,5 @@
 import LEVEL_EVENTS from "../level/events";
-import TILE_TYPES from "../level/tile-types";
+import TILE_TYPES, { isEnemyTile } from "../level/tile-types";
 import Level from "../level/level";
 import store from "../../store";
 import GAME_MODES from "./game-modes";
@@ -22,6 +22,7 @@ import { Point } from "../../helpers/common-interfaces";
 import TutorialLogic from "../level/tutorial-logic";
 import EventEmitter from "../../helpers/event-emitter";
 import RandomPickupManager from "../level/random-pickup-manager";
+import AmmoCollectAnimation from "../player/ammo-collect-animation";
 
 export default class GameManager {
   private level: Level;
@@ -367,7 +368,6 @@ export default class GameManager {
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
     store.removeAmmo("hack", 1);
-    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
     const { x, y } = tile.getPosition();
     const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
     const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
@@ -375,13 +375,15 @@ export default class GameManager {
       attackAnim.fadeout().then(() => attackAnim.destroy()),
       tile.playTileDestructionAnimation(),
     ]);
-    if (shouldGetCoin) {
-      const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
-      await coinAnim.play();
-      coinAnim.destroy();
+    if (isEnemyTile(tile.type)) {
       store.addGold();
+      if (Phaser.Math.RND.integerInRange(1, 100) <= 33) {
+        const ammoAnim = new AmmoCollectAnimation(this.scene, x - 40, y);
+        await ammoAnim.play();
+        ammoAnim.destroy();
+        store.addAmmo("hack", 1);
+      }
     }
-
     if (tile.type !== TILE_TYPES.EXIT && tile.type !== TILE_TYPES.WALL) {
       const tileGridPos = tile.getGridPosition();
       await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);

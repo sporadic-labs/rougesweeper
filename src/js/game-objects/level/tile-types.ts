@@ -16,6 +16,9 @@ enum TILE_TYPES {
   ALERT_AMMO = "ALERT_AMMO",
 }
 
+export const isEnemyTile = (tile: TILE_TYPES) =>
+  [TILE_TYPES.SCRAMBLE_ENEMY, TILE_TYPES.ENEMY].includes(tile);
+
 type DebugMap = { [T in TILE_TYPES]: string };
 const tileTypeToDebugCharacter: DebugMap = {
   [TILE_TYPES.ENTRANCE]: "S",
