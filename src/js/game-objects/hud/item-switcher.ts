@@ -160,10 +160,12 @@ export default class ItemSwitcher {
   private onArrowButtonClick = (arrowButton: ArrowButton) => {
     const items = this.gameStore.unlockedItems;
     const index = this.gameStore.activeItemIndex;
-    if (arrowButton === this.leftButton && index > 0) {
-      this.gameStore.setActiveItem(items[index - 1].key);
-    } else if (arrowButton === this.rightButton && index < items.length - 1) {
-      this.gameStore.setActiveItem(items[index + 1].key);
+    if (arrowButton === this.leftButton) {
+      const newIndex = index > 0 ? index - 1 : items.length - 1;
+      this.gameStore.setActiveItem(items[newIndex].key);
+    } else if (arrowButton === this.rightButton) {
+      const newIndex = index < items.length - 1 ? index + 1 : 0;
+      this.gameStore.setActiveItem(items[newIndex].key);
     }
     this.updateState();
   };
@@ -174,15 +176,13 @@ export default class ItemSwitcher {
     const isActive = this.gameStore.gameState === GAME_MODES.IDLE_MODE;
 
     const { label, ammo, capacity, imageKey } = this.gameStore.activeItemInfo;
-    const items = this.gameStore.unlockedItems;
-    const index = this.gameStore.activeItemIndex;
     this.weaponSprite.setFrame(imageKey);
 
     this.nameText.setText(label);
     this.ammoText.setText(`${ammo}/${capacity}`);
 
-    this.leftButton.setEnabled(isActive && index > 0);
-    this.rightButton.setEnabled(isActive && index < items.length - 1);
+    this.leftButton.setEnabled(isActive);
+    this.rightButton.setEnabled(isActive);
   }
 
   destroy() {
