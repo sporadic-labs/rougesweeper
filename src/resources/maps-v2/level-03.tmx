@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="14">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="15">
  <editorsettings>
-  <export target="level-1-floor-3.json" format="json"/>
+  <export target="level-03.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="hq" tilewidth="75" tileheight="75" tilecount="56" columns="8">
   <image source="tilesets/hq.png" width="600" height="525"/>
@@ -83,6 +83,7 @@
  <objectgroup id="8" name="Random Pickup">
   <object id="12" x="375" y="225" width="525" height="525"/>
   <object id="13" gid="70" x="375" y="750" width="75" height="75"/>
+  <object id="14" gid="70" x="450" y="750" width="75" height="75"/>
  </objectgroup>
  <objectgroup id="5" name="Random Enemies">
   <object id="1" x="374.511" y="301.654" width="216.015" height="373.233"/>

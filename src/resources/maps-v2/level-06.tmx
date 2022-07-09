@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="43">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="44">
  <editorsettings>
-  <export target="level-3-floor-3.json" format="json"/>
+  <export target="level-06.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="lab" tilewidth="75" tileheight="75" tilecount="30" columns="5">
   <image source="tilesets/lab.png" width="375" height="450"/>
@@ -83,6 +83,7 @@
  <objectgroup id="8" name="Random Pickup">
   <object id="41" x="375" y="225" width="525" height="525"/>
   <object id="42" gid="44" x="450" y="750" width="75" height="75"/>
+  <object id="43" gid="44" x="525" y="750" width="75" height="75"/>
  </objectgroup>
  <objectgroup color="#0a16fa" id="4" name="Random Key" opacity="0.67">
   <object id="1" x="450" y="225" width="225" height="150"/>
