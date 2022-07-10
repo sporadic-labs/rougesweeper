@@ -25,14 +25,15 @@ const levelData: Array<{
     subtitle: "Floor 3",
     tiles: [],
   },
-  { level: "level-04", title: "Laboratory", subtitle: "Floor 4", tiles: [] },
-  { level: "level-05", title: "Laboratory", subtitle: "Floor 5", tiles: [] },
-  { level: "level-06", title: "Laboratory", subtitle: "Floor 6", tiles: [] },
-  { level: "level-07", title: "Warehouse", subtitle: "Floor 7", tiles: [] },
-  { level: "level-08", title: "Warehouse", subtitle: "Floor 8", tiles: [] },
-  { level: "level-09", title: "Warehouse", subtitle: "Floor 9", tiles: [] },
-  { level: "level-10", title: "Skyscraper", subtitle: "Floor 10", tiles: [] },
-  { level: "level-11", title: "Temple", subtitle: "Floor 11", tiles: [] },
+  { level: "level-04", title: "Laboratory", subtitle: "Level 4", tiles: [] },
+  { level: "level-05", title: "Laboratory", subtitle: "Level 5", tiles: [] },
+  { level: "level-06", title: "Laboratory", subtitle: "Level 6", tiles: [] },
+  { level: "level-07", title: "Warehouse", subtitle: "Level 7", tiles: [] },
+  { level: "level-08", title: "Warehouse", subtitle: "Level 8", tiles: [] },
+  { level: "level-09", title: "Warehouse", subtitle: "Level 9", tiles: [] },
+  { level: "level-10", title: "Skyscraper", subtitle: "Level 10", tiles: [] },
+  { level: "level-11", title: "Temple", subtitle: "Level 11", tiles: [] },
+  { level: "level-12", title: "Jungle", subtitle: "Level 12", tiles: [] },
 ];
 
 /**
@@ -45,13 +46,14 @@ const levelKeys = levelData.map(({ level }) => level);
  * @param scene
  */
 function loadLevels(scene: Phaser.Scene) {
-  scene.load.image("all-assets", "maps/tilesets/all-assets.png");
-  scene.load.image("hq", "maps/tilesets/hq.png");
-  scene.load.image("warehouse", "maps/tilesets/warehouse.png");
-  scene.load.image("lab", "maps/tilesets/lab.png");
-  scene.load.image("skyscraper", "maps/tilesets/skyscraper.png");
-  scene.load.image("temple", "maps/tilesets/temple.png");
-  scene.load.image("decorations", "maps/tilesets/decorations.png");
+  scene.load.image("all-assets", "maps-v2/tilesets/all-assets.png");
+  scene.load.image("hq", "maps-v2/tilesets/hq.png");
+  scene.load.image("warehouse", "maps-v2/tilesets/warehouse.png");
+  scene.load.image("lab", "maps-v2/tilesets/lab.png");
+  scene.load.image("skyscraper", "maps-v2/tilesets/skyscraper.png");
+  scene.load.image("temple", "maps-v2/tilesets/temple.png");
+  scene.load.image("jungle", "maps-v2/tilesets/jungle.png");
+  scene.load.image("decorations", "maps-v2/tilesets/decorations.png");
   levelData.forEach(({ level }) =>
     scene.load.tilemapTiledJSONExternal(level, `maps-v2/${level}.json`)
   );

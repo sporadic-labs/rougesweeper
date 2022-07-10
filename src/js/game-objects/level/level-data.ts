@@ -16,13 +16,7 @@ class DataTile {
 type TileProperty = { type?: TILE; frameName?: string };
 type TilesetProperty = { [key: string]: TileProperty };
 type TileTypeToTileIdMap = { [tileType in TILE]?: number };
-type SupportedEnemyTypes = TILE_TYPES.ENEMY | TILE_TYPES.SCRAMBLE_ENEMY;
 interface RandomizedSpawnInfo {
-  polygon: Geom.Polygon;
-  enemies: SupportedEnemyTypes[];
-}
-
-interface RandomizedSpawnInfo2 {
   polygon: Geom.Polygon;
   objects: TILE_TYPES[];
 }
@@ -387,7 +381,7 @@ export default class LevelData {
       (obj) => obj.polygon !== undefined || obj.rectangle === true
     );
 
-    const spawns: RandomizedSpawnInfo2[] = spawnRegions.map((obj) => ({
+    const spawns: RandomizedSpawnInfo[] = spawnRegions.map((obj) => ({
       polygon: this.tiledShapeToPhaserPoly(obj),
       objects: [],
     }));
@@ -405,6 +399,10 @@ export default class LevelData {
         type = TILE_TYPES.SCRAMBLE_ENEMY;
       } else if (objectTile.gid === this.tileTypeToId["ENEMY"]) {
         type = TILE_TYPES.ENEMY;
+      } else if (objectTile.gid === this.tileTypeToId["SUPER_ENEMY"]) {
+        type = TILE_TYPES.SUPER_ENEMY;
+      } else if (objectTile.gid === this.tileTypeToId["BOSS"]) {
+        type = TILE_TYPES.BOSS;
       } else if (objectTile.gid === this.tileTypeToId["KEY"]) {
         type = TILE_TYPES.KEY;
       } else if (objectTile.gid === this.tileTypeToId["PICKUP"]) {

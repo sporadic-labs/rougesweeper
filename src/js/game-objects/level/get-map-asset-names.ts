@@ -4,6 +4,7 @@ export enum LevelTilesetName {
   warehouse = "warehouse",
   skyscraper = "skyscraper",
   temple = "temple",
+  jungle = "jungle",
 }
 
 export const levelTilesetNames = Object.values(LevelTilesetName);
@@ -43,6 +44,8 @@ export function getTileFrame(levelKey: string): string {
       return "tile-skyscraper";
     case "level-11":
       return "tile-temple";
+    case "level-12":
+      return "tile-jungle";
     default:
       throw Error(
         `Unrecognized level key ${levelKey} - unable to determine the corresponding tile fame name.`
