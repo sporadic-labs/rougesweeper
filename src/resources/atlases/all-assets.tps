@@ -271,6 +271,7 @@
             <key type="filename">all-assets/tile-back-disabled.png</key>
             <key type="filename">all-assets/tile-back.png</key>
             <key type="filename">all-assets/tile-hq.png</key>
+            <key type="filename">all-assets/tile-jungle.png</key>
             <key type="filename">all-assets/tile-lab.png</key>
             <key type="filename">all-assets/tile-skyscraper.png</key>
             <key type="filename">all-assets/tile-temple.png</key>

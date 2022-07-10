@@ -76,7 +76,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"TENTACLE_ENEMY"
+                 "value":"SUPER_ENEMY"
                 }]
         }, 
         {
@@ -90,7 +90,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"BOSS_ENEMY"
+                 "value":"BOSS"
                 }]
         }, 
         {
