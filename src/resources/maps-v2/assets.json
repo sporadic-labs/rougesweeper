@@ -225,12 +225,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"scramble-1"
+                 "value":"arrow"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"FX"
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -645,12 +645,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"ammo-empty"
+                 "value":""
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"HUD"
+                 "value":""
                 }]
         }, 
         {
@@ -659,12 +659,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"ammo-full"
+                 "value":""
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"HUD"
+                 "value":""
                 }]
         }, 
         {
@@ -673,12 +673,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"arrow"
+                 "value":""
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"HUD"
+                 "value":""
                 }]
         }, 
         {
@@ -869,12 +869,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"shop-button"
+                 "value":""
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"HUD"
+                 "value":""
                 }]
         }, 
         {
@@ -925,30 +925,16 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"compass-icon"
+                 "value":"weapon-pickup-icon"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"WEAPON"
                 }]
         }, 
         {
          "id":66,
-         "properties":[
-                {
-                 "name":"frameName",
-                 "type":"string",
-                 "value":"weapon-icon-v1"
-                }, 
-                {
-                 "name":"type",
-                 "type":"string",
-                 "value":""
-                }]
-        }, 
-        {
-         "id":67,
          "properties":[
                 {
                  "name":"frameName",
@@ -958,7 +944,21 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":"ALERT_AMMO"
+                 "value":"AMMO"
+                }]
+        }, 
+        {
+         "id":67,
+         "properties":[
+                {
+                 "name":"frameName",
+                 "type":"string",
+                 "value":"weapon-upgrade-v1"
+                }, 
+                {
+                 "name":"type",
+                 "type":"string",
+                 "value":"UPGRADE"
                 }]
         }, 
         {
@@ -972,7 +972,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -986,7 +986,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -1000,7 +1000,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }, 
         {
@@ -1014,7 +1014,7 @@
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"HUD"
                 }]
         }],
  "tilewidth":75,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="31">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="33">
  <tileset firstgid="1" name="temple" tilewidth="75" tileheight="75" tilecount="100" columns="10">
   <image source="tilesets/temple.png" width="750" height="750"/>
  </tileset>
@@ -86,5 +86,8 @@
   <object id="25" x="600" y="225" width="225" height="525"/>
   <object id="27" gid="112" x="600" y="300" width="75" height="75"/>
  </objectgroup>
- <objectgroup color="#e51418" id="5" name="Random Enemies" opacity="0.69"/>
+ <objectgroup color="#e51418" id="5" name="Random Enemies" opacity="0.69">
+  <object id="31" x="375" y="225" width="525" height="525"/>
+  <object id="32" gid="106" x="825" y="525" width="75" height="75"/>
+ </objectgroup>
 </map>
