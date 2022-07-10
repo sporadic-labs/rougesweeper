@@ -9,7 +9,7 @@ export default class AmmoCollectAnimation {
     this.scene = scene;
 
     this.sprite = scene.add
-      .sprite(0, 0, "all-assets", "weapon-icon-v2")
+      .sprite(0, 0, "all-assets", "weapon-refill-v1")
       .setOrigin(0.5, 0.5)
       .setScale(0.5);
     this.sprite.setDepth(DEPTHS.ABOVE_PLAYER);
