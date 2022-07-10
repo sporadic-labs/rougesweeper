@@ -186,6 +186,7 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">all-assets/3d-printer-1.png</key>
+            <key type="filename">all-assets/alert-pickup.png</key>
             <key type="filename">all-assets/ancient-statue.png</key>
             <key type="filename">all-assets/attack-fx-1.png</key>
             <key type="filename">all-assets/attack-fx-2.png</key>
@@ -195,7 +196,6 @@
             <key type="filename">all-assets/bookcase-cabinet.png</key>
             <key type="filename">all-assets/cabinet-1.png</key>
             <key type="filename">all-assets/cabinet-plant.png</key>
-            <key type="filename">all-assets/compass-icon.png</key>
             <key type="filename">all-assets/compass-pickup-v2.png</key>
             <key type="filename">all-assets/compass.png</key>
             <key type="filename">all-assets/computer-1.png</key>
@@ -208,7 +208,6 @@
             <key type="filename">all-assets/desk-6.png</key>
             <key type="filename">all-assets/desk-drinks.png</key>
             <key type="filename">all-assets/desk-science.png</key>
-            <key type="filename">all-assets/emp-icon.png</key>
             <key type="filename">all-assets/emp-pickup-v2.png</key>
             <key type="filename">all-assets/enemy-1.png</key>
             <key type="filename">all-assets/enemy-2.png</key>
@@ -262,7 +261,6 @@
             <key type="filename">all-assets/shelves-2.png</key>
             <key type="filename">all-assets/shield-switch-1.png</key>
             <key type="filename">all-assets/shop.png</key>
-            <key type="filename">all-assets/sniper-icon.png</key>
             <key type="filename">all-assets/sniper-pickup-v2.png</key>
             <key type="filename">all-assets/stairs-2.png</key>
             <key type="filename">all-assets/statue-tree.png</key>

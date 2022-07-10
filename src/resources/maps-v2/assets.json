@@ -911,12 +911,12 @@
                 {
                  "name":"frameName",
                  "type":"string",
-                 "value":"sniper-icon"
+                 "value":"alert-pickup"
                 }, 
                 {
                  "name":"type",
                  "type":"string",
-                 "value":""
+                 "value":"ALERT"
                 }]
         }, 
         {

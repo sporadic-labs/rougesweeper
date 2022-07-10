@@ -3,15 +3,14 @@ import TILE_TYPES from "./tile-types";
 import { levelKeys } from "../../store/levels";
 
 export default class RandomPickupManager {
-  // private pickupOrder: Array<Array<TILE_TYPES>> = [];
   private pickupOrder: { [key: string]: Array<TILE_TYPES>} = {};
 
   constructor() {
     const pickupList = this.generatePickupList()
 
     levelKeys.forEach((key, i) => {
-      if (i % 3 === 0) {
-        this.pickupOrder[key] = [TILE_TYPES.UPGRADE, ...pickupList.splice(0, 1)];
+      if ((i + 1) % 3 === 0) {
+        this.pickupOrder[key] = [TILE_TYPES.UPGRADE, TILE_TYPES.ALERT, ...pickupList.splice(0, 1)];
       } else {
         this.pickupOrder[key] = pickupList.splice(0, 2);
       }
@@ -19,13 +18,14 @@ export default class RandomPickupManager {
   }
 
   getPickupTypeForLevelFromKey(levelKey: string): TILE_TYPES {
-    return this.pickupOrder[levelKey].shift();
+    // Rotate the list...
+    const pickup = this.pickupOrder[levelKey].shift();
+    this.pickupOrder[levelKey].push(pickup)
+    return pickup
   }
 
+  /** Generate a list of 24 pickup tiles, where no repeated tiles are next to each other, and there are 2 of each pickup type. */
   private generatePickupList(): Array<TILE_TYPES> {
-    /*
-     * Generate a list of 24 pickup tiles, where no repeated tiles are next to each other, and there are 2 of each pickup type.
-     */
     let pickupList: Array<TILE_TYPES> = [];
 
     while (pickupList.length < 24) {

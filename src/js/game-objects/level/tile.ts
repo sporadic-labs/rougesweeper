@@ -137,6 +137,7 @@ export default class Tile {
         this.type === TILE_TYPES.SUPER_ENEMY ||
         this.type === TILE_TYPES.BOSS ||
         this.type === TILE_TYPES.KEY ||
+        this.type === TILE_TYPES.ALERT ||
         this.type === TILE_TYPES.AMMO ||
         this.type === TILE_TYPES.UPGRADE ||
         this.type === TILE_TYPES.COMPASS ||
@@ -153,6 +154,7 @@ export default class Tile {
           this.type === TILE_TYPES.GOLD ||
           this.type === TILE_TYPES.KEY ||
           this.type === TILE_TYPES.AMMO ||
+          this.type === TILE_TYPES.ALERT ||
           this.type === TILE_TYPES.UPGRADE ||
           this.type === TILE_TYPES.COMPASS ||
           this.type === TILE_TYPES.EMP ||
@@ -198,6 +200,7 @@ export default class Tile {
         this.type === TILE_TYPES.SUPER_ENEMY ||
         this.type === TILE_TYPES.BOSS ||
         this.type === TILE_TYPES.AMMO ||
+        this.type === TILE_TYPES.ALERT ||
         this.type === TILE_TYPES.UPGRADE ||
         this.type === TILE_TYPES.COMPASS ||
         this.type === TILE_TYPES.EMP ||

@@ -15,6 +15,7 @@ enum TILE_TYPES {
   SNIPER = "SNIPER",
   AMMO = "AMMO",
   UPGRADE = "UPGRADE",
+  ALERT = "ALERT",
 }
 
 export const isEnemyTile = (tile: TILE_TYPES) =>
@@ -38,6 +39,7 @@ const tileTypeToDebugCharacter: DebugMap = {
   [TILE_TYPES.SNIPER]: "8",
   [TILE_TYPES.AMMO]: "8",
   [TILE_TYPES.UPGRADE]: "8",
+  [TILE_TYPES.ALERT]: "8",
 };
 
 export { tileTypeToDebugCharacter };

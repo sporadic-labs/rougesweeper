@@ -302,6 +302,9 @@ export default class GameManager {
         case TILE_TYPES.AMMO:
           store.addAmmo("hack", 5);
           break;
+        case TILE_TYPES.ALERT:
+          store.addHealth();
+          break;
         case TILE_TYPES.UPGRADE:
           store.upgradeItems();
           store.addAmmo("hack", 5);
