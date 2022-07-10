@@ -103,5 +103,6 @@ export default class PauseToggle {
     if (this.tween) this.tween.stop();
     this.sprite.destroy();
     this.proxy.removeAll();
+    this.mobProxy.destroy();
   }
 }

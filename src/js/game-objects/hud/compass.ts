@@ -67,5 +67,6 @@ export default class Compass {
   destroy() {
     this.sprite.destroy();
     this.proxy.removeAll();
+    this.mobProxy.destroy();
   }
 }
