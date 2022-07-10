@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="34">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="8" nextobjectid="46">
  <editorsettings>
   <export target="level-12.json" format="json"/>
  </editorsettings>
@@ -49,13 +49,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,36,45,36,0,0,0,36,45,36,0,0,0,0,
+0,0,0,0,27,0,0,0,0,0,27,0,0,0,0,0,
+0,0,0,0,0,0,0,36,0,0,0,0,0,0,0,0,
 0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,36,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,36,27,45,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -91,7 +91,19 @@
   <object id="27" gid="12" x="600" y="300" width="75" height="75"/>
  </objectgroup>
  <objectgroup color="#e51418" id="5" name="Random Enemies" opacity="0.69">
-  <object id="31" x="375" y="225" width="525" height="525"/>
+  <object id="31" x="600" y="225" width="300" height="525"/>
   <object id="32" gid="6" x="825" y="525" width="75" height="75"/>
+  <object id="34" x="375" y="225" width="525" height="150"/>
+  <object id="35" x="375" y="375" width="375" height="225"/>
+  <object id="36" x="375" y="600"/>
+  <object id="37" x="375" y="600" width="525" height="150"/>
+  <object id="38" gid="3" x="450" y="300" width="75" height="75"/>
+  <object id="39" gid="3" x="525" y="300" width="75" height="75"/>
+  <object id="40" gid="3" x="450" y="525" width="75" height="75"/>
+  <object id="41" gid="3" x="525" y="525" width="75" height="75"/>
+  <object id="42" gid="3" x="675" y="525" width="75" height="75"/>
+  <object id="43" gid="3" x="750" y="525" width="75" height="75"/>
+  <object id="44" gid="3" x="375" y="675" width="75" height="75"/>
+  <object id="45" gid="3" x="450" y="675" width="75" height="75"/>
  </objectgroup>
 </map>
