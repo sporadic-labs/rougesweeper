@@ -409,7 +409,6 @@ export default class LevelData {
         type = TILE_TYPES.KEY;
       } else if (objectTile.gid === this.tileTypeToId["PICKUP"]) {
         type = this.randomPickupManager.getPickupTypeForLevelFromKey(this.levelKey);
-        console.log(type)
       }
 
       if (type === null) {

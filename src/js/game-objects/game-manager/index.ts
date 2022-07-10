@@ -136,8 +136,6 @@ export default class GameManager {
     const tileGridPos = tile.getGridPosition();
     const itemInfo = store.activeItemInfo;
 
-    console.log("Attempting to use item", itemInfo.label);
-
     if (itemInfo.ammo <= 0) {
       this.toastManager.setMessage("Not enough ammo!");
       return;
@@ -285,6 +283,8 @@ export default class GameManager {
       switch (tile.type) {
         case TILE_TYPES.ENEMY:
         case TILE_TYPES.SCRAMBLE_ENEMY:
+        case TILE_TYPES.SUPER_ENEMY:
+        case TILE_TYPES.BOSS:
           store.removeHealth();
           break;
         case TILE_TYPES.GOLD:
@@ -299,8 +299,15 @@ export default class GameManager {
         case TILE_TYPES.EMP:
           store.addAmmo("clearRadar", 1);
           break;
-        case TILE_TYPES.ALERT_AMMO:
+        case TILE_TYPES.AMMO:
           store.addAmmo("hack", 5);
+          break;
+        case TILE_TYPES.UPGRADE:
+          store.upgradeItems();
+          store.addAmmo("hack", 5);
+          store.addAmmo("clearRadar", 1);
+          store.addAmmo("revealTile", 1);
+          store.addAmmo("compass", 1);
           break;
       }
       const { x, y } = this.player.getPosition();
@@ -341,14 +348,8 @@ export default class GameManager {
     this.level.enableAllTiles();
     this.startIdleFlow();
 
-    // Disabled in favor of using the tutorial class:
-    // this.dialogueManager.playDialogueFromTile(currentTile);
-
     // Apply any effect that need to happen at the end of moving.
     switch (tile.type) {
-      case TILE_TYPES.SHOP:
-        // store.setShopUnlockOpen(true);
-        break;
       case TILE_TYPES.KEY:
         store.setHasKey(true);
         this.level.exit.open();

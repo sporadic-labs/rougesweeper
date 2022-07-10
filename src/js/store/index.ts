@@ -65,6 +65,12 @@ class GameStore {
   unlockItem(itemName: ItemKey) {
     this.items[itemName].hasUnlocked = true;
   }
+  upgradeItems() {
+    this.items.hack.capacity += 5
+    this.items.revealTile.capacity += 1
+    this.items.clearRadar.capacity += 1
+    this.items.compass.capacity += 1
+  }
   setActiveItem(itemName: ItemKey) {
     this.activeItemKey = itemName;
   }

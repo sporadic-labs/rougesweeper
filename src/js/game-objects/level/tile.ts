@@ -57,9 +57,21 @@ export default class Tile {
     this.frontSprite = scene.add.sprite(0, 0, "all-assets", tileKey);
     this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back-disabled");
 
-    this.scrambleSprite = scene.add.sprite(x, y, "all-assets", "scramble-1");
+    this.scrambleSprite = scene.add.sprite(x, y, "all-assets", "scramble/scramble-00");
     this.scrambleSprite.setDepth(yPositionToDepth(y));
     this.scrambleSprite.setScale(1.25);
+
+    scene.anims.create({
+      key: `scramble-tile`,
+      frames: scene.anims.generateFrameNames("all-assets", {
+        prefix: `scramble/scramble-`,
+        start: 0,
+        end: 35,
+        zeroPad: 2,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
 
     // Add the front and back tile to a container for easy access.
     this.container = scene.add.container(x, y, [this.backSprite, this.frontSprite]);
@@ -122,8 +134,11 @@ export default class Tile {
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||
         this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
+        this.type === TILE_TYPES.SUPER_ENEMY ||
+        this.type === TILE_TYPES.BOSS ||
         this.type === TILE_TYPES.KEY ||
-        this.type === TILE_TYPES.ALERT_AMMO ||
+        this.type === TILE_TYPES.AMMO ||
+        this.type === TILE_TYPES.UPGRADE ||
         this.type === TILE_TYPES.COMPASS ||
         this.type === TILE_TYPES.EMP ||
         this.type === TILE_TYPES.SNIPER
@@ -137,13 +152,19 @@ export default class Tile {
         if (
           this.type === TILE_TYPES.GOLD ||
           this.type === TILE_TYPES.KEY ||
-          this.type === TILE_TYPES.ALERT_AMMO ||
+          this.type === TILE_TYPES.AMMO ||
+          this.type === TILE_TYPES.UPGRADE ||
           this.type === TILE_TYPES.COMPASS ||
           this.type === TILE_TYPES.EMP ||
           this.type === TILE_TYPES.SNIPER
         ) {
           this.tileGraphicTimeline = createPickupAnimation(this.scene, this.tileContents);
-        } else if (this.type === TILE_TYPES.ENEMY || this.type === TILE_TYPES.SCRAMBLE_ENEMY) {
+        } else if (
+          this.type === TILE_TYPES.ENEMY ||
+          this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
+          this.type === TILE_TYPES.SUPER_ENEMY ||
+          this.type === TILE_TYPES.BOSS
+        ) {
           this.tileGraphicTimeline = createAttackAnimation(this.scene, this.tileContents);
           this.tileGraphicTimeline.on("complete", () => {
             const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(4, 5)}`;
@@ -174,7 +195,10 @@ export default class Tile {
         this.type === TILE_TYPES.GOLD ||
         this.type === TILE_TYPES.ENEMY ||
         this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
-        this.type === TILE_TYPES.ALERT_AMMO ||
+        this.type === TILE_TYPES.SUPER_ENEMY ||
+        this.type === TILE_TYPES.BOSS ||
+        this.type === TILE_TYPES.AMMO ||
+        this.type === TILE_TYPES.UPGRADE ||
         this.type === TILE_TYPES.COMPASS ||
         this.type === TILE_TYPES.EMP ||
         this.type === TILE_TYPES.SNIPER
@@ -322,10 +346,12 @@ export default class Tile {
 
   scramble() {
     this.scramblePoser.moveToPose("FadeIn");
+    this.scrambleSprite.play("scramble-tile");
   }
 
   clearScramble() {
     this.scramblePoser.moveToPose("FadeOut");
+    this.scrambleSprite.stop();
   }
 
   getPosition() {

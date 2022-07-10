@@ -11,7 +11,7 @@ export default class RandomPickupManager {
 
     levelKeys.forEach((key, i) => {
       if (i % 3 === 0) {
-        this.pickupOrder[key] = [TILE_TYPES.ALERT_AMMO, ...pickupList.splice(0, 1)];
+        this.pickupOrder[key] = [TILE_TYPES.UPGRADE, ...pickupList.splice(0, 1)];
       } else {
         this.pickupOrder[key] = pickupList.splice(0, 2);
       }
@@ -33,14 +33,14 @@ export default class RandomPickupManager {
         TILE_TYPES.COMPASS,
         TILE_TYPES.EMP,
         TILE_TYPES.SNIPER,
-        TILE_TYPES.ALERT_AMMO,
+        TILE_TYPES.AMMO,
       ]);
       while (pickupList[pickupList.length - 1] === secondGroup[0]) {
         secondGroup = Phaser.Math.RND.shuffle([
           TILE_TYPES.COMPASS,
           TILE_TYPES.EMP,
           TILE_TYPES.SNIPER,
-          TILE_TYPES.ALERT_AMMO,
+          TILE_TYPES.AMMO,
         ]);
 
       }
