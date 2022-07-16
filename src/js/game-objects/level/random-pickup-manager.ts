@@ -49,4 +49,8 @@ export default class RandomPickupManager {
 
     return pickupList;
   }
+
+  shouldPlaceUpgradePickupOnLevel(levelIndex: number) {
+    return levelIndex % 3;
+  }
 }

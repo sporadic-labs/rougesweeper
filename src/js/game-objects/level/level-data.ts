@@ -128,6 +128,14 @@ export default class LevelData {
 
     const pickupLayer = map.getObjectLayer("Random Pickup");
     if (pickupLayer) {
+      const { x, y } = this.generateKeyPosition(pickupLayer);
+      const pickupType = this.randomPickupManager.getPickupTypeForLevelFromKey(this.levelKey)
+      this.setTileAt(x, y, pickupType);
+
+      if (this.randomPickupManager.shouldPlaceUpgradePickupOnLevel) {
+        const { x, y } = this.generateKeyPosition(pickupLayer);
+        this.setTileAt(x, y, TILE_TYPES.UPGRADE);    
+      }
       const pickupPositions = this.generateObjectPositions(pickupLayer);
       pickupPositions.forEach(({ type, pos }) => {
         this.setTileAt(pos.x, pos.y, type);
