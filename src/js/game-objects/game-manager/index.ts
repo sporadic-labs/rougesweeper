@@ -207,7 +207,7 @@ export default class GameManager {
     const canRevealDistantTile = !tile.isRevealed;
 
     if (!canRevealDistantTile) {
-      this.toastManager.setMessage("You can't reveal that tile.");
+      this.toastManager.setMessage("This tile is already revealed!");
       return;
     }
 
@@ -215,7 +215,7 @@ export default class GameManager {
     this.level.disableAllTiles();
 
     await tile.flipToFront();
-    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
+    const shouldGetCoin = isEnemyTile(tile.type);
     if (shouldGetCoin) {
       const { x, y } = tile.getPosition();
       const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
