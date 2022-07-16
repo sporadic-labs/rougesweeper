@@ -34,13 +34,17 @@ export default class LevelData {
   private tileHeight: number;
   private tileTypeToId: TileTypeToTileIdMap;
 
-  constructor(levelKey: string, private map: Tilemaps.Tilemap, private randomPickupManager: RandomPickupManager) {
+  constructor(
+    levelKey: string,
+    private map: Tilemaps.Tilemap,
+    private randomPickupManager: RandomPickupManager
+  ) {
     this.levelKey = levelKey;
     this.map = map;
     this.tileWidth = map.tileWidth;
     this.tileHeight = map.tileHeight;
 
-    this.randomPickupManager = randomPickupManager
+    this.randomPickupManager = randomPickupManager;
 
     // Create a map that goes from our type property on the tileset in Tiled to
     // our TileType enum in JS.
@@ -120,35 +124,71 @@ export default class LevelData {
       entranceTile
     );
 
-    const keyLayer = map.getObjectLayer("Random Key");
-    if (keyLayer) {
-      const { x, y } = this.generateKeyPosition(keyLayer);
-      this.setTileAt(x, y, TILE.KEY);
+    const maxAttempts = 3; // TODO: do we even need to retry?
+    let tilesToPlace: Array<{ pos: Point; type: TILE }> = [];
+    for (let attemptNum = 1; attemptNum <= maxAttempts; attemptNum++) {
+      let couldPlaceAllObjects = true;
+      tilesToPlace = [];
+
+      const keyLayer = map.getObjectLayer("Random Key");
+      if (keyLayer) {
+        const keySpawnInfo = this.generateObjectPositions(
+          keyLayer,
+          tilesToPlace.map((t) => t.pos)
+        );
+        if (!keySpawnInfo.placedAllObjects) {
+          couldPlaceAllObjects = false;
+        }
+        tilesToPlace.push(...keySpawnInfo.objectsToSpawn);
+      }
+
+      const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
+      if (scrambleEnemyLayer) {
+        const scrambleSpawnInfo = this.generateObjectPositions(
+          scrambleEnemyLayer,
+          tilesToPlace.map((t) => t.pos)
+        );
+        if (!scrambleSpawnInfo.placedAllObjects) {
+          couldPlaceAllObjects = false;
+        }
+        tilesToPlace.push(...scrambleSpawnInfo.objectsToSpawn);
+      }
+
+      const enemyLayer = map.getObjectLayer("Random Enemies");
+      if (enemyLayer) {
+        const enemySpawnInfo = this.generateObjectPositions(
+          enemyLayer,
+          tilesToPlace.map((t) => t.pos)
+        );
+        if (!enemySpawnInfo.placedAllObjects) {
+          couldPlaceAllObjects = false;
+        }
+        tilesToPlace.push(...enemySpawnInfo.objectsToSpawn);
+      }
+
+      const pickupLayer = map.getObjectLayer("Random Pickup");
+      if (pickupLayer) {
+        const pickupSpawnInfo = this.generateObjectPositions(
+          pickupLayer,
+          tilesToPlace.map((t) => t.pos)
+        );
+        if (!pickupSpawnInfo.placedAllObjects) {
+          couldPlaceAllObjects = false;
+        }
+        tilesToPlace.push(...pickupSpawnInfo.objectsToSpawn);
+      }
+
+      if (!couldPlaceAllObjects) {
+        if (attemptNum < maxAttempts) {
+          console.log(`Could not place something on attempt ${attemptNum} - regenerating...`);
+          continue;
+        } else {
+          console.log(`Exhausted max attempts on ${attemptNum} - not placing everything.`);
+        }
+      }
     }
 
-    const pickupLayer = map.getObjectLayer("Random Pickup");
-    if (pickupLayer) {
-      const pickupPositions = this.generateObjectPositions(pickupLayer);
-      pickupPositions.forEach(({ type, pos }) => {
-        this.setTileAt(pos.x, pos.y, type);
-      })
-    }
-
-    const scrambleEnemyLayer = map.getObjectLayer("Scramble Enemies");
-    if (scrambleEnemyLayer) {
-      const enemyPositions = this.generateObjectPositions(scrambleEnemyLayer)
-      enemyPositions.forEach(({ type, pos }) => {
-        this.setTileAt(pos.x, pos.y, type);
-      });
-    }
-
-    const enemiesLayer = map.getObjectLayer("Random Enemies");
-    if (enemiesLayer) {
-      const enemyPositions = this.generateObjectPositions(enemiesLayer);
-      enemyPositions.forEach(({ type, pos }) => {
-        this.setTileAt(pos.x, pos.y, type);
-      });
-    }
+    tilesToPlace.forEach((tile) => this.setTileAt(tile.pos.x, tile.pos.y, tile.type));
 
     this.updateReachability();
     this.debugDump();
@@ -375,7 +415,7 @@ export default class LevelData {
    * @returns {{x,y}|undefined}
    * @memberof LevelData
    */
-  generateObjectPositions(objectLayer: Tilemaps.ObjectLayer) {
+  generateObjectPositions(objectLayer: Tilemaps.ObjectLayer, takenTiles: Point[] = []) {
     // Find the spawning polygons
     const spawnRegions = objectLayer.objects.filter(
       (obj) => obj.polygon !== undefined || obj.rectangle === true
@@ -424,16 +464,22 @@ export default class LevelData {
 
     // Attempt to find random places for all object tiles - inefficient!
     const objectsToSpawn: Array<{ type: TILE_TYPES; pos: Point }> = [];
+    let placedAllObjects = true;
     spawns.forEach((spawnInfo) => {
       const { polygon, objects } = spawnInfo;
       const blanks = this.getBlanksWithin(polygon);
-      Phaser.Utils.Array.Shuffle(blanks);
-      if (blanks.length < objects.length) {
-        throw new Error("Not enough blanks to spawn an object in the region.");
+      const nonTakenBlanks = blanks.filter(
+        (b) => !takenTiles.find((t) => t.x === b.x && t.y === b.y)
+      );
+      Phaser.Utils.Array.Shuffle(nonTakenBlanks);
+      if (objects.length > nonTakenBlanks.length) {
+        placedAllObjects = false;
       }
-      objects.forEach((type, i) => objectsToSpawn.push({ type, pos: blanks[i] }));
+      objects
+        .slice(0, nonTakenBlanks.length)
+        .forEach((type, i) => objectsToSpawn.push({ type, pos: nonTakenBlanks[i] }));
     });
-    return objectsToSpawn;
+    return { objectsToSpawn, placedAllObjects };
   }
 
   /**
