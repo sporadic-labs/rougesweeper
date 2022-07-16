@@ -143,8 +143,12 @@ export default class GameManager {
 
     if (itemInfo.key === "compass") {
       // TODO: only allow one active compass
-      this.compass = new Compass(this.scene, this.player, this.level);
-      store.removeAmmo("compass", 1);
+      if (this.compass) {
+        this.toastManager.setMessage("A compass is already active!");
+      } else {
+        this.compass = new Compass(this.scene, this.player, this.level);
+        store.removeAmmo("compass", 1);
+      }
     } else if (itemInfo.key === "clearRadar") {
       const success = await this.clearTilesInRadar();
       if (success) {
