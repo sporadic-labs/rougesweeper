@@ -143,8 +143,12 @@ export default class GameManager {
 
     if (itemInfo.key === "compass") {
       // TODO: only allow one active compass
-      this.compass = new Compass(this.scene, this.player, this.level);
-      store.removeAmmo("compass", 1);
+      if (this.compass) {
+        this.toastManager.setMessage("A compass is already active!");
+      } else {
+        this.compass = new Compass(this.scene, this.player, this.level);
+        store.removeAmmo("compass", 1);
+      }
     } else if (itemInfo.key === "clearRadar") {
       const success = await this.clearTilesInRadar();
       if (success) {
@@ -203,7 +207,7 @@ export default class GameManager {
     const canRevealDistantTile = !tile.isRevealed;
 
     if (!canRevealDistantTile) {
-      this.toastManager.setMessage("You can't reveal that tile.");
+      this.toastManager.setMessage("This tile is already revealed!");
       return;
     }
 
@@ -211,7 +215,7 @@ export default class GameManager {
     this.level.disableAllTiles();
 
     await tile.flipToFront();
-    const shouldGetCoin = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
+    const shouldGetCoin = isEnemyTile(tile.type);
     if (shouldGetCoin) {
       const { x, y } = tile.getPosition();
       const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
@@ -243,10 +247,9 @@ export default class GameManager {
       return Promise.resolve(false);
     }
 
-    return tiles.map(async (tile) => {
+    const flipTiles = tiles.map(async (tile) => {
+      const shouldGetCoin = isEnemyTile(tile.type) && !tile.isRevealed;
       await tile.flipToFront();
-      const shouldGetCoin =
-        tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
       if (shouldGetCoin) {
         const { x, y } = tile.getPosition();
         const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
@@ -262,6 +265,11 @@ export default class GameManager {
       }
       return Promise.resolve(true);
     });
+
+    const success = await Promise.all(flipTiles);
+
+    await this.radar.update();
+    return Promise.resolve(success);
   }
 
   async runMoveFlow(tile: Tile, path: Point[]) {
