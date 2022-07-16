@@ -136,6 +136,17 @@ export default class DebugMenu {
       this
     );
     this.proxy.on(scene.input.keyboard, "keydown-G", () => gameStore.addGold(), this);
+    this.proxy.on(scene.input.keyboard, "keydown-Z", () => {
+      gameStore.upgradeItems();
+      gameStore.addAmmo("hack", 5);
+      gameStore.addAmmo("clearRadar", 1);
+      gameStore.addAmmo("revealTile", 1);
+      gameStore.addAmmo("compass", 1);
+    }, this);
+    this.proxy.on(scene.input.keyboard, "keydown-X", () => gameStore.addAmmo("hack", 1), this);
+    this.proxy.on(scene.input.keyboard, "keydown-C", () => gameStore.addAmmo("revealTile", 1), this);
+    this.proxy.on(scene.input.keyboard, "keydown-V", () => gameStore.addAmmo("clearRadar", 1), this);
+    this.proxy.on(scene.input.keyboard, "keydown-B", () => gameStore.addAmmo("compass", 1), this);
   }
 
   loadLevel(i: number) {
