@@ -1,5 +1,5 @@
 import Phaser, { Scene, GameObjects, Tweens, Input } from "phaser";
-import TILE_TYPES, { isEnemyTile } from "./tile-types";
+import TILE_TYPES, { isEnemyTile, isPickup } from "./tile-types";
 import EVENTS from "./events";
 import FlipEffect from "../components/flip-effect";
 import AttackAnimation from "../player/attack-animation";
@@ -135,14 +135,9 @@ export default class Tile {
     return new Promise<void>((resolve) => {
       if (
         this.type === TILE_TYPES.GOLD ||
-        isEnemyTile(this.type) ||
         this.type === TILE_TYPES.KEY ||
-        this.type === TILE_TYPES.ALERT ||
-        this.type === TILE_TYPES.AMMO ||
-        this.type === TILE_TYPES.UPGRADE ||
-        this.type === TILE_TYPES.COMPASS ||
-        this.type === TILE_TYPES.EMP ||
-        this.type === TILE_TYPES.SNIPER
+        isEnemyTile(this.type) ||
+        isPickup(this.type)
       ) {
         if (!this.tileContents) return;
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
@@ -153,12 +148,7 @@ export default class Tile {
         if (
           this.type === TILE_TYPES.GOLD ||
           this.type === TILE_TYPES.KEY ||
-          this.type === TILE_TYPES.AMMO ||
-          this.type === TILE_TYPES.ALERT ||
-          this.type === TILE_TYPES.UPGRADE ||
-          this.type === TILE_TYPES.COMPASS ||
-          this.type === TILE_TYPES.EMP ||
-          this.type === TILE_TYPES.SNIPER
+          isPickup(this.type)
         ) {
           this.tileGraphicTimeline = createPickupAnimation(this.scene, this.tileContents);
         } else if (isEnemyTile(this.type)) {
@@ -191,12 +181,7 @@ export default class Tile {
       if (
         this.type === TILE_TYPES.GOLD ||
         isEnemyTile(this.type) ||
-        this.type === TILE_TYPES.AMMO ||
-        this.type === TILE_TYPES.ALERT ||
-        this.type === TILE_TYPES.UPGRADE ||
-        this.type === TILE_TYPES.COMPASS ||
-        this.type === TILE_TYPES.EMP ||
-        this.type === TILE_TYPES.SNIPER
+        isPickup(this.type)
       ) {
         if (!this.tileContents) return;
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();

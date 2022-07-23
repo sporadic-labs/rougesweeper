@@ -21,6 +21,9 @@ enum TILE_TYPES {
 export const isEnemyTile = (tile: TILE_TYPES) =>
   [TILE_TYPES.SCRAMBLE_ENEMY, TILE_TYPES.ENEMY, TILE_TYPES.SUPER_ENEMY, TILE_TYPES.BOSS].includes(tile);
 
+export const isPickup = (tile: TILE_TYPES) =>
+  [TILE_TYPES.PICKUP, TILE_TYPES.COMPASS, TILE_TYPES.EMP, TILE_TYPES.SNIPER, TILE_TYPES.AMMO, TILE_TYPES.UPGRADE, TILE_TYPES.ALERT].includes(tile);
+
 type DebugMap = { [T in TILE_TYPES]: string };
 const tileTypeToDebugCharacter: DebugMap = {
   [TILE_TYPES.ENTRANCE]: "S",

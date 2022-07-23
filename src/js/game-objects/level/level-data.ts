@@ -1,5 +1,5 @@
 import { Tilemaps, Geom } from "phaser";
-import TILE_TYPES, { default as TILE, tileTypeToDebugCharacter } from "./tile-types";
+import TILE_TYPES, { default as TILE, isEnemyTile, isPickup, tileTypeToDebugCharacter } from "./tile-types";
 import { create2DArray } from "../../helpers/array-utils";
 import logger from "../../helpers/logger";
 import { Point } from "../../helpers/common-interfaces";
@@ -555,15 +555,15 @@ export default class LevelData {
     const grid = debugTiles.map((row) => row.join(" ")).join("\n");
     const flatTiles = this.tiles.flat(1);
     const numTiles = flatTiles.filter((t) => t && t.type !== undefined).length;
-    const numEnemy = flatTiles.filter((t) => t && t.type === TILE.ENEMY).length;
     const numBlank = flatTiles.filter((t) => t && t.type === TILE.BLANK).length;
-    const numGold = flatTiles.filter((t) => t && t.type === TILE.GOLD).length;
+    const numEnemy = flatTiles.filter((t) => t && isEnemyTile(t.type)).length;
+    const numPickups = flatTiles.filter((t) => t && isPickup(t.type)).length;
     const numWall = flatTiles.filter((t) => t && t.type === TILE.WALL).length;
     const stats =
       `Num tiles: ${numTiles}\n` +
       `Enemy tiles: ${numEnemy} (${((numEnemy / numTiles) * 100).toFixed(2)}%)\n` +
       `Blank tiles: ${numBlank} (${((numBlank / numTiles) * 100).toFixed(2)}%)\n` +
-      `Gold tiles: ${numGold} (${((numGold / numTiles) * 100).toFixed(2)}%)\n` +
+      `Pickup tiles: ${numPickups} (${((numPickups / numTiles) * 100).toFixed(2)}%)\n` +
       `Wall tiles: ${numWall} (${((numWall / numTiles) * 100).toFixed(2)}%)`;
     logger.log(`${grid}\n${stats}`);
   }
