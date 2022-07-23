@@ -20,7 +20,6 @@ import Door from "../level/door";
 import Compass from "../hud/compass";
 import { Point } from "../../helpers/common-interfaces";
 import TutorialLogic from "../level/tutorial-logic";
-import EventEmitter from "../../helpers/event-emitter";
 import RandomPickupManager from "../level/random-pickup-manager";
 import AmmoCollectAnimation from "../player/ammo-collect-animation";
 
@@ -291,9 +290,11 @@ export default class GameManager {
       switch (tile.type) {
         case TILE_TYPES.ENEMY:
         case TILE_TYPES.SCRAMBLE_ENEMY:
+          store.removeHealth();
+          break;
         case TILE_TYPES.SUPER_ENEMY:
         case TILE_TYPES.BOSS:
-          store.removeHealth();
+          store.removeHealth(2);
           break;
         case TILE_TYPES.GOLD:
           store.addGold();

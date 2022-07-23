@@ -1,6 +1,6 @@
 import Phaser, { Scene, GameObjects, Tweens, Input } from "phaser";
-import TILE_TYPES from "./tile-types";
-import EVENTS, { LevelEmitter } from "./events";
+import TILE_TYPES, { isEnemyTile } from "./tile-types";
+import EVENTS from "./events";
 import FlipEffect from "../components/flip-effect";
 import AttackAnimation from "../player/attack-animation";
 import DEPTHS, { yPositionToDepth } from "../depths";
@@ -132,10 +132,7 @@ export default class Tile {
     return new Promise<void>((resolve) => {
       if (
         this.type === TILE_TYPES.GOLD ||
-        this.type === TILE_TYPES.ENEMY ||
-        this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
-        this.type === TILE_TYPES.SUPER_ENEMY ||
-        this.type === TILE_TYPES.BOSS ||
+        isEnemyTile(this.type) ||
         this.type === TILE_TYPES.KEY ||
         this.type === TILE_TYPES.ALERT ||
         this.type === TILE_TYPES.AMMO ||
@@ -161,12 +158,7 @@ export default class Tile {
           this.type === TILE_TYPES.SNIPER
         ) {
           this.tileGraphicTimeline = createPickupAnimation(this.scene, this.tileContents);
-        } else if (
-          this.type === TILE_TYPES.ENEMY ||
-          this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
-          this.type === TILE_TYPES.SUPER_ENEMY ||
-          this.type === TILE_TYPES.BOSS
-        ) {
+        } else if (isEnemyTile(this.type)) {
           this.tileGraphicTimeline = createAttackAnimation(this.scene, this.tileContents);
           this.tileGraphicTimeline.on("complete", () => {
             const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(4, 5)}`;
@@ -195,10 +187,7 @@ export default class Tile {
     return new Promise<void>((resolve) => {
       if (
         this.type === TILE_TYPES.GOLD ||
-        this.type === TILE_TYPES.ENEMY ||
-        this.type === TILE_TYPES.SCRAMBLE_ENEMY ||
-        this.type === TILE_TYPES.SUPER_ENEMY ||
-        this.type === TILE_TYPES.BOSS ||
+        isEnemyTile(this.type) ||
         this.type === TILE_TYPES.AMMO ||
         this.type === TILE_TYPES.ALERT ||
         this.type === TILE_TYPES.UPGRADE ||

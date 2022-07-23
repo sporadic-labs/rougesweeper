@@ -1,5 +1,5 @@
 import Phaser, { Tilemaps, Scene, GameObjects } from "phaser";
-import TILE_TYPES from "./tile-types";
+import TILE_TYPES, { isEnemyTile } from "../level/tile-types";
 import Tile from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
@@ -317,7 +317,7 @@ export default class Level {
 
   countNeighboringEnemies(x: number, y: number) {
     const enemyCount = this.getNeighboringTiles(x, y).reduce((count, tile) => {
-      const isEnemy = tile.type === TILE_TYPES.ENEMY || tile.type === TILE_TYPES.SCRAMBLE_ENEMY;
+      const isEnemy = isEnemyTile(tile.type);;
       if (isEnemy && !tile.isCurrentlyBlank) count += 1;
       return count;
     }, 0);
