@@ -34,6 +34,7 @@ export default class Tile {
   private scramblePoser: TweenPoser<FadePoses>;
   private canScramble = false;
   private secondarySelectKey: Input.Keyboard.Key;
+  private overrideTileOffset: boolean;
 
   constructor(
     private scene: Scene,
@@ -44,7 +45,8 @@ export default class Tile {
     private y: number,
     private level: Level,
     public isReachable: boolean,
-    private dialogueData: TileDialogueEntry
+    private dialogueData: TileDialogueEntry,
+    private overrideOffset: boolean
   ) {
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
 
@@ -80,7 +82,8 @@ export default class Tile {
     this.container.setDepth(DEPTHS.BOARD);
 
     if (!this.isCurrentlyBlank && type !== TILE_TYPES.ENTRANCE) {
-      this.tileContents = scene.add.sprite(x, y - 20, "all-assets", frameName);
+      const yPos = this.overrideOffset ? y : y - 20;
+      this.tileContents = scene.add.sprite(x, yPos, "all-assets", frameName);
       this.tileContents.setDepth(yPositionToDepth(y));
     }
 

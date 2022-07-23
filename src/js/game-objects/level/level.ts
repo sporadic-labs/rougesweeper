@@ -53,7 +53,7 @@ export default class Level {
     // Set up the tilemap with necessary statics graphics layers, i.e. everything but the gameboard.
     this.map = scene.add.tilemap(levelKey);
 
-    this.randomPickupManager = randomPickupManager
+    this.randomPickupManager = randomPickupManager;
 
     const tilesSetImage = this.map.addTilesetImage(getTilesetName(this.map));
 
@@ -87,12 +87,11 @@ export default class Level {
       .setDepth(DEPTHS.GROUND)
       .setOrigin(0.5, 0.5);
 
+    // NOTE(rex): If it is one of the last 2 levels, the tiles shouldn't be raised...
+    const overrideTileOffset = levelKey === "level-11" || levelKey === "level-12";
+
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((dataTile, x) => {
-        // TODO: remove the shop from the tile creation here and create it
-        // later. We can drop this when we remove the shop from all tilemap
-        // files.
-        // if (!dataTile || !dataTile.type || dataTile.type === TILE_TYPES.SHOP) return undefined;
         if (!dataTile || !dataTile.type) return undefined;
 
         const { type, phaserTile, isReachable } = dataTile;
@@ -155,7 +154,8 @@ export default class Level {
           this.gridYToWorldY(y),
           this,
           isReachable,
-          dialogueData
+          dialogueData,
+          overrideTileOffset
         );
         tile.setGridPosition(x, y);
         tile.enableInteractive();
@@ -317,7 +317,7 @@ export default class Level {
 
   countNeighboringEnemies(x: number, y: number) {
     const enemyCount = this.getNeighboringTiles(x, y).reduce((count, tile) => {
-      const isEnemy = isEnemyTile(tile.type);;
+      const isEnemy = isEnemyTile(tile.type);
       if (isEnemy && !tile.isCurrentlyBlank) count += 1;
       return count;
     }, 0);
