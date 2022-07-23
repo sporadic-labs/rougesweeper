@@ -87,17 +87,17 @@
   <object id="15" gid="70" x="375" y="675" width="75" height="75"/>
  </objectgroup>
  <objectgroup id="5" name="Random Enemies">
-  <object id="1" x="374.511" y="301.654" width="216.015" height="373.233"/>
+  <object id="1" x="375" y="301.654" width="225" height="373.346"/>
   <object id="2" gid="59" x="449.992" y="600.406" width="75" height="75"/>
   <object id="3" x="594.361" y="299.098" width="230.075" height="375.789"/>
   <object id="4" gid="59" x="750.368" y="595.293" width="75" height="75"/>
-  <object id="6" x="448.647" y="602.03" width="300.376" height="144.436"/>
+  <object id="6" x="450" y="600" width="300" height="150"/>
   <object id="7" x="448.647" y="224.962" width="299.098" height="145.714"/>
   <object id="8" gid="59" x="525.406" y="301.308" width="75" height="75"/>
   <object id="9" gid="59" x="599.541" y="748.677" width="75" height="75"/>
  </objectgroup>
  <objectgroup id="7" name="Random Key">
-  <object id="10" x="525.886" y="228.269" width="369.854" height="520.107"/>
+  <object id="10" x="525" y="225" width="375" height="525"/>
   <object id="11" gid="68" x="600.132" y="300.943" width="75" height="75"/>
  </objectgroup>
 </map>

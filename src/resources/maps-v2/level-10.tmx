@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="10" nextobjectid="57">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="10" nextobjectid="65">
  <editorsettings>
   <export target="level-10.json" format="json"/>
  </editorsettings>
@@ -53,7 +53,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,92,0,0,0,0,128,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,129,0,0,0,0,0,0,0,0,
+0,0,0,0,0,129,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,125,131,0,119,111,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -86,11 +86,11 @@
   <object id="53" gid="105" x="750" y="750" width="75" height="75"/>
   <object id="54" x="825" y="675"/>
  </objectgroup>
- <objectgroup color="#0a16fa" id="4" name="Random Key" opacity="0.67">
+ <objectgroup color="#0a16fa" id="4" name="Random Key">
   <object id="26" x="225" y="225" width="675" height="150"/>
   <object id="42" gid="103" x="225" y="300" width="75" height="75"/>
  </objectgroup>
- <objectgroup color="#e51418" id="5" name="Random Enemies" opacity="0.69">
+ <objectgroup color="#e51418" id="5" name="Random Enemies">
   <object id="25" x="225" y="225" width="450" height="150"/>
   <object id="34" x="375" y="375" width="225" height="300"/>
   <object id="35" x="600" y="300" width="300" height="300"/>
@@ -103,6 +103,15 @@
   <object id="48" gid="94" x="675" y="600" width="75" height="75"/>
   <object id="49" gid="94" x="750" y="675" width="75" height="75"/>
   <object id="56" gid="97" x="825" y="525" width="75" height="75"/>
+  <object id="63" gid="96" x="825" y="375" width="75" height="75"/>
+  <object id="64" gid="96" x="525" y="450" width="75" height="75"/>
  </objectgroup>
- <objectgroup id="8" name="Scramble Enemies"/>
+ <objectgroup id="8" name="Scramble Enemies">
+  <object id="57" x="450" y="300" width="450" height="75"/>
+  <object id="58" x="525" y="525" width="375" height="150"/>
+  <object id="59" x="675" y="225" width="150" height="525"/>
+  <object id="60" gid="95" x="750" y="375" width="75" height="75"/>
+  <object id="61" gid="95" x="525" y="375" width="75" height="75"/>
+  <object id="62" gid="95" x="600" y="600" width="75" height="75"/>
+ </objectgroup>
 </map>

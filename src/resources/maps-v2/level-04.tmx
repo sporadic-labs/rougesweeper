@@ -93,7 +93,6 @@
   <object id="1" x="375" y="225" width="75" height="525"/>
   <object id="6" x="675" y="225" width="150" height="375"/>
   <object id="7" x="450" y="525" width="225" height="150"/>
-  <object id="23" gid="33" x="675" y="450" width="75" height="75"/>
   <object id="24" gid="33" x="675" y="525" width="75" height="75"/>
   <object id="25" gid="33" x="525" y="600" width="75" height="75"/>
   <object id="26" gid="33" x="525" y="675" width="75" height="75"/>

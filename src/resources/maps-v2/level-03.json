@@ -118,14 +118,14 @@
          "name":"Random Enemies",
          "objects":[
                 {
-                 "height":373.233,
+                 "height":373.346,
                  "id":1,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":216.015,
-                 "x":374.511,
+                 "width":225,
+                 "x":375,
                  "y":301.654
                 }, 
                 {
@@ -164,15 +164,15 @@
                  "y":595.293
                 }, 
                 {
-                 "height":144.436,
+                 "height":150,
                  "id":6,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":300.376,
-                 "x":448.647,
-                 "y":602.03
+                 "width":300,
+                 "x":450,
+                 "y":600
                 }, 
                 {
                  "height":145.714,
@@ -221,15 +221,15 @@
          "name":"Random Key",
          "objects":[
                 {
-                 "height":520.107,
+                 "height":525,
                  "id":10,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":369.854,
-                 "x":525.886,
-                 "y":228.269
+                 "width":375,
+                 "x":525,
+                 "y":225
                 }, 
                 {
                  "gid":68,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="24">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="14" tilewidth="75" tileheight="75" infinite="0" nextlayerid="9" nextobjectid="26">
  <editorsettings>
   <export target="level-08.json" format="json"/>
  </editorsettings>
@@ -50,8 +50,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,63,64,0,0,0,0,0,62,0,0,0,0,0,
-0,0,0,0,0,72,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,81,0,0,0,0,0,0,0,0,0,
 0,0,0,43,0,0,0,0,81,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -92,7 +92,7 @@
  <objectgroup id="7" name="Random Enemies">
   <object id="9" x="375" y="225" width="225" height="300"/>
   <object id="10" x="600" y="225" width="300" height="225"/>
-  <object id="11" x="375" y="525" width="300" height="225"/>
+  <object id="11" x="375" y="450" width="300" height="300"/>
   <object id="12" x="675" y="450" width="225" height="300"/>
   <object id="13" gid="45" x="750" y="450" width="75" height="75"/>
   <object id="14" gid="45" x="750" y="525" width="75" height="75"/>
@@ -102,10 +102,12 @@
   <object id="18" gid="45" x="450" y="750" width="75" height="75"/>
   <object id="19" gid="45" x="825" y="750" width="75" height="75"/>
   <object id="20" gid="45" x="825" y="450" width="75" height="75"/>
+  <object id="24" gid="47" x="525" y="300" width="75" height="75"/>
+  <object id="25" gid="47" x="750" y="750" width="75" height="75"/>
  </objectgroup>
  <objectgroup id="6" name="Scramble Enemies">
   <object id="3" x="450" y="300" width="375" height="75"/>
-  <object id="4" x="375" y="525" width="375" height="75"/>
+  <object id="4" x="375" y="525" width="375" height="150"/>
   <object id="5" x="525" y="375" width="375" height="75"/>
   <object id="6" gid="46" x="675" y="375" width="75" height="75"/>
   <object id="7" gid="46" x="600" y="450" width="75" height="75"/>

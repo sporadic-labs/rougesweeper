@@ -154,37 +154,37 @@
          "name":"Random Enemies",
          "objects":[
                 {
-                 "height":225,
+                 "height":300,
                  "id":4,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":150,
-                 "x":675,
-                 "y":525
+                 "width":300,
+                 "x":600,
+                 "y":450
                 }, 
                 {
-                 "height":150,
+                 "height":225,
                  "id":5,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":225,
-                 "x":675,
+                 "width":300,
+                 "x":600,
                  "y":300
                 }, 
                 {
-                 "height":225,
+                 "height":525,
                  "id":7,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":150,
+                 "width":225,
                  "x":375,
-                 "y":525
+                 "y":225
                 }, 
                 {
                  "gid":33,
@@ -233,6 +233,30 @@
                  "width":75,
                  "x":450,
                  "y":675
+                }, 
+                {
+                 "gid":35,
+                 "height":75,
+                 "id":45,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":75,
+                 "x":375,
+                 "y":675
+                }, 
+                {
+                 "gid":33,
+                 "height":75,
+                 "id":46,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":75,
+                 "x":375,
+                 "y":600
                 }],
          "opacity":0.69,
          "type":"objectgroup",
@@ -247,15 +271,15 @@
          "name":"Scramble Enemies",
          "objects":[
                 {
-                 "height":75,
+                 "height":150,
                  "id":35,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":75,
-                 "x":600,
-                 "y":375
+                 "width":150,
+                 "x":450,
+                 "y":300
                 }, 
                 {
                  "height":75,
@@ -264,32 +288,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":75,
-                 "x":375,
-                 "y":300
-                }, 
-                {
-                 "height":75,
-                 "id":37,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":75,
+                 "width":150,
                  "x":525,
                  "y":600
-                }, 
-                {
-                 "gid":34,
-                 "height":75,
-                 "id":38,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":75,
-                 "x":525,
-                 "y":675
                 }, 
                 {
                  "gid":34,
@@ -300,7 +301,7 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":600,
+                 "x":525,
                  "y":450
                 }, 
                 {
@@ -312,8 +313,8 @@
                  "type":"",
                  "visible":true,
                  "width":75,
-                 "x":375,
-                 "y":375
+                 "x":525,
+                 "y":675
                 }],
          "opacity":0.7,
          "type":"objectgroup",
@@ -322,7 +323,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":45,
+ "nextobjectid":47,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
