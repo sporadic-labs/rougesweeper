@@ -15,6 +15,20 @@ import Level from "./level";
 type FadePoses = "FadeOut" | "FadeIn";
 type MagnifyPoses = "ZoomIn" | "ZoomOut";
 
+const isFrameOffset = (frame: string): boolean => {
+  if (
+    frame === "hole-1" ||
+    frame === "rocks-1" ||
+    frame === "rocks-2" ||
+    frame === "ruins-1" ||
+    frame === "ruins-2"
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
+
 export default class Tile {
   public isRevealed = false;
   public gridX = 0;
@@ -45,8 +59,7 @@ export default class Tile {
     private y: number,
     private level: Level,
     public isReachable: boolean,
-    private dialogueData: TileDialogueEntry,
-    private overrideOffset: boolean
+    private dialogueData: TileDialogueEntry
   ) {
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
 
@@ -55,6 +68,8 @@ export default class Tile {
 
     this.gridX = 0;
     this.gridY = 0;
+
+    this.overrideTileOffset = isFrameOffset(frameName);
 
     this.frontSprite = scene.add.sprite(0, 0, "all-assets", tileKey);
     this.backSprite = scene.add.sprite(0, 0, "all-assets", "tile-back-disabled");
@@ -82,7 +97,7 @@ export default class Tile {
     this.container.setDepth(DEPTHS.BOARD);
 
     if (!this.isCurrentlyBlank && type !== TILE_TYPES.ENTRANCE) {
-      const yPos = this.overrideOffset ? y : y - 20;
+      const yPos = this.overrideTileOffset ? y : y - 20;
       this.tileContents = scene.add.sprite(x, yPos, "all-assets", frameName);
       this.tileContents.setDepth(yPositionToDepth(y));
     }
@@ -109,8 +124,9 @@ export default class Tile {
       duration: 250,
       ease: BezierEasing(0.31, 0.68, 0.02, 1.47), // https://cubic-bezier.com/#.17,.67,.83,.67
     });
+    const contentsScale = this.overrideTileOffset ? 1.0 : 1.2
     this.contentsMagnifyPoser.definePoses({
-      ZoomIn: { scaleX: 1.2, scaleY: 1.2 },
+      ZoomIn: { scaleX: contentsScale, scaleY: contentsScale },
       ZoomOut: { scaleX: 0, scaleY: 0 },
     });
     this.contentsMagnifyPoser.setToPose("ZoomOut");

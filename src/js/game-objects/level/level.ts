@@ -87,9 +87,6 @@ export default class Level {
       .setDepth(DEPTHS.GROUND)
       .setOrigin(0.5, 0.5);
 
-    // NOTE(rex): If it is one of the last 2 levels, the tiles shouldn't be raised...
-    const overrideTileOffset = levelKey === "level-11" || levelKey === "level-12";
-
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((dataTile, x) => {
         if (!dataTile || !dataTile.type) return undefined;
@@ -154,8 +151,7 @@ export default class Level {
           this.gridYToWorldY(y),
           this,
           isReachable,
-          dialogueData,
-          overrideTileOffset
+          dialogueData
         );
         tile.setGridPosition(x, y);
         tile.enableInteractive();
