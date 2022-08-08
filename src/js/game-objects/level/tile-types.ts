@@ -16,13 +16,25 @@ enum TILE_TYPES {
   AMMO = "AMMO",
   UPGRADE = "UPGRADE",
   ALERT = "ALERT",
+  WEAPON = "WEAPON",
 }
 
 export const isEnemyTile = (tile: TILE_TYPES) =>
-  [TILE_TYPES.SCRAMBLE_ENEMY, TILE_TYPES.ENEMY, TILE_TYPES.SUPER_ENEMY, TILE_TYPES.BOSS].includes(tile);
+  [TILE_TYPES.SCRAMBLE_ENEMY, TILE_TYPES.ENEMY, TILE_TYPES.SUPER_ENEMY, TILE_TYPES.BOSS].includes(
+    tile
+  );
 
 export const isPickup = (tile: TILE_TYPES) =>
-  [TILE_TYPES.PICKUP, TILE_TYPES.COMPASS, TILE_TYPES.EMP, TILE_TYPES.SNIPER, TILE_TYPES.AMMO, TILE_TYPES.UPGRADE, TILE_TYPES.ALERT].includes(tile);
+  [
+    TILE_TYPES.PICKUP,
+    TILE_TYPES.COMPASS,
+    TILE_TYPES.EMP,
+    TILE_TYPES.SNIPER,
+    TILE_TYPES.AMMO,
+    TILE_TYPES.UPGRADE,
+    TILE_TYPES.ALERT,
+    TILE_TYPES.WEAPON,
+  ].includes(tile);
 
 type DebugMap = { [T in TILE_TYPES]: string };
 const tileTypeToDebugCharacter: DebugMap = {
@@ -43,6 +55,7 @@ const tileTypeToDebugCharacter: DebugMap = {
   [TILE_TYPES.AMMO]: "8",
   [TILE_TYPES.UPGRADE]: "8",
   [TILE_TYPES.ALERT]: "8",
+  [TILE_TYPES.WEAPON]: "H",
 };
 
 export { tileTypeToDebugCharacter };

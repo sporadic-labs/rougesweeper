@@ -27,6 +27,8 @@ class GameStore {
   maxPlayerAmmo: number;
   playerAmmo: number;
   pauseMenuOpen: boolean;
+  hasWeapon: boolean;
+  hasSeenTutorial: boolean;
 
   // Inventory Stuff
   items: Record<ItemKey, Item>;
@@ -113,6 +115,15 @@ class GameStore {
     return this.allItems.filter((item) => item.hasUnlocked);
   }
 
+  setHasWeapon(hasWeapon: boolean) {
+    this.hasWeapon = hasWeapon;
+  }
+
+  setHasSeenTutorial(hasSeenTutorial: boolean) {
+    this.hasSeenTutorial = hasSeenTutorial;
+    storedSettings.setHasSeenTutorial(hasSeenTutorial)
+  }
+
   setPauseMenuOpen(pauseMenuOpen: boolean) {
     this.pauseMenuOpen = pauseMenuOpen;
   }
@@ -125,8 +136,10 @@ class GameStore {
     this.maxPlayerHealth = 4;
     this.playerHealth = this.maxPlayerHealth;
     this.moveCount = 0;
-    this.levelIndex = storedSettings.startingLevel;
+    this.levelIndex = storedSettings.startingLevel === 0 && storedSettings.hasSeenTutorial ? 1 : storedSettings.startingLevel;
     this.hasKey = false;
+    this.hasSeenTutorial = storedSettings.hasSeenTutorial;
+    this.hasWeapon = storedSettings.hasSeenTutorial ? true : false; // TODO(rex): Make this conditional based on whether the player needs to do the tutorial or not...
     this.pauseMenuOpen = false;
     this.activeItemKey = "hack";
     this.items = {

@@ -6,6 +6,7 @@ import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
 import { levelKeys } from "../../store/levels";
 import storedSettings from "../../store/stored-settings";
+import MobXProxy from "../../helpers/mobx-proxy";
 
 const baseTextStyle = {
   align: "center",
@@ -70,6 +71,8 @@ export default class DebugMenu {
   isOpen = false;
   levelSelectButtons: LevelSelectButton[];
   closeButton: TextButton;
+  showTutorialButton: TextButton;
+  public mobxProxy: MobXProxy;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
@@ -95,9 +98,22 @@ export default class DebugMenu {
     closeButton.events.on("DOWN", this.close);
     this.closeButton = closeButton;
 
+    const showTutorialButton = new TextButton(
+      scene,
+      r.right - 160,
+      r.bottom - 30,
+      "Show Tutorial",
+      {
+        origin: { x: 0.5, y: 1 },
+      }
+    );
+    showTutorialButton.events.on("DOWN", this.showTutorial);
+    if (!gameStore.hasSeenTutorial) showTutorialButton.disableInteractivity();
+    this.showTutorialButton = showTutorialButton;
+
     const levelSelectButtons = levelKeys.map((name, i) => {
-      const col = i % 3;
-      const row = Math.floor(i / 3)
+      const col = i % 4;
+      const row = Math.floor(i / 4);
 
       const y = r.y + 125 + row * 100;
       const x = r.x + 100 + col * 300;
@@ -118,6 +134,7 @@ export default class DebugMenu {
         background,
         title,
         closeButton.text,
+        showTutorialButton.text,
         ...this.levelSelectButtons.map((b) => b.container),
       ])
       .setDepth(DEPTHS.MENU)
@@ -136,21 +153,44 @@ export default class DebugMenu {
       this
     );
     this.proxy.on(scene.input.keyboard, "keydown-G", () => gameStore.addGold(), this);
-    this.proxy.on(scene.input.keyboard, "keydown-Z", () => {
-      gameStore.upgradeItems();
-      gameStore.addAmmo("hack", 5);
-      gameStore.addAmmo("clearRadar", 1);
-      gameStore.addAmmo("revealTile", 1);
-      gameStore.addAmmo("compass", 1);
-    }, this);
+    this.proxy.on(
+      scene.input.keyboard,
+      "keydown-Z",
+      () => {
+        gameStore.upgradeItems();
+        gameStore.addAmmo("hack", 5);
+        gameStore.addAmmo("clearRadar", 1);
+        gameStore.addAmmo("revealTile", 1);
+        gameStore.addAmmo("compass", 1);
+      },
+      this
+    );
     this.proxy.on(scene.input.keyboard, "keydown-X", () => gameStore.addAmmo("hack", 1), this);
-    this.proxy.on(scene.input.keyboard, "keydown-C", () => gameStore.addAmmo("revealTile", 1), this);
-    this.proxy.on(scene.input.keyboard, "keydown-V", () => gameStore.addAmmo("clearRadar", 1), this);
+    this.proxy.on(
+      scene.input.keyboard,
+      "keydown-C",
+      () => gameStore.addAmmo("revealTile", 1),
+      this
+    );
+    this.proxy.on(
+      scene.input.keyboard,
+      "keydown-V",
+      () => gameStore.addAmmo("clearRadar", 1),
+      this
+    );
     this.proxy.on(scene.input.keyboard, "keydown-B", () => gameStore.addAmmo("compass", 1), this);
+
+    this.mobxProxy = new MobXProxy();
+    this.mobxProxy.observe(gameStore, "hasSeenTutorial", () => {
+      if (gameStore.hasSeenTutorial) this.showTutorialButton.enableInteractivity();
+      else this.showTutorialButton.disableInteractivity();
+    });
   }
 
   loadLevel(i: number) {
     this.close();
+    // If you are loading the tutorial, reset the weapon state.
+    if (i === 0) this.gameStore.setHasWeapon(false);
     this.gameStore.setLevelByIndex(i);
   }
 
@@ -167,6 +207,10 @@ export default class DebugMenu {
     this.gameStore.goToPreviousGameState();
   };
 
+  showTutorial = () => {
+    this.gameStore.setHasSeenTutorial(false);
+  };
+
   resetButtons() {
     // Manually call this when closing menu because of bug where button stays in pressed state
     this.levelSelectButtons.forEach((b) => b.reset());
@@ -176,5 +220,6 @@ export default class DebugMenu {
   destroy() {
     this.container.destroy();
     this.proxy.removeAll();
+    this.mobxProxy.destroy();
   }
 }

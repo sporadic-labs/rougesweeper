@@ -3,14 +3,17 @@ import localStorage from "store";
 
 class StoredSettings {
   private defaultStartingLevel = 0;
-  private defaultStartingGold = 3;
+  private defaultStartingGold = 0;
+  private defaultHasSeenTutorial = false;
   @observable startingLevel: number = this.defaultStartingLevel;
   @observable startingGold: number = this.defaultStartingGold;
+  @observable hasSeenTutorial: boolean = this.defaultHasSeenTutorial;
 
   constructor() {
     if (!IS_PRODUCTION) {
       this.startingLevel = localStorage.get("startingLevel") ?? this.defaultStartingLevel;
       this.startingGold = localStorage.get("startingGold") ?? this.defaultStartingGold;
+      this.hasSeenTutorial = localStorage.get("hasSeenTutorial") ?? this.defaultHasSeenTutorial;
     }
   }
 
@@ -22,6 +25,11 @@ class StoredSettings {
   @action setStartingGold(startingGold: number) {
     this.startingGold = startingGold;
     localStorage.set("startingGold", this.startingGold);
+  }
+
+  @action setHasSeenTutorial(hasSeenTutorial: boolean) {
+    this.hasSeenTutorial = hasSeenTutorial;
+    localStorage.set("hasSeenTutorial", this.hasSeenTutorial);
   }
 }
 

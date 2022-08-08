@@ -111,6 +111,7 @@ export default class GameManager {
 
     await this.movePlayerAlongPath(path);
     this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
+    this.events.emit(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.player);
     this.events.emit(GAME_EVENTS.EXIT_SELECT, door);
 
     if (this.level.exit.isOpen()) {
@@ -333,14 +334,11 @@ export default class GameManager {
       await this.movePlayerToTile(tileGridPos.x, tileGridPos.y);
     }
 
-    this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
-
-    // if there is dialogue, play it
-    const playerGridPos = this.player.getGridPosition();
-    const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
-
     await this.radar.update();
     this.flipTilesIfClear();
+
+    const playerGridPos = this.player.getGridPosition();
+    const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
 
     // if the tile is the EXIT, check if the player has the correct conditions to finish the level
     if (currentTile.type === TILE_TYPES.EXIT) {
@@ -363,11 +361,23 @@ export default class GameManager {
     // Apply any effect that need to happen at the end of moving.
     switch (tile.type) {
       case TILE_TYPES.KEY:
-        store.setHasKey(true);
-        this.level.exit.open();
-        this.level.exit.flipTileToFront();
+        if (!store.hasKey) {
+          store.setHasKey(true);
+          this.level.exit.open();
+          this.level.exit.flipTileToFront();
+          this.tutorialLogic.onTileClick(TILE_TYPES.KEY);
+        }
+        break;
+      case TILE_TYPES.WEAPON:
+        if (!store.hasWeapon) {
+          store.setHasWeapon(true)
+          this.tutorialLogic.onTileClick(TILE_TYPES.WEAPON);
+        }
         break;
     }
+
+    this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
+    this.events.emit(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.player);
   }
 
   /**
@@ -407,6 +417,9 @@ export default class GameManager {
 
     this.level.enableAllTiles();
     this.startIdleFlow();
+
+    this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
+    this.events.emit(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.player);
   }
 
   private flipTilesIfClear() {
@@ -484,6 +497,7 @@ export default class GameManager {
       this.dialogueManager,
       this.level,
       store.level,
+      this.player,
       this.events
     );
 

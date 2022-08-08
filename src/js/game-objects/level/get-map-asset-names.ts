@@ -28,6 +28,7 @@ export function getTilesetName(map: Phaser.Tilemaps.Tilemap): LevelTilesetName {
 
 export function getTileFrame(levelKey: string): string {
   switch (levelKey.slice(0, 8)) {
+    case "level-00":
     case "level-01":
     case "level-02":
     case "level-03":

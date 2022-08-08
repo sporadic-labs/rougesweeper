@@ -8,6 +8,12 @@ const levelData: Array<{
   tiles: Array<{ x: number; y: number }>;
 }> = [
   {
+    level: "level-00",
+    title: "Headquarters",
+    subtitle: "Tutorial",
+    tiles: [],
+  },
+  {
     level: "level-01",
     title: "Headquarters",
     subtitle: "Floor 1",

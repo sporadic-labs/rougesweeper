@@ -290,12 +290,12 @@ export default class Tile {
     this.level.events.emit(EVENTS.TILE_OUT, this);
   };
 
-  async flipToFront(): Promise<void> {
+  async flipToFront(showContents = true): Promise<void> {
     if (this.isRevealed) return;
     this.isRevealed = true;
     if (!this.isCurrentlyBlank && this.tileContents) {
       this.flipEffect.events.once("halfway", () => {
-        this.tileContents.setVisible(true);
+        if (showContents) this.tileContents.setVisible(true);
         this.contentsMagnifyPoser.moveToPose("ZoomIn");
       });
     }
