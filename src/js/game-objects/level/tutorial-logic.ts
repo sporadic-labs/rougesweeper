@@ -70,7 +70,11 @@ class Level0Tutorial implements FloorTutorial {
     this.dialogueManager.playDialogue({
       title: "Tutorial",
       imageKey: "player-m",
-      text: ["I need to get to the next level..."],
+      text: [
+        "I finally made it into the enemy HQ!",
+        "Need to move quickly to find the stolen tech!",
+        "Left-Click on an Empty Tile to move to it.",
+      ],
     });
   }
 
@@ -84,17 +88,34 @@ class Level0Tutorial implements FloorTutorial {
     this.dialogueManager.playDialogue({
       title: "Tutorial",
       imageKey: "player-m",
-      text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
+      text: [
+        "I need to find a key to get through!",
+        "Find the Key pickup hidden somewhere in the level.",
+      ],
     });
   }
 
   async onTileClick(tileType: TILE_TYPES) {
     if (tileType === TILE_TYPES.WEAPON) {
-      this.dialogueManager.playDialogue({
-        title: "Tutorial",
-        imageKey: "player-m",
-        text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
-      });
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "Ah! I must have tripped the security alarm.",
+            "Need to move carefully!",
+            "Left-Click a Hidden Tile to reveal it.",
+          ],
+        },
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "This futuristic weapon will help me hack the system!",
+            "Right-Click to use the equipped weapon.  Use the Arrow Keys to cycle through weapons.",
+          ],
+        },
+      ]);
 
       // Hide everything when you pickup the weapon
       const playerGridPos = this.player.getGridPosition();
@@ -114,14 +135,30 @@ class Level0Tutorial implements FloorTutorial {
       this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-m",
-        text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
+        text: [
+          "This Key should let me get through that locked door!",
+          "Once you have cleared a path, Left-Click the Door to move on to the next level.",
+        ],
       });
     } else if (tileType === TILE_TYPES.ENEMY) {
-      this.dialogueManager.playDialogue({
-        title: "Tutorial",
-        imageKey: "player-m",
-        text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
-      });
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "That drone was communicating with the security system...",
+            "I need to hack the enemy drones before I am seen!",
+          ],
+        },
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "Hacking a drone will remove it as a threat.",
+            "Revealing a drone without hacking it will increase your Alert Level.",
+          ],
+        },
+      ]);
     }
   }
 
@@ -133,7 +170,7 @@ class Level0Tutorial implements FloorTutorial {
       this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-m",
-        text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
+        text: ["This radar is blaring...", "An enemy must be nearby!", "Equip 'Hack' and Right-Click on the hidden tile with the Enemy to neutralize the threat."],
       });
     }
   }

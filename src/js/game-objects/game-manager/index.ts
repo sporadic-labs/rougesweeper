@@ -131,7 +131,7 @@ export default class GameManager {
 
   onTileSelectForActiveItem = async (tile: Tile) => {
     // TODO: need to switch game mode while this is happening to prevent multiple actions?
-    
+
     // If the player doesn't have a weapon yet, they can't do anything!
     if (!store.hasWeapon) {
       this.toastManager.setMessage("No way to hack!");
@@ -297,31 +297,40 @@ export default class GameManager {
       switch (tile.type) {
         case TILE_TYPES.ENEMY:
         case TILE_TYPES.SCRAMBLE_ENEMY:
+          this.tutorialLogic.onTileClick(tile.type);
           store.removeHealth();
           break;
         case TILE_TYPES.SUPER_ENEMY:
         case TILE_TYPES.BOSS:
+          this.tutorialLogic.onTileClick(tile.type);
           store.removeHealth(2);
           break;
         case TILE_TYPES.GOLD:
+          this.tutorialLogic.onTileClick(tile.type);
           store.addGold();
           break;
         case TILE_TYPES.COMPASS:
+          this.tutorialLogic.onTileClick(tile.type);
           store.addAmmo("compass", 1);
           break;
         case TILE_TYPES.SNIPER:
+          this.tutorialLogic.onTileClick(tile.type);
           store.addAmmo("revealTile", 1);
           break;
         case TILE_TYPES.EMP:
+          this.tutorialLogic.onTileClick(tile.type);
           store.addAmmo("clearRadar", 1);
           break;
         case TILE_TYPES.AMMO:
+          this.tutorialLogic.onTileClick(tile.type);
           store.addAmmo("hack", 5);
           break;
         case TILE_TYPES.ALERT:
+          this.tutorialLogic.onTileClick(tile.type);
           store.addHealth();
           break;
         case TILE_TYPES.UPGRADE:
+          this.tutorialLogic.onTileClick(tile.type);
           store.upgradeItems();
           store.addAmmo("hack", 5);
           store.addAmmo("clearRadar", 1);
@@ -371,14 +380,14 @@ export default class GameManager {
           store.setHasKey(true);
           this.level.exit.open();
           this.level.exit.flipTileToFront();
-          this.tutorialLogic.onTileClick(TILE_TYPES.KEY);
+          this.tutorialLogic.onTileClick(tile.type);
         }
         break;
       case TILE_TYPES.WEAPON:
         if (!store.hasWeapon) {
           store.setHasWeapon(true);
-          store.setAmmo("hack", 10)
-          this.tutorialLogic.onTileClick(TILE_TYPES.WEAPON);
+          store.setAmmo("hack", 10);
+          this.tutorialLogic.onTileClick(tile.type);
         }
         break;
     }
@@ -405,6 +414,9 @@ export default class GameManager {
       attackAnim.fadeout().then(() => attackAnim.destroy()),
       tile.playTileDestructionAnimation(),
     ]);
+
+    this.tutorialLogic.onTileClick(tile.type);
+
     if (isEnemyTile(tile.type)) {
       store.addGold();
       store.addEnemiesDefeated();
