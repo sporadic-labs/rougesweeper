@@ -400,6 +400,7 @@ export default class GameManager {
     ]);
     if (isEnemyTile(tile.type)) {
       store.addGold();
+      store.addEnemiesDefeated();
       if (Phaser.Math.RND.integerInRange(1, 100) <= 33) {
         const ammoAnim = new AmmoCollectAnimation(this.scene, x - 40, y);
         await ammoAnim.play();

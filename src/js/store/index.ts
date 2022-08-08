@@ -22,6 +22,7 @@ class GameStore {
   maxPlayerHealth: number;
   playerHealth: number;
   moveCount: number;
+  enemiesDefeated: number;
   levelIndex: number;
   hasKey: boolean;
   maxPlayerAmmo: number;
@@ -88,6 +89,9 @@ class GameStore {
   addMove(amt = 1) {
     if (this.moveCount >= 0) this.moveCount += amt;
   }
+  addEnemiesDefeated(amt = 1) {
+    if (this.enemiesDefeated >= 0) this.enemiesDefeated += amt;
+  }
   nextLevel() {
     if (this.levelIndex < levelKeys.length) this.levelIndex += 1;
   }
@@ -136,6 +140,7 @@ class GameStore {
     this.maxPlayerHealth = 4;
     this.playerHealth = this.maxPlayerHealth;
     this.moveCount = 0;
+    this.enemiesDefeated = 0;
     this.levelIndex = storedSettings.startingLevel === 0 && storedSettings.hasSeenTutorial ? 1 : storedSettings.startingLevel;
     this.hasKey = false;
     this.hasSeenTutorial = storedSettings.hasSeenTutorial;
