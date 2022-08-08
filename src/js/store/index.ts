@@ -65,14 +65,20 @@ class GameStore {
   removeAmmo(itemName: ItemKey, amt: number) {
     this.setAmmo(itemName, this.items[itemName].ammo - amt);
   }
+  removeAllAmmo() {
+    this.items.hack.ammo = 0;
+    this.items.revealTile.ammo = 0;
+    this.items.clearRadar.ammo = 0;
+    this.items.compass.ammo = 0;
+  }
   unlockItem(itemName: ItemKey) {
     this.items[itemName].hasUnlocked = true;
   }
   upgradeItems() {
-    this.items.hack.capacity += 5
-    this.items.revealTile.capacity += 1
-    this.items.clearRadar.capacity += 1
-    this.items.compass.capacity += 1
+    this.items.hack.capacity += 5;
+    this.items.revealTile.capacity += 1;
+    this.items.clearRadar.capacity += 1;
+    this.items.compass.capacity += 1;
   }
   setActiveItem(itemName: ItemKey) {
     this.activeItemKey = itemName;
@@ -125,7 +131,7 @@ class GameStore {
 
   setHasSeenTutorial(hasSeenTutorial: boolean) {
     this.hasSeenTutorial = hasSeenTutorial;
-    storedSettings.setHasSeenTutorial(hasSeenTutorial)
+    storedSettings.setHasSeenTutorial(hasSeenTutorial);
   }
 
   setPauseMenuOpen(pauseMenuOpen: boolean) {
@@ -141,10 +147,15 @@ class GameStore {
     this.playerHealth = this.maxPlayerHealth;
     this.moveCount = 0;
     this.enemiesDefeated = 0;
-    this.levelIndex = storedSettings.startingLevel === 0 && storedSettings.hasSeenTutorial ? 1 : storedSettings.startingLevel;
+    // NOTE(rex): If we have already seen the tutorial, skip to level 1.
+    this.levelIndex =
+      storedSettings.startingLevel === 0 && storedSettings.hasSeenTutorial
+        ? 1
+        : storedSettings.startingLevel;
     this.hasKey = false;
     this.hasSeenTutorial = storedSettings.hasSeenTutorial;
-    this.hasWeapon = storedSettings.hasSeenTutorial ? true : false; // TODO(rex): Make this conditional based on whether the player needs to do the tutorial or not...
+    const hasWeapon = storedSettings.hasSeenTutorial ? true : false
+    this.hasWeapon = hasWeapon;
     this.pauseMenuOpen = false;
     this.activeItemKey = "hack";
     this.items = {
@@ -152,14 +163,14 @@ class GameStore {
         key: "hack",
         imageKey: "weapon-icon-v2",
         label: "Hack",
-        ammo: 10,
+        ammo: hasWeapon ? 10 : 0,
         capacity: 10,
         hasUnlocked: true,
       },
       revealTile: {
         key: "revealTile",
         imageKey: "sniper-pickup-v2",
-        label: "Reveal",
+        label: "Snipe",
         ammo: 0,
         capacity: 1,
         hasUnlocked: true, // Should be false to start, testing
@@ -167,7 +178,7 @@ class GameStore {
       clearRadar: {
         key: "clearRadar",
         imageKey: "emp-pickup-v2",
-        label: "Clear",
+        label: "EMP",
         ammo: 0,
         capacity: 1,
         hasUnlocked: true, // Should be false to start, testing

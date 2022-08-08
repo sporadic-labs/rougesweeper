@@ -6,6 +6,7 @@ import { GameStore } from "../../store";
 import TweenPoser from "../components/tween-poser";
 import EventEmitter from "../../helpers/event-emitter";
 import GAME_MODES from "../game-manager/game-modes";
+import MobXProxy from "../../helpers/mobx-proxy";
 
 const textStyle = {
   color: "#585e5e",
@@ -115,14 +116,15 @@ export default class ItemSwitcher {
   private dispose: IReactionDisposer;
   private leftKey: Phaser.Input.Keyboard.Key;
   private rightKey: Phaser.Input.Keyboard.Key;
+  private mobxProxy: MobXProxy;
 
   constructor(private scene: Phaser.Scene, private gameStore: GameStore) {
-    const size = { x: 1.5 * 96, y: 1.5 * 110 };
-    const padding = 12;
+    const size = { x: 1.72 * 96, y: 1.72 * 132 };
+    const padding = 16;
 
     this.weaponSprite = scene.add
-      .sprite(size.x * 0.5, size.y * 0.27, "all-assets", gameStore.activeItemInfo.imageKey)
-      .setDisplaySize(size.x * 0.46, size.x * 0.46)
+      .sprite(size.x * 0.5, size.y * 0.18, "all-assets", gameStore.activeItemInfo.imageKey)
+      .setDisplaySize(size.x * 0.8, size.x * 0.8)
       .setOrigin(0.5, 0);
 
     this.nameText = scene.add.text(size.x * 0.5, padding, "", textStyle).setOrigin(0.5, 0);
@@ -133,8 +135,8 @@ export default class ItemSwitcher {
       .setStrokeStyle(8, 0x585e5e, 1)
       .setOrigin(0, 0);
 
-    this.leftButton = new ArrowButton(scene, size.x * 0.17, size.y * 0.48, "left");
-    this.rightButton = new ArrowButton(scene, size.x * 0.83, size.y * 0.48, "right");
+    this.leftButton = new ArrowButton(scene, size.x * 0.15, size.y * 0.88, "left");
+    this.rightButton = new ArrowButton(scene, size.x * 0.85, size.y * 0.88, "right");
     this.leftButton.events.addListener("pointerdown", this.onArrowButtonClick);
     this.rightButton.events.addListener("pointerdown", this.onArrowButtonClick);
     this.container = scene.add
@@ -149,6 +151,10 @@ export default class ItemSwitcher {
       ])
       .setDepth(DEPTHS.HUD);
 
+    // If the user doesn't have the weapon yet, disable it.
+    // TODO(rex): For some reason this isn't working...
+    if (gameStore.hasWeapon) this.container.disableInteractive();
+
     this.dispose = autorun(() => this.updateState());
     this.updateState();
 
@@ -160,6 +166,13 @@ export default class ItemSwitcher {
     this.rightKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     this.proxy.on(this.leftKey, "down", () => this.shiftActiveItem("left"));
     this.proxy.on(this.rightKey, "down", () => this.shiftActiveItem("right"));
+
+    // TODO(rex): For some reason this isn't working...
+    this.mobxProxy = new MobXProxy();
+    this.mobxProxy.observe(gameStore, "hasWeapon", () => {
+      if (gameStore.hasWeapon) this.container.setInteractive();
+      else this.container.disableInteractive();
+    });
   }
 
   private shiftActiveItem(direction: "left" | "right") {
@@ -203,5 +216,6 @@ export default class ItemSwitcher {
     this.dispose();
     this.container.destroy();
     this.proxy.removeAll();
+    this.mobxProxy.destroy();
   }
 }

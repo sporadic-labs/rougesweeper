@@ -72,7 +72,7 @@ export default class DebugMenu {
   levelSelectButtons: LevelSelectButton[];
   closeButton: TextButton;
   showTutorialButton: TextButton;
-  public mobxProxy: MobXProxy;
+  private mobxProxy: MobXProxy;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
@@ -190,7 +190,10 @@ export default class DebugMenu {
   loadLevel(i: number) {
     this.close();
     // If you are loading the tutorial, reset the weapon state.
-    if (i === 0) this.gameStore.setHasWeapon(false);
+    if (i === 0) {
+      this.gameStore.removeAllAmmo();
+      this.gameStore.setHasWeapon(false);
+    }
     this.gameStore.setLevelByIndex(i);
   }
 

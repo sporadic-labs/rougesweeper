@@ -131,6 +131,12 @@ export default class GameManager {
 
   onTileSelectForActiveItem = async (tile: Tile) => {
     // TODO: need to switch game mode while this is happening to prevent multiple actions?
+    
+    // If the player doesn't have a weapon yet, they can't do anything!
+    if (!store.hasWeapon) {
+      this.toastManager.setMessage("No way to hack!");
+      return;
+    }
 
     const playerGridPos = this.player.getGridPosition();
     const tileGridPos = tile.getGridPosition();
@@ -370,7 +376,8 @@ export default class GameManager {
         break;
       case TILE_TYPES.WEAPON:
         if (!store.hasWeapon) {
-          store.setHasWeapon(true)
+          store.setHasWeapon(true);
+          store.setAmmo("hack", 10)
           this.tutorialLogic.onTileClick(TILE_TYPES.WEAPON);
         }
         break;

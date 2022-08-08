@@ -36,6 +36,7 @@ class Level0Tutorial implements FloorTutorial {
   private player: Player;
   private dialogueManager: DialogueManager;
   private hasFinishedFloor0Tutorial = false;
+  private hasSeenAnEnemy = false;
   private gameEvents: GameEmitter;
 
   constructor(
@@ -59,11 +60,10 @@ class Level0Tutorial implements FloorTutorial {
     this.gameEvents.addListener(GAME_EVENTS.EXIT_SELECT, this.onExitClick, this);
     this.gameEvents.addListener(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.onPlayerFinishMove, this);
 
-    this.level.forEachTile(t => {
-      if (t.type === TILE_TYPES.ENEMY || t.type === TILE_TYPES.KEY) t.flipToFront(false)
-      else t.flipToFront()
+    this.level.forEachTile((t) => {
+      if (t.type === TILE_TYPES.ENEMY || t.type === TILE_TYPES.KEY) t.flipToFront(false);
+      else t.flipToFront();
     });
-
   }
 
   async onLevelStart() {
@@ -77,7 +77,7 @@ class Level0Tutorial implements FloorTutorial {
   async onExitClick() {
     // Hide everything when you touched the locked door
     if (store.hasKey) {
-      store.setHasSeenTutorial(true)
+      store.setHasSeenTutorial(true);
       return;
     }
 
@@ -93,17 +93,18 @@ class Level0Tutorial implements FloorTutorial {
       this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-m",
-        text: [
-          "Ah! I must have tripped the security alarm. I need to find a key to get through.",
-        ],
+        text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
       });
-      
+
       // Hide everything when you pickup the weapon
       const playerGridPos = this.player.getGridPosition();
-      const tilesAroundPlayer = this.level.getNeighboringTiles(playerGridPos.x, playerGridPos.y)
+      const tilesAroundPlayer = this.level.getNeighboringTiles(playerGridPos.x, playerGridPos.y);
       this.level.forEachTile((t) => {
         // Figure out if the tiles are around the player.
-        if (tilesAroundPlayer.includes(t) || (t.gridX === playerGridPos.x && t.gridY === playerGridPos.y)) {
+        if (
+          tilesAroundPlayer.includes(t) ||
+          (t.gridX === playerGridPos.x && t.gridY === playerGridPos.y)
+        ) {
           // Do nothing...
         } else {
           t.flipToBack();
@@ -113,18 +114,13 @@ class Level0Tutorial implements FloorTutorial {
       this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-m",
-        text: [
-          "Ah! I must have tripped the security alarm. I need to find a key to get through.",
-        ],
+        text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
       });
-    
     } else if (tileType === TILE_TYPES.ENEMY) {
       this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-m",
-        text: [
-          "Ah! I must have tripped the security alarm. I need to find a key to get through.",
-        ],
+        text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
       });
     }
   }
@@ -132,13 +128,12 @@ class Level0Tutorial implements FloorTutorial {
   async onPlayerFinishMove() {
     const playerGridPos = this.player.getGridPosition();
     const enemyCount = this.level.countNeighboringEnemies(playerGridPos.x, playerGridPos.y);
-    if (enemyCount > 0) {
+    if (enemyCount > 0 && !this.hasSeenAnEnemy) {
+      this.hasSeenAnEnemy = true;
       this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-m",
-        text: [
-          "Ah! I must have tripped the security alarm. I need to find a key to get through.",
-        ],
+        text: ["Ah! I must have tripped the security alarm. I need to find a key to get through."],
       });
     }
   }
