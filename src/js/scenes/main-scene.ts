@@ -35,5 +35,18 @@ export default class MainScene extends Scene {
     new ItemSwitcher(this, store);
     new PauseToggle(this, store);
     new LevelIndicator(this, store);
+
+    // Example code, remove me when implemented.
+    // See this reference: https://github.com/jdotrjs/phaser3-nineslice#2-use-the-plugin-to-make-9-sliced-objects
+    // const testPanel = this.add.nineslice(
+    //   110,
+    //   110,
+    //   340,
+    //   240,
+    //   // @ts-expect-error Bad plugin types!
+    //   { key: "all-assets", frame: "panel_blue" },
+    //   88,
+    //   24
+    // );
   }
 }

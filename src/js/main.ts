@@ -6,6 +6,7 @@ import { SCENE_NAME, installScenes } from "./scenes";
 import disableRightClickMenu from "./helpers/disable-right-click-menu";
 import { gameWidth, gameHeight } from "./game-dimensions";
 import PhaserTiledExternalTilesetPlugin from "./plugins/phaser-tiled-json-external-loader";
+import { Plugin as NineSlicePlugin } from "phaser3-nineslice";
 
 const containerId = "game-container";
 const game = new Game({
@@ -25,6 +26,7 @@ const game = new Game({
         plugin: PhaserTiledExternalTilesetPlugin,
         start: true,
       },
+      NineSlicePlugin.DefaultCfg,
     ],
   },
   physics: {
