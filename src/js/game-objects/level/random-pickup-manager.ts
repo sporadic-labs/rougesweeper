@@ -9,7 +9,7 @@ export default class RandomPickupManager {
     const pickupList = this.generatePickupList()
 
     levelKeys.forEach((key, i) => {
-      if ((i + 1) % 3 === 0) {
+      if ((i + 1) % 3 === 1) {
         this.pickupOrder[key] = [TILE_TYPES.UPGRADE, TILE_TYPES.ALERT, ...pickupList.splice(0, 1)];
       } else {
         this.pickupOrder[key] = pickupList.splice(0, 2);

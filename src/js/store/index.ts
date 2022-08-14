@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import GAME_MODES from "../game-objects/game-manager/game-modes";
+import TILE_TYPES from "../game-objects/level/tile-types";
 import { levelKeys } from "./levels";
 import storedSettings from "./stored-settings";
 
@@ -13,6 +14,21 @@ interface Item {
 }
 
 export type ItemKey = "hack" | "revealTile" | "clearRadar" | "compass";
+
+interface TutorialFlags {
+  hasWeapon: boolean;
+  hasSeenEnemy: boolean;
+  hasSeenScrambleEnemy: boolean;
+  hasSeenScrambledTile: boolean;
+  hasSeenSuperEnemy: boolean;
+  hasSeenBoss: boolean;
+  hasSeenAmmo: boolean;
+  hasSeenSniper: boolean;
+  hasSeenEmp: boolean;
+  hasSeenCompass: boolean;
+  hasSeenUpgrade: boolean;
+  hasSeenResetAlarm: boolean;
+}
 
 class GameStore {
   previousGameState: GAME_MODES;
@@ -28,8 +44,9 @@ class GameStore {
   maxPlayerAmmo: number;
   playerAmmo: number;
   pauseMenuOpen: boolean;
-  hasWeapon: boolean;
   hasSeenTutorial: boolean;
+  hasWeapon: boolean;
+  tutorialFlags: TutorialFlags;
 
   // Inventory Stuff
   items: Record<ItemKey, Item>;
@@ -134,6 +151,39 @@ class GameStore {
     storedSettings.setHasSeenTutorial(hasSeenTutorial);
   }
 
+  // hasWeapon: boolean;
+  // hasSeenEnemy: boolean;
+  // hasSeenScrambleEnemy: boolean;
+  // hasSeenScrambledTile: boolean;
+  // hasSeenSuperEnemy: boolean;
+  // hasSeenBoss: boolean;
+  // hasSeenAmmo: boolean;
+  // hasSeenSniper: boolean;
+  // hasSeenEmp: boolean;
+  // hasSeenCompass: boolean;
+  // hasSeenUpgrade: boolean;
+  // hasSeenResetAlarm: boolean;
+
+  setTutorialFlag(tile: TILE_TYPES) {
+    if (tile === TILE_TYPES.ENEMY) {
+      this.tutorialFlags.hasSeenEnemy = true;
+    } else if (tile === TILE_TYPES.SCRAMBLE_ENEMY) {
+      this.tutorialFlags.hasSeenScrambleEnemy = true;
+    } else if (tile === TILE_TYPES.SUPER_ENEMY) {
+      this.tutorialFlags.hasSeenSuperEnemy = true;
+    } else if (tile === TILE_TYPES.AMMO) {
+      this.tutorialFlags.hasSeenAmmo = true;
+    } else if (tile === TILE_TYPES.SNIPER) {
+      this.tutorialFlags.hasSeenSniper = true;
+    } else if (tile === TILE_TYPES.EMP) {
+      this.tutorialFlags.hasSeenEmp = true;
+    } else if (tile === TILE_TYPES.COMPASS) {
+      this.tutorialFlags.hasSeenCompass = true;
+    } else if (tile === TILE_TYPES.UPGRADE) {
+      this.tutorialFlags.hasSeenUpgrade = true;
+    }
+  }
+
   setPauseMenuOpen(pauseMenuOpen: boolean) {
     this.pauseMenuOpen = pauseMenuOpen;
   }
@@ -192,6 +242,20 @@ class GameStore {
         hasUnlocked: true, // Should be false to start, testing
       },
     };
+    this.tutorialFlags = {
+      hasWeapon,
+      hasSeenEnemy: false,
+      hasSeenScrambleEnemy: false,
+      hasSeenSuperEnemy: false,
+      hasSeenBoss: false,
+      hasSeenAmmo: false,
+      hasSeenSniper: false,
+      hasSeenEmp: false,
+      hasSeenCompass: false,
+      hasSeenUpgrade: false,
+      hasSeenResetAlarm: false,
+      hasSeenScrambledTile: false,
+    }
   }
 }
 
