@@ -184,6 +184,10 @@ class GameStore {
     }
   }
 
+  setHasSeenScrambleTile() {
+    this.tutorialFlags.hasSeenScrambledTile = true;
+  }
+
   setPauseMenuOpen(pauseMenuOpen: boolean) {
     this.pauseMenuOpen = pauseMenuOpen;
   }

@@ -223,6 +223,8 @@ class Level1To9Tutorial implements FloorTutorial {
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
+
+    this.gameEvents.addListener(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.onPlayerFinishMove, this);
   }
 
   async onLevelStart() {
@@ -233,19 +235,6 @@ class Level1To9Tutorial implements FloorTutorial {
     // no-op
   }
 
-  // hasWeapon: boolean;
-  // hasSeenEnemy: boolean;
-  // hasSeenScrambleEnemy: boolean;
-  // hasSeenScrambledTile: boolean;
-  // hasSeenSuperEnemy: boolean;
-  // hasSeenBoss: boolean;
-  // hasSeenAmmo: boolean;
-  // hasSeenSniper: boolean;
-  // hasSeenEmp: boolean;
-  // hasSeenCompass: boolean;
-  // hasSeenUpgrade: boolean;
-  // hasSeenResetAlarm: boolean;
-
   async onTileClick(tileType: TILE_TYPES) {
     if (tileType === TILE_TYPES.ENEMY && !store.tutorialFlags.hasSeenEnemy) {
       this.dialogueManager.playDialogue([
@@ -253,8 +242,9 @@ class Level1To9Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "This is a basic enemy.",
-            "Avoid making contact with these",
+            "This is a basic enemy drone.",
+            "Hacking a drone will remove it as a threat.",
+            "Revealing a drone without hacking it will increase the Alert Level.",
           ],
         },
       ]);
@@ -264,8 +254,9 @@ class Level1To9Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "Ah! I must have tripped the security alarm.",
-            "Need to move carefully!",
+            "This enemy drone is more advanced!",
+            "It's defenses can scramble my radar!",
+            "Gotta be extra cautious!",
           ],
         },
       ]);
@@ -274,8 +265,8 @@ class Level1To9Tutorial implements FloorTutorial {
         title: "Tutorial",
         imageKey: "player-m",
         text: [
-          "This Key should let me get through that locked door!",
-          "Once you have cleared a path, Left-Click the Door to move on to the next level.",
+          "This enemy drone looks dangerous!",
+          "If it spots me, it will increase the Alert Level by 2!",
         ],
       });
     } else if (tileType === TILE_TYPES.AMMO && !store.tutorialFlags.hasSeenAmmo) {
@@ -284,8 +275,8 @@ class Level1To9Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
+            "This is a refill for my Hacking Weapon!",
+            "Whew, I needed that!  Better keep an eye out for more ammo...",
           ],
         },
       ]);
@@ -295,8 +286,7 @@ class Level1To9Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
+            "This Sniper Attachment will let me attack tiles that are outside of my normal range!",
           ],
         },
       ]);
@@ -306,8 +296,7 @@ class Level1To9Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
+            "This EMP Attachment will clear all of the tiles around my current position!",
           ],
         },
       ]);
@@ -317,8 +306,7 @@ class Level1To9Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
+            "This Compass Attachment will do something useful, eventually!",
           ],
         },
       ]);
@@ -328,8 +316,7 @@ class Level1To9Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
+            "Wow! This Weapon Upgrade let's me hold more ammo for all of the Weapon Attachments!",
           ],
         },
       ]);
@@ -339,8 +326,8 @@ class Level1To9Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
+            "This item reduces the Alert Level by 1!",
+            "I better be careful to avoid being seen!",
           ],
         },
       ]);
@@ -349,10 +336,28 @@ class Level1To9Tutorial implements FloorTutorial {
   }
 
   async onPlayerFinishMove() {
-    // no-op
+    if (!store.tutorialFlags.hasSeenScrambledTile) {
+      const playerGridPos = this.player.getGridPosition();
+      const tile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y)
+      const isTileScrambled = tile.isScrambled
+      if (isTileScrambled) {
+        this.dialogueManager.playDialogue([
+          {
+            title: "Tutorial",
+            imageKey: "player-m",
+            text: [
+              "Wha- My Radar is being scrambled...",
+              "A powerful enemy must be nearby!",
+            ],
+          },
+        ]);
+        store.setHasSeenScrambleTile()
+      }
+    }
   }
 
   destroy() {
+    this.gameEvents.removeListener(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.onPlayerFinishMove, this);
     this.proxy.removeAll();
   }
 }
