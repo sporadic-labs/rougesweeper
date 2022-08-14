@@ -17,17 +17,7 @@ interface FloorTutorial {
   destroy(): void;
 }
 
-/**
- * TODO aspects of the tutorial:
- *
- * > hasSeenEnemy
- * > when player has finished move, if in range of enemy, trigger dialogue
- * > if you click on enemy, also trigger
- *
- * > hasSeenMovePrompt
- * > onLoad, trigger dialogue and pause while waiting for the player to move
- */
-
+/** */
 class Level0Tutorial implements FloorTutorial {
   private scene: Phaser.Scene;
   private proxy: EventProxy;
@@ -186,17 +176,7 @@ class Level0Tutorial implements FloorTutorial {
   }
 }
 
-/**
- * TODO aspects of the tutorial:
- *
- * > hasSeenEnemy
- * > when player has finished move, if in range of enemy, trigger dialogue
- * > if you click on enemy, also trigger
- *
- * > hasSeenMovePrompt
- * > onLoad, trigger dialogue and pause while waiting for the player to move
- */
-
+/** */
 class Level1To9Tutorial implements FloorTutorial {
   private scene: Phaser.Scene;
   private proxy: EventProxy;
@@ -248,7 +228,10 @@ class Level1To9Tutorial implements FloorTutorial {
           ],
         },
       ]);
-    } else if (tileType === TILE_TYPES.SCRAMBLE_ENEMY && !store.tutorialFlags.hasSeenScrambleEnemy) {
+    } else if (
+      tileType === TILE_TYPES.SCRAMBLE_ENEMY &&
+      !store.tutorialFlags.hasSeenScrambleEnemy
+    ) {
       this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
@@ -295,9 +278,7 @@ class Level1To9Tutorial implements FloorTutorial {
         {
           title: "Tutorial",
           imageKey: "player-m",
-          text: [
-            "This EMP Attachment will clear all of the tiles around my current position!",
-          ],
+          text: ["This EMP Attachment will clear all of the tiles around my current position!"],
         },
       ]);
     } else if (tileType === TILE_TYPES.COMPASS && !store.tutorialFlags.hasSeenCompass) {
@@ -305,9 +286,7 @@ class Level1To9Tutorial implements FloorTutorial {
         {
           title: "Tutorial",
           imageKey: "player-m",
-          text: [
-            "This Compass Attachment will do something useful, eventually!",
-          ],
+          text: ["This Compass Attachment will do something useful, eventually!"],
         },
       ]);
     } else if (tileType === TILE_TYPES.UPGRADE && !store.tutorialFlags.hasSeenUpgrade) {
@@ -332,32 +311,215 @@ class Level1To9Tutorial implements FloorTutorial {
         },
       ]);
     }
-    store.setTutorialFlag(tileType)
+    store.setTutorialFlag(tileType);
   }
 
   async onPlayerFinishMove() {
     if (!store.tutorialFlags.hasSeenScrambledTile) {
       const playerGridPos = this.player.getGridPosition();
-      const tile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y)
-      const isTileScrambled = tile.isScrambled
+      const tile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
+      const isTileScrambled = tile.isScrambled;
       if (isTileScrambled) {
         this.dialogueManager.playDialogue([
           {
             title: "Tutorial",
             imageKey: "player-m",
-            text: [
-              "Wha- My Radar is being scrambled...",
-              "A powerful enemy must be nearby!",
-            ],
+            text: ["Wha- My Radar is being scrambled...", "A powerful enemy must be nearby!"],
           },
         ]);
-        store.setHasSeenScrambleTile()
+        store.setHasSeenScrambleTile();
       }
     }
   }
 
   destroy() {
     this.gameEvents.removeListener(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.onPlayerFinishMove, this);
+    this.proxy.removeAll();
+  }
+}
+
+/** */
+class Level10Tutorial implements FloorTutorial {
+  private scene: Phaser.Scene;
+  private proxy: EventProxy;
+  private level: Level;
+  private levelKey: string;
+  private player: Player;
+  private dialogueManager: DialogueManager;
+  private hasSeenAnEnemy = false;
+  private gameEvents: GameEmitter;
+
+  constructor(
+    scene: Phaser.Scene,
+    dialogueManager: DialogueManager,
+    level: Level,
+    player: Player,
+    gameEvents: GameEmitter
+  ) {
+    this.scene = scene;
+    this.level = level;
+    this.dialogueManager = dialogueManager;
+    this.gameEvents = gameEvents;
+    this.player = player;
+
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
+
+  async onLevelStart() {
+    // no-op
+  }
+
+  async onExitClick() {
+    // no-op
+  }
+
+  async onTileClick(tileType: TILE_TYPES) {
+    if (tileType === TILE_TYPES.BOSS) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "Hello, Agent. I see you have discovered my plot...",
+            "However, you are too late to stop me! If only you had more TIME...",
+            "Ha Ha Ha!",
+          ],
+        },
+      ]);
+    }
+  }
+
+  async onPlayerFinishMove() {
+    // no-op
+  }
+
+  destroy() {
+    this.proxy.removeAll();
+  }
+}
+
+/** */
+class Level11Tutorial implements FloorTutorial {
+  private scene: Phaser.Scene;
+  private proxy: EventProxy;
+  private level: Level;
+  private levelKey: string;
+  private player: Player;
+  private dialogueManager: DialogueManager;
+  private hasSeenAnEnemy = false;
+  private gameEvents: GameEmitter;
+
+  constructor(
+    scene: Phaser.Scene,
+    dialogueManager: DialogueManager,
+    level: Level,
+    player: Player,
+    gameEvents: GameEmitter
+  ) {
+    this.scene = scene;
+    this.level = level;
+    this.dialogueManager = dialogueManager;
+    this.gameEvents = gameEvents;
+    this.player = player;
+
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
+
+  async onLevelStart() {
+    // no-op
+  }
+
+  async onExitClick() {
+    // no-op
+  }
+
+  async onTileClick(tileType: TILE_TYPES) {
+    if (tileType === TILE_TYPES.BOSS) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "We meet again, Agent.",
+            "You are better than I originally thought...",
+            "But you won't catch me again!",
+          ],
+        },
+      ]);
+    }
+  }
+
+  async onPlayerFinishMove() {
+    // no-op
+  }
+
+  destroy() {
+    this.proxy.removeAll();
+  }
+}
+
+/** */
+class Level12Tutorial implements FloorTutorial {
+  private scene: Phaser.Scene;
+  private proxy: EventProxy;
+  private level: Level;
+  private levelKey: string;
+  private player: Player;
+  private dialogueManager: DialogueManager;
+  private hasSeenAnEnemy = false;
+  private gameEvents: GameEmitter;
+
+  constructor(
+    scene: Phaser.Scene,
+    dialogueManager: DialogueManager,
+    level: Level,
+    player: Player,
+    gameEvents: GameEmitter
+  ) {
+    this.scene = scene;
+    this.level = level;
+    this.dialogueManager = dialogueManager;
+    this.gameEvents = gameEvents;
+    this.player = player;
+
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
+
+  async onLevelStart() {
+    // no-op
+  }
+
+  async onExitClick() {
+    // no-op
+  }
+
+  async onTileClick(tileType: TILE_TYPES) {
+    if (tileType === TILE_TYPES.BOSS) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "Wha- How did you find me again!?!",
+            "This is IMPOSSIBLE!",
+            "Nooooooooo...",
+          ],
+        },
+      ]);
+    }
+  }
+
+  async onPlayerFinishMove() {
+    // no-op
+  }
+
+  destroy() {
     this.proxy.removeAll();
   }
 }
@@ -393,6 +555,12 @@ export default class TutorialLogic {
       levelKey === "level-09"
     ) {
       this.tutorial = new Level1To9Tutorial(scene, dialogueManager, level, player, gameEvents);
+    } else if (levelKey === "level-10") {
+      this.tutorial = new Level10Tutorial(scene, dialogueManager, level, player, gameEvents);
+    } else if (levelKey === "level-11") {
+      this.tutorial = new Level11Tutorial(scene, dialogueManager, level, player, gameEvents);
+    } else if (levelKey === "level-12") {
+      this.tutorial = new Level12Tutorial(scene, dialogueManager, level, player, gameEvents);
     }
   }
 
