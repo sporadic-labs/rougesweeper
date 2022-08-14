@@ -21,6 +21,7 @@ export default class Tile {
   public gridY = 0;
   public isCurrentlyBlank: boolean;
   public dialoguePlayedCounter = 0;
+  public isScrambled = false;
   private backSprite: GameObjects.Sprite;
   private frontSprite: GameObjects.Sprite;
   private scrambleSprite: GameObjects.Sprite;
@@ -32,7 +33,6 @@ export default class Tile {
   private tileMagnifyPoser: TweenPoser<MagnifyPoses>;
   private contentsMagnifyPoser: TweenPoser<MagnifyPoses>;
   private scramblePoser: TweenPoser<FadePoses>;
-  private canScramble = false;
   private secondarySelectKey: Input.Keyboard.Key;
 
   constructor(
@@ -142,11 +142,7 @@ export default class Tile {
         this.tileGraphicTimeline = this.scene.tweens.createTimeline();
 
         // Setup different animations for the Gold vs. the Enemy graphics.
-        if (
-          this.type === TILE_TYPES.GOLD ||
-          this.type === TILE_TYPES.KEY ||
-          isPickup(this.type)
-        ) {
+        if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.KEY || isPickup(this.type)) {
           this.tileGraphicTimeline = createPickupAnimation(this.scene, this.tileContents);
         } else if (isEnemyTile(this.type)) {
           this.tileGraphicTimeline = createAttackAnimation(this.scene, this.tileContents);
@@ -175,11 +171,7 @@ export default class Tile {
 
   playTileDestructionAnimation() {
     return new Promise<void>((resolve) => {
-      if (
-        this.type === TILE_TYPES.GOLD ||
-        isEnemyTile(this.type) ||
-        isPickup(this.type)
-      ) {
+      if (this.type === TILE_TYPES.GOLD || isEnemyTile(this.type) || isPickup(this.type)) {
         if (!this.tileContents) return;
         if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
         this.tileGraphicTimeline = createDisappearAnimation(this.scene, this.tileContents);
@@ -236,16 +228,6 @@ export default class Tile {
    */
   getGridPosition() {
     return { x: this.gridX, y: this.gridY };
-  }
-
-  getCanScramble(): boolean {
-    return this.canScramble;
-  }
-
-  setCanScramble(canScramble: boolean): void {
-    this.canScramble = canScramble;
-    if (canScramble && this.isRevealed) this.scrambleSprite.setAlpha(1);
-    else this.scrambleSprite.setAlpha(0);
   }
 
   /**
@@ -322,11 +304,13 @@ export default class Tile {
   }
 
   scramble() {
+    this.isScrambled = true;
     this.scramblePoser.moveToPose("FadeIn");
     this.scrambleSprite.play("scramble-tile");
   }
 
   clearScramble() {
+    this.isScrambled = false;
     this.scramblePoser.moveToPose("FadeOut");
     this.scrambleSprite.stop();
   }

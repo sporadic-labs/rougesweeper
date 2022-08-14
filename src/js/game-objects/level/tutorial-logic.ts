@@ -17,17 +17,7 @@ interface FloorTutorial {
   destroy(): void;
 }
 
-/**
- * TODO aspects of the tutorial:
- *
- * > hasSeenEnemy
- * > when player has finished move, if in range of enemy, trigger dialogue
- * > if you click on enemy, also trigger
- *
- * > hasSeenMovePrompt
- * > onLoad, trigger dialogue and pause while waiting for the player to move
- */
-
+/** */
 class Level0Tutorial implements FloorTutorial {
   private scene: Phaser.Scene;
   private proxy: EventProxy;
@@ -186,18 +176,170 @@ class Level0Tutorial implements FloorTutorial {
   }
 }
 
-/**
- * TODO aspects of the tutorial:
- *
- * > hasSeenEnemy
- * > when player has finished move, if in range of enemy, trigger dialogue
- * > if you click on enemy, also trigger
- *
- * > hasSeenMovePrompt
- * > onLoad, trigger dialogue and pause while waiting for the player to move
- */
-
+/** */
 class Level1To9Tutorial implements FloorTutorial {
+  private scene: Phaser.Scene;
+  private proxy: EventProxy;
+  private level: Level;
+  private levelKey: string;
+  private player: Player;
+  private dialogueManager: DialogueManager;
+  private hasSeenAnEnemy = false;
+  private gameEvents: GameEmitter;
+
+  constructor(
+    scene: Phaser.Scene,
+    dialogueManager: DialogueManager,
+    level: Level,
+    player: Player,
+    gameEvents: GameEmitter
+  ) {
+    this.scene = scene;
+    this.level = level;
+    this.dialogueManager = dialogueManager;
+    this.gameEvents = gameEvents;
+    this.player = player;
+
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
+
+    this.gameEvents.addListener(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.onPlayerFinishMove, this);
+  }
+
+  async onLevelStart() {
+    // no-op
+  }
+
+  async onExitClick() {
+    // no-op
+  }
+
+  async onTileClick(tileType: TILE_TYPES) {
+    if (tileType === TILE_TYPES.ENEMY && !store.tutorialFlags.hasSeenEnemy) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "This is a basic enemy drone.",
+            "Hacking a drone will remove it as a threat.",
+            "Revealing a drone without hacking it will increase the Alert Level.",
+          ],
+        },
+      ]);
+    } else if (
+      tileType === TILE_TYPES.SCRAMBLE_ENEMY &&
+      !store.tutorialFlags.hasSeenScrambleEnemy
+    ) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "This enemy drone is more advanced!",
+            "It's defenses can scramble my radar!",
+            "Gotta be extra cautious!",
+          ],
+        },
+      ]);
+    } else if (tileType === TILE_TYPES.SUPER_ENEMY && !store.tutorialFlags.hasSeenSuperEnemy) {
+      this.dialogueManager.playDialogue({
+        title: "Tutorial",
+        imageKey: "player-m",
+        text: [
+          "This enemy drone looks dangerous!",
+          "If it spots me, it will increase the Alert Level by 2!",
+        ],
+      });
+    } else if (tileType === TILE_TYPES.AMMO && !store.tutorialFlags.hasSeenAmmo) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "This is a refill for my Hacking Weapon!",
+            "Whew, I needed that!  Better keep an eye out for more ammo...",
+          ],
+        },
+      ]);
+    } else if (tileType === TILE_TYPES.SNIPER && !store.tutorialFlags.hasSeenSniper) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "This Sniper Attachment will let me attack tiles that are outside of my normal range!",
+          ],
+        },
+      ]);
+    } else if (tileType === TILE_TYPES.EMP && !store.tutorialFlags.hasSeenEmp) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: ["This EMP Attachment will clear all of the tiles around my current position!"],
+        },
+      ]);
+    } else if (tileType === TILE_TYPES.COMPASS && !store.tutorialFlags.hasSeenCompass) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: ["This Compass Attachment will do something useful, eventually!"],
+        },
+      ]);
+    } else if (tileType === TILE_TYPES.UPGRADE && !store.tutorialFlags.hasSeenUpgrade) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "Wow! This Weapon Upgrade let's me hold more ammo for all of the Weapon Attachments!",
+          ],
+        },
+      ]);
+    } else if (tileType === TILE_TYPES.ALERT && !store.tutorialFlags.hasSeenResetAlarm) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "This item reduces the Alert Level by 1!",
+            "I better be careful to avoid being seen!",
+          ],
+        },
+      ]);
+    }
+    store.setTutorialFlag(tileType);
+  }
+
+  async onPlayerFinishMove() {
+    if (!store.tutorialFlags.hasSeenScrambledTile) {
+      const playerGridPos = this.player.getGridPosition();
+      const tile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
+      const isTileScrambled = tile.isScrambled;
+      if (isTileScrambled) {
+        this.dialogueManager.playDialogue([
+          {
+            title: "Tutorial",
+            imageKey: "player-m",
+            text: ["Wha- My Radar is being scrambled...", "A powerful enemy must be nearby!"],
+          },
+        ]);
+        store.setHasSeenScrambleTile();
+      }
+    }
+  }
+
+  destroy() {
+    this.gameEvents.removeListener(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.onPlayerFinishMove, this);
+    this.proxy.removeAll();
+  }
+}
+
+/** */
+class Level10Tutorial implements FloorTutorial {
   private scene: Phaser.Scene;
   private proxy: EventProxy;
   private level: Level;
@@ -233,119 +375,144 @@ class Level1To9Tutorial implements FloorTutorial {
     // no-op
   }
 
-  // hasWeapon: boolean;
-  // hasSeenEnemy: boolean;
-  // hasSeenScrambleEnemy: boolean;
-  // hasSeenScrambledTile: boolean;
-  // hasSeenSuperEnemy: boolean;
-  // hasSeenBoss: boolean;
-  // hasSeenAmmo: boolean;
-  // hasSeenSniper: boolean;
-  // hasSeenEmp: boolean;
-  // hasSeenCompass: boolean;
-  // hasSeenUpgrade: boolean;
-  // hasSeenResetAlarm: boolean;
-
   async onTileClick(tileType: TILE_TYPES) {
-    if (tileType === TILE_TYPES.ENEMY && !store.tutorialFlags.hasSeenEnemy) {
+    if (tileType === TILE_TYPES.BOSS) {
       this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-m",
           text: [
-            "This is a basic enemy.",
-            "Avoid making contact with these",
-          ],
-        },
-      ]);
-    } else if (tileType === TILE_TYPES.SCRAMBLE_ENEMY && !store.tutorialFlags.hasSeenScrambleEnemy) {
-      this.dialogueManager.playDialogue([
-        {
-          title: "Tutorial",
-          imageKey: "player-m",
-          text: [
-            "Ah! I must have tripped the security alarm.",
-            "Need to move carefully!",
-          ],
-        },
-      ]);
-    } else if (tileType === TILE_TYPES.SUPER_ENEMY && !store.tutorialFlags.hasSeenSuperEnemy) {
-      this.dialogueManager.playDialogue({
-        title: "Tutorial",
-        imageKey: "player-m",
-        text: [
-          "This Key should let me get through that locked door!",
-          "Once you have cleared a path, Left-Click the Door to move on to the next level.",
-        ],
-      });
-    } else if (tileType === TILE_TYPES.AMMO && !store.tutorialFlags.hasSeenAmmo) {
-      this.dialogueManager.playDialogue([
-        {
-          title: "Tutorial",
-          imageKey: "player-m",
-          text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
-          ],
-        },
-      ]);
-    } else if (tileType === TILE_TYPES.SNIPER && !store.tutorialFlags.hasSeenSniper) {
-      this.dialogueManager.playDialogue([
-        {
-          title: "Tutorial",
-          imageKey: "player-m",
-          text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
-          ],
-        },
-      ]);
-    } else if (tileType === TILE_TYPES.EMP && !store.tutorialFlags.hasSeenEmp) {
-      this.dialogueManager.playDialogue([
-        {
-          title: "Tutorial",
-          imageKey: "player-m",
-          text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
-          ],
-        },
-      ]);
-    } else if (tileType === TILE_TYPES.COMPASS && !store.tutorialFlags.hasSeenCompass) {
-      this.dialogueManager.playDialogue([
-        {
-          title: "Tutorial",
-          imageKey: "player-m",
-          text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
-          ],
-        },
-      ]);
-    } else if (tileType === TILE_TYPES.UPGRADE && !store.tutorialFlags.hasSeenUpgrade) {
-      this.dialogueManager.playDialogue([
-        {
-          title: "Tutorial",
-          imageKey: "player-m",
-          text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
-          ],
-        },
-      ]);
-    } else if (tileType === TILE_TYPES.ALERT && !store.tutorialFlags.hasSeenResetAlarm) {
-      this.dialogueManager.playDialogue([
-        {
-          title: "Tutorial",
-          imageKey: "player-m",
-          text: [
-            "That drone was communicating with the security system...",
-            "I need to hack the enemy drones before I am seen!",
+            "Hello, Agent. I see you have discovered my plot...",
+            "However, you are too late to stop me! If only you had more TIME...",
+            "Ha Ha Ha!",
           ],
         },
       ]);
     }
-    store.setTutorialFlag(tileType)
+  }
+
+  async onPlayerFinishMove() {
+    // no-op
+  }
+
+  destroy() {
+    this.proxy.removeAll();
+  }
+}
+
+/** */
+class Level11Tutorial implements FloorTutorial {
+  private scene: Phaser.Scene;
+  private proxy: EventProxy;
+  private level: Level;
+  private levelKey: string;
+  private player: Player;
+  private dialogueManager: DialogueManager;
+  private hasSeenAnEnemy = false;
+  private gameEvents: GameEmitter;
+
+  constructor(
+    scene: Phaser.Scene,
+    dialogueManager: DialogueManager,
+    level: Level,
+    player: Player,
+    gameEvents: GameEmitter
+  ) {
+    this.scene = scene;
+    this.level = level;
+    this.dialogueManager = dialogueManager;
+    this.gameEvents = gameEvents;
+    this.player = player;
+
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
+
+  async onLevelStart() {
+    // no-op
+  }
+
+  async onExitClick() {
+    // no-op
+  }
+
+  async onTileClick(tileType: TILE_TYPES) {
+    if (tileType === TILE_TYPES.BOSS) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "We meet again, Agent.",
+            "You are better than I originally thought...",
+            "But you won't catch me again!",
+          ],
+        },
+      ]);
+    }
+  }
+
+  async onPlayerFinishMove() {
+    // no-op
+  }
+
+  destroy() {
+    this.proxy.removeAll();
+  }
+}
+
+/** */
+class Level12Tutorial implements FloorTutorial {
+  private scene: Phaser.Scene;
+  private proxy: EventProxy;
+  private level: Level;
+  private levelKey: string;
+  private player: Player;
+  private dialogueManager: DialogueManager;
+  private hasSeenAnEnemy = false;
+  private gameEvents: GameEmitter;
+
+  constructor(
+    scene: Phaser.Scene,
+    dialogueManager: DialogueManager,
+    level: Level,
+    player: Player,
+    gameEvents: GameEmitter
+  ) {
+    this.scene = scene;
+    this.level = level;
+    this.dialogueManager = dialogueManager;
+    this.gameEvents = gameEvents;
+    this.player = player;
+
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
+
+  async onLevelStart() {
+    // no-op
+  }
+
+  async onExitClick() {
+    // no-op
+  }
+
+  async onTileClick(tileType: TILE_TYPES) {
+    if (tileType === TILE_TYPES.BOSS) {
+      this.dialogueManager.playDialogue([
+        {
+          title: "Tutorial",
+          imageKey: "player-m",
+          text: [
+            "Wha- How did you find me again!?!",
+            "This is IMPOSSIBLE!",
+            "Nooooooooo...",
+          ],
+        },
+      ]);
+    }
   }
 
   async onPlayerFinishMove() {
@@ -388,6 +555,12 @@ export default class TutorialLogic {
       levelKey === "level-09"
     ) {
       this.tutorial = new Level1To9Tutorial(scene, dialogueManager, level, player, gameEvents);
+    } else if (levelKey === "level-10") {
+      this.tutorial = new Level10Tutorial(scene, dialogueManager, level, player, gameEvents);
+    } else if (levelKey === "level-11") {
+      this.tutorial = new Level11Tutorial(scene, dialogueManager, level, player, gameEvents);
+    } else if (levelKey === "level-12") {
+      this.tutorial = new Level12Tutorial(scene, dialogueManager, level, player, gameEvents);
     }
   }
 
