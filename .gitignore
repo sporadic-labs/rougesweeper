@@ -2,6 +2,9 @@ types
 node_modules
 public
 
+# Mac
+.DS_Store
+
 # Ignore files used for publishing to gh-pages!
 .publish
 
