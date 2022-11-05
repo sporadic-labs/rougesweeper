@@ -72,6 +72,8 @@ export default class DialogueManager {
   private text: Phaser.GameObjects.Text;
   private sprite: Phaser.GameObjects.Sprite;
 
+  private onComplete: (value?: unknown) => void
+
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
     this.gameStore = gameStore;
@@ -170,6 +172,23 @@ export default class DialogueManager {
     this.open();
   }
 
+  async playDialogueTheRealOne(dialogueEntryOrEntries: DialogueEntry[] | DialogueEntry) {
+    const entries = Array.isArray(dialogueEntryOrEntries)
+      ? dialogueEntryOrEntries
+      : [dialogueEntryOrEntries];
+    this.setDialoguePages(entries);
+    if (this.isCurrentlyOpen) this.close();
+
+    return new Promise((resolve, _reject) => {
+      if (this.onComplete) {
+        this.onComplete()
+        this.onComplete = null
+      }
+      this.onComplete = resolve
+      this.open()
+    })
+  }
+
   nextState() {
     this.updateButtons();
     switch (this.state) {
@@ -180,7 +199,8 @@ export default class DialogueManager {
         this.complete();
         break;
       case DIALOGUE_STATES.CLOSED:
-        this.open();
+        // this.open();
+        // NOTE(rex): Do nothing...?
         break;
       case DIALOGUE_STATES.OPEN:
       default:
@@ -337,6 +357,8 @@ export default class DialogueManager {
     this.scene.time.removeAllEvents();
     this.scene.time.clearPendingEvents();
     this.state = DIALOGUE_STATES.CLOSED;
+    this.onComplete()
+    this.onComplete = undefined
   }
 
   private updateButtons() {

@@ -297,45 +297,60 @@ export default class GameManager {
       switch (tile.type) {
         case TILE_TYPES.ENEMY:
         case TILE_TYPES.SCRAMBLE_ENEMY:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.removeHealth();
           break;
         case TILE_TYPES.SUPER_ENEMY:
         case TILE_TYPES.BOSS:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.removeHealth(2);
           break;
         case TILE_TYPES.GOLD:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.addGold();
           break;
         case TILE_TYPES.COMPASS:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.addAmmo("compass", 1);
           break;
         case TILE_TYPES.SNIPER:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.addAmmo("revealTile", 1);
           break;
         case TILE_TYPES.EMP:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.addAmmo("clearRadar", 1);
           break;
         case TILE_TYPES.AMMO:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.addAmmo("hack", 5);
           break;
         case TILE_TYPES.ALERT:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.addHealth();
           break;
         case TILE_TYPES.UPGRADE:
-          this.tutorialLogic.onTileClick(tile.type);
+          await this.tutorialLogic.onTileClick(tile.type);
           store.upgradeItems();
           store.addAmmo("hack", 5);
           store.addAmmo("clearRadar", 1);
           store.addAmmo("revealTile", 1);
           store.addAmmo("compass", 1);
+          break;
+        case TILE_TYPES.KEY:
+          if (!store.hasKey) {
+            store.setHasKey(true);
+            this.level.exit.open();
+            this.level.exit.flipTileToFront();
+            await this.tutorialLogic.onTileClick(tile.type);
+          }
+          break;
+        case TILE_TYPES.WEAPON:
+          if (!store.hasWeapon) {
+            store.setHasWeapon(true);
+            store.setAmmo("hack", 10);
+            await this.tutorialLogic.onTileClick(tile.type);
+          }
           break;
       }
       const { x, y } = this.player.getPosition();
@@ -373,24 +388,25 @@ export default class GameManager {
     this.level.enableAllTiles();
     this.startIdleFlow();
 
+    // TODO(rex): Do we need something that happens after the tile moved?
     // Apply any effect that need to happen at the end of moving.
-    switch (tile.type) {
-      case TILE_TYPES.KEY:
-        if (!store.hasKey) {
-          store.setHasKey(true);
-          this.level.exit.open();
-          this.level.exit.flipTileToFront();
-          this.tutorialLogic.onTileClick(tile.type);
-        }
-        break;
-      case TILE_TYPES.WEAPON:
-        if (!store.hasWeapon) {
-          store.setHasWeapon(true);
-          store.setAmmo("hack", 10);
-          this.tutorialLogic.onTileClick(tile.type);
-        }
-        break;
-    }
+    // switch (tile.type) {
+    //   case TILE_TYPES.KEY:
+    //     if (!store.hasKey) {
+    //       store.setHasKey(true);
+    //       this.level.exit.open();
+    //       this.level.exit.flipTileToFront();
+    //       await this.tutorialLogic.onTileClick(tile.type);
+    //     }
+    //     break;
+    //   case TILE_TYPES.WEAPON:
+    //     if (!store.hasWeapon) {
+    //       store.setHasWeapon(true);
+    //       store.setAmmo("hack", 10);
+    //       await this.tutorialLogic.onTileClick(tile.type);
+    //     }
+    //     break;
+    // }
 
     this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
     this.events.emit(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.player);
@@ -403,6 +419,8 @@ export default class GameManager {
    */
   async runAttackFlow(tile: Tile, path: Point[]) {
     this.level.disableAllTiles();
+    
+    await this.tutorialLogic.onTileClick(tile.type);
 
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
@@ -414,8 +432,6 @@ export default class GameManager {
       attackAnim.fadeout().then(() => attackAnim.destroy()),
       tile.playTileDestructionAnimation(),
     ]);
-
-    this.tutorialLogic.onTileClick(tile.type);
 
     if (isEnemyTile(tile.type)) {
       store.addGold();
