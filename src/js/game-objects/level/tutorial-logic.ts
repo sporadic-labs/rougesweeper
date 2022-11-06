@@ -58,7 +58,7 @@ class Level0Tutorial implements FloorTutorial {
   async onLevelStart() {
     await this.dialogueManager.playDialogueTheRealOne({
       title: "Tutorial",
-      imageKey: "player-m",
+      imageKey: "player-f",
       text: [
         "I finally made it into the enemy HQ!",
         "Need to move quickly to find the stolen tech!",
@@ -76,7 +76,7 @@ class Level0Tutorial implements FloorTutorial {
 
     await this.dialogueManager.playDialogueTheRealOne({
       title: "Tutorial",
-      imageKey: "player-m",
+      imageKey: "player-f",
       text: [
         "I need to find a key to get through!",
         "Find the Key pickup hidden somewhere in the level.",
@@ -89,7 +89,7 @@ class Level0Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "Ah! I must have tripped the security alarm.",
             "Need to move carefully!",
@@ -98,7 +98,7 @@ class Level0Tutorial implements FloorTutorial {
         },
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "This futuristic weapon will help me hack the system!",
             "Right-Click to use the equipped weapon.  Use the Arrow Keys to cycle through weapons.",
@@ -123,7 +123,7 @@ class Level0Tutorial implements FloorTutorial {
     } else if (tileType === TILE_TYPES.KEY) {
       await this.dialogueManager.playDialogueTheRealOne({
         title: "Tutorial",
-        imageKey: "player-m",
+        imageKey: "player-f",
         text: [
           "This Key should let me get through that locked door!",
           "Once you have cleared a path, Left-Click the Door to move on to the next level.",
@@ -133,7 +133,7 @@ class Level0Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "That drone was communicating with the security system...",
             "I need to hack the enemy drones before I am seen!",
@@ -141,7 +141,7 @@ class Level0Tutorial implements FloorTutorial {
         },
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "Hacking a drone will remove it as a threat.",
             "Revealing a drone without hacking it will increase your Alert Level.",
@@ -158,7 +158,7 @@ class Level0Tutorial implements FloorTutorial {
       this.hasSeenAnEnemy = true;
       await this.dialogueManager.playDialogueTheRealOne({
         title: "Tutorial",
-        imageKey: "player-m",
+        imageKey: "player-f",
         text: [
           "This radar is blaring...",
           "An enemy must be nearby!",
@@ -220,7 +220,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "This is a basic enemy drone.",
             "Hacking a drone will remove it as a threat.",
@@ -235,7 +235,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "This enemy drone is more advanced!",
             "It's defenses can scramble my radar!",
@@ -246,7 +246,7 @@ class Level1To9Tutorial implements FloorTutorial {
     } else if (tileType === TILE_TYPES.SUPER_ENEMY && !store.tutorialFlags.hasSeenSuperEnemy) {
       await this.dialogueManager.playDialogueTheRealOne({
         title: "Tutorial",
-        imageKey: "player-m",
+        imageKey: "player-f",
         text: [
           "This enemy drone looks dangerous!",
           "If it spots me, it will increase the Alert Level by 2!",
@@ -256,7 +256,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "This is a refill for my Hacking Weapon!",
             "Whew, I needed that!  Better keep an eye out for more ammo...",
@@ -267,7 +267,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "This Sniper Attachment will let me attack tiles that are outside of my normal range!",
           ],
@@ -277,7 +277,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: ["This EMP Attachment will clear all of the tiles around my current position!"],
         },
       ]);
@@ -285,7 +285,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: ["This Compass Attachment will do something useful, eventually!"],
         },
       ]);
@@ -293,7 +293,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "Wow! This Weapon Upgrade let's me hold more ammo for all of the Weapon Attachments!",
           ],
@@ -303,7 +303,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "This item reduces the Alert Level by 1!",
             "I better be careful to avoid being seen!",
@@ -323,7 +323,7 @@ class Level1To9Tutorial implements FloorTutorial {
         await this.dialogueManager.playDialogueTheRealOne([
           {
             title: "Tutorial",
-            imageKey: "player-m",
+            imageKey: "player-f",
             text: ["Wha- My Radar is being scrambled...", "A powerful enemy must be nearby!"],
           },
         ]);
@@ -380,7 +380,7 @@ class Level10Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "Hello, Agent. I see you have discovered my plot...",
             "However, you are too late to stop me! If only you had more TIME...",
@@ -442,7 +442,7 @@ class Level11Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogueTheRealOne([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "We meet again, Agent.",
             "You are better than I originally thought...",
@@ -501,10 +501,10 @@ class Level12Tutorial implements FloorTutorial {
 
   async onTileClick(tileType: TILE_TYPES) {
     if (tileType === TILE_TYPES.BOSS) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
-          imageKey: "player-m",
+          imageKey: "player-f",
           text: [
             "Wha- How did you find me again!?!",
             "This is IMPOSSIBLE!",

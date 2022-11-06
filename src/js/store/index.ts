@@ -181,6 +181,8 @@ class GameStore {
       this.tutorialFlags.hasSeenCompass = true;
     } else if (tile === TILE_TYPES.UPGRADE) {
       this.tutorialFlags.hasSeenUpgrade = true;
+    } else if (tile === TILE_TYPES.ALERT) {
+      this.tutorialFlags.hasSeenResetAlarm = true;
     }
   }
 

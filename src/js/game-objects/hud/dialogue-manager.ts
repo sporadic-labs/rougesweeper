@@ -104,7 +104,7 @@ export default class DialogueManager {
       .setFixedSize(modalWidth * 0.76, modalHeight * 0.6)
       .setWordWrapWidth(modalWidth * 0.76);
 
-    this.sprite = scene.add.sprite(r.x + 36, r.centerY, "all-assets", "player-m").setOrigin(0, 0.5);
+    this.sprite = scene.add.sprite(r.x + 36, r.centerY, "all-assets", "player-f").setOrigin(0, 0.5);
 
     const continueButton = new TextButton(scene, r.right - 172, r.bottom - 20, "Next", {
       origin: { x: 0.5, y: 1 },
