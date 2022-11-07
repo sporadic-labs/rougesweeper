@@ -65,33 +65,4 @@ function loadLevels(scene: Phaser.Scene) {
   );
 }
 
-/**
- * Construct a tile key from a given level and tile obj.
- * @param level
- * @param tile
- */
-const getDialogueKey = (level: string, tile: { x: number; y: number }) =>
-  `${level}-tile-${tile.x}-${tile.y}`;
-
-/**
- * Keys for dialogue data, attached to each tile.
- */
-const dialogueKeys = levelData
-  .map(({ level, tiles }) => tiles.map((tile) => getDialogueKey(level, tile)))
-  .filter((key) => key.length > 0)
-  .flat();
-
-/**
- * Loads the JSON files using the key and path from the `levelData` array.
- * @param scene
- */
-function loadDialogue(scene: Phaser.Scene) {
-  levelData.forEach(({ level, tiles }) => {
-    tiles.forEach((tile) => {
-      const key = getDialogueKey(level, tile);
-      scene.load.json(key, `dialogue/${key}.json`);
-    });
-  });
-}
-
-export { levelData, levelKeys, loadLevels, dialogueKeys, loadDialogue, getDialogueKey };
+export { levelData, levelKeys, loadLevels };

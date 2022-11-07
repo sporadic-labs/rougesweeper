@@ -5,9 +5,7 @@ import EventProxy from "../../helpers/event-proxy";
 import GAME_MODES from "../game-manager/game-modes";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
-import Tile from "../level/tile";
 import { GameStore } from "../../store/index";
-import { getDialogueKey } from "../../store/levels";
 
 const baseTextStyle = {
   color: "#ffffff",
@@ -22,15 +20,6 @@ const textStyle = {
   ...baseTextStyle,
   fontSize: "22px",
 };
-
-export interface TileDialogueEntry {
-  level: string;
-  x: number;
-  y: number;
-  entries: DialogueEntry[];
-  repeat: number; // -1 for infinite repeat
-  condition: () => boolean;
-}
 
 export interface DialogueEntry {
   title: string;
@@ -150,29 +139,7 @@ export default class DialogueManager {
     return this.isCurrentlyOpen;
   }
 
-  getDialogueDataForTile(level: string, x: number, y: number): TileDialogueEntry {
-    const key = getDialogueKey(level, { x, y });
-    return this.scene.cache.json.get(`${key}`);
-  }
-
-  playDialogueFromTile(tile: Tile) {
-    const data: TileDialogueEntry = tile.getDialogueData();
-    if (data && (data.repeat < 0 || data.repeat >= tile.dialoguePlayedCounter)) {
-      this.playDialogue(data.entries);
-      tile.dialoguePlayedCounter++;
-    }
-  }
-
-  playDialogue(dialogueEntryOrEntries: DialogueEntry[] | DialogueEntry) {
-    const entries = Array.isArray(dialogueEntryOrEntries)
-      ? dialogueEntryOrEntries
-      : [dialogueEntryOrEntries];
-    this.setDialoguePages(entries);
-    if (this.isCurrentlyOpen) this.close();
-    this.open();
-  }
-
-  async playDialogueTheRealOne(dialogueEntryOrEntries: DialogueEntry[] | DialogueEntry) {
+  async playDialogue(dialogueEntryOrEntries: DialogueEntry[] | DialogueEntry) {
     const entries = Array.isArray(dialogueEntryOrEntries)
       ? dialogueEntryOrEntries
       : [dialogueEntryOrEntries];
@@ -182,7 +149,7 @@ export default class DialogueManager {
     return new Promise((resolve, _reject) => {
       if (this.onComplete) {
         this.onComplete()
-        this.onComplete = null
+        this.onComplete = undefined
       }
       this.onComplete = resolve
       this.open()
@@ -199,8 +166,7 @@ export default class DialogueManager {
         this.complete();
         break;
       case DIALOGUE_STATES.CLOSED:
-        // this.open();
-        // NOTE(rex): Do nothing...?
+        this.open();
         break;
       case DIALOGUE_STATES.OPEN:
       default:
@@ -357,7 +323,7 @@ export default class DialogueManager {
     this.scene.time.removeAllEvents();
     this.scene.time.clearPendingEvents();
     this.state = DIALOGUE_STATES.CLOSED;
-    this.onComplete()
+    if (this.onComplete) this.onComplete()
     this.onComplete = undefined
   }
 

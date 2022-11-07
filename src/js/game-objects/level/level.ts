@@ -94,8 +94,6 @@ export default class Level {
         const { type, phaserTile, isReachable } = dataTile;
         const { frameName } = phaserTile.properties;
 
-        const dialogueData = dialogueManager.getDialogueDataForTile(levelKey, x, y);
-
         if (type === TILE_TYPES.EXIT) {
           // Find the center world position of the whole door (which is 2 tall) from the top tile.
           this.exitWorldPosition = {
@@ -150,8 +148,7 @@ export default class Level {
           this.gridXToWorldX(x),
           this.gridYToWorldY(y),
           this,
-          isReachable,
-          dialogueData
+          isReachable
         );
         tile.setGridPosition(x, y);
         tile.enableInteractive();

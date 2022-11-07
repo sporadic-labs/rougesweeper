@@ -56,7 +56,7 @@ class Level0Tutorial implements FloorTutorial {
   }
 
   async onLevelStart() {
-    await this.dialogueManager.playDialogueTheRealOne({
+    await this.dialogueManager.playDialogue({
       title: "Tutorial",
       imageKey: "player-f",
       text: [
@@ -74,7 +74,7 @@ class Level0Tutorial implements FloorTutorial {
       return;
     }
 
-    await this.dialogueManager.playDialogueTheRealOne({
+    await this.dialogueManager.playDialogue({
       title: "Tutorial",
       imageKey: "player-f",
       text: [
@@ -86,7 +86,7 @@ class Level0Tutorial implements FloorTutorial {
 
   async onTileClick(tileType: TILE_TYPES) {
     if (tileType === TILE_TYPES.WEAPON) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -121,7 +121,7 @@ class Level0Tutorial implements FloorTutorial {
         }
       });
     } else if (tileType === TILE_TYPES.KEY) {
-      await this.dialogueManager.playDialogueTheRealOne({
+      await this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-f",
         text: [
@@ -130,7 +130,7 @@ class Level0Tutorial implements FloorTutorial {
         ],
       });
     } else if (tileType === TILE_TYPES.ENEMY) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -156,7 +156,7 @@ class Level0Tutorial implements FloorTutorial {
     const enemyCount = this.level.countNeighboringEnemies(playerGridPos.x, playerGridPos.y);
     if (enemyCount > 0 && !this.hasSeenAnEnemy) {
       this.hasSeenAnEnemy = true;
-      await this.dialogueManager.playDialogueTheRealOne({
+      await this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-f",
         text: [
@@ -217,7 +217,7 @@ class Level1To9Tutorial implements FloorTutorial {
 
   async onTileClick(tileType: TILE_TYPES) {
     if (tileType === TILE_TYPES.ENEMY && !store.tutorialFlags.hasSeenEnemy) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -232,7 +232,7 @@ class Level1To9Tutorial implements FloorTutorial {
       tileType === TILE_TYPES.SCRAMBLE_ENEMY &&
       !store.tutorialFlags.hasSeenScrambleEnemy
     ) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -244,7 +244,7 @@ class Level1To9Tutorial implements FloorTutorial {
         },
       ]);
     } else if (tileType === TILE_TYPES.SUPER_ENEMY && !store.tutorialFlags.hasSeenSuperEnemy) {
-      await this.dialogueManager.playDialogueTheRealOne({
+      await this.dialogueManager.playDialogue({
         title: "Tutorial",
         imageKey: "player-f",
         text: [
@@ -253,7 +253,7 @@ class Level1To9Tutorial implements FloorTutorial {
         ],
       });
     } else if (tileType === TILE_TYPES.AMMO && !store.tutorialFlags.hasSeenAmmo) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -264,7 +264,7 @@ class Level1To9Tutorial implements FloorTutorial {
         },
       ]);
     } else if (tileType === TILE_TYPES.SNIPER && !store.tutorialFlags.hasSeenSniper) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -274,7 +274,7 @@ class Level1To9Tutorial implements FloorTutorial {
         },
       ]);
     } else if (tileType === TILE_TYPES.EMP && !store.tutorialFlags.hasSeenEmp) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -282,7 +282,7 @@ class Level1To9Tutorial implements FloorTutorial {
         },
       ]);
     } else if (tileType === TILE_TYPES.COMPASS && !store.tutorialFlags.hasSeenCompass) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -290,7 +290,7 @@ class Level1To9Tutorial implements FloorTutorial {
         },
       ]);
     } else if (tileType === TILE_TYPES.UPGRADE && !store.tutorialFlags.hasSeenUpgrade) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -300,7 +300,7 @@ class Level1To9Tutorial implements FloorTutorial {
         },
       ]);
     } else if (tileType === TILE_TYPES.ALERT && !store.tutorialFlags.hasSeenResetAlarm) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -318,9 +318,9 @@ class Level1To9Tutorial implements FloorTutorial {
     if (!store.tutorialFlags.hasSeenScrambledTile) {
       const playerGridPos = this.player.getGridPosition();
       const tile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
-      const isTileScrambled = tile.isScrambled;
+      const isTileScrambled = tile?.isScrambled ?? false;
       if (isTileScrambled) {
-        await this.dialogueManager.playDialogueTheRealOne([
+        await this.dialogueManager.playDialogue([
           {
             title: "Tutorial",
             imageKey: "player-f",
@@ -377,7 +377,7 @@ class Level10Tutorial implements FloorTutorial {
 
   async onTileClick(tileType: TILE_TYPES) {
     if (tileType === TILE_TYPES.BOSS) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",
@@ -439,7 +439,7 @@ class Level11Tutorial implements FloorTutorial {
 
   async onTileClick(tileType: TILE_TYPES) {
     if (tileType === TILE_TYPES.BOSS) {
-      await this.dialogueManager.playDialogueTheRealOne([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
           imageKey: "player-f",

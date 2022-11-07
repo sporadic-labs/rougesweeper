@@ -7,7 +7,6 @@ import DEPTHS, { yPositionToDepth } from "../depths";
 import createPickupAnimation from "./tile-animations/pickup-animation";
 import createDisappearAnimation from "./tile-animations/disappear-animation";
 import createAttackAnimation from "./tile-animations/attack-animation";
-import { TileDialogueEntry } from "../hud/dialogue-manager";
 import BezierEasing from "bezier-easing";
 import TweenPoser from "../components/tween-poser";
 import Level from "./level";
@@ -20,7 +19,6 @@ export default class Tile {
   public gridX = 0;
   public gridY = 0;
   public isCurrentlyBlank: boolean;
-  public dialoguePlayedCounter = 0;
   public isScrambled = false;
   private backSprite: GameObjects.Sprite;
   private frontSprite: GameObjects.Sprite;
@@ -43,13 +41,9 @@ export default class Tile {
     private x: number,
     private y: number,
     private level: Level,
-    public isReachable: boolean,
-    private dialogueData: TileDialogueEntry
+    public isReachable: boolean
   ) {
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
-
-    this.dialogueData = dialogueData;
-    this.dialoguePlayedCounter = 0;
 
     this.gridX = 0;
     this.gridY = 0;
@@ -339,10 +333,6 @@ export default class Tile {
   unhighlight = () => {
     this.backSprite.setFrame("tile-back-disabled");
   };
-
-  getDialogueData() {
-    return this.dialogueData;
-  }
 
   getCurrentTileType() {
     return this.isCurrentlyBlank ? TILE_TYPES.BLANK : this.type;

@@ -1,6 +1,6 @@
 import Phaser, { Scene } from "phaser";
 import { SCENE_NAME } from "./index";
-import { loadLevels, loadDialogue } from "../store/levels";
+import { loadLevels } from "../store/levels";
 
 const textStyle = {
   color: "#ffffff",
@@ -34,7 +34,6 @@ export default class LoadingScene extends Scene {
     this.load.setPath("resources/");
     this.load.atlas("all-assets", "atlases/all-assets.png", "atlases/all-assets.json");
     loadLevels(this);
-    loadDialogue(this);
   }
 
   create() {
