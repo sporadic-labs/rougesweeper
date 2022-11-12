@@ -1,7 +1,6 @@
 import { Scene } from "phaser";
 import Player from "../game-objects/player/index";
 import GameManager from "../game-objects/game-manager/index";
-import TechIndicator from "../game-objects/hud/tech-indicator";
 import AlertIndicator from "../game-objects/hud/alert-indicator";
 import PauseToggle from "../game-objects/hud/pause-toggle";
 import LevelIndicator from "../game-objects/hud/level-indicator";
@@ -17,7 +16,6 @@ export default class MainScene extends Scene {
     const toastManager = new ToastManager(this);
     new GameManager(this, player, toastManager);
 
-    new TechIndicator(this, store);
     new AlertIndicator(this, store);
     new ItemSwitcher(this, store);
     new PauseToggle(this, store);
