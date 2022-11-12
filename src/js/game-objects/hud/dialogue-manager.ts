@@ -6,9 +6,10 @@ import GAME_MODES from "../game-manager/game-modes";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
+import constants from "../../constants";
 
 const baseTextStyle = {
-  color: "#ffffff",
+  color: constants.darkText,
 };
 const titleStyle = {
   ...baseTextStyle,

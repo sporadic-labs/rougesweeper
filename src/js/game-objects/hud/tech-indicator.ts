@@ -3,9 +3,10 @@ import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store";
+import constants from "../../constants";
 
 const textStyle = {
-  color: "#585e5e",
+  color: constants.darkText,
   align: "center",
   fontSize: "30px",
   fontStyle: "bold",
@@ -37,7 +38,7 @@ export default class TechIndicator {
     this.title = scene.add
       .text(bgWidth / 2, bgPadding.y, "Score", {
         fontSize: "20px",
-        color: "#000000",
+        color: constants.darkText,
         fontStyle: "bold",
       })
       .setOrigin(0.5, 0);

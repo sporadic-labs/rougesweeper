@@ -7,10 +7,11 @@ import { GameStore } from "../../store/index";
 import { levelKeys } from "../../store/levels";
 import storedSettings from "../../store/stored-settings";
 import MobXProxy from "../../helpers/mobx-proxy";
+import constants from "../../constants";
 
 const baseTextStyle = {
   align: "center",
-  color: "#ffffff",
+  color: constants.lightText,
 };
 const titleStyle = {
   ...baseTextStyle,

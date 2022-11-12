@@ -8,11 +8,11 @@ import LevelIndicator from "../game-objects/hud/level-indicator";
 import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
 import ItemSwitcher from "../game-objects/hud/item-switcher";
-import { addUIPanel } from "../helpers/add-ui-panel";
+import constants from "../constants";
 
 const titleStyle = {
   align: "left",
-  color: "#ffffff",
+  color: constants.lightText,
   fontSize: "30px",
   fontStyle: "bold",
 };

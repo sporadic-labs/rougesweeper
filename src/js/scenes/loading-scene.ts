@@ -1,9 +1,10 @@
 import Phaser, { Scene } from "phaser";
 import { SCENE_NAME } from "./index";
 import { loadLevels } from "../store/levels";
+import constants from "../constants";
 
 const textStyle = {
-  color: "#ffffff",
+  color: constants.lightText,
   align: "center",
   fontSize: "30px",
   fontStyle: "bold",

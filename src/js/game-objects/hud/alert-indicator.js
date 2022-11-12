@@ -2,6 +2,7 @@ import { autorun } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
+import constants from "../../constants";
 
 const FRAMES = {
   FILLED: "alarm-on",
@@ -16,7 +17,7 @@ export default class AlertIndicator {
     this.scene = scene;
 
     this.text = scene.add
-      .text(0, 0, "Alert", { fontSize: 20, fill: "#000000", fontStyle: "bold" })
+      .text(0, 0, "Alert", { fontSize: 20, fill: constants.darkText, fontStyle: "bold" })
       .setOrigin(0.5, 0);
 
     this.icons = [

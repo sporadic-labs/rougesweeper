@@ -4,10 +4,11 @@ import TextButton from "./text-button";
 import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
+import constants from "../../constants";
 
 const baseTextStyle = {
   align: "center",
-  color: "#ffffff",
+  color: constants.lightText,
   fontSize: "20px",
 };
 const titleStyle = {

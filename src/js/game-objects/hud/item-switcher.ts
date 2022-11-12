@@ -7,9 +7,10 @@ import TweenPoser from "../components/tween-poser";
 import EventEmitter from "../../helpers/event-emitter";
 import GAME_MODES from "../game-manager/game-modes";
 import MobXProxy from "../../helpers/mobx-proxy";
+import constants from "../../constants";
 
 const textStyle = {
-  color: "#585e5e",
+  color: constants.darkText,
   align: "center",
   fontSize: "22px",
   fontStyle: "bold",
