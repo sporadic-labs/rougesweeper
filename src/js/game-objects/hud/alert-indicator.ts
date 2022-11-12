@@ -4,6 +4,7 @@ import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
 import constants from "../../constants";
 import { GameStore } from "../../store";
+import { addUIPanel } from "../../helpers/add-ui-panel";
 
 const FRAMES = {
   FILLED: "alarm-on",
@@ -12,11 +13,8 @@ const FRAMES = {
 
 export default class AlertIndicator {
   private scene: Phaser.Scene;
-  private gameStore: GameStore;
   private text: Phaser.GameObjects.Text;
   private icons: Array<Phaser.GameObjects.Image>;
-  private background: Phaser.GameObjects.Rectangle;
-  private container: Phaser.GameObjects.Container;
   private dispose: IReactionDisposer;
   private proxy: EventProxy;
 
@@ -39,7 +37,7 @@ export default class AlertIndicator {
     const iconSpacing = 0;
     const iconHeight = this.icons[0].height;
     const bgPadding = { x: 4, y: 24 };
-    const bgWidth = 96;
+    const bgWidth = 110;
 
     this.text.setPosition(bgWidth / 2, bgPadding.y);
 
@@ -51,13 +49,20 @@ export default class AlertIndicator {
     });
 
     const bgHeight = this.icons[2].y + iconHeight + bgPadding.y;
-    this.background = scene.add
-      .rectangle(0, 0, bgWidth, bgHeight, 0xffffff)
-      .setStrokeStyle(8, 0x585e5e, 1)
-      .setOrigin(0, 0);
 
-    this.container = scene.add
-      .container(fractionToX(0.83), fractionToY(0.03), [this.background, this.text, ...this.icons])
+    const uiPanel = addUIPanel({
+      scene: this.scene,
+      x: 0,
+      y: 0,
+      width: bgWidth,
+      height: bgHeight,
+      shadow: "hud",
+      offset: 20,
+      safeUsageOffset: 20,
+    });
+
+    scene.add
+      .container(fractionToX(0.12), fractionToY(0.03), [uiPanel, this.text, ...this.icons])
       .setDepth(DEPTHS.HUD);
 
     this.updateText(gameStore.playerHealth);

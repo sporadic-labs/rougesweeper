@@ -11,8 +11,8 @@ export default class PauseToggle {
   constructor(scene, gameStore) {
     this.scene = scene;
     this.gameStore = gameStore;
-    const x = fractionToX(0.96);
-    const y = fractionToY(0.06);
+    const x = fractionToX(0.865);
+    const y = fractionToY(0.065);
 
     this.sprite = scene.add.sprite(x, y, "all-assets", "gears").setDepth(DEPTHS.HUD);
 

@@ -8,6 +8,7 @@ import EventEmitter from "../../helpers/event-emitter";
 import GAME_MODES from "../game-manager/game-modes";
 import MobXProxy from "../../helpers/mobx-proxy";
 import constants from "../../constants";
+import { addUIPanel } from "../../helpers/add-ui-panel";
 
 const textStyle = {
   color: constants.darkText,
@@ -111,7 +112,6 @@ export default class ItemSwitcher {
   private weaponSprite: Phaser.GameObjects.Sprite;
   private leftButton: ArrowButton;
   private rightButton: ArrowButton;
-  private background: Phaser.GameObjects.Shape;
   private container: Phaser.GameObjects.Container;
   private proxy: EventProxy;
   private dispose: IReactionDisposer;
@@ -120,7 +120,7 @@ export default class ItemSwitcher {
   private mobxProxy: MobXProxy;
 
   constructor(private scene: Phaser.Scene, private gameStore: GameStore) {
-    const size = { x: 1.72 * 96, y: 1.72 * 132 };
+    const size = { x: 1.75 * 96, y: 1.75 * 132 };
     const padding = 16;
 
     this.weaponSprite = scene.add
@@ -131,10 +131,16 @@ export default class ItemSwitcher {
     this.nameText = scene.add.text(size.x * 0.5, padding, "", textStyle).setOrigin(0.5, 0);
     this.ammoText = scene.add.text(size.x * 0.5, size.y - padding, "", textStyle).setOrigin(0.5, 1);
 
-    this.background = scene.add
-      .rectangle(0, 0, size.x, size.y, 0xffffff)
-      .setStrokeStyle(8, 0x585e5e, 1)
-      .setOrigin(0, 0);
+    const uiPanel = addUIPanel({
+      scene: this.scene,
+      x: 0,
+      y: 0,
+      width: size.x,
+      height: size.y,
+      shadow: "hud",
+      offset: 20,
+      safeUsageOffset: 20,
+    });
 
     this.leftButton = new ArrowButton(scene, size.x * 0.15, size.y * 0.88, "left");
     this.rightButton = new ArrowButton(scene, size.x * 0.85, size.y * 0.88, "right");
@@ -142,8 +148,8 @@ export default class ItemSwitcher {
     this.rightButton.events.addListener("pointerdown", this.onArrowButtonClick);
     this.container = scene.add
       // TODO: we should align placement of UI.
-      .container(fractionToX(0.83), fractionToY(0.98) - size.y, [
-        this.background,
+      .container(fractionToX(0.12), fractionToY(0.97) - size.y, [
+        uiPanel,
         this.nameText,
         this.ammoText,
         this.weaponSprite,

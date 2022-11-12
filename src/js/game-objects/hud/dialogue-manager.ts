@@ -135,8 +135,7 @@ export default class DialogueManager {
       y: r.y,
       width: modalWidth,
       height: modalHeight,
-      shadowOffsetX: 15,
-      shadowOffsetY: 15,
+      shadow: "dialogue",
       offset: 20,
       safeUsageOffset: 20,
     });

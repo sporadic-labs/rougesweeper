@@ -1,13 +1,18 @@
 import Phaser from "phaser";
 
+/**
+ * Shadows are weird - we want a smaller offset, but a lighter shadow when the
+ * shadow is in the HUD, so use a type here to control that.
+ */
+export type Shadow = "dialogue" | "hud";
+
 export function addUIPanel({
   scene,
   x,
   y,
   width,
   height,
-  shadowOffsetX,
-  shadowOffsetY,
+  shadow,
   offset,
   safeUsageOffset,
 }: {
@@ -16,18 +21,20 @@ export function addUIPanel({
   y: number;
   width: number;
   height: number;
-  shadowOffsetX: number;
-  shadowOffsetY: number;
+  shadow: Shadow;
   // Offset (width & height) from top-left to use when 9 slicing the asset
   offset: number;
   // Offset (width & height) from top-left to use when determining the safe
   // usage area - the area within the sprite that is safe for content
   safeUsageOffset?: number;
 }) {
+  const shadowOffset = shadow === "dialogue" ? 15 : 10;
+  const shadowAlpha = shadow === "dialogue" ? 1 : 0.5;
+
   const container = scene.add.container(x, y);
-  const shadow = scene.add.nineslice(
-    shadowOffsetX,
-    shadowOffsetY,
+  const shadowPanel = scene.add.nineslice(
+    shadowOffset,
+    shadowOffset,
     width,
     height,
     // @ts-expect-error Bad plugin types!
@@ -35,7 +42,8 @@ export function addUIPanel({
     offset,
     safeUsageOffset
   );
-  container.add(shadow);
+  shadowPanel.setAlpha(shadowAlpha);
+  container.add(shadowPanel);
   const panel = scene.add.nineslice(
     0,
     0,
