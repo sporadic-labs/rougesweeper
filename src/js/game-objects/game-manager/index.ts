@@ -57,10 +57,16 @@ export default class GameManager {
         scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: false });
       }
     });
-    this.mobProxy.observe(store, "gameState", () => {
-      if (store.gameState === GAME_MODES.MENU_MODE && this.level && this.level.events)
+    this.mobProxy.observe(store, "gameState", ({ newValue, oldValue }) => {
+      if (!this.level && !this.level.events) {
+        return;
+      }
+
+      if (newValue === GAME_MODES.MENU_MODE && oldValue !== GAME_MODES.MENU_MODE) {
         this.disableInteractivity();
-      else if (this.level && this.level.events) this.enableInteractivity();
+      } else if (newValue !== GAME_MODES.MENU_MODE && oldValue === GAME_MODES.MENU_MODE) {
+        this.enableInteractivity();
+      }
     });
     this.mobProxy.observe(store, "levelIndex", () => this.startLevel());
 
