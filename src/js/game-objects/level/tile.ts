@@ -288,6 +288,7 @@ export default class Tile {
     if (!this.isRevealed) return;
     this.isRevealed = false;
     this.tileContents?.setVisible(false);
+    this.contentsMagnifyPoser.moveToPose("ZoomOut");
     return new Promise((resolve) => {
       this.flipEffect.events.once("complete", () => {
         resolve();
