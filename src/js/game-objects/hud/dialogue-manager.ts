@@ -69,43 +69,87 @@ export default class DialogueManager {
     this.scene = scene;
     this.gameStore = gameStore;
 
-    const width = Number(scene.game.config.width);
-    const height = Number(scene.game.config.height);
-    const modalWidth = width * 0.9;
-    const modalHeight = 0.32 * height;
+    this.createModal();
 
+    scene.input.keyboard.on("keydown-M", () => {
+      this.nextState();
+    });
+
+    this.proxy = new EventProxy();
+    this.proxy.on(scene.events, "shutdown", this.destroy, this);
+    this.proxy.on(scene.events, "destroy", this.destroy, this);
+  }
+
+  /**
+   * The easiest way to make the dialogue assets responsive is to destroy the
+   * last set of GameObjects and recreate them on-the-fly based on the dialogue
+   * pages!
+   */
+  private createModal() {
+    if (this.container) {
+      this.container.destroy();
+    }
+
+    const height = Number(this.scene.game.config.height);
+    const width = Number(this.scene.game.config.width);
+    const modalWidth = width * 0.5;
+    const textWidth = modalWidth * 0.7;
+
+    this.text = this.scene.add
+      .text(0, 0, "", textStyle)
+      .setOrigin(0.5, 0.5)
+      .setLineSpacing(6)
+      .setFixedSize(textWidth, 0)
+      .setWordWrapWidth(textWidth);
+
+    // Find the max height of all the text entries that will be displayed so
+    // we can derive the modal height from that.
+    let maxDialogueTextHeight = 0;
+    this.dialoguePages.forEach((entry) => {
+      this.text.setText(entry.text);
+      if (this.text.height > maxDialogueTextHeight) {
+        maxDialogueTextHeight = this.text.height;
+      }
+      console.log(this.text.height, this.text.displayHeight);
+    });
+    this.text.setText("");
+    this.text.setFixedSize(textWidth, maxDialogueTextHeight);
+
+    // Derive the modal height from the text height plus some buffer around it
+    // for the title and buttons.
+    const modalHeight = maxDialogueTextHeight + 200;
     const r = new Phaser.Geom.Rectangle(
       (width - modalWidth) / 2,
+      // This is a hacky way to put the modal below the level, ideally we'd
+      // detect where the player is and place the modal underneath them.
       height - modalHeight - 50,
       modalWidth,
       modalHeight
     );
+
+    this.text.setPosition(r.centerX, r.centerY);
+
     const uiPanel = addUIPanel({
-      scene,
+      scene: this.scene,
       x: r.x,
       y: r.y,
       width: modalWidth,
       height: modalHeight,
-      shadowOffsetX: 10,
-      shadowOffsetY: 10,
+      shadowOffsetX: 15,
+      shadowOffsetY: 15,
       offset: 20,
       safeUsageOffset: 20,
     });
 
-    this.title = scene.add
-      .text(r.centerX, r.y + 32, "Dialogue Dialog", titleStyle)
+    this.title = this.scene.add
+      .text(r.centerX, r.y + 40, "Dialogue Dialog", titleStyle)
       .setOrigin(0.5, 0.5);
 
-    this.text = scene.add
-      .text(r.centerX + 72, r.centerY + 12, "", textStyle)
-      .setOrigin(0.5, 0.5)
-      .setLineSpacing(6)
-      .setFixedSize(modalWidth * 0.76, modalHeight * 0.6)
-      .setWordWrapWidth(modalWidth * 0.76);
+    this.sprite = this.scene.add
+      .sprite(r.x + 36, r.centerY, "all-assets", "player-f")
+      .setOrigin(0, 0.5);
 
-    this.sprite = scene.add.sprite(r.x + 36, r.centerY, "all-assets", "player-f").setOrigin(0, 0.5);
-
-    const continueButton = new TextButton(scene, r.right - 182, r.bottom - 30, "Next", {
+    const continueButton = new TextButton(this.scene, r.right - 182, r.bottom - 30, "Next", {
       origin: { x: 0.5, y: 1 },
       textStyle: {
         backgroundColor: constants.darkText,
@@ -113,7 +157,7 @@ export default class DialogueManager {
       },
     });
     continueButton.events.on("DOWN", this.nextState, this);
-    const skipButton = new TextButton(scene, r.right - 74, r.bottom - 30, "Skip", {
+    const skipButton = new TextButton(this.scene, r.right - 74, r.bottom - 30, "Skip", {
       origin: { x: 0.5, y: 1 },
       textStyle: {
         backgroundColor: constants.darkText,
@@ -121,7 +165,7 @@ export default class DialogueManager {
       },
     });
     skipButton.events.on("DOWN", this.close, this);
-    const doneButton = new TextButton(scene, r.right - 74, r.bottom - 30, "Done", {
+    const doneButton = new TextButton(this.scene, r.right - 74, r.bottom - 30, "Done", {
       origin: { x: 0.5, y: 1 },
       textStyle: {
         backgroundColor: constants.darkText,
@@ -131,7 +175,7 @@ export default class DialogueManager {
     doneButton.events.on("DOWN", this.close, this);
     this.controls = { continueButton, doneButton, skipButton };
 
-    this.container = scene.add
+    this.container = this.scene.add
       .container(0, 0, [
         uiPanel,
         this.title,
@@ -143,14 +187,6 @@ export default class DialogueManager {
       ])
       .setDepth(DEPTHS.DIALOGUE)
       .setVisible(false);
-
-    scene.input.keyboard.on("keydown-M", () => {
-      this.nextState();
-    });
-
-    this.proxy = new EventProxy();
-    this.proxy.on(scene.events, "shutdown", this.destroy, this);
-    this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
   get characterDelayMs() {
@@ -167,6 +203,8 @@ export default class DialogueManager {
       : [dialogueEntryOrEntries];
     this.setDialoguePages(entries);
     if (this.isCurrentlyOpen) this.close();
+
+    this.createModal();
 
     return new Promise((resolve, _reject) => {
       if (this.onComplete) {
