@@ -26,6 +26,7 @@ class Level0Tutorial implements FloorTutorial {
   private player: Player;
   private dialogueManager: DialogueManager;
   private hasSeenAnEnemy = false;
+  private hasTriggeredTheAlarm = false; // NOTE(rex): This happens after you pick up the weapon...
   private gameEvents: GameEmitter;
 
   constructor(
@@ -91,35 +92,11 @@ class Level0Tutorial implements FloorTutorial {
           title: "Tutorial",
           imageKey: "player-f",
           text: [
-            "Ah! I must have tripped the security alarm.",
-            "Need to move carefully!",
-            "Left-Click a Hidden Tile to reveal it.",
-          ],
-        },
-        {
-          title: "Tutorial",
-          imageKey: "player-f",
-          text: [
             "This futuristic weapon will help me hack the system!",
             "Right-Click to use the equipped weapon.  Use the Arrow Keys to cycle through weapons.",
           ],
         },
       ]);
-
-      // Hide everything when you pickup the weapon
-      const playerGridPos = this.player.getGridPosition();
-      const tilesAroundPlayer = this.level.getNeighboringTiles(playerGridPos.x, playerGridPos.y);
-      this.level.forEachTile((t) => {
-        // Figure out if the tiles are around the player.
-        if (
-          tilesAroundPlayer.includes(t) ||
-          (t.gridX === playerGridPos.x && t.gridY === playerGridPos.y)
-        ) {
-          // Do nothing...
-        } else {
-          t.flipToBack();
-        }
-      });
     } else if (tileType === TILE_TYPES.KEY) {
       await this.dialogueManager.playDialogue({
         title: "Tutorial",
@@ -153,18 +130,54 @@ class Level0Tutorial implements FloorTutorial {
 
   async onPlayerFinishMove() {
     const playerGridPos = this.player.getGridPosition();
-    const enemyCount = this.level.countNeighboringEnemies(playerGridPos.x, playerGridPos.y);
-    if (enemyCount > 0 && !this.hasSeenAnEnemy) {
-      this.hasSeenAnEnemy = true;
-      await this.dialogueManager.playDialogue({
-        title: "Tutorial",
-        imageKey: "player-f",
-        text: [
-          "This radar is blaring...",
-          "An enemy must be nearby!",
-          "Equip 'Hack' and Right-Click on the hidden tile with the Enemy to neutralize the threat.",
-        ],
-      });
+
+    if (!this.hasTriggeredTheAlarm) {
+      const tile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
+      if (tile.type === TILE_TYPES.WEAPON) {
+        this.hasTriggeredTheAlarm = true;
+
+        // Hide everything when you pickup the weapon
+        const tilesAroundPlayer = this.level.getNeighboringTiles(playerGridPos.x, playerGridPos.y);
+        this.level.forEachTile((t) => {
+          // Figure out if the tiles are around the player.
+          if (
+            tilesAroundPlayer.includes(t) ||
+            (t.gridX === playerGridPos.x && t.gridY === playerGridPos.y)
+          ) {
+            // Do nothing...
+          } else {
+            t.flipToBack();
+          }
+        });
+
+        await this.dialogueManager.playDialogue([
+          {
+            title: "Tutorial",
+            imageKey: "player-f",
+            text: [
+              "Ah! I must have tripped the security alarm.",
+              "Need to move carefully!",
+              "Left-Click a Hidden Tile to reveal it.",
+            ],
+          },
+        ]);
+      }
+    }
+
+    if (!this.hasSeenAnEnemy) {
+      const enemyCount = this.level.countNeighboringEnemies(playerGridPos.x, playerGridPos.y);
+      if (enemyCount > 0) {
+        this.hasSeenAnEnemy = true;
+        await this.dialogueManager.playDialogue({
+          title: "Tutorial",
+          imageKey: "player-f",
+          text: [
+            "This radar is blaring...",
+            "An enemy must be nearby!",
+            "Equip 'Hack' and Right-Click on the hidden tile with the Enemy to neutralize the threat.",
+          ],
+        });
+      }
     }
   }
 
@@ -505,11 +518,7 @@ class Level12Tutorial implements FloorTutorial {
         {
           title: "Tutorial",
           imageKey: "player-f",
-          text: [
-            "Wha- How did you find me again!?!",
-            "This is IMPOSSIBLE!",
-            "Nooooooooo...",
-          ],
+          text: ["Wha- How did you find me again!?!", "This is IMPOSSIBLE!", "Nooooooooo..."],
         },
       ]);
     }
