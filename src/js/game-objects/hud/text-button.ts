@@ -1,21 +1,22 @@
 import EventProxy from "../../helpers/event-proxy";
-import { Events } from "phaser";
+import { Types } from "phaser";
+import EventEmitter from "../../helpers/event-emitter";
 
-const defaultOrigin = { x: 0.5, y: 0.5 };
+const defaultOrigin = { x: 0.5, y: 0.5 } as const;
 const defaultStyle = {
-  fontSize: 20,
+  fontSize: "20px",
   fontWeight: 600,
   backgroundColor: "#E5E0D6",
-  fill: "#3C3E42",
+  color: "#3C3E42",
   padding: { left: 20, right: 20, top: 10, bottom: 10 },
-};
+} as const;
 
 export const BUTTON_EVENTS = {
   DOWN: "DOWN",
   OVER: "OVER",
   UP: "UP",
   OUT: "OUT",
-};
+} as const;
 
 /**
  * A simple text-based button for mocking things up without needing sprites. This allows tracking of
@@ -24,21 +25,46 @@ export const BUTTON_EVENTS = {
  * @class Button
  */
 export default class TextButton {
+  public events = new EventEmitter<{
+    DOWN: undefined;
+    OVER: undefined;
+    UP: undefined;
+    OUT: undefined;
+  }>();
+  public text: Phaser.GameObjects.Text;
+
+  private scene: Phaser.Scene;
+  private isHovered: boolean;
+  private isPressed: boolean;
+  private enabled: boolean;
+  private proxy: EventProxy;
+
   /**
    * @param {Phaser.Scene} scene
    * @param {number} x
    * @param {number} y
    */
-  constructor(scene, x, y, text, { origin = defaultOrigin, textStyle = defaultStyle } = {}) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    text: string,
+    {
+      origin = defaultOrigin,
+      textStyle = defaultStyle,
+    }: {
+      origin?: { x: number; y: number };
+      textStyle?: Types.GameObjects.Text.TextStyle;
+    } = {}
+  ) {
     this.scene = scene;
     this.isHovered = false;
     this.isPressed = false;
-    this.events = new Events.EventEmitter();
 
     this.enabled = true;
 
     this.text = scene.add
-      .text(x, y, text, textStyle)
+      .text(x, y, text, { ...defaultStyle, ...textStyle })
       .setOrigin(origin.x, origin.y)
       .setInteractive();
 
@@ -50,16 +76,16 @@ export default class TextButton {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
-  setVisible(isVisible) {
+  setVisible(isVisible: boolean) {
     this.text.setVisible(isVisible);
   }
 
-  setIsHovered(isHovered) {
+  setIsHovered(isHovered: boolean) {
     this.isHovered = isHovered;
     this.updateTextStyle();
   }
 
-  setIsPressed(isPressed) {
+  setIsPressed(isPressed: boolean) {
     this.isPressed = isPressed;
     this.updateTextStyle();
   }
@@ -123,25 +149,25 @@ export default class TextButton {
   onPointerOver() {
     this.isHovered = true;
     this.updateTextStyle();
-    this.events.emit(BUTTON_EVENTS.OVER);
+    this.events.emit(BUTTON_EVENTS.OVER, undefined);
   }
 
   onPointerOut() {
     this.isHovered = false;
     this.updateTextStyle();
-    this.events.emit(BUTTON_EVENTS.OUT);
+    this.events.emit(BUTTON_EVENTS.OUT, undefined);
   }
 
   onPointerUp() {
     this.isPressed = false;
     this.updateTextStyle();
-    this.events.emit(BUTTON_EVENTS.UP);
+    this.events.emit(BUTTON_EVENTS.UP, undefined);
   }
 
   onPointerDown() {
     this.isPressed = true;
     this.updateTextStyle();
-    this.events.emit(BUTTON_EVENTS.DOWN);
+    this.events.emit(BUTTON_EVENTS.DOWN, undefined);
   }
 
   destroy() {

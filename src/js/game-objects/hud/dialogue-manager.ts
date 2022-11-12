@@ -6,6 +6,7 @@ import GAME_MODES from "../game-manager/game-modes";
 import TextButton from "./text-button";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
+import { addUIPanel } from "../../helpers/add-ui-panel";
 import constants from "../../constants";
 
 const baseTextStyle = {
@@ -62,7 +63,7 @@ export default class DialogueManager {
   private text: Phaser.GameObjects.Text;
   private sprite: Phaser.GameObjects.Sprite;
 
-  private onComplete: (value?: unknown) => void
+  private onComplete: (value?: unknown) => void;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
@@ -70,18 +71,26 @@ export default class DialogueManager {
 
     const width = Number(scene.game.config.width);
     const height = Number(scene.game.config.height);
-    const modalWidth = width;
+    const modalWidth = width * 0.9;
     const modalHeight = 0.32 * height;
 
     const r = new Phaser.Geom.Rectangle(
       (width - modalWidth) / 2,
-      height - modalHeight,
+      height - modalHeight - 50,
       modalWidth,
       modalHeight
     );
-    const background = scene.add.graphics();
-    background.fillStyle(0xbcbcbc);
-    background.fillRect(r.x, r.y, r.width, r.height);
+    const uiPanel = addUIPanel({
+      scene,
+      x: r.x,
+      y: r.y,
+      width: modalWidth,
+      height: modalHeight,
+      shadowOffsetX: 10,
+      shadowOffsetY: 10,
+      offset: 20,
+      safeUsageOffset: 20,
+    });
 
     this.title = scene.add
       .text(r.centerX, r.y + 32, "Dialogue Dialog", titleStyle)
@@ -96,23 +105,35 @@ export default class DialogueManager {
 
     this.sprite = scene.add.sprite(r.x + 36, r.centerY, "all-assets", "player-f").setOrigin(0, 0.5);
 
-    const continueButton = new TextButton(scene, r.right - 172, r.bottom - 20, "Next", {
+    const continueButton = new TextButton(scene, r.right - 182, r.bottom - 30, "Next", {
       origin: { x: 0.5, y: 1 },
+      textStyle: {
+        backgroundColor: constants.darkText,
+        color: constants.lightText,
+      },
     });
     continueButton.events.on("DOWN", this.nextState, this);
-    const skipButton = new TextButton(scene, r.right - 64, r.bottom - 20, "Skip", {
+    const skipButton = new TextButton(scene, r.right - 74, r.bottom - 30, "Skip", {
       origin: { x: 0.5, y: 1 },
+      textStyle: {
+        backgroundColor: constants.darkText,
+        color: constants.lightText,
+      },
     });
     skipButton.events.on("DOWN", this.close, this);
-    const doneButton = new TextButton(scene, r.right - 64, r.bottom - 20, "Done", {
+    const doneButton = new TextButton(scene, r.right - 74, r.bottom - 30, "Done", {
       origin: { x: 0.5, y: 1 },
+      textStyle: {
+        backgroundColor: constants.darkText,
+        color: constants.lightText,
+      },
     });
     doneButton.events.on("DOWN", this.close, this);
     this.controls = { continueButton, doneButton, skipButton };
 
     this.container = scene.add
       .container(0, 0, [
-        background,
+        uiPanel,
         this.title,
         this.text,
         this.sprite,
@@ -149,12 +170,12 @@ export default class DialogueManager {
 
     return new Promise((resolve, _reject) => {
       if (this.onComplete) {
-        this.onComplete()
-        this.onComplete = undefined
+        this.onComplete();
+        this.onComplete = undefined;
       }
-      this.onComplete = resolve
-      this.open()
-    })
+      this.onComplete = resolve;
+      this.open();
+    });
   }
 
   nextState() {
@@ -324,8 +345,8 @@ export default class DialogueManager {
     this.scene.time.removeAllEvents();
     this.scene.time.clearPendingEvents();
     this.state = DIALOGUE_STATES.CLOSED;
-    if (this.onComplete) this.onComplete()
-    this.onComplete = undefined
+    if (this.onComplete) this.onComplete();
+    this.onComplete = undefined;
   }
 
   private updateButtons() {
