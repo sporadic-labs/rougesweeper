@@ -561,9 +561,9 @@ export default class GameManager {
     this.radar.setVisible(true);
     this.radar.update();
 
-    this.events.emit(GAME_EVENTS.LEVEL_START, this.level);
-
     this.startIdleFlow();
+
+    this.events.emit(GAME_EVENTS.LEVEL_START, this.level);
   }
 
   destroy() {
