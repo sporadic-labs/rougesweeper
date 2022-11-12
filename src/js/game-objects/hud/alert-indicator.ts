@@ -1,8 +1,9 @@
-import { autorun } from "mobx";
+import { autorun, IReactionDisposer } from "mobx";
 import EventProxy from "../../helpers/event-proxy";
 import { fractionToX, fractionToY } from "../../game-dimensions";
 import DEPTHS from "../depths";
 import constants from "../../constants";
+import { GameStore } from "../../store";
 
 const FRAMES = {
   FILLED: "alarm-on",
@@ -10,14 +11,23 @@ const FRAMES = {
 };
 
 export default class AlertIndicator {
+  private scene: Phaser.Scene;
+  private gameStore: GameStore;
+  private text: Phaser.GameObjects.Text;
+  private icons: Array<Phaser.GameObjects.Image>;
+  private background: Phaser.GameObjects.Rectangle;
+  private container: Phaser.GameObjects.Container;
+  private dispose: IReactionDisposer;
+  private proxy: EventProxy;
+
   /**
    * @param {Phaser.Scene} scene
    */
-  constructor(scene, gameStore) {
+  constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
 
     this.text = scene.add
-      .text(0, 0, "Alert", { fontSize: 20, fill: constants.darkText, fontStyle: "bold" })
+      .text(0, 0, "Alert", { fontSize: "20px", color: constants.darkText, fontStyle: "bold" })
       .setOrigin(0.5, 0);
 
     this.icons = [
@@ -50,7 +60,7 @@ export default class AlertIndicator {
       .container(fractionToX(0.83), fractionToY(0.03), [this.background, this.text, ...this.icons])
       .setDepth(DEPTHS.HUD);
 
-    this.updateText(gameStore.playerHealth, true);
+    this.updateText(gameStore.playerHealth);
     this.dispose = autorun(() => this.updateText(gameStore.playerHealth));
 
     this.proxy = new EventProxy();
@@ -58,7 +68,7 @@ export default class AlertIndicator {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
-  updateText(playerHealth) {
+  updateText(playerHealth: number) {
     const alertLevel = 4 - playerHealth;
     this.icons.forEach((icon, i) => {
       const frame = i < alertLevel ? FRAMES.FILLED : FRAMES.UNFILLED;
