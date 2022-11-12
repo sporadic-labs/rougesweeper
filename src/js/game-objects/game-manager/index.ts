@@ -85,9 +85,10 @@ export default class GameManager {
   }
 
   enableInteractivity() {
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
-    this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForActiveItem);
-    this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
+    const currentEvents = this.level.events.eventNames()
+    if (!currentEvents.includes(LEVEL_EVENTS.TILE_SELECT_PRIMARY)) this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
+    if (!currentEvents.includes(LEVEL_EVENTS.TILE_SELECT_SECONDARY)) this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForActiveItem);
+    if (!currentEvents.includes(LEVEL_EVENTS.EXIT_SELECT_PRIMARY)) this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
   }
 
   disableInteractivity() {
