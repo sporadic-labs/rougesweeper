@@ -201,7 +201,6 @@ export default class DialogueManager {
       ? dialogueEntryOrEntries
       : [dialogueEntryOrEntries];
     this.setDialoguePages(entries);
-    if (this.isCurrentlyOpen) this.close();
 
     this.createModal();
 
@@ -225,7 +224,7 @@ export default class DialogueManager {
         this.complete();
         break;
       case DIALOGUE_STATES.CLOSED:
-        this.open();
+        // Do nothing...
         break;
       case DIALOGUE_STATES.OPEN:
       default:
@@ -357,14 +356,10 @@ export default class DialogueManager {
     this.resetButtons();
 
     // Create Event listeners for easy control of the dialogue.
-    this.scene.input.on(
-      "pointerdown",
-      (e: any) => {
-        if (e.button === 0) this.nextState();
-        else if (e.button === 2) this.close();
-      },
-      this
-    );
+    // NOTE(rex): This fucking thing solves a Phaser problem with subscribing to an event, and Phaser thinking it is firing already...
+    setTimeout(() => {
+      this.proxy.on(this.scene.input, "pointerdown", this.onPointerDown, this);
+    }, 0)
 
     this.container.setVisible(true);
     this.previousGameState = this.gameStore.gameState;
@@ -376,7 +371,10 @@ export default class DialogueManager {
     this.isCurrentlyOpen = false;
     this.container.setVisible(false);
     this.gameStore.setGameState(this.previousGameState);
-    this.scene.input.off("pointerdown");
+
+    // this.scene.input.off("pointerdown");
+    this.proxy.off(this.scene.input, "pointerdown", this.onPointerDown, this);
+
     this.reset();
     this.pageIndex = 0;
     this.scene.time.removeAllEvents();
@@ -402,8 +400,10 @@ export default class DialogueManager {
     this.currentDialoguePage = null;
     this.title.setText("");
     this.text.setText("");
+    this.pageIndex = 0;
     this.lineIndex = 0;
     this.wordIndex = 0;
+    this.characterIndex = 0;
     this.state = DIALOGUE_STATES.EMPTY;
   }
 
@@ -418,6 +418,16 @@ export default class DialogueManager {
 
   setDialogueImage(imageFrame: string) {
     this.sprite.setTexture("all-assets", imageFrame);
+  }
+
+  onPointerDown(e: Phaser.Input.Pointer) {
+    if (this.isCurrentlyOpen) {
+      if (e.button === 0) {
+        this.nextState();
+      } else if (e.button === 2) {
+        this.close();
+      }
+    }
   }
 
   destroy() {
