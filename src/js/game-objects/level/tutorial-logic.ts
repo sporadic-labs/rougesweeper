@@ -93,7 +93,7 @@ class Level0Tutorial implements FloorTutorial {
           imageKey: "player-f",
           text: [
             "This futuristic weapon will help me hack the system!",
-            "Right-Click to use the equipped weapon.  Use the Arrow Keys to cycle through weapons.",
+            "Right-Click to use the equipped weapon. Use the Arrow Keys to cycle through weapons.",
           ],
         },
       ]);
