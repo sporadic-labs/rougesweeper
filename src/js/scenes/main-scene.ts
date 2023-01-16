@@ -7,6 +7,7 @@ import LevelIndicator from "../game-objects/hud/level-indicator";
 import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
 import ItemSwitcher from "../game-objects/hud/item-switcher";
+import DebugTips from "../game-objects/hud/debug-tips";
 
 export default class MainScene extends Scene {
   create() {
@@ -20,5 +21,6 @@ export default class MainScene extends Scene {
     new ItemSwitcher(this, store);
     new PauseToggle(this, store);
     new LevelIndicator(this, store);
+    new DebugTips(this);
   }
 }

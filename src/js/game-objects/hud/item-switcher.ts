@@ -117,6 +117,8 @@ export default class ItemSwitcher {
   private dispose: IReactionDisposer;
   private leftKey: Phaser.Input.Keyboard.Key;
   private rightKey: Phaser.Input.Keyboard.Key;
+  private aKey: Phaser.Input.Keyboard.Key;
+  private dKey: Phaser.Input.Keyboard.Key;
   private mobxProxy: MobXProxy;
 
   constructor(private scene: Phaser.Scene, private gameStore: GameStore) {
@@ -171,8 +173,12 @@ export default class ItemSwitcher {
 
     this.leftKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     this.rightKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    this.aKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    this.dKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     this.proxy.on(this.leftKey, "down", () => this.shiftActiveItem("left"));
     this.proxy.on(this.rightKey, "down", () => this.shiftActiveItem("right"));
+    this.proxy.on(this.aKey, "down", () => this.shiftActiveItem("left"));
+    this.proxy.on(this.dKey, "down", () => this.shiftActiveItem("right"));
 
     // TODO(rex): For some reason this isn't working...
     this.mobxProxy = new MobXProxy();

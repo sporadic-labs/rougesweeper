@@ -146,7 +146,7 @@ export default class DebugMenu {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
     this.proxy.on(
       scene.input.keyboard,
-      "keydown-D",
+      "keydown-SPACE",
       () => {
         if (this.isOpen) this.close();
         else if (gameStore.gameState !== GAME_MODES.MENU_MODE) this.open();
