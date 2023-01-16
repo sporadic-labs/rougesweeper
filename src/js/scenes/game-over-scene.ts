@@ -24,7 +24,7 @@ export default class GameOverScene extends Scene {
 
     const backgroundSprite = this.add
       .sprite(width / 2, y - 100, this.didPlayerWin ? "win-screen" : "lose-screen")
-      .setScale(1.6) // TODO(rex): Just make the screens the right size...
+      .setScale(2) // TODO(rex): Just make the screens the right size...
       .setDepth(DEPTHS.BOARD)
       .setOrigin(0.5, 0.5);
     this.background = backgroundSprite;
