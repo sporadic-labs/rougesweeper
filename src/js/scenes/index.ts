@@ -1,9 +1,11 @@
 import Loading from "./loading-scene";
+import StartScene from "./start-scene";
 import Main from "./main-scene";
 import GameOverScene from "./game-over-scene";
 
 enum SCENE_NAME {
   LOADING = "LOADING",
+  START = "START",
   MAIN = "MAIN",
   GAME_OVER = "GAME_OVER",
 }
@@ -15,6 +17,7 @@ enum SCENE_NAME {
  */
 function installScenes(game: Phaser.Game) {
   game.scene.add(SCENE_NAME.LOADING, Loading);
+  game.scene.add(SCENE_NAME.START, StartScene);
   game.scene.add(SCENE_NAME.MAIN, Main);
   game.scene.add(SCENE_NAME.GAME_OVER, GameOverScene);
 }

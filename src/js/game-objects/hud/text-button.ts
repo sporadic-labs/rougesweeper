@@ -1,6 +1,7 @@
 import EventProxy from "../../helpers/event-proxy";
 import { Types } from "phaser";
 import EventEmitter from "../../helpers/event-emitter";
+import DEPTHS from "../depths";
 
 const defaultOrigin = { x: 0.5, y: 0.5 } as const;
 const defaultStyle = {
@@ -10,6 +11,7 @@ const defaultStyle = {
   color: "#3C3E42",
   padding: { left: 20, right: 20, top: 10, bottom: 10 },
 } as const;
+const defaultDepth = DEPTHS.HUD
 
 export const BUTTON_EVENTS = {
   DOWN: "DOWN",
@@ -52,9 +54,11 @@ export default class TextButton {
     {
       origin = defaultOrigin,
       textStyle = defaultStyle,
+      depth = defaultDepth
     }: {
       origin?: { x: number; y: number };
       textStyle?: Types.GameObjects.Text.TextStyle;
+      depth?: number
     } = {}
   ) {
     this.scene = scene;
@@ -66,6 +70,7 @@ export default class TextButton {
     this.text = scene.add
       .text(x, y, text, { ...defaultStyle, ...textStyle })
       .setOrigin(origin.x, origin.y)
+      .setDepth(depth)
       .setInteractive();
 
     this.updateTextStyle();

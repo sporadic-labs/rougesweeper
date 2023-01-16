@@ -34,10 +34,15 @@ export default class LoadingScene extends Scene {
 
     this.load.setPath("resources/");
     this.load.atlas("all-assets", "atlases/all-assets.png", "atlases/all-assets.json");
+    // Load the starting screens
+    this.load.image("start-screen", "screens/start-v1.png")
+    this.load.image("win-screen", "screens/game-over-win-v1.png")
+    this.load.image("lose-screen", "screens/game-over-lose-v1.png")
+
     loadLevels(this);
   }
 
   create() {
-    this.scene.start(SCENE_NAME.MAIN);
+    this.scene.start(SCENE_NAME.START);
   }
 }

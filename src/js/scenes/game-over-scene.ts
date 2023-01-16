@@ -1,15 +1,17 @@
-import Phaser, { Scene } from "phaser";
+import { Scene, GameObjects } from "phaser";
 import TextButton, { BUTTON_EVENTS } from "../game-objects/hud/text-button";
 import { SCENE_NAME } from "./index";
 import store from "../store/index";
+import DEPTHS from "../game-objects/depths";
 
 export default class GameOverScene extends Scene {
   private didPlayerWin = false;
-  private gameOverText: Phaser.GameObjects.Text;
-  private moveCountText: Phaser.GameObjects.Text;
-  private enemiesDefeatedText: Phaser.GameObjects.Text;
-  private goldText: Phaser.GameObjects.Text;
+  private gameOverText: GameObjects.Text;
+  private moveCountText: GameObjects.Text;
+  private enemiesDefeatedText: GameObjects.Text;
+  private goldText: GameObjects.Text;
   private playButton: TextButton;
+  private background: GameObjects.Sprite;
 
   init(data: { didPlayerWin: boolean }) {
     this.didPlayerWin = data.didPlayerWin;
@@ -20,10 +22,18 @@ export default class GameOverScene extends Scene {
     const height = Number(this.game.config.height);
     const y = height / 2;
 
+    const backgroundSprite = this.add
+      .sprite(width / 2, y - 100, this.didPlayerWin ? "win-screen" : "lose-screen")
+      .setScale(1.6) // TODO(rex): Just make the screens the right size...
+      .setDepth(DEPTHS.BOARD)
+      .setOrigin(0.5, 0.5);
+    this.background = backgroundSprite;
+
     const gameOverText = this.add
       .text(width / 2, y - 100, this.didPlayerWin ? "You Win!" : "Game Over!", {
         fontSize: "50px",
       })
+      .setDepth(DEPTHS.HUD)
       .setOrigin(0.5, 0.5);
     this.gameOverText = gameOverText;
 
@@ -31,6 +41,7 @@ export default class GameOverScene extends Scene {
       .text(width / 2, y - 40, `Moves: ${store.moveCount}`, {
         fontSize: "50px",
       })
+      .setDepth(DEPTHS.HUD)
       .setOrigin(0.5, 0.5);
     this.moveCountText = moveCountText;
 
@@ -38,6 +49,7 @@ export default class GameOverScene extends Scene {
       .text(width / 2, y + 20, `Enemies Defeated: ${store.enemiesDefeated}`, {
         fontSize: "50px",
       })
+      .setDepth(DEPTHS.HUD)
       .setOrigin(0.5, 0.5);
     this.enemiesDefeatedText = enemiesDefeatedText;
 
@@ -45,6 +57,7 @@ export default class GameOverScene extends Scene {
       .text(width / 2, y + 80, `Tech Collected: ${store.goldCount}`, {
         fontSize: "50px",
       })
+      .setDepth(DEPTHS.HUD)
       .setOrigin(0.5, 0.5);
     this.goldText = goldText;
 
@@ -63,5 +76,6 @@ export default class GameOverScene extends Scene {
     this.moveCountText.destroy();
     this.enemiesDefeatedText.destroy();
     this.goldText.destroy();
+    this.background.destroy();
   }
 }
