@@ -85,10 +85,13 @@ export default class GameManager {
   }
 
   enableInteractivity() {
-    const currentEvents = this.level.events.eventNames()
-    if (!currentEvents.includes(LEVEL_EVENTS.TILE_SELECT_PRIMARY)) this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
-    if (!currentEvents.includes(LEVEL_EVENTS.TILE_SELECT_SECONDARY)) this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForActiveItem);
-    if (!currentEvents.includes(LEVEL_EVENTS.EXIT_SELECT_PRIMARY)) this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
+    const currentEvents = this.level.events.eventNames();
+    if (!currentEvents.includes(LEVEL_EVENTS.TILE_SELECT_PRIMARY))
+      this.level.events.on(LEVEL_EVENTS.TILE_SELECT_PRIMARY, this.onTileSelectForMove);
+    if (!currentEvents.includes(LEVEL_EVENTS.TILE_SELECT_SECONDARY))
+      this.level.events.on(LEVEL_EVENTS.TILE_SELECT_SECONDARY, this.onTileSelectForActiveItem);
+    if (!currentEvents.includes(LEVEL_EVENTS.EXIT_SELECT_PRIMARY))
+      this.level.events.on(LEVEL_EVENTS.EXIT_SELECT_PRIMARY, this.onExitSelect);
   }
 
   disableInteractivity() {
@@ -426,7 +429,7 @@ export default class GameManager {
    */
   async runAttackFlow(tile: Tile, path: Point[]) {
     this.level.disableAllTiles();
-    
+
     await this.tutorialLogic.onTileClick(tile.type);
 
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
@@ -443,7 +446,7 @@ export default class GameManager {
     if (isEnemyTile(tile.type)) {
       store.addGold();
       store.addEnemiesDefeated();
-      if (Phaser.Math.RND.integerInRange(1, 100) <= 33) {
+      if (Phaser.Math.RND.integerInRange(1, 100) <= 50) {
         const ammoAnim = new AmmoCollectAnimation(this.scene, x - 40, y);
         await ammoAnim.play();
         ammoAnim.destroy();
