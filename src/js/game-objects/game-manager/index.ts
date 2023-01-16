@@ -52,7 +52,7 @@ export default class GameManager {
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
-      if (store.playerHealth === 0) {
+      if (store.playerHealth <= 0) {
         scene.scene.stop();
         scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: false });
       }
@@ -124,7 +124,7 @@ export default class GameManager {
     this.events.emit(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.player);
     this.events.emit(GAME_EVENTS.EXIT_SELECT, door);
 
-    if (this.level.exit.isOpen()) {
+    if (this.level.exit.isOpen() && !this.level.isLastLevel()) {
       const { x, y } = this.level.gridXYToWorldXY(exitGridPos);
       const coinAnim = new CoinCollectAnimation(this.scene, x - 40, y);
       await coinAnim.play();
@@ -132,6 +132,10 @@ export default class GameManager {
       store.addGold();
       store.nextLevel();
       return;
+    } else if (this.level.exit.isOpen() && this.level.isLastLevel()) {
+      // If we made it to the end, stop the scene and kick us over to the game over scene!
+      this.scene.scene.stop();
+      this.scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: true });
     } else {
       this.toastManager.setMessage("That door is locked - find the key.");
     }

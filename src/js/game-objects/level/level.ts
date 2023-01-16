@@ -13,6 +13,7 @@ import EventEmitter from "../../helpers/event-emitter";
 import LEVEL_EVENTS, { LevelEmitter } from "./events";
 import { neighborOffsets } from "./neighbor-offsets";
 import RandomPickupManager from "./random-pickup-manager";
+import { levelData as allLevelData } from "../../store/levels";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 
@@ -484,6 +485,11 @@ export default class Level {
     this.getNeighboringTiles(start.x, start.y).map((tile) => tile.flipToFront());
     this.state = LEVEL_STATE.RUNNING;
     this.events.emit(LEVEL_EVENTS.LEVEL_START, this);
+  }
+
+  isLastLevel(): boolean {
+    const levelData = allLevelData.find((data) => data.level === this.levelKey);
+    return levelData ? levelData.isLastLevel : false
   }
 
   destroy() {

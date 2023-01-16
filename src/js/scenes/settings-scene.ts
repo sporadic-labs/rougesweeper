@@ -3,7 +3,7 @@ import TextButton, { BUTTON_EVENTS } from "../game-objects/hud/text-button";
 import { SCENE_NAME } from "./index";
 import DEPTHS from "../game-objects/depths";
 
-export default class StartScene extends Scene {
+export default class SettingScene extends Scene {
   private titleText: GameObjects.Text;
   private playButton: TextButton;
   private settingsButton: TextButton;
@@ -22,27 +22,19 @@ export default class StartScene extends Scene {
     this.background = backgroundSprite;
 
     const gameOverText = this.add
-      .text(width / 2, height - 312, "Rogue Sweeper", {
+      .text(width / 2, height - 312, "Settings", {
         fontSize: "50px",
       })
       .setOrigin(0.5, 0.5)
       .setDepth(DEPTHS.HUD);
     this.titleText = gameOverText;
 
-    const playButton = new TextButton(this, width / 2, height - 224, "Start");
+    const playButton = new TextButton(this, width / 2, height - 172, "Back");
     this.playButton = playButton;
 
     playButton.events.once(BUTTON_EVENTS.DOWN, () => {
       this.scene.stop();
-      this.scene.start(SCENE_NAME.MAIN);
-    });
-
-    const settingsButton = new TextButton(this, width / 2, height - 148, "Settings");
-    this.settingsButton = settingsButton;
-
-    settingsButton.events.once(BUTTON_EVENTS.DOWN, () => {
-      this.scene.stop();
-      this.scene.start(SCENE_NAME.SETTINGS);
+      this.scene.start(SCENE_NAME.START);
     });
   }
 

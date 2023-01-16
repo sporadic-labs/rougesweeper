@@ -11,6 +11,7 @@ export default class GameOverScene extends Scene {
   private enemiesDefeatedText: GameObjects.Text;
   private goldText: GameObjects.Text;
   private playButton: TextButton;
+  private mainMenuButton: TextButton;
   private background: GameObjects.Sprite;
 
   init(data: { didPlayerWin: boolean }) {
@@ -61,16 +62,25 @@ export default class GameOverScene extends Scene {
       .setOrigin(0.5, 0.5);
     this.goldText = goldText;
 
-    const playButton = new TextButton(this, width / 2, y + 160, "Play Again?");
+    const playButton = new TextButton(this, width / 2, y + 164, "Play Again?");
     this.playButton = playButton;
 
     playButton.events.once(BUTTON_EVENTS.DOWN, () => {
       this.scene.stop();
       this.scene.start(SCENE_NAME.MAIN);
     });
+    
+    const mainMenuButton = new TextButton(this, width / 2, y + 240, "Main Menu");
+    this.mainMenuButton = mainMenuButton;
+
+    mainMenuButton.events.once(BUTTON_EVENTS.DOWN, () => {
+      this.scene.stop();
+      this.scene.start(SCENE_NAME.START);
+    });
   }
 
   destroy() {
+    this.mainMenuButton.destroy();
     this.playButton.destroy();
     this.gameOverText.destroy();
     this.moveCountText.destroy();

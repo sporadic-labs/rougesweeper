@@ -6,6 +6,7 @@ const levelData: Array<{
   title: string;
   subtitle: string;
   tiles: Array<{ x: number; y: number }>;
+  isLastLevel?: boolean;
 }> = [
   {
     level: "level-00",
@@ -39,7 +40,7 @@ const levelData: Array<{
   { level: "level-09", title: "Warehouse", subtitle: "Level 9", tiles: [] },
   { level: "level-10", title: "Skyscraper", subtitle: "Level 10", tiles: [] },
   { level: "level-11", title: "Temple", subtitle: "Level 11", tiles: [] },
-  { level: "level-12", title: "Jungle", subtitle: "Level 12", tiles: [] },
+  { level: "level-12", title: "Jungle", subtitle: "Level 12", tiles: [], isLastLevel: true },
 ];
 
 /**

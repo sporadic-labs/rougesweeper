@@ -5,6 +5,7 @@ import MobXProxy from "../../helpers/mobx-proxy";
 import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
 import constants from "../../constants";
+import { SCENE_NAME } from "../../scenes";
 
 const baseTextStyle = {
   align: "center",
@@ -25,6 +26,7 @@ export default class PauseMenu {
   container: Phaser.GameObjects.Container;
   isOpen = false;
   closeButton: TextButton;
+  quitButton: TextButton;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
@@ -48,6 +50,12 @@ export default class PauseMenu {
       .text(r.centerX, r.centerY, "TODO: Put a pause menu in...", baseTextStyle)
       .setOrigin(0.5, 0);
 
+    const quitButton = new TextButton(scene, r.centerX, r.bottom - 100, "Quit", {
+      origin: { x: 0.5, y: 1 },
+    });
+    quitButton.events.on("DOWN", this.quit);
+    this.quitButton = quitButton;
+
     const closeButton = new TextButton(scene, r.centerX, r.bottom - 30, "Close", {
       origin: { x: 0.5, y: 1 },
     });
@@ -55,7 +63,7 @@ export default class PauseMenu {
     this.closeButton = closeButton;
 
     this.container = scene.add
-      .container(0, 0, [background, title, text, closeButton.text])
+      .container(0, 0, [background, title, text, quitButton.text, closeButton.text])
       .setDepth(DEPTHS.MENU)
       .setVisible(false);
 
@@ -79,17 +87,28 @@ export default class PauseMenu {
     });
   }
 
-  open = () => {
+  open = (): void => {
     this.isOpen = true;
     this.container.setVisible(true);
     this.gameStore.setGameState(GAME_MODES.MENU_MODE);
   };
 
-  close = () => {
+  close = (): void => {
     this.isOpen = false;
     this.container.setVisible(false);
     this.gameStore.setPauseMenuOpen(false);
+    // NOTE(rex): Going to the previous state would sometimes cause us issues, so I am just going to explicitly set us back to idle mode.
+    this.gameStore.setGameState(GAME_MODES.IDLE_MODE);
+  };
+
+  quit = (): void => {
+    this.gameStore.setPauseMenuOpen(false);
     this.gameStore.goToPreviousGameState();
+    this.gameStore.setGameState(GAME_MODES.IDLE_MODE);
+
+    // If we are quitting, go back to the main menu!
+    this.scene.scene.stop();
+    this.scene.scene.start(SCENE_NAME.START);
   };
 
   resetButtons() {
