@@ -1,5 +1,5 @@
 import Phaser, { Scene } from "phaser";
-import { SCENE_NAME } from "./index";
+import { SCENE_NAME, loadAudio } from "./index";
 import { loadLevels } from "../store/levels";
 import constants from "../constants";
 
@@ -16,6 +16,7 @@ export default class LoadingScene extends Scene {
     const width = Number(this.game.config.width);
     const height = Number(this.game.config.height);
 
+    // Show the user a userful interface.
     this.text = this.add
       .text(width / 2, height / 2 + 75, "Loading...", textStyle)
       .setOrigin(0.5, 0);
@@ -32,13 +33,19 @@ export default class LoadingScene extends Scene {
 
     this.load.on("complete", () => loadingBar.destroy());
 
+    // Game Assets
     this.load.setPath("resources/");
     this.load.atlas("all-assets", "atlases/all-assets.png", "atlases/all-assets.json");
-    // Load the starting screens
-    this.load.image("start-screen", "screens/start-v1.png")
-    this.load.image("win-screen", "screens/game-over-win-v1.png")
-    this.load.image("lose-screen", "screens/game-over-lose-v1.png")
 
+    // Screens
+    this.load.image("start-screen", "screens/start-v1.png");
+    this.load.image("win-screen", "screens/game-over-win-v1.png");
+    this.load.image("lose-screen", "screens/game-over-lose-v1.png");
+
+    // SFX
+    loadAudio(this);
+
+    // Levels
     loadLevels(this);
   }
 

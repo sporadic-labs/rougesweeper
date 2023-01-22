@@ -8,15 +8,20 @@ import { levelKeys } from "../../store/levels";
 import storedSettings from "../../store/stored-settings";
 import MobXProxy from "../../helpers/mobx-proxy";
 import constants from "../../constants";
+import { addUIPanel } from "../../helpers/add-ui-panel";
 
 const baseTextStyle = {
-  align: "center",
-  color: constants.lightText,
+  color: constants.darkText,
 };
 const titleStyle = {
   ...baseTextStyle,
+  align: "center",
   fontSize: "30px",
   fontStyle: "bold",
+};
+const textStyle = {
+  ...baseTextStyle,
+  fontSize: "22px",
 };
 
 /**
@@ -35,11 +40,7 @@ class LevelSelectButton {
     const origin = { origin: { x: 0, y: 0 } };
     let x = 0;
     let y = 0;
-    this.label = scene.add.text(x, y, levelName, {
-      align: "left",
-      color: "#ffffff",
-      fontSize: "25px",
-    });
+    this.label = scene.add.text(x, y, levelName, textStyle);
     y += this.label.height + 5;
     this.loadButton = new TextButton(scene, x, y, "Load", origin);
     x += this.loadButton.text.width + 5;
@@ -73,73 +74,17 @@ export default class DebugMenu {
   levelSelectButtons: LevelSelectButton[];
   closeButton: TextButton;
   showTutorialButton: TextButton;
+
   private mobxProxy: MobXProxy;
+
+  private title: Phaser.GameObjects.Text;
+  private text: Phaser.GameObjects.Text;
 
   constructor(scene: Phaser.Scene, gameStore: GameStore) {
     this.scene = scene;
     this.gameStore = gameStore;
 
-    const width = Number(scene.game.config.width);
-    const height = Number(scene.game.config.height);
-    const modalWidth = width - 100;
-    const modalHeight = 0.6 * height;
-
-    const r = new Phaser.Geom.Rectangle((width - modalWidth) / 2, 50, modalWidth, modalHeight);
-    const background = scene.add.graphics();
-    background.fillStyle(0x000000, 0.5);
-    background.fillRect(0, 0, width, height);
-    background.fillStyle(0x000000);
-    background.fillRect(r.x, r.y, r.width, r.height);
-
-    const title = scene.add.text(r.centerX, r.y + 25, "Debug Menu", titleStyle).setOrigin(0.5, 0);
-
-    const closeButton = new TextButton(scene, r.centerX, r.bottom - 30, "Close", {
-      origin: { x: 0.5, y: 1 },
-    });
-    closeButton.events.on("DOWN", this.close);
-    this.closeButton = closeButton;
-
-    const showTutorialButton = new TextButton(
-      scene,
-      r.right - 160,
-      r.bottom - 30,
-      "Show Tutorial",
-      {
-        origin: { x: 0.5, y: 1 },
-      }
-    );
-    showTutorialButton.events.on("DOWN", this.showTutorial);
-    if (!gameStore.hasSeenTutorial) showTutorialButton.disableInteractivity();
-    this.showTutorialButton = showTutorialButton;
-
-    const levelSelectButtons = levelKeys.map((name, i) => {
-      const col = i % 4;
-      const row = Math.floor(i / 4);
-
-      const y = r.y + 125 + row * 100;
-      const x = r.x + 100 + col * 300;
-      const levelButton = new LevelSelectButton(scene, name, x, y);
-      levelButton.loadButton.events.on("DOWN", () => {
-        this.loadLevel(i);
-      });
-      levelButton.setStartingLevelButton.events.on("DOWN", () => {
-        this.loadLevel(i);
-        storedSettings.setStartingLevel(i);
-      });
-      return levelButton;
-    });
-    this.levelSelectButtons = levelSelectButtons;
-
-    this.container = scene.add
-      .container(0, 0, [
-        background,
-        title,
-        closeButton.text,
-        showTutorialButton.text,
-        ...this.levelSelectButtons.map((b) => b.container),
-      ])
-      .setDepth(DEPTHS.MENU)
-      .setVisible(false);
+    this.createModal()
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
@@ -188,6 +133,107 @@ export default class DebugMenu {
     });
   }
 
+  /** Create the menu. */
+  private createModal() {
+    if (this.container) {
+      this.container.destroy();
+    }
+
+    const height = Number(this.scene.game.config.height);
+    const width = Number(this.scene.game.config.width);
+    const modalWidth = width * 0.7;
+    const textWidth = modalWidth * 0.75;
+    const modalHeight = height * 0.6;
+    const textHeight = modalHeight * 0.75;
+
+    this.text = this.scene.add
+      .text(0, 0, "", textStyle)
+      .setOrigin(0.5, 0.5)
+      .setLineSpacing(6)
+      .setFixedSize(textWidth, textHeight)
+      .setWordWrapWidth(textWidth)
+      .setText("Debug the game here!");
+
+    // Derive the modal height from the text height plus some buffer around it
+    // for the title and buttons.
+    const r = new Phaser.Geom.Rectangle(
+      (width - modalWidth) / 2,
+      (height - modalHeight) / 2,
+      modalWidth,
+      modalHeight
+    );
+
+    const background = this.scene.add.graphics();
+    background.fillStyle(0x000000, 0.25);
+    background.fillRect(0, 0, width, height);
+
+    this.text.setPosition(r.centerX, r.centerY);
+
+    const uiPanel = addUIPanel({
+      scene: this.scene,
+      x: r.x,
+      y: r.y,
+      width: modalWidth,
+      height: modalHeight,
+      shadow: "dialogue",
+      offset: 20,
+      safeUsageOffset: 20,
+    });
+
+    this.title = this.scene.add.text(r.centerX, r.y + 40, "Debug Menu", titleStyle).setOrigin(0.5, 0.5);
+
+
+    const closeButton = new TextButton(this.scene, r.centerX - 180, r.bottom - 30, "Back", {
+      origin: { x: 0.5, y: 1 },
+    });
+    closeButton.events.on("DOWN", this.close);
+    this.closeButton = closeButton;
+
+    const showTutorialButton = new TextButton(
+      this.scene,
+      r.centerX + 180,
+      r.bottom - 30,
+      "Show Tutorial",
+      {
+        origin: { x: 0.5, y: 1 },
+      }
+    );
+    showTutorialButton.events.on("DOWN", this.showTutorial);
+    if (!this.gameStore.hasSeenTutorial) showTutorialButton.disableInteractivity();
+    this.showTutorialButton = showTutorialButton;
+
+    const levelSelectButtons = levelKeys.map((name, i) => {
+      const col = i % 4;
+      const row = Math.floor(i / 4);
+
+      const y = r.y + 125 + row * 100;
+      const x = r.x + 100 + col * 300;
+      const levelButton = new LevelSelectButton(this.scene, name, x, y);
+      levelButton.loadButton.events.on("DOWN", () => {
+        this.loadLevel(i);
+      });
+      levelButton.setStartingLevelButton.events.on("DOWN", () => {
+        this.loadLevel(i);
+        storedSettings.setStartingLevel(i);
+      });
+      return levelButton;
+    });
+    this.levelSelectButtons = levelSelectButtons;
+
+    this.container = this.scene.add
+      .container(0, 0, [
+        background,
+        uiPanel,
+        this.title,
+        this.text,
+        closeButton.text,
+        showTutorialButton.text,
+        ...this.levelSelectButtons.map((b) => b.container),
+      ])
+      .setDepth(DEPTHS.MENU)
+      .setVisible(false);
+  }
+
   loadLevel(i: number) {
     this.close();
     // If you are loading the tutorial, reset the weapon state.
@@ -218,6 +264,7 @@ export default class DebugMenu {
   resetButtons() {
     // Manually call this when closing menu because of bug where button stays in pressed state
     this.levelSelectButtons.forEach((b) => b.reset());
+    this.showTutorialButton.reset();
     this.closeButton.reset();
   }
 

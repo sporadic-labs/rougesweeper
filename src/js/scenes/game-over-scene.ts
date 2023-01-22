@@ -1,6 +1,6 @@
 import { Scene, GameObjects } from "phaser";
 import TextButton, { BUTTON_EVENTS } from "../game-objects/hud/text-button";
-import { SCENE_NAME } from "./index";
+import { AUDIO_KEYS, SCENE_NAME, addAudio } from "./index";
 import store from "../store/index";
 import DEPTHS from "../game-objects/depths";
 
@@ -69,7 +69,7 @@ export default class GameOverScene extends Scene {
       this.scene.stop();
       this.scene.start(SCENE_NAME.MAIN);
     });
-    
+
     const mainMenuButton = new TextButton(this, width / 2, y + 240, "Main Menu");
     this.mainMenuButton = mainMenuButton;
 
@@ -77,9 +77,16 @@ export default class GameOverScene extends Scene {
       this.scene.stop();
       this.scene.start(SCENE_NAME.START);
     });
+
+    /* Add sound fx needed for the main menu. */
+    addAudio(this);
+
+    this.sound.play(AUDIO_KEYS.MAIN_MENU_MUSIC);
   }
 
   destroy() {
+    this.sound.stopAll();
+    this.sound.destroy();
     this.mainMenuButton.destroy();
     this.playButton.destroy();
     this.gameOverText.destroy();

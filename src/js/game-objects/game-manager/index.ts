@@ -6,7 +6,7 @@ import GAME_MODES from "./game-modes";
 import { makeGameEmitter, GAME_EVENTS } from "./events";
 import AttackAnimation from "../player/attack-animation";
 import MobXProxy from "../../helpers/mobx-proxy";
-import { SCENE_NAME } from "../../scenes/index";
+import { SCENE_NAME, AUDIO_KEYS } from "../../scenes/index";
 import EventProxy from "../../helpers/event-proxy";
 import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
@@ -35,6 +35,7 @@ export default class GameManager {
   private tutorialLogic: TutorialLogic;
   private randomPickupManager: RandomPickupManager;
   public events = makeGameEmitter();
+  private audio: Phaser.Sound.BaseSoundManager;
 
   constructor(
     private scene: Phaser.Scene,
@@ -73,6 +74,8 @@ export default class GameManager {
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
+
+    this.audio = scene.sound
 
     this.startLevel();
   }
@@ -207,6 +210,7 @@ export default class GameManager {
     const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
     const isValidMove = path && (!tile.isRevealed || tile.type !== TILE_TYPES.WALL);
     if (!isValidMove) {
+      this.audio.play(AUDIO_KEYS.INVALID_MOVE)
       this.toastManager.setMessage("You can't move there.");
       return;
     }
@@ -296,6 +300,8 @@ export default class GameManager {
     // disable tiles, start the move
     this.level.disableAllTiles();
     store.addMove();
+
+    this.audio.play(AUDIO_KEYS.PLAYER_MOVE);
 
     /* if the tile has been revealed/is blank, move there immediately,
      * otherwise move to the tile right before this one.
@@ -570,6 +576,10 @@ export default class GameManager {
     this.radar.update();
 
     this.startIdleFlow();
+
+    // Restart the level music.
+    this.audio.stopByKey(AUDIO_KEYS.LEVEL_MUSIC)
+    this.audio.play(AUDIO_KEYS.LEVEL_MUSIC)
 
     this.events.emit(GAME_EVENTS.LEVEL_START, this.level);
   }
