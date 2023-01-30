@@ -14,6 +14,7 @@ import LEVEL_EVENTS, { LevelEmitter } from "./events";
 import { neighborOffsets } from "./neighbor-offsets";
 import RandomPickupManager from "./random-pickup-manager";
 import { levelData as allLevelData } from "../../store/levels";
+import SoundManager from "../sound-manager";
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 
@@ -47,7 +48,8 @@ export default class Level {
     private scene: Scene,
     private levelKey: string,
     private dialogueManager: DialogueManager,
-    private randomPickupManager: RandomPickupManager
+    private randomPickupManager: RandomPickupManager,
+    private sound: SoundManager
   ) {
     this.tileKey = getTileFrame(levelKey);
 
@@ -149,7 +151,8 @@ export default class Level {
           this.gridXToWorldX(x),
           this.gridYToWorldY(y),
           this,
-          isReachable
+          isReachable,
+          this.sound
         );
         tile.setGridPosition(x, y);
         tile.enableInteractive();

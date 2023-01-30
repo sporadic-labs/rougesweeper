@@ -1,3 +1,7 @@
+/*
+ * Game Manager.
+ */
+
 import LEVEL_EVENTS from "../level/events";
 import TILE_TYPES, { isEnemyTile } from "../level/tile-types";
 import Level from "../level/level";
@@ -10,8 +14,6 @@ import { SCENE_NAME, AUDIO_KEYS } from "../../scenes/index";
 import EventProxy from "../../helpers/event-proxy";
 import CoinCollectAnimation from "../player/coin-collect-animation";
 import Radar from "../hud/radar";
-import DebugMenu from "../hud/debug-menu";
-import PauseMenu from "../hud/pause-menu";
 import DialogueManager from "../hud/dialogue-manager";
 import Player from "../player";
 import ToastManager from "../hud/toast-manager";
@@ -22,34 +24,28 @@ import { Point } from "../../helpers/common-interfaces";
 import TutorialLogic from "../level/tutorial-logic";
 import RandomPickupManager from "../level/random-pickup-manager";
 import AmmoCollectAnimation from "../player/ammo-collect-animation";
+import SoundManager from "../sound-manager";
 
 export default class GameManager {
   private level: Level;
   private radar: Radar;
-  private debugMenu: DebugMenu;
-  private pauseMenu: PauseMenu;
-  private dialogueManager: DialogueManager;
   private compass: Compass;
+  private tutorialLogic: TutorialLogic;
   private mobProxy: MobXProxy;
   private proxy: EventProxy;
-  private tutorialLogic: TutorialLogic;
-  private randomPickupManager: RandomPickupManager;
   public events = makeGameEmitter();
-  private audio: Phaser.Sound.BaseSoundManager;
 
   constructor(
     private scene: Phaser.Scene,
     private player: Player,
-    private toastManager: ToastManager
+    private toast: ToastManager,
+    private dialogue: DialogueManager,
+    private pickups: RandomPickupManager,
+    private sound: SoundManager
   ) {
     this.level = null;
     this.radar = new Radar(scene, player);
     this.radar.setVisible(false);
-    this.debugMenu = new DebugMenu(scene, store);
-    this.pauseMenu = new PauseMenu(scene, store);
-    this.dialogueManager = new DialogueManager(scene, store);
-
-    this.randomPickupManager = new RandomPickupManager();
 
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(store, "playerHealth", () => {
@@ -75,14 +71,10 @@ export default class GameManager {
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
     this.proxy.on(scene.events, "destroy", this.destroy, this);
 
-    this.audio = scene.sound
-
     this.startLevel();
   }
 
-  /**
-   * Start the idle flow for the player, waiting for the user to make a move!
-   */
+  /** Start the idle flow for the player, waiting for the user to make a move! */
   startIdleFlow() {
     this.enableInteractivity();
   }
@@ -108,14 +100,14 @@ export default class GameManager {
     const exitGridPos = this.level.exitGridPosition;
 
     if (door === this.level.entrance) {
-      this.toastManager.setMessage("The entrance is locked. You can't go back.");
+      this.toast.setMessage("The entrance is locked. You can't go back.");
       return;
     }
 
     const path = this.level.findPathBetween(playerGridPos, exitGridPos, true);
 
     if (!path) {
-      this.toastManager.setMessage("There is no clear path to the door - get closer.");
+      this.toast.setMessage("There is no clear path to the door - get closer.");
       return;
     }
 
@@ -140,7 +132,7 @@ export default class GameManager {
       this.scene.scene.stop();
       this.scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: true });
     } else {
-      this.toastManager.setMessage("That door is locked - find the key.");
+      this.toast.setMessage("That door is locked - find the key.");
     }
 
     this.enableInteractivity();
@@ -151,7 +143,7 @@ export default class GameManager {
 
     // If the player doesn't have a weapon yet, they can't do anything!
     if (!store.hasWeapon) {
-      this.toastManager.setMessage("No way to hack!");
+      this.toast.setMessage("No way to hack!");
       return;
     }
 
@@ -160,14 +152,14 @@ export default class GameManager {
     const itemInfo = store.activeItemInfo;
 
     if (itemInfo.ammo <= 0) {
-      this.toastManager.setMessage("Not enough ammo!");
+      this.toast.setMessage("Not enough ammo!");
       return;
     }
 
     if (itemInfo.key === "compass") {
-      // TODO: only allow one active compass
+      // only allow one active compass
       if (this.compass) {
-        this.toastManager.setMessage("A compass is already active!");
+        this.toast.setMessage("A compass is already active!");
       } else {
         this.compass = new Compass(this.scene, this.player, this.level);
         store.removeAmmo("compass", 1);
@@ -177,7 +169,7 @@ export default class GameManager {
       if (success) {
         store.removeAmmo("clearRadar", 1);
       } else {
-        this.toastManager.setMessage(
+        this.toast.setMessage(
           "No tiles to reveal around you - try using in a different spot."
         );
       }
@@ -188,7 +180,7 @@ export default class GameManager {
       const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
       const canAttack = path && !tile.isRevealed;
       if (!canAttack) {
-        this.toastManager.setMessage("You can't hack that location.");
+        this.toast.setMessage("You can't hack that location.");
         return;
       }
       this.disableInteractivity();
@@ -210,8 +202,8 @@ export default class GameManager {
     const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
     const isValidMove = path && (!tile.isRevealed || tile.type !== TILE_TYPES.WALL);
     if (!isValidMove) {
-      this.audio.play(AUDIO_KEYS.INVALID_MOVE)
-      this.toastManager.setMessage("You can't move there.");
+      this.sound.play(AUDIO_KEYS.INVALID_MOVE)
+      this.toast.setMessage("You can't move there.");
       return;
     }
 
@@ -231,7 +223,7 @@ export default class GameManager {
     const canRevealDistantTile = !tile.isRevealed;
 
     if (!canRevealDistantTile) {
-      this.toastManager.setMessage("This tile is already revealed!");
+      this.toast.setMessage("This tile is already revealed!");
       return;
     }
 
@@ -301,7 +293,7 @@ export default class GameManager {
     this.level.disableAllTiles();
     store.addMove();
 
-    this.audio.play(AUDIO_KEYS.PLAYER_MOVE);
+    this.sound.play(AUDIO_KEYS.PLAYER_MOVE);
 
     /* if the tile has been revealed/is blank, move there immediately,
      * otherwise move to the tile right before this one.
@@ -393,7 +385,7 @@ export default class GameManager {
     // if the tile is the EXIT, check if the player has the correct conditions to finish the level
     if (currentTile.type === TILE_TYPES.EXIT) {
       if (!this.level.exit.isOpen()) {
-        this.toastManager.setMessage("Door is locked - you need a key.");
+        this.toast.setMessage("Door is locked - you need a key.");
       } else if (store.levelIndex >= 8) {
         this.scene.scene.stop();
         this.scene.scene.start(SCENE_NAME.GAME_OVER, { didPlayerWin: true });
@@ -409,34 +401,12 @@ export default class GameManager {
     this.startIdleFlow();
 
     // TODO(rex): Do we need something that happens after the tile moved?
-    // Apply any effect that need to happen at the end of moving.
-    // switch (tile.type) {
-    //   case TILE_TYPES.KEY:
-    //     if (!store.hasKey) {
-    //       store.setHasKey(true);
-    //       this.level.exit.open();
-    //       this.level.exit.flipTileToFront();
-    //       await this.tutorialLogic.onTileClick(tile.type);
-    //     }
-    //     break;
-    //   case TILE_TYPES.WEAPON:
-    //     if (!store.hasWeapon) {
-    //       store.setHasWeapon(true);
-    //       store.setAmmo("hack", 10);
-    //       await this.tutorialLogic.onTileClick(tile.type);
-    //     }
-    //     break;
-    // }
 
     this.level.events.emit(LEVEL_EVENTS.PLAYER_FINISHED_MOVE, this.player);
     this.events.emit(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.player);
   }
 
-  /**
-   * Start the attack flow for the player.
-   * @param {*} tile
-   * @param {*} path
-   */
+  /** Start the attack flow for the player. */
   async runAttackFlow(tile: Tile, path: Point[]) {
     this.level.disableAllTiles();
 
@@ -489,11 +459,7 @@ export default class GameManager {
     }
   }
 
-  /**
-   * Move the player along a path of tiles.
-   * @param {*} path
-   * @param {*} duration
-   */
+  /** Move the player along a path of tiles. */
   async movePlayerAlongPath(path: Point[], duration = 200) {
     this.radar.closeRadar();
     const lastPoint = path[path.length - 1];
@@ -504,12 +470,7 @@ export default class GameManager {
     this.level.highlightTiles(this.player.getGridPosition());
   }
 
-  /**
-   * Move the player to the specified tile.
-   * @param {*} gridX
-   * @param {*} gridY
-   * @param {*} moveInstantly
-   */
+  /** Move the player to the specified tile. */
   async movePlayerToTile(gridX: number, gridY: number, moveInstantly = false) {
     this.radar.closeRadar();
     const worldX = this.level.gridXToWorldX(gridX);
@@ -520,11 +481,9 @@ export default class GameManager {
     this.level.highlightTiles(this.player.getGridPosition());
   }
 
-  /**
-   * Fade out the player, fade out the previous level, set up the next level, and start things off!
-   */
+  /** Fade out the player, fade out the previous level, set up the next level, and start things off! */
   async startLevel() {
-    if (this.dialogueManager.isOpen()) this.dialogueManager.close();
+    if (this.dialogue.isOpen()) this.dialogue.close();
     this.radar.setVisible(false);
     if (this.compass) {
       this.compass.destroy();
@@ -542,7 +501,7 @@ export default class GameManager {
     store.setGameState(GAME_MODES.IDLE_MODE);
     store.setHasKey(false);
 
-    this.level = new Level(this.scene, store.level, this.dialogueManager, this.randomPickupManager);
+    this.level = new Level(this.scene, store.level, this.dialogue, this.pickups, this.sound);
     const playerStartGridPos = this.level.getStartingGridPosition();
 
     if (this.tutorialLogic) {
@@ -550,7 +509,7 @@ export default class GameManager {
     }
     this.tutorialLogic = new TutorialLogic(
       this.scene,
-      this.dialogueManager,
+      this.dialogue,
       this.level,
       store.level,
       this.player,
@@ -578,8 +537,8 @@ export default class GameManager {
     this.startIdleFlow();
 
     // Restart the level music.
-    this.audio.stopByKey(AUDIO_KEYS.LEVEL_MUSIC)
-    this.audio.play(AUDIO_KEYS.LEVEL_MUSIC)
+    this.sound.stopByKey(AUDIO_KEYS.LEVEL_MUSIC)
+    this.sound.play(AUDIO_KEYS.LEVEL_MUSIC)
 
     this.events.emit(GAME_EVENTS.LEVEL_START, this.level);
   }

@@ -11,6 +11,7 @@ import BezierEasing from "bezier-easing";
 import TweenPoser from "../components/tween-poser";
 import Level from "./level";
 import { AUDIO_KEYS } from "../../scenes/index";
+import SoundManager from "../sound-manager";
 
 type FadePoses = "FadeOut" | "FadeIn";
 type MagnifyPoses = "ZoomIn" | "ZoomOut";
@@ -33,7 +34,6 @@ export default class Tile {
   private contentsMagnifyPoser: TweenPoser<MagnifyPoses>;
   private scramblePoser: TweenPoser<FadePoses>;
   private secondarySelectKey: Input.Keyboard.Key;
-  private audio: Sound.BaseSoundManager
 
   constructor(
     private scene: Scene,
@@ -43,7 +43,8 @@ export default class Tile {
     private x: number,
     private y: number,
     private level: Level,
-    public isReachable: boolean
+    public isReachable: boolean,
+    private sound: SoundManager
   ) {
     this.isCurrentlyBlank = type === TILE_TYPES.BLANK;
 
@@ -116,8 +117,6 @@ export default class Tile {
     this.tileFadePoser.setToPose("FadeIn");
 
     this.secondarySelectKey = scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.SHIFT);
-
-    this.audio = scene.sound
   }
 
   removeTileContents() {
@@ -142,10 +141,10 @@ export default class Tile {
         // Setup different animations for the Gold vs. the Enemy graphics.
         if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.KEY || isPickup(this.type)) {
           this.tileGraphicTimeline = createPickupAnimation(this.scene, this.tileContents);
-          this.audio.play(AUDIO_KEYS.TILE_PICKUP);
+          this.sound.play(AUDIO_KEYS.TILE_PICKUP);
         } else if (isEnemyTile(this.type)) {
           this.tileGraphicTimeline = createAttackAnimation(this.scene, this.tileContents);
-          this.audio.play(AUDIO_KEYS.TILE_PICKUP);
+          this.sound.play(AUDIO_KEYS.TILE_PICKUP);
           this.tileGraphicTimeline.on("complete", () => {
             const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(4, 5)}`;
             const attackAnim = new AttackAnimation(
@@ -158,7 +157,7 @@ export default class Tile {
           });
         } else {
           // This is an empty tile, but we still wanna play the flip sound.
-          this.audio.play(AUDIO_KEYS.TILE_PICKUP);
+          this.sound.play(AUDIO_KEYS.TILE_PICKUP);
         }
 
         this.tileGraphicTimeline.on("complete", () => {
@@ -290,7 +289,7 @@ export default class Tile {
         this.level.onTileFlip(this);
       });
       this.flipEffect.flipToFront();
-      this.audio.play(AUDIO_KEYS.TILE_PLACE);
+      this.sound.play(AUDIO_KEYS.TILE_PLACE);
     });
   }
 

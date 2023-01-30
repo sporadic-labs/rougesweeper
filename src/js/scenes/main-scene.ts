@@ -1,3 +1,7 @@
+/*
+ * Main Scene, where the game is played!
+ */
+
 import { Scene } from "phaser";
 import Player from "../game-objects/player/index";
 import GameManager from "../game-objects/game-manager/index";
@@ -8,24 +12,31 @@ import store from "../store/index";
 import ToastManager from "../game-objects/hud/toast-manager";
 import ItemSwitcher from "../game-objects/hud/item-switcher";
 import DebugTips from "../game-objects/hud/debug-tips";
-import { addAudio } from "../scenes/index";
+import SoundManager from "../game-objects/sound-manager";
+import DialogueManager from "../game-objects/hud/dialogue-manager";
+import DebugMenu from "../game-objects/hud/debug-menu";
+import PauseMenu from "../game-objects/hud/pause-menu";
+import RandomPickupManager from "../game-objects/level/random-pickup-manager";
 
 export default class MainScene extends Scene {
   create() {
     store.startNewGame();
 
-    /*
-     * Add sound fx needed for game.
-     * NOTE(rex): I am just using the sound manager on the scene,
-     * as it is shared everywhere we need to play songs (I think...)
-     */
-    addAudio(this)
-
     // Create the stuff needed for the game.
     const player = new Player(this, 0, 0);
     const toastManager = new ToastManager(this);
-    new GameManager(this, player, toastManager);
+    const soundManager = new SoundManager(this, store);
+    const dialogueManager = new DialogueManager(this, store);
+    const randomPickupManager = new RandomPickupManager();
 
+    // Create the game manager.
+    new GameManager(this, player, toastManager, dialogueManager, randomPickupManager, soundManager);
+
+    // Create the menus...
+    new DebugMenu(this, store);
+    new PauseMenu(this, store);
+    
+    // And other HUD stuff!
     new AlertIndicator(this, store);
     new ItemSwitcher(this, store);
     new PauseToggle(this, store);
@@ -34,8 +45,6 @@ export default class MainScene extends Scene {
   }
 
   destroy() {
-    this.sound.stopAll();
-    this.sound.destroy();
-    // NOTE(rex): What else needs to be reset here...?
+    // What needs to be destroyed?
   }
 }

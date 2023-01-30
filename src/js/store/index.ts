@@ -151,19 +151,6 @@ class GameStore {
     storedSettings.setHasSeenTutorial(hasSeenTutorial);
   }
 
-  // hasWeapon: boolean;
-  // hasSeenEnemy: boolean;
-  // hasSeenScrambleEnemy: boolean;
-  // hasSeenScrambledTile: boolean;
-  // hasSeenSuperEnemy: boolean;
-  // hasSeenBoss: boolean;
-  // hasSeenAmmo: boolean;
-  // hasSeenSniper: boolean;
-  // hasSeenEmp: boolean;
-  // hasSeenCompass: boolean;
-  // hasSeenUpgrade: boolean;
-  // hasSeenResetAlarm: boolean;
-
   setTutorialFlag(tile: TILE_TYPES) {
     if (tile === TILE_TYPES.ENEMY) {
       this.tutorialFlags.hasSeenEnemy = true;
