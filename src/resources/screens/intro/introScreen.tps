@@ -2,9 +2,9 @@
 <data version="1.0">
     <struct type="Settings">
         <key>fileFormatVersion</key>
-        <int>5</int>
+        <int>6</int>
         <key>texturePackerVersion</key>
-        <string>6.0.1</string>
+        <string>7.0.1</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -32,9 +32,9 @@
         <key>dpi</key>
         <uint>72</uint>
         <key>dataFormat</key>
-        <string>phaser-json-hash</string>
+        <string>phaser</string>
         <key>textureFileName</key>
-        <filename></filename>
+        <filename>intro-{n}.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrQualityLevel</key>
@@ -43,24 +43,14 @@
         <uint>2</uint>
         <key>basisUniversalQualityLevel</key>
         <uint>2</uint>
-        <key>atfCompressData</key>
-        <false/>
-        <key>mipMapMinSize</key>
-        <uint>32768</uint>
         <key>etc1QualityLevel</key>
         <uint>70</uint>
         <key>etc2QualityLevel</key>
         <uint>70</uint>
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
-        <key>jxrColorFormat</key>
-        <enum type="SettingsBase::JpegXrColorMode">JXR_YUV444</enum>
-        <key>jxrTrimFlexBits</key>
-        <uint>0</uint>
-        <key>jxrCompressionLevel</key>
-        <uint>0</uint>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
+        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -78,15 +68,13 @@
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>webpQualityLevel</key>
         <uint>101</uint>
         <key>textureSubPath</key>
         <string></string>
-        <key>atfFormats</key>
-        <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png8</enum>
+        <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -133,14 +121,14 @@
         </struct>
         <key>dataFileNames</key>
         <map type="GFileNameMap">
-            <key>data</key>
+            <key>json</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>introScreen-{n}.json</filename>
+                <filename>intro.json</filename>
             </struct>
         </map>
-        <key>multiPack</key>
-        <true/>
+        <key>multiPackMode</key>
+        <enum type="SettingsBase::MultiPackMode">MultiPackAuto</enum>
         <key>forceIdenticalLayout</key>
         <false/>
         <key>outputFormat</key>
@@ -155,7 +143,7 @@
         <key>autoAliasEnabled</key>
         <false/>
         <key>trimSpriteNames</key>
-        <false/>
+        <true/>
         <key>prependSmartFolderName</key>
         <false/>
         <key>autodetectAnimations</key>
@@ -185,8 +173,8 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../introFrames/Rogue_Sweeper_.png</key>
-            <key type="filename">../introFrames/bg.png</key>
+            <key type="filename">frames/bg.png</key>
+            <key type="filename">frames/light.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -201,7 +189,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../introFrames/cloud-1.png</key>
+            <key type="filename">frames/cloud-1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -216,7 +204,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../introFrames/cloud-2.png</key>
+            <key type="filename">frames/cloud-2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -231,18 +219,18 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../introFrames/hero_01.png</key>
-            <key type="filename">../introFrames/hero_02.png</key>
-            <key type="filename">../introFrames/hero_03.png</key>
-            <key type="filename">../introFrames/hero_04.png</key>
-            <key type="filename">../introFrames/hero_05.png</key>
-            <key type="filename">../introFrames/hero_06.png</key>
-            <key type="filename">../introFrames/hero_07.png</key>
-            <key type="filename">../introFrames/hero_08.png</key>
-            <key type="filename">../introFrames/hero_09.png</key>
-            <key type="filename">../introFrames/hero_10.png</key>
-            <key type="filename">../introFrames/hero_11.png</key>
-            <key type="filename">../introFrames/hero_12.png</key>
+            <key type="filename">frames/hero_01.png</key>
+            <key type="filename">frames/hero_02.png</key>
+            <key type="filename">frames/hero_03.png</key>
+            <key type="filename">frames/hero_04.png</key>
+            <key type="filename">frames/hero_05.png</key>
+            <key type="filename">frames/hero_06.png</key>
+            <key type="filename">frames/hero_07.png</key>
+            <key type="filename">frames/hero_08.png</key>
+            <key type="filename">frames/hero_09.png</key>
+            <key type="filename">frames/hero_10.png</key>
+            <key type="filename">frames/hero_11.png</key>
+            <key type="filename">frames/hero_12.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -258,10 +246,16 @@
                 <false/>
             </struct>
         </map>
-        <key>fileList</key>
-        <array>
-            <filename>../introFrames</filename>
-        </array>
+        <key>fileLists</key>
+        <map type="SpriteSheetMap">
+            <key>default</key>
+            <struct type="SpriteSheet">
+                <key>files</key>
+                <array>
+                    <filename>frames</filename>
+                </array>
+            </struct>
+        </map>
         <key>ignoreFileList</key>
         <array/>
         <key>replaceList</key>

@@ -10,8 +10,6 @@ import { addAudio } from "../scenes/index";
 import MobXProxy from "../helpers/mobx-proxy";
 
 export default class SoundManager {
-  private scene: Scene;
-  private gameStore: GameStore;
   private proxy: EventProxy;
   private mobProxy: MobXProxy;
 
@@ -22,17 +20,15 @@ export default class SoundManager {
   private isMuted: boolean;
 
   constructor(scene: Scene, gameStore: GameStore) {
-    this.scene = scene;
-    this.gameStore = gameStore;
     this.audio = scene.sound;
 
     /* Add sound fx needed for game. */
     addAudio(scene)
 
-    this.mobProxy = new MobXProxy();
-    this.mobProxy.observe(storedSettings, "sfxVolume", () => {
-      console.log("volume changing...")
-    });
+    // this.mobProxy = new MobXProxy();
+    // this.mobProxy.observe(storedSettings, "sfxVolume", () => {
+    //   console.log("volume changing...")
+    // });
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
@@ -53,7 +49,7 @@ export default class SoundManager {
 
   destroy() {
     this.audio.stopAll();
-    this.audio.destroy();
+    // this.mobProxy.destroy();
     this.proxy.removeAll();
     
     // NOTE(rex): What else needs to be reset here...?

@@ -2,27 +2,20 @@ import Loading from "./loading-scene";
 import StartScene from "./start-scene";
 import Main from "./main-scene";
 import GameOverScene from "./game-over-scene";
-import SettingScene from "./settings-scene";
 
 enum SCENE_NAME {
   LOADING = "LOADING",
   START = "START",
   MAIN = "MAIN",
   GAME_OVER = "GAME_OVER",
-  SETTINGS = "SETTINGS",
 }
 
-/**
- * Register the scene classes to the given game using the SCENE_NAME enum values.
- *
- * @param game
- */
+/** Register the scene classes to the given game using the SCENE_NAME enum values. */
 function installScenes(game: Phaser.Game) {
   game.scene.add(SCENE_NAME.LOADING, Loading);
   game.scene.add(SCENE_NAME.START, StartScene);
   game.scene.add(SCENE_NAME.MAIN, Main);
   game.scene.add(SCENE_NAME.GAME_OVER, GameOverScene);
-  game.scene.add(SCENE_NAME.SETTINGS, SettingScene);
 }
 
 enum AUDIO_KEYS {
@@ -44,46 +37,46 @@ const audioData: Array<{
   // Music
   {
     key: AUDIO_KEYS.MAIN_MENU_MUSIC,
-    path: "audio/music/cool-scary-background-track-by-brolefilmer-13959.mp3",
+    path: "music/cool-scary-background-track-by-brolefilmer-13959.mp3",
     options: {},
   },
   {
     key: AUDIO_KEYS.LEVEL_MUSIC,
-    path: "audio/music/enemy-inside-the-wire-129685.mp3",
+    path: "music/enemy-inside-the-wire-129685.mp3",
     options: {},
   },
   // Gameplay
   {
     key: AUDIO_KEYS.TILE_PLACE,
-    path: "audio/gameplay/cardPlace2.ogg",
+    path: "gameplay/cardPlace2.ogg",
     options: {},
   },
   {
     key: AUDIO_KEYS.INVALID_MOVE,
-    path: "audio/gameplay/error_006.ogg",
+    path: "gameplay/error_006.ogg",
     options: {},
   },
   // Weapons
   {
     key: AUDIO_KEYS.WEAPON_HACK,
-    path: "audio/weapons/laserSmall_003.ogg",
+    path: "weapons/laserSmall_003.ogg",
     options: {},
   },
   // Pickups
   {
     key: AUDIO_KEYS.TILE_PICKUP,
-    path: "audio/pickups/powerUp7.ogg",
+    path: "pickups/powerUp7.ogg",
     options: {},
   },
   {
     key: AUDIO_KEYS.TILE_HIT,
-    path: "audio/pickups/impactWood_light_002.ogg",
+    path: "pickups/impactWood_light_002.ogg",
     options: {},
   },
   // Player
   {
     key: AUDIO_KEYS.PLAYER_MOVE,
-    path: "audio/player/cardShove2.ogg",
+    path: "player/cardShove2.ogg",
     options: {},
   },
 ];
@@ -91,23 +84,31 @@ const audioData: Array<{
 /**
  * Register the audio files to the given game using the AUDIO_KEYS enum values.
  * TODO(rex): Investigate Audiosprites
- * @param game
  */
 function loadAudio(scene: Phaser.Scene) {
+  scene.load.setPath("resources/audio/"); // set the initial path
+
   audioData.forEach((data) => {
     scene.load.audio(data.key, data.path);
   });
+
+  scene.load.setPath(); // reset the path
 }
 
-/**
- * Add the relevant audio files to a scene.
- *
- * @param game
- */
+/** Add the relevant audio files to a scene. */
 function addAudio(scene: Phaser.Scene) {
+  scene.load.setPath("resources/audio/"); // set the initial path
+
   audioData.forEach((data) => {
-    scene.sound.add(data.key, data.options);
+    try {
+      scene.sound.add(data.key, data.options);
+    } catch (err) {
+      console.log(data)
+      console.log(err)
+    }
   });
+
+  scene.load.setPath(); // reset the path
 }
 
 export { installScenes, SCENE_NAME, AUDIO_KEYS, loadAudio, addAudio };

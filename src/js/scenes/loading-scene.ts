@@ -34,14 +34,20 @@ export default class LoadingScene extends Scene {
     this.load.on("complete", () => loadingBar.destroy());
 
     // Game Assets
-    this.load.setPath("resources/");
-    this.load.atlas("all-assets", "atlases/all-assets.png", "atlases/all-assets.json");
+    this.load.setPath("resources/atlases/"); // set the path for the assets
+    this.load.atlas("all-assets", "all-assets.png", "all-assets.json");
+    
+    // Intro Screen
+    this.load.setPath("resources/screens/intro/"); // set the path for the screens
+    this.load.multiatlas("intro", "intro.json");
 
-    // Screens
-    this.load.image("start-screen", "screens/start-v1.png");
-    this.load.image("win-screen", "screens/game-over-win-v1.png");
-    this.load.image("lose-screen", "screens/game-over-lose-v1.png");
+    this.load.setPath("resources/screens/"); // set the path for the screens
 
+    this.load.image("win-screen", "game-over-win-v1.png");
+    this.load.image("lose-screen", "game-over-lose-v1.png");
+
+    this.load.setPath("resources/"); // reset the path
+    
     // SFX
     loadAudio(this);
 

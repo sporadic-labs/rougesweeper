@@ -1,6 +1,4 @@
-/**
- * Level and tile data for tilemaps and dialogue info.
- */
+/** Level and tile data for tilemaps and dialogue info. */
 const levelData: Array<{
   level: string;
   title: string;
@@ -43,27 +41,24 @@ const levelData: Array<{
   { level: "level-12", title: "Jungle", subtitle: "Level 12", tiles: [], isLastLevel: true },
 ];
 
-/**
- * Keys for levels loaded into Phaser, used to access tilemap info.
- */
+/** Keys for levels loaded into Phaser, used to access tilemap info. */
 const levelKeys = levelData.map(({ level }) => level);
 
-/**
- * Loads the JSON files using the key and path from the `levelData` array.
- * @param scene
- */
+/** Loads the JSON files using the key and path from the `levelData` array. */
 function loadLevels(scene: Phaser.Scene) {
-  scene.load.image("all-assets", "maps-v2/tilesets/all-assets.png");
-  scene.load.image("hq", "maps-v2/tilesets/hq.png");
-  scene.load.image("warehouse", "maps-v2/tilesets/warehouse.png");
-  scene.load.image("lab", "maps-v2/tilesets/lab.png");
-  scene.load.image("skyscraper", "maps-v2/tilesets/skyscraper.png");
-  scene.load.image("temple", "maps-v2/tilesets/temple.png");
-  scene.load.image("jungle", "maps-v2/tilesets/jungle.png");
-  scene.load.image("decorations", "maps-v2/tilesets/decorations.png");
-  levelData.forEach(({ level }) =>
-    scene.load.tilemapTiledJSONExternal(level, `maps-v2/${level}.json`)
-  );
+  scene.load.setPath("resources/maps-v2/"); // Set the path for the maps.
+
+  scene.load.image("all-assets", "tilesets/all-assets.png");
+  scene.load.image("hq", "tilesets/hq.png");
+  scene.load.image("warehouse", "tilesets/warehouse.png");
+  scene.load.image("lab", "tilesets/lab.png");
+  scene.load.image("skyscraper", "tilesets/skyscraper.png");
+  scene.load.image("temple", "tilesets/temple.png");
+  scene.load.image("jungle", "tilesets/jungle.png");
+  scene.load.image("decorations", "tilesets/decorations.png");
+  levelData.forEach(({ level }) => scene.load.tilemapTiledJSONExternal(level, `${level}.json`));
+
+  scene.load.setPath(); // reset the path
 }
 
 export { levelData, levelKeys, loadLevels };
