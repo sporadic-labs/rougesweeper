@@ -1,13 +1,15 @@
+import { GameObjects, Scene } from "phaser";
+
+import constants from "../../constants";
+import { addUIPanel } from "../../helpers/add-ui-panel";
 import EventProxy from "../../helpers/event-proxy";
-import GAME_MODES from "../game-manager/game-modes";
-import TextButton from "./text-button";
 import MobXProxy from "../../helpers/mobx-proxy";
-import DEPTHS from "../depths";
+import { SCENE_NAME } from "../../scenes";
 import { GameStore } from "../../store/index";
 import storedSettings from "../../store/stored-settings";
-import constants from "../../constants";
-import { SCENE_NAME } from "../../scenes";
-import { addUIPanel } from "../../helpers/add-ui-panel";
+import DEPTHS from "../depths";
+import GAME_MODES from "../game-manager/game-modes";
+import TextButton from "./text-button";
 
 const baseTextStyle = {
   color: constants.darkText,
@@ -18,28 +20,39 @@ const titleStyle = {
   fontSize: "30px",
   fontStyle: "bold",
 };
+const subtitleStyle = {
+  ...baseTextStyle,
+  align: "center",
+  fontSize: "24px",
+  fontStyle: "bold",
+};
 const textStyle = {
   ...baseTextStyle,
   fontSize: "22px",
 };
 
 export default class PauseMenu {
-  scene: Phaser.Scene;
-  gameStore: GameStore;
-  mobProxy: MobXProxy;
-  proxy: EventProxy;
-  container: Phaser.GameObjects.Container;
-  isOpen = false;
-  closeButton: TextButton;
-  quitButton: TextButton;
+  private mobProxy: MobXProxy;
+  private proxy: EventProxy;
+  private container: GameObjects.Container;
+  private isOpen = false;
 
-  private title: Phaser.GameObjects.Text;
-  private text: Phaser.GameObjects.Text;
+  // Menu UI
+  private title: GameObjects.Text;
+  private text: GameObjects.Text;
+  private closeButton: TextButton;
+  private quitButton: TextButton;
 
-  constructor(scene: Phaser.Scene, gameStore: GameStore) {
-    this.scene = scene;
-    this.gameStore = gameStore;
+  private musicVolumeLabel: GameObjects.Text;
+  private musicVolumeValue: GameObjects.Text;
+  private musicVolumeUpButton: TextButton;
+  private musicVolumeDownButton: TextButton;
+  private sfxVolumeLabel: GameObjects.Text;
+  private sfxVolumeValue: GameObjects.Text;
+  private sfxVolumeUpButton: TextButton;
+  private sfxVolumeDownButton: TextButton;
 
+  constructor(private scene: Scene, private gameStore: GameStore) {
     this.createModal();
 
     this.proxy = new EventProxy();
@@ -81,7 +94,7 @@ export default class PauseMenu {
       .setLineSpacing(6)
       .setFixedSize(textWidth, textHeight)
       .setWordWrapWidth(textWidth)
-      .setText("If you want to pause this menu, you are shit out of luck my guy!");
+      .setText("Configure the game to your exact specifications!");
 
     // Derive the modal height from the text height plus some buffer around it
     // for the title and buttons.
@@ -109,9 +122,8 @@ export default class PauseMenu {
       safeUsageOffset: 20,
     });
 
-    this.title = this.scene.add
-      .text(r.centerX, r.y + 40, "Pause", titleStyle)
-      .setOrigin(0.5, 0.5);
+    // Menu Stuff
+    this.title = this.scene.add.text(r.centerX, r.y + 40, "Pause", titleStyle).setOrigin(0.5, 0.5);
 
     const closeButton = new TextButton(this.scene, r.centerX - 180, r.bottom - 30, "Resume", {
       origin: { x: 0.5, y: 1 },
@@ -125,12 +137,62 @@ export default class PauseMenu {
     quitButton.events.on("DOWN", this.quit);
     this.quitButton = quitButton;
 
+    // Music Controls
+    this.musicVolumeLabel = this.scene.add
+      .text(r.centerX, r.centerY - 90, "Music Volume", subtitleStyle)
+      .setOrigin(0.5, 0.5);
+    this.musicVolumeValue = this.scene.add
+      .text(r.centerX, r.centerY  - 40, `${storedSettings.musicVolume}`, subtitleStyle)
+      .setOrigin(0.5, 0.5);
+
+    const musicVolumeUpButton = new TextButton(this.scene, r.centerX + 120, r.centerY  - 40, "+", {
+      origin: { x: 0.5, y: 0.5 },
+    });
+    musicVolumeUpButton.events.on("DOWN", this.musicVolumeUp);
+    this.musicVolumeUpButton = musicVolumeUpButton;
+
+    const musicVolumeDownButton = new TextButton(this.scene, r.centerX - 120, r.centerY  - 40, "-", {
+      origin: { x: 0.5, y: 0.5 },
+    });
+    musicVolumeDownButton.events.on("DOWN", this.musicVolumeDown);
+    this.musicVolumeDownButton = musicVolumeDownButton;
+
+    // SFX Controls
+    this.sfxVolumeLabel = this.scene.add
+      .text(r.centerX, r.centerY + 40, "SFX Volume", subtitleStyle)
+      .setOrigin(0.5, 0.5);
+    this.sfxVolumeValue = this.scene.add
+      .text(r.centerX,  r.centerY + 90, `${storedSettings.sfxVolume}`, subtitleStyle)
+      .setOrigin(0.5, 0.5);
+
+    const sfxVolumeUpButton = new TextButton(this.scene, r.centerX + 120,  r.centerY + 90, "+", {
+      origin: { x: 0.5, y: 0.5 },
+    });
+    sfxVolumeUpButton.events.on("DOWN", this.sfxVolumeUp);
+    this.sfxVolumeUpButton = sfxVolumeUpButton;
+
+    const sfxVolumeDownButton = new TextButton(this.scene, r.centerX - 120,  r.centerY + 90, "-", {
+      origin: { x: 0.5, y: 0.5 },
+    });
+    sfxVolumeDownButton.events.on("DOWN", this.sfxVolumeDown);
+    this.sfxVolumeDownButton = sfxVolumeDownButton;
+
+    // NOTE(rex): What else...?
+
     this.container = this.scene.add
       .container(0, 0, [
         background,
         uiPanel,
         this.title,
         this.text,
+        this.musicVolumeLabel,
+        this.musicVolumeValue,
+        this.musicVolumeUpButton.text,
+        this.musicVolumeDownButton.text,
+        this.sfxVolumeLabel,
+        this.sfxVolumeValue,
+        this.sfxVolumeUpButton.text,
+        this.sfxVolumeDownButton.text,
         closeButton.text,
         quitButton.text,
       ])
@@ -168,6 +230,30 @@ export default class PauseMenu {
     this.scene.scene.stop();
     this.scene.scene.start(SCENE_NAME.START);
   };
+
+  musicVolumeUp = () : void => {
+    const newVolume = storedSettings.musicVolume + 1
+    storedSettings.setMusicVolume(newVolume)
+    this.musicVolumeValue.setText(`${newVolume}`)
+  }
+
+  musicVolumeDown = () : void => {
+    const newVolume = storedSettings.musicVolume - 1
+    storedSettings.setMusicVolume(newVolume)
+    this.musicVolumeValue.setText(`${newVolume}`)
+  }
+
+  sfxVolumeUp = () : void => {
+    const newVolume = storedSettings.sfxVolume + 1
+    storedSettings.setSfxVolume(newVolume)
+    this.sfxVolumeValue.setText(`${newVolume}`)
+  }
+
+  sfxVolumeDown = () : void => {
+    const newVolume = storedSettings.sfxVolume - 1
+    storedSettings.setSfxVolume(newVolume)
+    this.sfxVolumeValue.setText(`${newVolume}`)
+  }
 
   /** Manually call this when closing menu because of bug where button stays in pressed state */
   resetButtons() {
