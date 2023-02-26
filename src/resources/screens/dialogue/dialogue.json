@@ -1,0 +1,272 @@
+{
+	"textures": [
+		{
+			"image": "dialogue-0.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 410,
+				"h": 1254
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "boss_noArmor_02.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 73,
+						"w": 187,
+						"h": 168
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 187,
+						"h": 168
+					}
+				},
+				{
+					"filename": "boss_noArmor_01.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 6,
+						"y": 71,
+						"w": 185,
+						"h": 170
+					},
+					"frame": {
+						"x": 193,
+						"y": 2,
+						"w": 185,
+						"h": 170
+					}
+				},
+				{
+					"filename": "enemySimple_01.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 66,
+						"w": 200,
+						"h": 175
+					},
+					"frame": {
+						"x": 2,
+						"y": 176,
+						"w": 200,
+						"h": 175
+					}
+				},
+				{
+					"filename": "enemySimple_02.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 64,
+						"w": 200,
+						"h": 177
+					},
+					"frame": {
+						"x": 206,
+						"y": 176,
+						"w": 200,
+						"h": 177
+					}
+				},
+				{
+					"filename": "character_02.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 11,
+						"y": 43,
+						"w": 182,
+						"h": 198
+					},
+					"frame": {
+						"x": 2,
+						"y": 355,
+						"w": 182,
+						"h": 198
+					}
+				},
+				{
+					"filename": "character_01.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 11,
+						"y": 42,
+						"w": 181,
+						"h": 199
+					},
+					"frame": {
+						"x": 188,
+						"y": 357,
+						"w": 181,
+						"h": 199
+					}
+				},
+				{
+					"filename": "boss_01.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 27,
+						"w": 201,
+						"h": 214
+					},
+					"frame": {
+						"x": 2,
+						"y": 560,
+						"w": 201,
+						"h": 214
+					}
+				},
+				{
+					"filename": "boss_02.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 25,
+						"w": 201,
+						"h": 216
+					},
+					"frame": {
+						"x": 207,
+						"y": 560,
+						"w": 201,
+						"h": 216
+					}
+				},
+				{
+					"filename": "enemyTough_01.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 5,
+						"w": 201,
+						"h": 227
+					},
+					"frame": {
+						"x": 2,
+						"y": 778,
+						"w": 201,
+						"h": 227
+					}
+				},
+				{
+					"filename": "enemyScramble_02.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 1,
+						"w": 196,
+						"h": 230
+					},
+					"frame": {
+						"x": 207,
+						"y": 780,
+						"w": 196,
+						"h": 230
+					}
+				},
+				{
+					"filename": "enemyTough_02.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 2,
+						"w": 201,
+						"h": 231
+					},
+					"frame": {
+						"x": 2,
+						"y": 1009,
+						"w": 201,
+						"h": 231
+					}
+				},
+				{
+					"filename": "enemyScramble_01.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 201,
+						"h": 241
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1,
+						"w": 201,
+						"h": 238
+					},
+					"frame": {
+						"x": 207,
+						"y": 1014,
+						"w": 201,
+						"h": 238
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:3cf7bc7ef55b5c3453c9466a396b940b:440a1fcad0374a162e1efac9517b8f44:189f015835e7942e196e8193cc5e9c36$"
+	}
+}
