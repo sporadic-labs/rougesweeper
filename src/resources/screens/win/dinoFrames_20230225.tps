@@ -143,7 +143,7 @@
         <key>autoAliasEnabled</key>
         <true/>
         <key>trimSpriteNames</key>
-        <false/>
+        <true/>
         <key>prependSmartFolderName</key>
         <false/>
         <key>autodetectAnimations</key>
@@ -173,24 +173,24 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_01.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_02.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_03.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_04.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_05.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_06.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_07.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_08.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_09.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_10.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_11.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_12.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_13.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_14.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_15.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_16.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_17.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/dinoFrames/dino_18.png</key>
+            <key type="filename">dinoFrames/dino_01.png</key>
+            <key type="filename">dinoFrames/dino_02.png</key>
+            <key type="filename">dinoFrames/dino_03.png</key>
+            <key type="filename">dinoFrames/dino_04.png</key>
+            <key type="filename">dinoFrames/dino_05.png</key>
+            <key type="filename">dinoFrames/dino_06.png</key>
+            <key type="filename">dinoFrames/dino_07.png</key>
+            <key type="filename">dinoFrames/dino_08.png</key>
+            <key type="filename">dinoFrames/dino_09.png</key>
+            <key type="filename">dinoFrames/dino_10.png</key>
+            <key type="filename">dinoFrames/dino_11.png</key>
+            <key type="filename">dinoFrames/dino_12.png</key>
+            <key type="filename">dinoFrames/dino_13.png</key>
+            <key type="filename">dinoFrames/dino_14.png</key>
+            <key type="filename">dinoFrames/dino_15.png</key>
+            <key type="filename">dinoFrames/dino_16.png</key>
+            <key type="filename">dinoFrames/dino_17.png</key>
+            <key type="filename">dinoFrames/dino_18.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -212,7 +212,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../../../../../../../../Desktop/win/dinoFrames</filename>
+                    <filename>dinoFrames</filename>
                 </array>
             </struct>
         </map>

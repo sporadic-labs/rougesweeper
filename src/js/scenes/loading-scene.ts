@@ -41,8 +41,20 @@ export default class LoadingScene extends Scene {
     this.load.setPath("resources/screens/intro/"); // set the path for the screens
     this.load.multiatlas("intro", "intro.json");
 
-    this.load.setPath("resources/screens/"); // set the path for the screens
+    // Win Screen
+    this.load.setPath("resources/screens/win/");
+    this.load.multiatlas("win", "win.json");
+    this.load.multiatlas("dino", "dino.json");
 
+    // Lose Screen
+    this.load.setPath("resources/screens/lose/");
+    this.load.multiatlas("lose", "lose.json");
+
+    // Dialogue
+    this.load.setPath("resources/screens/dialogue/");
+    this.load.multiatlas("dialogue", "dialogue.json");
+
+    this.load.setPath("resources/screens/"); // set the path for the screens
     this.load.image("win-screen", "game-over-win-v1.png");
     this.load.image("lose-screen", "game-over-lose-v1.png");
 

@@ -2,12 +2,16 @@ import Loading from "./loading-scene";
 import StartScene from "./start-scene";
 import Main from "./main-scene";
 import GameOverScene from "./game-over-scene";
+import WinScene from "./win-scene";
+import LoseScene from "./lose-scene";
 
 enum SCENE_NAME {
   LOADING = "LOADING",
   START = "START",
   MAIN = "MAIN",
   GAME_OVER = "GAME_OVER",
+  WIN = "WIN",
+  LOSE = "LOSE",
 }
 
 /** Register the scene classes to the given game using the SCENE_NAME enum values. */
@@ -16,6 +20,8 @@ function installScenes(game: Phaser.Game) {
   game.scene.add(SCENE_NAME.START, StartScene);
   game.scene.add(SCENE_NAME.MAIN, Main);
   game.scene.add(SCENE_NAME.GAME_OVER, GameOverScene);
+  game.scene.add(SCENE_NAME.WIN, WinScene);
+  game.scene.add(SCENE_NAME.LOSE, LoseScene);
 }
 
 enum AUDIO_KEYS {
@@ -29,54 +35,68 @@ enum AUDIO_KEYS {
   PLAYER_MOVE = "player-move",
 }
 
+enum AUDIO_TYPES {
+  BACKGROUND_MUSIC = "background-music",
+  SFX = "sfx",
+}
+
 const audioData: Array<{
   key: AUDIO_KEYS;
   path: string;
+  type: AUDIO_TYPES;
   options: Phaser.Types.Sound.SoundConfig;
 }> = [
   // Music
   {
     key: AUDIO_KEYS.MAIN_MENU_MUSIC,
     path: "music/cool-scary-background-track-by-brolefilmer-13959.mp3",
+    type: AUDIO_TYPES.BACKGROUND_MUSIC,
     options: {},
   },
   {
     key: AUDIO_KEYS.LEVEL_MUSIC,
     path: "music/enemy-inside-the-wire-129685.mp3",
+    type: AUDIO_TYPES.BACKGROUND_MUSIC,
     options: {},
   },
   // Gameplay
   {
     key: AUDIO_KEYS.TILE_PLACE,
     path: "gameplay/cardPlace2.ogg",
+    type: AUDIO_TYPES.SFX,
     options: {},
   },
   {
     key: AUDIO_KEYS.INVALID_MOVE,
     path: "gameplay/error_006.ogg",
+    type: AUDIO_TYPES.SFX,
     options: {},
   },
   // Weapons
   {
     key: AUDIO_KEYS.WEAPON_HACK,
     path: "weapons/laserSmall_003.ogg",
+    type: AUDIO_TYPES.SFX,
     options: {},
   },
   // Pickups
   {
     key: AUDIO_KEYS.TILE_PICKUP,
     path: "pickups/powerUp7.ogg",
+    type: AUDIO_TYPES.SFX,
     options: {},
   },
   {
     key: AUDIO_KEYS.TILE_HIT,
     path: "pickups/impactWood_light_002.ogg",
+    type: AUDIO_TYPES.SFX,
     options: {},
   },
   // Player
   {
     key: AUDIO_KEYS.PLAYER_MOVE,
     path: "player/cardShove2.ogg",
+    type: AUDIO_TYPES.SFX,
     options: {},
   },
 ];

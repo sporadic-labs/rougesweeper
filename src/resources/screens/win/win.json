@@ -10,7 +10,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "background.png",
+					"filename": "background",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -31,7 +31,7 @@
 					}
 				},
 				{
-					"filename": "midground.png",
+					"filename": "midground",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -63,7 +63,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "foreground.png",
+					"filename": "foreground",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -84,7 +84,7 @@
 					}
 				},
 				{
-					"filename": "smoke_07.png",
+					"filename": "smoke_07",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -105,7 +105,7 @@
 					}
 				},
 				{
-					"filename": "smoke_08.png",
+					"filename": "smoke_08",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -126,7 +126,7 @@
 					}
 				},
 				{
-					"filename": "smoke_01.png",
+					"filename": "smoke_01",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -147,7 +147,7 @@
 					}
 				},
 				{
-					"filename": "smoke_03.png",
+					"filename": "smoke_03",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -168,7 +168,7 @@
 					}
 				},
 				{
-					"filename": "smoke_12.png",
+					"filename": "smoke_12",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -200,7 +200,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "smoke_09.png",
+					"filename": "smoke_09",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -221,7 +221,7 @@
 					}
 				},
 				{
-					"filename": "smoke_02.png",
+					"filename": "smoke_02",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -242,7 +242,7 @@
 					}
 				},
 				{
-					"filename": "smoke_04.png",
+					"filename": "smoke_04",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -263,7 +263,7 @@
 					}
 				},
 				{
-					"filename": "smoke_11.png",
+					"filename": "smoke_11",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -284,7 +284,7 @@
 					}
 				},
 				{
-					"filename": "smoke_05.png",
+					"filename": "smoke_05",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -305,7 +305,7 @@
 					}
 				},
 				{
-					"filename": "smoke_10.png",
+					"filename": "smoke_10",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -326,7 +326,7 @@
 					}
 				},
 				{
-					"filename": "smoke_06.png",
+					"filename": "smoke_06",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -352,6 +352,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:f642b8b40fbaaa4829d0317d4a9470ff:bbf5677175d01a08f257478602d76c27:346b6139bcc7b4b9b39f4d69f3e96444$"
+		"smartupdate": "$TexturePacker:SmartUpdate:ed596920e1abec98e6832fed9993187f:bbf5677175d01a08f257478602d76c27:346b6139bcc7b4b9b39f4d69f3e96444$"
 	}
 }

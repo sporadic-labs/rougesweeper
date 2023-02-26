@@ -10,7 +10,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_11.png",
+					"filename": "dino_11",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -31,7 +31,7 @@
 					}
 				},
 				{
-					"filename": "dino_12.png",
+					"filename": "dino_12",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -63,7 +63,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_09.png",
+					"filename": "dino_09",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -84,7 +84,7 @@
 					}
 				},
 				{
-					"filename": "dino_10.png",
+					"filename": "dino_10",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -116,7 +116,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_08.png",
+					"filename": "dino_08",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -148,7 +148,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_13.png",
+					"filename": "dino_13",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -180,7 +180,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_14.png",
+					"filename": "dino_14",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -201,7 +201,7 @@
 					}
 				},
 				{
-					"filename": "dino_15.png",
+					"filename": "dino_15",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -233,7 +233,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_07.png",
+					"filename": "dino_07",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -254,7 +254,7 @@
 					}
 				},
 				{
-					"filename": "dino_06.png",
+					"filename": "dino_06",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -286,7 +286,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_17.png",
+					"filename": "dino_17",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -307,7 +307,7 @@
 					}
 				},
 				{
-					"filename": "dino_18.png",
+					"filename": "dino_18",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -339,7 +339,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_16.png",
+					"filename": "dino_16",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -360,7 +360,7 @@
 					}
 				},
 				{
-					"filename": "dino_01.png",
+					"filename": "dino_01",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -381,7 +381,7 @@
 					}
 				},
 				{
-					"filename": "dino_02.png",
+					"filename": "dino_02",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -402,7 +402,7 @@
 					}
 				},
 				{
-					"filename": "dino_03.png",
+					"filename": "dino_03",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -434,7 +434,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "dino_04.png",
+					"filename": "dino_04",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -455,7 +455,7 @@
 					}
 				},
 				{
-					"filename": "dino_05.png",
+					"filename": "dino_05",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -481,6 +481,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:4449d7c8453d95f0ea06c77ca68312d3:5ff6d139be771517d46f6efee1120798:a6e3d0da969a894f1ef5205f5bd76ff2$"
+		"smartupdate": "$TexturePacker:SmartUpdate:979e9e3be4a2711461c025cdb50ca9d8:5ff6d139be771517d46f6efee1120798:a6e3d0da969a894f1ef5205f5bd76ff2$"
 	}
 }

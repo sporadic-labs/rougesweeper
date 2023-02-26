@@ -10,7 +10,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "background.png",
+					"filename": "background",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -31,7 +31,7 @@
 					}
 				},
 				{
-					"filename": "spotlight.png",
+					"filename": "spotlight",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -52,7 +52,7 @@
 					}
 				},
 				{
-					"filename": "cloud_01.png",
+					"filename": "cloud_01",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -73,7 +73,7 @@
 					}
 				},
 				{
-					"filename": "cloud_02.png",
+					"filename": "cloud_02",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -105,7 +105,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "character_05.png",
+					"filename": "character_05",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -126,7 +126,7 @@
 					}
 				},
 				{
-					"filename": "character_06.png",
+					"filename": "character_06",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -147,7 +147,7 @@
 					}
 				},
 				{
-					"filename": "character_04.png",
+					"filename": "character_04",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -179,7 +179,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "character_07.png",
+					"filename": "character_07",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -200,7 +200,7 @@
 					}
 				},
 				{
-					"filename": "character_03.png",
+					"filename": "character_03",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -221,7 +221,7 @@
 					}
 				},
 				{
-					"filename": "character_02.png",
+					"filename": "character_02",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -253,7 +253,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "character_08.png",
+					"filename": "character_08",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -274,7 +274,7 @@
 					}
 				},
 				{
-					"filename": "character_01.png",
+					"filename": "character_01",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -295,7 +295,7 @@
 					}
 				},
 				{
-					"filename": "character_09.png",
+					"filename": "character_09",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -327,7 +327,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "character_112.png",
+					"filename": "character_112",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -348,7 +348,7 @@
 					}
 				},
 				{
-					"filename": "character_10.png",
+					"filename": "character_10",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -369,7 +369,7 @@
 					}
 				},
 				{
-					"filename": "character_11.png",
+					"filename": "character_11",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -395,6 +395,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:1e43556b897601e08c22a63d8cc78975:dc7037217b517e74afecfd0aa17d8b04:b15526e0adb7962f41a4cccf247a9ccd$"
+		"smartupdate": "$TexturePacker:SmartUpdate:8431e2a351c1e64bc6429d4a74936da0:dc7037217b517e74afecfd0aa17d8b04:b15526e0adb7962f41a4cccf247a9ccd$"
 	}
 }

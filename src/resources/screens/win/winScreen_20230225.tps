@@ -143,7 +143,7 @@
         <key>autoAliasEnabled</key>
         <true/>
         <key>trimSpriteNames</key>
-        <false/>
+        <true/>
         <key>prependSmartFolderName</key>
         <false/>
         <key>autodetectAnimations</key>
@@ -173,9 +173,9 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/background.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/foreground.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/midground.png</key>
+            <key type="filename">winFrames/background.png</key>
+            <key type="filename">winFrames/foreground.png</key>
+            <key type="filename">winFrames/midground.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -190,18 +190,18 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_01.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_02.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_03.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_04.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_05.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_06.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_07.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_08.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_09.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_10.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_11.png</key>
-            <key type="filename">../../../../../../../../Desktop/win/winFrames/smoke_12.png</key>
+            <key type="filename">winFrames/smoke_01.png</key>
+            <key type="filename">winFrames/smoke_02.png</key>
+            <key type="filename">winFrames/smoke_03.png</key>
+            <key type="filename">winFrames/smoke_04.png</key>
+            <key type="filename">winFrames/smoke_05.png</key>
+            <key type="filename">winFrames/smoke_06.png</key>
+            <key type="filename">winFrames/smoke_07.png</key>
+            <key type="filename">winFrames/smoke_08.png</key>
+            <key type="filename">winFrames/smoke_09.png</key>
+            <key type="filename">winFrames/smoke_10.png</key>
+            <key type="filename">winFrames/smoke_11.png</key>
+            <key type="filename">winFrames/smoke_12.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -223,7 +223,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../../../../../../../../Desktop/win/winFrames</filename>
+                    <filename>winFrames</filename>
                 </array>
             </struct>
         </map>
