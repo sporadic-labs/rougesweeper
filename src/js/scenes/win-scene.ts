@@ -6,7 +6,7 @@ import TextButton, { BUTTON_EVENTS } from "../game-objects/hud/text-button";
 import TweenPoser from "../game-objects/components/tween-poser";
 import SoundManager from "../game-objects/sound-manager";
 import store from "../store/index";
-import { AUDIO_KEYS, SCENE_NAME, addAudio } from "./index";
+import { AUDIO_KEYS, SCENE_NAME } from "./index";
 
 type SpotlightPoses = "Left" | "Right";
 type CloudPoses = "Left" | "Right";
@@ -27,6 +27,7 @@ export default class WinScene extends Scene {
   private midground: GameObjects.Sprite;
   private foreground: GameObjects.Sprite;
   private smoke: GameObjects.Sprite;
+  private dino: GameObjects.Sprite;
 
   // Sound Effects
   private sfx: SoundManager;
@@ -36,25 +37,32 @@ export default class WinScene extends Scene {
     const height = Number(this.game.config.height);
     const y = height / 2;
 
+    const bgHeight = height
+    const bgWidth = bgHeight * 6 / 4
+
     this.bg = this.add
-      .rectangle(0, 0, width, height, 0x475465)
+      .rectangle(0, 0, bgWidth, bgHeight, 0x88a4b7)
       .setPosition(gameCenter.x, gameCenter.y)
       .setDepth(DEPTHS.BOARD);
 
     this.volcano = this.add
       .sprite(gameCenter.x, gameCenter.y, "win", "background")
+      .setScale(0.9)
       .setDepth(DEPTHS.ABOVE_GROUND);
 
     this.midground = this.add
       .sprite(gameCenter.x, gameCenter.y, "win", "midground")
+      .setScale(0.9)
       .setDepth(DEPTHS.BELOW_PLAYER);
 
     this.foreground = this.add
       .sprite(gameCenter.x, gameCenter.y, "win", "foreground")
-      .setDepth(DEPTHS.PLAYER);
+      .setScale(0.9)
+      .setDepth(DEPTHS.ABOVE_PLAYER);
 
     this.smoke = this.add
-      .sprite(gameCenter.x, -60, "win", "smoke_01")
+      .sprite(gameCenter.x, 0, "win", "smoke_01")
+      .setScale(0.9)
       .setOrigin(0.5, 0)
       .setDepth(DEPTHS.PLAYER);
     this.anims.create({
@@ -65,11 +73,30 @@ export default class WinScene extends Scene {
         end: 12,
         zeroPad: 2,
       }),
-      frameRate: 8,
+      frameRate: 6,
       repeat: -1,
     });
 
     this.smoke.play("win-smoke");
+
+    this.dino = this.add
+      .sprite(500, gameCenter.y, "dino", "dino_01")
+      .setScale(0.36)
+      .setOrigin(0.5, 0.5)
+      .setDepth(DEPTHS.PLAYER);
+    this.anims.create({
+      key: `win-dino`,
+      frames: this.anims.generateFrameNames("dino", {
+        prefix: `dino_`,
+        start: 1,
+        end: 18,
+        zeroPad: 2,
+      }),
+      frameRate: 8,
+      repeat: -1,
+    });
+
+    this.dino.play("win-dino");
 
     const gameOverText = this.add
       .text(width / 2, y - 100, "You Win!", {
@@ -120,9 +147,8 @@ export default class WinScene extends Scene {
     });
 
     /* Add sound fx needed for the main menu. */
-    addAudio(this);
-
-    this.sound.play(AUDIO_KEYS.MAIN_MENU_MUSIC);
+    this.sfx = new SoundManager(this, store);
+    this.sfx.play(AUDIO_KEYS.MAIN_MENU_MUSIC);
   }
 
   destroy() {
@@ -132,9 +158,10 @@ export default class WinScene extends Scene {
     this.midground.destroy();
     this.foreground.destroy();
     this.smoke.destroy();
+    this.dino.destroy();
 
-    this.sound.stopAll();
-    this.sound.destroy();
+    // Cleanup the Audio.
+    this.sfx.destroy();
 
     this.mainMenuButton.destroy();
     this.playButton.destroy();
