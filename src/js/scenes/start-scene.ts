@@ -39,8 +39,8 @@ export default class StartScene extends Scene {
     const width = Number(this.game.config.width);
     const height = Number(this.game.config.height);
 
-    const bgHeight = height
-    const bgWidth = bgHeight * 6 / 4
+    const bgHeight = height;
+    const bgWidth = (bgHeight * 6) / 4;
 
     this.bg = this.add
       .rectangle(0, 0, bgWidth, bgHeight, 0x222730)
@@ -49,7 +49,12 @@ export default class StartScene extends Scene {
 
     // Cloud Sprite and Animation
     this.cloud_01 = this.add
-      .sprite(gameCenter.x + Math.RND.between(300, 400), Math.RND.between(40, 120), "intro", "cloud-1")
+      .sprite(
+        gameCenter.x + Math.RND.between(300, 400),
+        Math.RND.between(40, 120),
+        "intro",
+        "cloud-1"
+      )
       .setScale(0.75)
       .setAlpha(0.95)
       .setDepth(DEPTHS.ABOVE_GROUND);
@@ -68,9 +73,14 @@ export default class StartScene extends Scene {
     this.cloud_01_poser.moveToPose("Left");
 
     this.cloud_02 = this.add
-      .sprite(gameCenter.x - Math.RND.between(300, 400), Math.RND.between(40, 120), "intro", "cloud-2")
+      .sprite(
+        gameCenter.x - Math.RND.between(300, 400),
+        Math.RND.between(40, 120),
+        "intro",
+        "cloud-2"
+      )
       .setScale(0.65)
-      .setAlpha(0.90)
+      .setAlpha(0.9)
       .setDepth(DEPTHS.ABOVE_GROUND);
     this.cloud_02_poser = new TweenPoser(this, this.cloud_02, {
       duration: 60 * 5 * 1000 + Math.RND.between(200, 800),
@@ -117,7 +127,7 @@ export default class StartScene extends Scene {
       .setScale(0.65)
       .setRotation(Math.DegToRad(startingRotationDeg2))
       .setBlendMode(BlendModes.ADD)
-      .setAlpha(0.40)
+      .setAlpha(0.4)
       .setDepth(DEPTHS.BELOW_PLAYER);
     this.spotlight_02_poser = new TweenPoser(this, this.spotlight_02, {
       duration: 7200 + Math.RND.between(1200, 2000),
