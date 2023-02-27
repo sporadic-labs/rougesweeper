@@ -141,23 +141,24 @@ export default class Tile {
         // Setup different animations for the Gold vs. the Enemy graphics.
         if (this.type === TILE_TYPES.GOLD || this.type === TILE_TYPES.KEY || isPickup(this.type)) {
           this.tileGraphicTimeline = createPickupAnimation(this.scene, this.tileContents);
-          this.sound.play(AUDIO_KEYS.TILE_PICKUP);
+          this.sound.playSfx(AUDIO_KEYS.TILE_PICKUP);
         } else if (isEnemyTile(this.type)) {
           this.tileGraphicTimeline = createAttackAnimation(this.scene, this.tileContents);
-          this.sound.play(AUDIO_KEYS.TILE_PICKUP);
+          this.sound.playSfx(AUDIO_KEYS.TILE_PICKUP);
           this.tileGraphicTimeline.on("complete", () => {
             const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(4, 5)}`;
             const attackAnim = new AttackAnimation(
               this.scene,
               attackAnimKey,
               playerX - 40,
-              playerY - 28
+              playerY - 28,
+              this.sound
             );
             attackAnim.fadeout().then(() => attackAnim.destroy());
           });
         } else {
           // This is an empty tile, but we still wanna play the flip sound.
-          this.sound.play(AUDIO_KEYS.TILE_PICKUP);
+          this.sound.playSfx(AUDIO_KEYS.TILE_PICKUP);
         }
 
         this.tileGraphicTimeline.on("complete", () => {
@@ -289,7 +290,7 @@ export default class Tile {
         this.level.onTileFlip(this);
       });
       this.flipEffect.flipToFront();
-      this.sound.play(AUDIO_KEYS.TILE_PLACE);
+      this.sound.playSfx(AUDIO_KEYS.TILE_PLACE);
     });
   }
 

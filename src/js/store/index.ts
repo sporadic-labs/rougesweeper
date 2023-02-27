@@ -31,6 +31,11 @@ interface TutorialFlags {
 }
 
 class GameStore {
+  // Sound Settings
+  musicVolume: number;
+  sfxVolume: number;
+  muted: boolean;
+
   previousGameState: GAME_MODES;
   gameState: GAME_MODES;
   dangerCount: number;
@@ -55,6 +60,35 @@ class GameStore {
   constructor() {
     this.startNewGame();
     makeAutoObservable(this);
+  }
+
+  musicVolumeUp(): void {
+    const newVolume = this.musicVolume < 10 ? this.musicVolume + 1 : this.musicVolume;
+    this.musicVolume = newVolume
+    storedSettings.setMusicVolume(newVolume);
+  };
+
+  musicVolumeDown(): void {
+    const newVolume = this.musicVolume > 0 ? this.musicVolume - 1 : this.musicVolume;
+    this.musicVolume = newVolume
+    storedSettings.setMusicVolume(newVolume);
+  };
+
+  sfxVolumeUp(): void {
+    const newVolume = this.sfxVolume < 10 ? this.sfxVolume + 1 : this.sfxVolume;
+    this.sfxVolume = newVolume
+    storedSettings.setSfxVolume(newVolume);
+  };
+
+  sfxVolumeDown(): void {
+    const newVolume = this.sfxVolume > 0 ? this.sfxVolume - 1 : this.sfxVolume;
+    this.sfxVolume = newVolume
+    storedSettings.setSfxVolume(newVolume);
+  };
+
+  setMuted(): void {
+    this.muted = !this.muted
+    storedSettings.setMuted(this.muted)
   }
 
   setGameState(state: GAME_MODES) {
@@ -182,6 +216,10 @@ class GameStore {
   }
 
   startNewGame() {
+    this.musicVolume = storedSettings.musicVolume
+    this.sfxVolume = storedSettings.sfxVolume
+    this.muted = storedSettings.muted
+
     this.gameState = GAME_MODES.IDLE_MODE;
     this.previousGameState = this.gameState;
     this.dangerCount = 0;
@@ -197,7 +235,7 @@ class GameStore {
         : storedSettings.startingLevel;
     this.hasKey = false;
     this.hasSeenTutorial = storedSettings.hasSeenTutorial;
-    const hasWeapon = storedSettings.hasSeenTutorial ? true : false
+    const hasWeapon = storedSettings.hasSeenTutorial ? true : false;
     this.hasWeapon = hasWeapon;
     this.pauseMenuOpen = false;
     this.activeItemKey = "hack";
@@ -248,7 +286,7 @@ class GameStore {
       hasSeenUpgrade: false,
       hasSeenResetAlarm: false,
       hasSeenScrambledTile: false,
-    }
+    };
   }
 }
 

@@ -1,7 +1,8 @@
 import DEPTHS from "../depths";
-import { Scene, GameObjects, Sound, Tweens } from "phaser";
+import { Scene, GameObjects, Tweens } from "phaser";
 import TweenPoser from "../components/tween-poser";
 import { AUDIO_KEYS } from "../../scenes";
+import SoundManager from "../sound-manager";
 
 type FadePoses = "FadeOut" | "FadeIn";
 
@@ -9,9 +10,8 @@ export default class AttackAnimation {
   private sprite: GameObjects.Sprite;
   private tween: Tweens.Tween;
   private fadePoser: TweenPoser<FadePoses>;
-  private audio: Sound.BaseSoundManager
 
-  constructor(private scene: Scene, key: string, x: number, y: number) {
+  constructor(private scene: Scene, key: string, x: number, y: number, private sound: SoundManager) {
     this.scene = scene;
 
     this.sprite = scene.add.sprite(0, 0, "all-assets", key).setOrigin(0.5, 0.5);
@@ -22,8 +22,7 @@ export default class AttackAnimation {
     this.fadePoser.definePose("FadeOut", { alpha: 0 });
     this.fadePoser.setToPose("FadeIn");
 
-    this.audio = scene.sound
-    this.audio.play(AUDIO_KEYS.WEAPON_HACK)
+    this.sound.playSfx(AUDIO_KEYS.WEAPON_HACK)
 
     this.setPosition(x, y);
   }

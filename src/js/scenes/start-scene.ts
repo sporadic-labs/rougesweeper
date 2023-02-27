@@ -61,8 +61,8 @@ export default class StartScene extends Scene {
       repeatDelay: Math.RND.between(250, 350),
     });
     this.cloud_01_poser.definePoses({
-      Left: { x: 0 },
-      Right: { x: width },
+      Left: { x: this.cloud_01.width },
+      Right: { x: width - this.cloud_01.width },
     });
     this.cloud_01_poser.setToPose("Right");
     this.cloud_01_poser.moveToPose("Left");
@@ -80,8 +80,8 @@ export default class StartScene extends Scene {
       repeatDelay: Math.RND.between(250, 350),
     });
     this.cloud_02_poser.definePoses({
-      Left: { x: 0 },
-      Right: { x: width },
+      Left: { x: this.cloud_02.width },
+      Right: { x: width - this.cloud_02.width },
     });
     this.cloud_02_poser.setToPose("Right");
     this.cloud_02_poser.moveToPose("Left");
@@ -186,7 +186,7 @@ export default class StartScene extends Scene {
 
     /* Add sound fx needed for the main menu. */
     this.sfx = new SoundManager(this, store);
-    this.sfx.play(AUDIO_KEYS.MAIN_MENU_MUSIC);
+    this.sfx.playMusic(AUDIO_KEYS.MAIN_MENU_MUSIC);
   }
 
   destroy() {

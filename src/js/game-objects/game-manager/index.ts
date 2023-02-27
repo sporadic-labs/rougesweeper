@@ -202,7 +202,7 @@ export default class GameManager {
     const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
     const isValidMove = path && (!tile.isRevealed || tile.type !== TILE_TYPES.WALL);
     if (!isValidMove) {
-      this.sound.play(AUDIO_KEYS.INVALID_MOVE)
+      this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE)
       this.toast.setMessage("You can't move there.");
       return;
     }
@@ -235,7 +235,7 @@ export default class GameManager {
     if (shouldGetCoin) {
       const { x, y } = tile.getPosition();
       const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
-      const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
+      const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10, this.sound);
       await Promise.all([
         attackAnim.fadeout().then(() => attackAnim.destroy()),
         tile.playTileDestructionAnimation(),
@@ -269,7 +269,7 @@ export default class GameManager {
       if (shouldGetCoin) {
         const { x, y } = tile.getPosition();
         const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
-        const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
+        const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10, this.sound);
         await Promise.all([
           attackAnim.fadeout().then(() => attackAnim.destroy()),
           tile.playTileDestructionAnimation(),
@@ -293,7 +293,7 @@ export default class GameManager {
     this.level.disableAllTiles();
     store.addMove();
 
-    this.sound.play(AUDIO_KEYS.PLAYER_MOVE);
+    this.sound.playSfx(AUDIO_KEYS.PLAYER_MOVE);
 
     /* if the tile has been revealed/is blank, move there immediately,
      * otherwise move to the tile right before this one.
@@ -417,7 +417,7 @@ export default class GameManager {
     store.removeAmmo("hack", 1);
     const { x, y } = tile.getPosition();
     const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
-    const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10);
+    const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10, this.sound);
     await Promise.all([
       attackAnim.fadeout().then(() => attackAnim.destroy()),
       tile.playTileDestructionAnimation(),
@@ -538,7 +538,7 @@ export default class GameManager {
 
     // Restart the level music.
     this.sound.stopByKey(AUDIO_KEYS.LEVEL_MUSIC)
-    this.sound.play(AUDIO_KEYS.LEVEL_MUSIC)
+    this.sound.playMusic(AUDIO_KEYS.LEVEL_MUSIC)
 
     this.events.emit(GAME_EVENTS.LEVEL_START, this.level);
   }

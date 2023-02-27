@@ -62,6 +62,7 @@ export default class DialogueManager {
   private title: Phaser.GameObjects.Text;
   private text: Phaser.GameObjects.Text;
   private sprite: Phaser.GameObjects.Sprite;
+  private spriteBg: Phaser.GameObjects.Rectangle;
 
   private onComplete: (value?: unknown) => void;
 
@@ -92,8 +93,8 @@ export default class DialogueManager {
 
     const height = Number(this.scene.game.config.height);
     const width = Number(this.scene.game.config.width);
-    const modalWidth = width * 0.5;
-    const textWidth = modalWidth * 0.7;
+    const modalWidth = width * 0.55;
+    const textWidth = modalWidth * 0.6;
 
     this.text = this.scene.add
       .text(0, 0, "", textStyle)
@@ -110,7 +111,6 @@ export default class DialogueManager {
       if (this.text.height > maxDialogueTextHeight) {
         maxDialogueTextHeight = this.text.height;
       }
-      console.log(this.text.height, this.text.displayHeight);
     });
     this.text.setText("");
     this.text.setFixedSize(textWidth, maxDialogueTextHeight);
@@ -127,7 +127,7 @@ export default class DialogueManager {
       modalHeight
     );
 
-    this.text.setPosition(r.centerX, r.centerY);
+    this.text.setPosition(r.centerX + 50, r.centerY);
 
     const uiPanel = addUIPanel({
       scene: this.scene,
@@ -145,8 +145,16 @@ export default class DialogueManager {
       .setOrigin(0.5, 0.5);
 
     this.sprite = this.scene.add
-      .sprite(r.x + 36, r.centerY, "all-assets", "player-f")
+      .sprite(r.x + 34, r.centerY - 20, "dialogue", "character_01")
       .setOrigin(0, 0.5);
+
+    this.spriteBg = this.scene.add.rectangle(
+      r.x + 136,
+      r.centerY - 10,
+      this.sprite.width,
+      this.sprite.height - 20,
+      0xF1F4F5
+    );
 
     const continueButton = new TextButton(this.scene, r.right - 182, r.bottom - 30, "Next", {
       origin: { x: 0.5, y: 1 },
@@ -179,6 +187,7 @@ export default class DialogueManager {
         uiPanel,
         this.title,
         this.text,
+        this.spriteBg,
         this.sprite,
         continueButton.text,
         skipButton.text,
@@ -329,7 +338,7 @@ export default class DialogueManager {
     this.reset();
     this.pageIndex++;
     this.currentDialoguePage = this.dialoguePages[this.pageIndex];
-    this.sprite.setTexture("all-assets", this.currentDialoguePage.imageKey);
+    this.sprite.setTexture("dialogue", this.currentDialoguePage.imageKey);
     this.title.setText(this.currentDialoguePage.title);
     this.nextState();
   }
@@ -348,7 +357,7 @@ export default class DialogueManager {
     this.isCurrentlyOpen = true;
     if (this.dialoguePages[this.pageIndex]) {
       this.currentDialoguePage = this.dialoguePages[this.pageIndex];
-      this.sprite.setTexture("all-assets", this.currentDialoguePage.imageKey);
+      this.sprite.setTexture("dialogue", this.currentDialoguePage.imageKey);
       this.title.setText(this.currentDialoguePage.title);
     }
 
@@ -359,7 +368,7 @@ export default class DialogueManager {
     // NOTE(rex): This fucking thing solves a Phaser problem with subscribing to an event, and Phaser thinking it is firing already...
     setTimeout(() => {
       this.proxy.on(this.scene.input, "pointerdown", this.onPointerDown, this);
-    }, 0)
+    }, 0);
 
     this.container.setVisible(true);
     this.previousGameState = this.gameStore.gameState;
@@ -417,7 +426,7 @@ export default class DialogueManager {
   }
 
   setDialogueImage(imageFrame: string) {
-    this.sprite.setTexture("all-assets", imageFrame);
+    this.sprite.setTexture("dialogue", imageFrame);
   }
 
   onPointerDown(e: Phaser.Input.Pointer) {

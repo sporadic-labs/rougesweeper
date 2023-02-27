@@ -148,7 +148,7 @@ export default class WinScene extends Scene {
 
     /* Add sound fx needed for the main menu. */
     this.sfx = new SoundManager(this, store);
-    this.sfx.play(AUDIO_KEYS.MAIN_MENU_MUSIC);
+    this.sfx.playMusic(AUDIO_KEYS.MAIN_MENU_MUSIC);
   }
 
   destroy() {

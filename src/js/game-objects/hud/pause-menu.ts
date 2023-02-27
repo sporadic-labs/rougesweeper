@@ -232,27 +232,23 @@ export default class PauseMenu {
   };
 
   musicVolumeUp = () : void => {
-    const newVolume = storedSettings.musicVolume + 1
-    storedSettings.setMusicVolume(newVolume)
-    this.musicVolumeValue.setText(`${newVolume}`)
+    this.gameStore.musicVolumeUp()
+    this.musicVolumeValue.setText(`${this.gameStore.musicVolume}`)
   }
 
   musicVolumeDown = () : void => {
-    const newVolume = storedSettings.musicVolume - 1
-    storedSettings.setMusicVolume(newVolume)
-    this.musicVolumeValue.setText(`${newVolume}`)
+    this.gameStore.musicVolumeDown()
+    this.musicVolumeValue.setText(`${this.gameStore.musicVolume}`)
   }
 
   sfxVolumeUp = () : void => {
-    const newVolume = storedSettings.sfxVolume + 1
-    storedSettings.setSfxVolume(newVolume)
-    this.sfxVolumeValue.setText(`${newVolume}`)
+    this.gameStore.sfxVolumeUp()
+    this.sfxVolumeValue.setText(`${this.gameStore.sfxVolume}`)
   }
 
   sfxVolumeDown = () : void => {
-    const newVolume = storedSettings.sfxVolume - 1
-    storedSettings.setSfxVolume(newVolume)
-    this.sfxVolumeValue.setText(`${newVolume}`)
+    this.gameStore.sfxVolumeDown()
+    this.sfxVolumeValue.setText(`${this.gameStore.sfxVolume}`)
   }
 
   /** Manually call this when closing menu because of bug where button stays in pressed state */

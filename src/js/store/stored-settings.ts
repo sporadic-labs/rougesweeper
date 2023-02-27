@@ -7,11 +7,13 @@ class StoredSettings {
   private defaultHasSeenTutorial = false;
   private defaultMusicVolume = 1;
   private defaultSfxVolume = 1;
+  private defaultMuted = false;
   @observable startingLevel: number = this.defaultStartingLevel;
   @observable startingGold: number = this.defaultStartingGold;
   @observable hasSeenTutorial: boolean = this.defaultHasSeenTutorial;
   @observable musicVolume: number = this.defaultMusicVolume;
   @observable sfxVolume: number = this.defaultSfxVolume;
+  @observable muted: boolean = this.defaultMuted;
 
   constructor() {
     if (!IS_PRODUCTION) {
@@ -20,6 +22,7 @@ class StoredSettings {
       this.hasSeenTutorial = localStorage.get("hasSeenTutorial") ?? this.defaultHasSeenTutorial;
       this.musicVolume = localStorage.get("musicVolume") ?? this.defaultMusicVolume;
       this.sfxVolume = localStorage.get("sfxVolume") ?? this.defaultSfxVolume;
+      this.muted = localStorage.get("muted") ?? this.defaultMuted;
     }
   }
 
@@ -46,6 +49,11 @@ class StoredSettings {
   @action setSfxVolume(sfxVolume: number) {
     this.sfxVolume = sfxVolume;
     localStorage.set("sfxVolume", this.sfxVolume);
+  }
+
+  @action setMuted(muted: boolean) {
+    this.muted = muted;
+    localStorage.set("muted", this.muted);
   }
 }
 
