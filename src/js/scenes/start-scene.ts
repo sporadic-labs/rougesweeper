@@ -190,7 +190,7 @@ export default class StartScene extends Scene {
     // Settings Button
     const settingsButton = new TextButton(this, width / 2, height - 148, "Settings");
     this.settingsButton = settingsButton;
-    settingsButton.events.once(BUTTON_EVENTS.DOWN, () => {
+    settingsButton.events.on(BUTTON_EVENTS.DOWN, () => {
       store.setPauseMenuOpen(true);
     });
 
