@@ -485,14 +485,20 @@ export default class Level {
 
     const start = this.getStartingGridPosition();
     this.tiles[start.y][start.x].flipToFront();
-    this.getNeighboringTiles(start.x, start.y).map((tile) => tile.flipToFront());
+    await Promise.all(
+      this.getNeighboringTiles(start.x, start.y).map((tile, i) => {
+        return new Promise((resolve) => {
+          setTimeout(resolve, i * 100);
+        }).then(() => tile.flipToFront());
+      })
+    );
     this.state = LEVEL_STATE.RUNNING;
     this.events.emit(LEVEL_EVENTS.LEVEL_START, this);
   }
 
   isLastLevel(): boolean {
     const levelData = allLevelData.find((data) => data.level === this.levelKey);
-    return levelData ? levelData.isLastLevel : false
+    return levelData ? levelData.isLastLevel : false;
   }
 
   destroy() {
