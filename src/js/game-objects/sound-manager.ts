@@ -14,10 +14,12 @@ export default class SoundManager {
   private mobProxy: MobXProxy;
 
   private audio: Sound.BaseSoundManager;
+  private audioMap: { [key: string]: Phaser.Sound.BaseSound } = {};
 
   private sfxVolume: number;
   private musicVolume: number;
   private isMuted: boolean;
+  private bgMusicKey: string;
 
   private gameStore: GameStore;
 
@@ -30,12 +32,19 @@ export default class SoundManager {
     this.isMuted = gameStore.muted;
 
     /* Add sound fx needed for game. */
-    addAudio(scene);
+    this.audioMap = addAudio(scene);
 
     // Setup Observables.
     this.mobProxy = new MobXProxy();
     this.mobProxy.observe(gameStore, "musicVolume", () => {
       this.musicVolume = gameStore.musicVolume;
+      if (
+        this.audioMap[this.bgMusicKey] &&
+        this.audioMap[this.bgMusicKey] instanceof Phaser.Sound.WebAudioSound
+      ) {
+        const volume = this.musicVolume / 10;
+        (this.audioMap[this.bgMusicKey] as Phaser.Sound.WebAudioSound).setVolume(volume);
+      }
     });
     this.mobProxy.observe(gameStore, "sfxVolume", () => {
       this.sfxVolume = gameStore.sfxVolume;
@@ -49,19 +58,24 @@ export default class SoundManager {
     this.proxy.on(scene.events, "destroy", this.destroy, this);
   }
 
-  play(key: string, opts?: Types.Sound.SoundConfig | Types.Sound.SoundMarker): boolean {
-    return this.audio.play(key, opts);
+  play(key: string, opts?: Types.Sound.SoundConfig): boolean {
+    const sound = this.audioMap[key]
+    return sound.play(opts);
   }
 
-  playSfx(key: string, opts?: Types.Sound.SoundConfig | Types.Sound.SoundMarker): boolean {
-    const volume = this.sfxVolume / 10
+  playSfx(key: string, opts?: Types.Sound.SoundConfig): boolean {
+    const volume = this.sfxVolume / 10;
     const defaultOpts = opts ?? {};
     return this.play(key, { ...defaultOpts, volume });
   }
 
-  playMusic(key: string, opts?: Types.Sound.SoundConfig | Types.Sound.SoundMarker): boolean {
-    const volume = this.musicVolume / 10
+  playMusic(key: string, opts?: Types.Sound.SoundConfig): boolean {
+    if (this.audioMap[this.bgMusicKey]) {
+      this.audioMap[this.bgMusicKey].stop();
+    }
+    const volume = this.musicVolume / 10;
     const defaultOpts = opts ?? {};
+    this.bgMusicKey = key;
     return this.play(key, { ...defaultOpts, volume });
   }
 

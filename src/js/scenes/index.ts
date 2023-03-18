@@ -113,19 +113,23 @@ function loadAudio(scene: Phaser.Scene) {
 }
 
 /** Add the relevant audio files to a scene. */
-function addAudio(scene: Phaser.Scene) {
+function addAudio(scene: Phaser.Scene): { [key: string]: Phaser.Sound.BaseSound } {
   scene.load.setPath("resources/audio/"); // set the initial path
 
+  const audioMap: { [key: string]: Phaser.Sound.BaseSound } = {};
   audioData.forEach((data) => {
     try {
-      scene.sound.add(data.key, data.options);
+      const sound = scene.sound.add(data.key, data.options);
+      audioMap[data.key] = sound;
     } catch (err) {
-      console.log(data)
-      console.log(err)
+      console.log(data);
+      console.log(err);
     }
   });
 
   scene.load.setPath(); // reset the path
+
+  return audioMap
 }
 
 export { installScenes, SCENE_NAME, AUDIO_KEYS, loadAudio, addAudio };
