@@ -153,7 +153,8 @@ export default class DialogueManager {
      * Use the first image key you come across.
      * NOTE(rex): Default to the main character...
      */
-    const imageKey = this.dialoguePages?.length > 0 ? this.dialoguePages[0].imageKey : "character_01";
+    const imageKey =
+      this.dialoguePages?.length > 0 ? this.dialoguePages[0].imageKey : "character_01";
     const imagePrefix = imageKey.split("_")[0];
 
     this.sprite = this.scene.add
@@ -165,20 +166,20 @@ export default class DialogueManager {
       frames: [
         {
           key: "dialogue",
-          frame: `${imagePrefix}_01`
+          frame: `${imagePrefix}_01`,
         },
         {
           key: "dialogue",
-          frame: `${imagePrefix}_0${Phaser.Math.RND.pick([1, 2])}`
+          frame: `${imagePrefix}_0${Phaser.Math.RND.pick([1, 2])}`,
         },
         {
           key: "dialogue",
-          frame: `${imagePrefix}_02`
+          frame: `${imagePrefix}_02`,
         },
         {
           key: "dialogue",
-          frame: `${imagePrefix}_0${Phaser.Math.RND.pick([1, 2])}`
-        }
+          frame: `${imagePrefix}_0${Phaser.Math.RND.pick([1, 2])}`,
+        },
       ],
       frameRate: 2,
       repeat: -1,
@@ -193,29 +194,50 @@ export default class DialogueManager {
       0xf1f4f5
     );
 
-    const continueButton = new TextButton(this.scene, r.right - 182, r.bottom - 30, "Next", {
-      origin: { x: 0.5, y: 1 },
-      textStyle: {
-        backgroundColor: constants.darkText,
-        color: constants.lightText,
+    const continueButton = new TextButton(
+      this.scene,
+      r.right - 182,
+      r.bottom - 30,
+      "Next",
+      {
+        origin: { x: 0.5, y: 1 },
+        textStyle: {
+          backgroundColor: constants.darkText,
+          color: constants.lightText,
+        },
       },
-    });
+      this.sound
+    );
     continueButton.events.on("DOWN", this.nextState, this);
-    const skipButton = new TextButton(this.scene, r.right - 74, r.bottom - 30, "Skip", {
-      origin: { x: 0.5, y: 1 },
-      textStyle: {
-        backgroundColor: constants.darkText,
-        color: constants.lightText,
+    const skipButton = new TextButton(
+      this.scene,
+      r.right - 74,
+      r.bottom - 30,
+      "Skip",
+      {
+        origin: { x: 0.5, y: 1 },
+        textStyle: {
+          backgroundColor: constants.darkText,
+          color: constants.lightText,
+        },
       },
-    });
+      this.sound
+    );
     skipButton.events.on("DOWN", this.close, this);
-    const doneButton = new TextButton(this.scene, r.right - 74, r.bottom - 30, "Done", {
-      origin: { x: 0.5, y: 1 },
-      textStyle: {
-        backgroundColor: constants.darkText,
-        color: constants.lightText,
+    const doneButton = new TextButton(
+      this.scene,
+      r.right - 74,
+      r.bottom - 30,
+      "Done",
+      {
+        origin: { x: 0.5, y: 1 },
+        textStyle: {
+          backgroundColor: constants.darkText,
+          color: constants.lightText,
+        },
       },
-    });
+      this.sound
+    );
     doneButton.events.on("DOWN", this.close, this);
     this.controls = { continueButton, doneButton, skipButton };
 
@@ -284,7 +306,7 @@ export default class DialogueManager {
   }
 
   nextCharacter() {
-    this.sound.playSfx(AUDIO_KEYS.UI_TYPE)
+    this.sound.playUI(AUDIO_KEYS.UI_TYPE);
 
     //  Add the next word onto the text string, followed by a space
     const char = this.word[this.characterIndex];

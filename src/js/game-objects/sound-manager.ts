@@ -70,7 +70,7 @@ export default class SoundManager {
   }
 
   playUI(key: string, opts?: Types.Sound.SoundConfig): boolean {
-    const volume = this.sfxVolume / 10;
+    const volume = this.sfxVolume / 25;
     const defaultOpts = opts ?? {};
     return this.play(key, { ...defaultOpts, volume });
   }

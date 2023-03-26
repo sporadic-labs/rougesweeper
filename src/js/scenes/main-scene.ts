@@ -33,8 +33,8 @@ export default class MainScene extends Scene {
     new GameManager(this, player, toastManager, dialogueManager, randomPickupManager, soundManager);
 
     // Create the menus...
-    new DebugMenu(this, store);
-    new PauseMenu(this, store);
+    new DebugMenu(this, store, soundManager);
+    new PauseMenu(this, store, soundManager);
     
     // And other HUD stuff!
     new AlertIndicator(this, store);

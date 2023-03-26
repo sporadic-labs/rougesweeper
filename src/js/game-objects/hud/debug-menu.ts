@@ -8,6 +8,7 @@ import { levelKeys } from "../../store/levels";
 import storedSettings from "../../store/stored-settings";
 import MobXProxy from "../../helpers/mobx-proxy";
 import constants from "../../constants";
+import SoundManager from "../sound-manager";
 import { addUIPanel } from "../../helpers/add-ui-panel";
 
 const baseTextStyle = {
@@ -36,15 +37,21 @@ class LevelSelectButton {
   public setStartingLevelButton: TextButton;
   public container: GameObjects.Container;
 
-  constructor(scene: Scene, levelName: string, top: number, left: number) {
+  constructor(
+    scene: Scene,
+    private sound: SoundManager,
+    levelName: string,
+    top: number,
+    left: number
+  ) {
     const origin = { origin: { x: 0, y: 0 } };
     let x = 0;
     let y = 0;
     this.label = scene.add.text(x, y, levelName, textStyle);
     y += this.label.height + 5;
-    this.loadButton = new TextButton(scene, x, y, "Load", origin);
+    this.loadButton = new TextButton(scene, x, y, "Load", origin, this.sound);
     x += this.loadButton.text.width + 5;
-    this.setStartingLevelButton = new TextButton(scene, x, y, "Start Here", origin);
+    this.setStartingLevelButton = new TextButton(scene, x, y, "Start Here", origin, this.sound);
 
     this.container = scene.add.container(top, left, [
       this.label,
@@ -80,11 +87,11 @@ export default class DebugMenu {
   private title: Phaser.GameObjects.Text;
   private text: Phaser.GameObjects.Text;
 
-  constructor(scene: Phaser.Scene, gameStore: GameStore) {
+  constructor(scene: Phaser.Scene, gameStore: GameStore, private sound: SoundManager) {
     this.scene = scene;
     this.gameStore = gameStore;
 
-    this.createModal()
+    this.createModal();
 
     this.proxy = new EventProxy();
     this.proxy.on(scene.events, "shutdown", this.destroy, this);
@@ -180,12 +187,20 @@ export default class DebugMenu {
       safeUsageOffset: 20,
     });
 
-    this.title = this.scene.add.text(r.centerX, r.y + 40, "Debug Menu", titleStyle).setOrigin(0.5, 0.5);
+    this.title = this.scene.add
+      .text(r.centerX, r.y + 40, "Debug Menu", titleStyle)
+      .setOrigin(0.5, 0.5);
 
-
-    const closeButton = new TextButton(this.scene, r.centerX - 180, r.bottom - 30, "Back", {
-      origin: { x: 0.5, y: 1 },
-    });
+    const closeButton = new TextButton(
+      this.scene,
+      r.centerX - 180,
+      r.bottom - 30,
+      "Back",
+      {
+        origin: { x: 0.5, y: 1 },
+      },
+      this.sound
+    );
     closeButton.events.on("DOWN", this.close);
     this.closeButton = closeButton;
 
@@ -196,7 +211,8 @@ export default class DebugMenu {
       "Show Tutorial",
       {
         origin: { x: 0.5, y: 1 },
-      }
+      },
+      this.sound
     );
     showTutorialButton.events.on("DOWN", this.showTutorial);
     if (!this.gameStore.hasSeenTutorial) showTutorialButton.disableInteractivity();
@@ -208,7 +224,7 @@ export default class DebugMenu {
 
       const y = r.y + 125 + row * 100;
       const x = r.x + 100 + col * 300;
-      const levelButton = new LevelSelectButton(this.scene, name, x, y);
+      const levelButton = new LevelSelectButton(this.scene, this.sound, name, x, y);
       levelButton.loadButton.events.on("DOWN", () => {
         this.loadLevel(i);
       });
