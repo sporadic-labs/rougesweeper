@@ -26,7 +26,7 @@ export default class MainScene extends Scene {
     const player = new Player(this, 0, 0);
     const toastManager = new ToastManager(this);
     const soundManager = new SoundManager(this, store);
-    const dialogueManager = new DialogueManager(this, store);
+    const dialogueManager = new DialogueManager(this, store, soundManager);
     const randomPickupManager = new RandomPickupManager();
 
     // Create the game manager.

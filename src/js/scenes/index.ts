@@ -30,11 +30,15 @@ enum AUDIO_KEYS {
   INVALID_MOVE = "invalid-move",
   WEAPON_HACK = "weapon-hack",
   PLAYER_MOVE = "player-move",
+  UI_TYPE = "ui-type",
+  UI_HOVER = "ui-hover",
+  UI_CLICK = "ui-click"
 }
 
 enum AUDIO_TYPES {
   BACKGROUND_MUSIC = "background-music",
   SFX = "sfx",
+  UI = "ui"
 }
 
 const audioData: Array<{
@@ -94,6 +98,25 @@ const audioData: Array<{
     key: AUDIO_KEYS.PLAYER_MOVE,
     path: "player/cardShove2.ogg",
     type: AUDIO_TYPES.SFX,
+    options: {},
+  },
+  // UI
+  {
+    key: AUDIO_KEYS.UI_TYPE,
+    path: "ui/glass_006.ogg",
+    type: AUDIO_TYPES.UI,
+    options: {},
+  },
+  {
+    key: AUDIO_KEYS.UI_CLICK,
+    path: "ui/select_001.ogg",
+    type: AUDIO_TYPES.UI,
+    options: {},
+  },
+  {
+    key: AUDIO_KEYS.UI_HOVER,
+    path: "ui/drop_003.ogg",
+    type: AUDIO_TYPES.UI,
     options: {},
   },
 ];

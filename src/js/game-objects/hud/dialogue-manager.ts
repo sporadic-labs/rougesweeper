@@ -8,6 +8,8 @@ import DEPTHS from "../depths";
 import { GameStore } from "../../store/index";
 import { addUIPanel } from "../../helpers/add-ui-panel";
 import constants from "../../constants";
+import SoundManager from "../sound-manager";
+import { AUDIO_KEYS } from "../../scenes";
 
 const baseTextStyle = {
   color: constants.darkText,
@@ -66,7 +68,7 @@ export default class DialogueManager {
 
   private onComplete: (value?: unknown) => void;
 
-  constructor(scene: Phaser.Scene, gameStore: GameStore) {
+  constructor(scene: Phaser.Scene, gameStore: GameStore, private sound: SoundManager) {
     this.scene = scene;
     this.gameStore = gameStore;
 
@@ -117,7 +119,10 @@ export default class DialogueManager {
 
     // Derive the modal height from the text height plus some buffer around it
     // for the title and buttons.
-    const modalHeight = maxDialogueTextHeight + 200;
+    const heightWithPadding = maxDialogueTextHeight + 200;
+    const minimumDialogHeight = 300;
+    const modalHeight =
+      heightWithPadding >= minimumDialogHeight ? heightWithPadding : minimumDialogHeight;
     const r = new Phaser.Geom.Rectangle(
       (width - modalWidth) / 2,
       // This is a hacky way to put the modal below the level, ideally we'd
@@ -144,16 +149,48 @@ export default class DialogueManager {
       .text(r.centerX, r.y + 40, "Dialogue Dialog", titleStyle)
       .setOrigin(0.5, 0.5);
 
+    /*
+     * Use the first image key you come across.
+     * NOTE(rex): Default to the main character...
+     */
+    const imageKey = this.dialoguePages?.length > 0 ? this.dialoguePages[0].imageKey : "character_01";
+    const imagePrefix = imageKey.split("_")[0];
+
     this.sprite = this.scene.add
-      .sprite(r.x + 34, r.centerY - 20, "dialogue", "character_01")
+      .sprite(r.x + 34, r.centerY - 10, "dialogue", imageKey)
       .setOrigin(0, 0.5);
+
+    this.scene.anims.create({
+      key: `${imagePrefix}-dialogue`,
+      frames: [
+        {
+          key: "dialogue",
+          frame: `${imagePrefix}_01`
+        },
+        {
+          key: "dialogue",
+          frame: `${imagePrefix}_0${Phaser.Math.RND.pick([1, 2])}`
+        },
+        {
+          key: "dialogue",
+          frame: `${imagePrefix}_02`
+        },
+        {
+          key: "dialogue",
+          frame: `${imagePrefix}_0${Phaser.Math.RND.pick([1, 2])}`
+        }
+      ],
+      frameRate: 2,
+      repeat: -1,
+    });
+    this.sprite.play(`${imagePrefix}-dialogue`);
 
     this.spriteBg = this.scene.add.rectangle(
       r.x + 136,
-      r.centerY - 10,
+      r.centerY,
       this.sprite.width,
       this.sprite.height - 20,
-      0xF1F4F5
+      0xf1f4f5
     );
 
     const continueButton = new TextButton(this.scene, r.right - 182, r.bottom - 30, "Next", {
@@ -247,6 +284,8 @@ export default class DialogueManager {
   }
 
   nextCharacter() {
+    this.sound.playSfx(AUDIO_KEYS.UI_TYPE)
+
     //  Add the next word onto the text string, followed by a space
     const char = this.word[this.characterIndex];
     if (char) this.text.text = this.text.text.concat(char);

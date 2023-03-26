@@ -69,6 +69,12 @@ export default class SoundManager {
     return this.play(key, { ...defaultOpts, volume });
   }
 
+  playUI(key: string, opts?: Types.Sound.SoundConfig): boolean {
+    const volume = this.sfxVolume / 10;
+    const defaultOpts = opts ?? {};
+    return this.play(key, { ...defaultOpts, volume });
+  }
+
   playMusic(key: string, opts?: Types.Sound.SoundConfig): boolean {
     if (this.audioMap[this.bgMusicKey]) {
       this.audioMap[this.bgMusicKey].stop();
