@@ -96,11 +96,13 @@ export default class TweenPoser<PoseType extends ValidPoses> {
    * transition. Precedence of settings is: configOverrides > poseConfig > baseConfig.
    */
   moveToPose(pose: PoseType, configOverrides: PoseData = {}) {
-    this.tween?.stop();
-    const config = this.getPoseConfig(pose);
-    this.tween = this.scene.add.tween({ ...config, ...configOverrides });
-    this.pose = pose;
-    return this;
+    return new Promise((resolve, _reject) => {
+      this.tween?.stop();
+      const config = this.getPoseConfig(pose);
+      this.tween = this.scene.add.tween({ ...config, ...configOverrides });
+      this.tween.once("complete", resolve)
+      this.pose = pose;
+    })
   }
 
   /**
@@ -110,11 +112,13 @@ export default class TweenPoser<PoseType extends ValidPoses> {
    * transition. Precedence of settings is: configOverrides > poseConfig > baseConfig.
    */
   setToPose(pose: PoseType, configOverrides: PoseData = {}) {
-    this.tween?.stop();
-    const config = this.getPoseConfig(pose);
-    this.tween = this.scene.add.tween({ ...config, ...configOverrides, duration: 0 });
-    this.pose = pose;
-    return this;
+    return new Promise((resolve, _reject) => {
+      this.tween?.stop();
+      const config = this.getPoseConfig(pose);
+      this.tween = this.scene.add.tween({ ...config, ...configOverrides, duration: 0});
+      this.tween.on("complete", resolve)
+      this.pose = pose;
+    })
   }
 
   getCurrentPose(): PoseType | null {

@@ -68,6 +68,8 @@ export default class LoadingScene extends Scene {
   }
 
   create() {
-    this.scene.start(SCENE_NAME.START);
+    // this.scene.start(SCENE_NAME.START);
+    // this.scene.start(SCENE_NAME.WIN);
+    this.scene.start(SCENE_NAME.LOSE);
   }
 }

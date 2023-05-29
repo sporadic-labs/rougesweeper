@@ -62,7 +62,7 @@ export default class StartScene extends Scene {
       .setAlpha(0.95)
       .setDepth(DEPTHS.ABOVE_GROUND);
     this.cloud_01_poser = new TweenPoser(this, this.cloud_01, {
-      duration: 60 * 2 * 1000 + Math.RND.between(200, 800),
+      duration: 60 * 1000 + Math.RND.between(200, 800),
       yoyo: true,
       hold: Math.RND.between(250, 350),
       repeat: -1,
@@ -86,7 +86,7 @@ export default class StartScene extends Scene {
       .setAlpha(0.9)
       .setDepth(DEPTHS.ABOVE_GROUND);
     this.cloud_02_poser = new TweenPoser(this, this.cloud_02, {
-      duration: 60 * 2 * 1000 + Math.RND.between(200, 800),
+      duration: 60 * 1000 + Math.RND.between(200, 800),
       yoyo: true,
       hold: Math.RND.between(250, 350),
       repeat: -1,

@@ -10,6 +10,7 @@ import { AUDIO_KEYS, SCENE_NAME } from "./index";
 
 type SpotlightPoses = "Left" | "Right";
 type CloudPoses = "Left" | "Right";
+type DinoPoses = "Down" | "Up";
 
 export default class WinScene extends Scene {
   // UI Elements
@@ -28,6 +29,10 @@ export default class WinScene extends Scene {
   private foreground: GameObjects.Sprite;
   private smoke: GameObjects.Sprite;
   private dino: GameObjects.Sprite;
+  private dino_poser: TweenPoser<DinoPoses>;
+  private dinoAnimationPlaying: boolean;
+  private dinoLoopIntervalMs: number;
+  private dinoIntervalTracker: NodeJS.Timer;
 
   // Sound Effects
   private sfx: SoundManager;
@@ -83,7 +88,7 @@ export default class WinScene extends Scene {
     this.smoke.play("win-smoke");
 
     this.dino = this.add
-      .sprite(500, gameCenter.y, "dino", "dino_01")
+      .sprite(500, gameCenter.y + 300, "dino", "dino_01")
       .setScale(0.36)
       .setOrigin(0.5, 0.5)
       .setDepth(DEPTHS.PLAYER);
@@ -96,10 +101,23 @@ export default class WinScene extends Scene {
         zeroPad: 2,
       }),
       frameRate: 8,
-      repeat: -1,
+      repeat: 0,
     });
-
-    this.dino.play("win-dino");
+    this.dino_poser = new TweenPoser(this, this.dino, {
+      duration: 2000,
+      yoyo: false,
+      repeat: 0,
+      onComplete: this.onDinoTweenComplete,
+    });
+    this.dino_poser.definePoses({
+      Up: { y: gameCenter.y },
+      Down: { y: gameCenter.y + 300 },
+    });
+    this.dino_poser.setToPose("Down");
+    // A few flags that are useful to the dino loop animation.
+    this.dinoAnimationPlaying = false;
+    const dinoBaseInterval = 6000;
+    this.dinoLoopIntervalMs = Phaser.Math.RND.integerInRange(2000, 4000) + dinoBaseInterval;
 
     const gameOverText = this.add
       .text(width / 2, y - 100, "You Win!", {
@@ -151,9 +169,38 @@ export default class WinScene extends Scene {
 
     // Start playing the background music.
     this.sfx.playMusic(AUDIO_KEYS.MAIN_MENU_MUSIC);
+
+    // Start playing the dino animation on a loop.
+    this.playDinoAnimation();
+    this.dinoIntervalTracker = setInterval(() => {
+      this.playDinoAnimation();
+      this.dinoLoopIntervalMs = Phaser.Math.RND.integerInRange(2000, 4000) + dinoBaseInterval;
+    }, this.dinoLoopIntervalMs);
+  }
+
+  async playDinoAnimation() {
+    // If we are already playing the animation, skip triggering it again!
+    if (this.dinoAnimationPlaying === true) return;
+
+    // Setup the on complete callback for the Frame Animation.
+    this.dino.once(Phaser.Animations.Events.ANIMATION_COMPLETE, async () => {
+      this.dino_poser.moveToPose("Down");
+      this.dinoAnimationPlaying = false;
+    });
+
+    // Kick things off!
+    this.dinoAnimationPlaying = true;
+    await this.dino_poser.moveToPose("Up");
+    this.dino.play("win-dino");
+  }
+
+  onDinoTweenComplete(e: any) {
+    console.log(e);
   }
 
   destroy() {
+    clearInterval(this.dinoIntervalTracker);
+
     // Cleanup the Sprites...
     this.bg.destroy();
     this.volcano.destroy();
@@ -161,6 +208,7 @@ export default class WinScene extends Scene {
     this.foreground.destroy();
     this.smoke.destroy();
     this.dino.destroy();
+    this.dino_poser.destroy();
 
     // Cleanup the Audio.
     this.sfx.destroy();
