@@ -169,9 +169,7 @@ export default class GameManager {
       if (success) {
         store.removeAmmo("clearRadar", 1);
       } else {
-        this.toast.setMessage(
-          "No tiles to reveal around you - try using in a different spot."
-        );
+        this.toast.setMessage("No tiles to reveal around you - try using in a different spot.");
       }
     } else if (itemInfo.key === "revealTile") {
       // TODO: should we break all item logic out into separate methods?
@@ -202,7 +200,7 @@ export default class GameManager {
     const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
     const isValidMove = path && (!tile.isRevealed || tile.type !== TILE_TYPES.WALL);
     if (!isValidMove) {
-      this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE)
+      this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE);
       this.toast.setMessage("You can't move there.");
       return;
     }
@@ -249,7 +247,7 @@ export default class GameManager {
     store.removeAmmo("revealTile", 1);
 
     await this.radar.update();
-    this.flipTilesIfClear();
+    await this.flipTilesIfClear();
 
     this.level.enableAllTiles();
     this.enableInteractivity();
@@ -269,7 +267,13 @@ export default class GameManager {
       if (shouldGetCoin) {
         const { x, y } = tile.getPosition();
         const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;
-        const attackAnim = new AttackAnimation(this.scene, attackAnimKey, x - 40, y - 10, this.sound);
+        const attackAnim = new AttackAnimation(
+          this.scene,
+          attackAnimKey,
+          x - 40,
+          y - 10,
+          this.sound
+        );
         await Promise.all([
           attackAnim.fadeout().then(() => attackAnim.destroy()),
           tile.playTileDestructionAnimation(),
@@ -377,7 +381,7 @@ export default class GameManager {
     }
 
     await this.radar.update();
-    this.flipTilesIfClear();
+    await this.flipTilesIfClear();
 
     const playerGridPos = this.player.getGridPosition();
     const currentTile = this.level.getTileFromGrid(playerGridPos.x, playerGridPos.y);
@@ -439,7 +443,7 @@ export default class GameManager {
     }
 
     await this.radar.update();
-    this.flipTilesIfClear();
+    await this.flipTilesIfClear();
 
     this.level.enableAllTiles();
     this.startIdleFlow();
@@ -448,19 +452,21 @@ export default class GameManager {
     this.events.emit(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.player);
   }
 
-  private flipTilesIfClear() {
+  private async flipTilesIfClear() {
     const playerGridPos = this.player.getGridPosition();
     const enemyCount = this.level.countNeighboringEnemies(playerGridPos.x, playerGridPos.y);
     const isTileScrambled = this.level.isTileScrambled(playerGridPos.x, playerGridPos.y);
     if (enemyCount === 0 && !isTileScrambled) {
-      this.level
-        .getNeighboringTiles(playerGridPos.x, playerGridPos.y)
-        .forEach((tile) => tile.flipToFront());
+      await this.level.flipTileBatch({
+        tiles: this.level.getNeighboringTiles(playerGridPos.x, playerGridPos.y),
+        flipDirection: "front",
+        staggerMs: 25,
+      });
     }
   }
 
   /** Move the player along a path of tiles. */
-  async movePlayerAlongPath(path: Point[], duration = 200) {
+  async movePlayerAlongPath(path: Point[]) {
     this.radar.closeRadar();
     const lastPoint = path[path.length - 1];
     const worldPath = path.map((p) => this.level.gridXYToWorldXY(p));
@@ -537,8 +543,8 @@ export default class GameManager {
     this.startIdleFlow();
 
     // Restart the level music.
-    this.sound.stopByKey(AUDIO_KEYS.LEVEL_MUSIC)
-    this.sound.playMusic(AUDIO_KEYS.LEVEL_MUSIC)
+    this.sound.stopByKey(AUDIO_KEYS.LEVEL_MUSIC);
+    this.sound.playMusic(AUDIO_KEYS.LEVEL_MUSIC);
 
     this.events.emit(GAME_EVENTS.LEVEL_START, this.level);
   }
