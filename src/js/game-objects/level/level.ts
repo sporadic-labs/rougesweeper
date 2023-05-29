@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps, Scene, GameObjects } from "phaser";
 import TILE_TYPES, { isEnemyTile } from "../level/tile-types";
-import Tile from "./tile";
+import Tile, { TileFlipToBackInput, TileFlipToFrontInput } from "./tile";
 import LevelData from "./level-data";
 import PathFinder from "./path-finder";
 import DEPTHS from "../depths";
@@ -15,6 +15,33 @@ import { neighborOffsets } from "./neighbor-offsets";
 import RandomPickupManager from "./random-pickup-manager";
 import { levelData as allLevelData } from "../../store/levels";
 import SoundManager from "../sound-manager";
+
+const wait = ({ scene, delayMs }: { scene: Phaser.Scene; delayMs: number }) =>
+  new Promise<void>((resolve) => {
+    scene.time.delayedCall(delayMs, () => resolve());
+  });
+
+const filterToDefinedTiles = (tiles: Array<Tile | null> | Array<Array<Tile | null>>) =>
+  tiles.flat().filter((t): t is Tile => !!t);
+
+/**
+ * Sort an array of tiles by row first and then by column, so that the resulting
+ * array is sorted top to bottom and then left to right.
+ */
+const sortTiles = (tiles: Array<Tile>) =>
+  tiles.slice().sort((a, b) => {
+    if (b.gridY > a.gridY) {
+      return -1;
+    } else if (b.gridY < a.gridY) {
+      return 1;
+    } else if (b.gridX > a.gridX) {
+      return -1;
+    } else if (b.gridX < a.gridX) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
 
 const Distance = Phaser.Math.Distance.BetweenPoints;
 
@@ -40,7 +67,7 @@ export default class Level {
   private tileWidth: number;
   private tileHeight: number;
   private background: GameObjects.Rectangle;
-  private tiles: Tile[][];
+  private tiles: Array<Array<Tile | null>>;
   private state: LEVEL_STATE = LEVEL_STATE.TRANSITION_IN;
   private tileKey: string;
 
@@ -92,7 +119,7 @@ export default class Level {
 
     this.tiles = this.data.tiles.map((row, y) =>
       row.map((dataTile, x) => {
-        if (!dataTile || !dataTile.type) return undefined;
+        if (!dataTile || !dataTile.type) return null;
 
         const { type, phaserTile, isReachable } = dataTile;
         const { frameName } = phaserTile.properties;
@@ -118,7 +145,7 @@ export default class Level {
             DOOR_PLACEMENT.RIGHT,
             this.tileKey
           );
-          return;
+          return null;
         } else if (type === TILE_TYPES.ENTRANCE) {
           // Find the center world position of the whole door (which is 2 tall) from the top tile.
           this.entranceWorldPosition = {
@@ -140,7 +167,7 @@ export default class Level {
             DOOR_PLACEMENT.LEFT,
             this.tileKey
           );
-          return;
+          return null;
         }
 
         const tile = new Tile(
@@ -330,7 +357,7 @@ export default class Level {
         tiles.push(this.getTileFromGrid(nx, ny));
       }
     });
-    return tiles;
+    return filterToDefinedTiles(tiles);
   }
 
   getStartingWorldPosition() {
@@ -406,10 +433,8 @@ export default class Level {
    * @param {function} cb
    */
   forEachTile(cb: (t: Tile) => void) {
-    this.tiles.forEach((row) => {
-      row.forEach((tile) => {
-        if (tile) cb(tile);
-      });
+    filterToDefinedTiles(this.tiles).forEach((tile) => {
+      cb(tile);
     });
   }
 
@@ -457,26 +482,79 @@ export default class Level {
     const tilePromises: Promise<void>[] = [];
     tilePromises.push(this.flipAllTiles("front"));
     // Flip all to the front, then half a second later, kick off the fade out from left to right
-    this.tiles.forEach((row, y) =>
-      row.forEach((tile, x) => {
-        if (tile) {
-          tilePromises.push(tile.fadeTileOut(250, 500 + x * 50));
-        }
-      })
+    filterToDefinedTiles(this.tiles).forEach((tile) =>
+      tilePromises.push(tile.fadeTileOut(250, 500 + tile.gridX * 50))
     );
     await Promise.all(tilePromises);
   }
 
-  async flipAllTiles(flipDirection: "front" | "back" = "front") {
-    const tilePromises: Promise<void>[] = [];
-    this.tiles.forEach((row) =>
-      row.forEach((tile) => {
-        if (tile) {
-          tilePromises.push(flipDirection === "front" ? tile.flipToFront() : tile.flipToBack());
+  /**
+   * Flip tiles to the front or back in a batch. This is done so that we can
+   * play sound effects in a way that doesn't overwhelm the audio channel and
+   * cause clipping.
+   */
+  async flipTileBatch({
+    tiles,
+    flipDirection,
+    staggerMs = 100,
+    ...args
+  }:
+    | ({
+        tiles: Array<Tile>;
+        staggerMs?: number;
+        flipDirection: "front";
+      } & TileFlipToFrontInput)
+    | ({
+        tiles: Array<Tile>;
+        staggerMs?: number;
+        flipDirection: "back";
+      } & TileFlipToBackInput)) {
+    // If we are flipping 9 or less tiles, we can stagger each tile. If we are
+    // flipping more than that, we should flip row by row to speed things up.
+    const waitBehavior = tiles.length > 9 ? "row" : "each";
+    const sortedTiles = sortTiles(tiles);
+    const flipPromises = [];
+    let lastRow: null | number = null;
+    let i = 0;
+    for (const tile of sortedTiles) {
+      // No need to delay on the 1st tile.
+      if (i !== 0) {
+        // Always wait for "each", but only wait on the 1st tile in the row for
+        // "row" behavior.
+        const shouldWait = waitBehavior === "row" ? lastRow !== tile.gridY : true;
+        if (shouldWait) {
+          await wait({ scene: this.scene, delayMs: staggerMs });
         }
-      })
-    );
-    await Promise.all(tilePromises);
+      }
+
+      // Play a sound on each new row, or each tile.
+      const triggerSound = waitBehavior === "row" ? lastRow !== tile.gridY : true;
+      if (flipDirection === "front") {
+        flipPromises.push(
+          flipDirection === "front"
+            ? tile.flipToFront({ ...args, playSfx: triggerSound })
+            : tile.flipToBack({ ...args, playSfx: triggerSound })
+        );
+      }
+      lastRow = tile.gridY;
+      i++;
+    }
+    await Promise.all(flipPromises);
+  }
+
+  async flipAllTiles(flipDirection: "front" | "back" = "front") {
+    const tilesToFlip = filterToDefinedTiles(this.tiles).filter((tile) => {
+      return (
+        (tile.isRevealed && flipDirection === "back") ||
+        (tile && !tile.isRevealed && flipDirection === "front")
+      );
+    });
+
+    await this.flipTileBatch({
+      tiles: tilesToFlip,
+      flipDirection,
+      staggerMs: 100,
+    });
   }
 
   async fadeLevelIn() {
@@ -484,33 +562,25 @@ export default class Level {
     await this.entrance.open();
 
     const start = this.getStartingGridPosition();
-    this.tiles[start.y][start.x].flipToFront();
-    await Promise.all(
-      this.getNeighboringTiles(start.x, start.y).map((tile, i) => {
-        return new Promise((resolve) => {
-          setTimeout(resolve, i * 100);
-        }).then(() => tile.flipToFront());
-      })
-    );
+    const tiles = filterToDefinedTiles([
+      this.tiles[start.y][start.x],
+      ...this.getNeighboringTiles(start.x, start.y),
+    ]);
+    await this.flipTileBatch({ tiles, flipDirection: "front", staggerMs: 100 });
     this.state = LEVEL_STATE.RUNNING;
     this.events.emit(LEVEL_EVENTS.LEVEL_START, this);
   }
 
   isLastLevel(): boolean {
     const levelData = allLevelData.find((data) => data.level === this.levelKey);
-    return levelData ? levelData.isLastLevel : false;
+    return Boolean(levelData ? levelData.isLastLevel : false);
   }
 
   destroy() {
-    this.tiles.forEach((row) =>
-      row.forEach((tile) => {
-        if (tile) tile.destroy();
-      })
-    );
+    filterToDefinedTiles(this.tiles).forEach((tile) => tile.destroy());
     this.entrance.destroy();
     this.exit.destroy();
     this.map.destroy();
     this.events.destroy();
-    this.data = undefined;
   }
 }

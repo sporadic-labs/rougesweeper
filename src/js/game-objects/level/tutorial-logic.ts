@@ -51,8 +51,9 @@ class Level0Tutorial implements FloorTutorial {
     this.gameEvents.addListener(GAME_EVENTS.PLAYER_FINISHED_MOVE, this.onPlayerFinishMove, this);
 
     this.level.forEachTile((t) => {
-      if (t.type === TILE_TYPES.ENEMY || t.type === TILE_TYPES.KEY) t.flipToFront(false);
-      else t.flipToFront();
+      t.flipToFront({
+        showContents: t.type !== TILE_TYPES.ENEMY && t.type !== TILE_TYPES.KEY,
+      });
     });
   }
 

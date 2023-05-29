@@ -275,7 +275,24 @@ export default class Tile {
     this.level.events.emit(EVENTS.TILE_OUT, this);
   };
 
-  async flipToFront(showContents = true): Promise<void> {
+  /**
+   * Flip the tile to reveal the contents.
+   */
+  async flipToFront({
+    playSfx = true,
+    showContents = true,
+  }: {
+    /**
+     * Whether or not to play the tile flip sound. Used in level.ts to stagger
+     * and batch tile flipping without playing a SFX for each flip.
+     */
+    playSfx?: boolean;
+    /**
+     * Whether or not to show the contents of the tile when flipping. Almost
+     * always true, except on the tutorial level.
+     */
+    showContents?: boolean;
+  } = {}): Promise<void> {
     if (this.isRevealed) return;
     this.isRevealed = true;
     if (!this.isCurrentlyBlank && this.tileContents) {
@@ -290,11 +307,24 @@ export default class Tile {
         this.level.onTileFlip(this);
       });
       this.flipEffect.flipToFront();
-      this.sound.playSfx(AUDIO_KEYS.TILE_PLACE);
+      if (playSfx) {
+        this.sound.playSfx(AUDIO_KEYS.TILE_PLACE);
+      }
     });
   }
 
-  async flipToBack(): Promise<void> {
+  /**
+   * Flip the tile to hide the contents.
+   */
+  async flipToBack({
+    playSfx = true,
+  }: {
+    /**
+     * Whether or not to play the tile flip sound. Used in level.ts to stagger
+     * and batch tile flipping without playing a SFX for each flip.
+     */
+    playSfx?: boolean;
+  } = {}): Promise<void> {
     if (!this.isRevealed) return;
     this.isRevealed = false;
     this.tileContents?.setVisible(false);
@@ -305,6 +335,9 @@ export default class Tile {
         this.level.onTileFlip(this);
       });
       this.flipEffect.flipToBack();
+      if (playSfx) {
+        this.sound.playSfx(AUDIO_KEYS.TILE_PLACE);
+      }
     });
   }
 
@@ -361,3 +394,6 @@ export default class Tile {
     if (this.tileGraphicTimeline) this.tileGraphicTimeline.destroy();
   }
 }
+
+export type TileFlipToFrontInput = Parameters<Tile["flipToFront"]>[0];
+export type TileFlipToBackInput = Parameters<Tile["flipToBack"]>[0];
