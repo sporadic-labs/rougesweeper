@@ -111,7 +111,7 @@ class Level0Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
-          imageKey: "character_01",
+          imageKey: "enemySimple_01",
           text: [
             "That drone was communicating with the security system...",
             "I need to hack the enemy drones before I am seen!",
@@ -234,7 +234,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
-          imageKey: "character_01",
+          imageKey: "enemySimple_01",
           text: [
             "This is a basic enemy drone.",
             "Hacking a drone will remove it as a threat.",
@@ -249,7 +249,7 @@ class Level1To9Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
-          imageKey: "character_01",
+          imageKey: "enemyScramble_01",
           text: [
             "This enemy drone is more advanced!",
             "It's defenses can scramble my radar!",
@@ -260,7 +260,7 @@ class Level1To9Tutorial implements FloorTutorial {
     } else if (tileType === TILE_TYPES.SUPER_ENEMY && !store.tutorialFlags.hasSeenSuperEnemy) {
       await this.dialogueManager.playDialogue({
         title: "Tutorial",
-        imageKey: "character_01",
+        imageKey: "enemyTough_01",
         text: [
           "This enemy drone looks dangerous!",
           "If it spots me, it will increase the Alert Level by 2!",
@@ -394,7 +394,7 @@ class Level10Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
-          imageKey: "character_01",
+          imageKey: "boss_noArmor_01",
           text: [
             "Hello, Agent. I see you have discovered my plot...",
             "However, you are too late to stop me! If only you had more TIME...",
@@ -456,7 +456,7 @@ class Level11Tutorial implements FloorTutorial {
       await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
-          imageKey: "character_01",
+          imageKey: "boss_01",
           text: [
             "We meet again, Agent.",
             "You are better than I originally thought...",
@@ -515,10 +515,10 @@ class Level12Tutorial implements FloorTutorial {
 
   async onTileClick(tileType: TILE_TYPES) {
     if (tileType === TILE_TYPES.BOSS) {
-      this.dialogueManager.playDialogue([
+      await this.dialogueManager.playDialogue([
         {
           title: "Tutorial",
-          imageKey: "character_01",
+          imageKey: "boss_01",
           text: ["Wha- How did you find me again!?!", "This is IMPOSSIBLE!", "Nooooooooo..."],
         },
       ]);

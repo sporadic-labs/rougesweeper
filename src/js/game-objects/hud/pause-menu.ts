@@ -9,6 +9,7 @@ import { GameStore } from "../../store/index";
 import storedSettings from "../../store/stored-settings";
 import DEPTHS from "../depths";
 import GAME_MODES from "../game-manager/game-modes";
+import SoundManager from "../sound-manager";
 import TextButton from "./text-button";
 
 const baseTextStyle = {
@@ -52,7 +53,7 @@ export default class PauseMenu {
   private sfxVolumeUpButton: TextButton;
   private sfxVolumeDownButton: TextButton;
 
-  constructor(private scene: Scene, private gameStore: GameStore) {
+  constructor(private scene: Scene, private gameStore: GameStore, private sound: SoundManager) {
     this.createModal();
 
     this.proxy = new EventProxy();
@@ -125,15 +126,29 @@ export default class PauseMenu {
     // Menu Stuff
     this.title = this.scene.add.text(r.centerX, r.y + 40, "Pause", titleStyle).setOrigin(0.5, 0.5);
 
-    const closeButton = new TextButton(this.scene, r.centerX - 180, r.bottom - 30, "Resume", {
-      origin: { x: 0.5, y: 1 },
-    });
+    const closeButton = new TextButton(
+      this.scene,
+      r.centerX - 180,
+      r.bottom - 30,
+      "Resume",
+      {
+        origin: { x: 0.5, y: 1 },
+      },
+      this.sound
+    );
     closeButton.events.on("DOWN", this.close);
     this.closeButton = closeButton;
 
-    const quitButton = new TextButton(this.scene, r.centerX + 180, r.bottom - 30, "Exit", {
-      origin: { x: 0.5, y: 1 },
-    });
+    const quitButton = new TextButton(
+      this.scene,
+      r.centerX + 180,
+      r.bottom - 30,
+      "Exit",
+      {
+        origin: { x: 0.5, y: 1 },
+      },
+      this.sound
+    );
     quitButton.events.on("DOWN", this.quit);
     this.quitButton = quitButton;
 
@@ -142,18 +157,32 @@ export default class PauseMenu {
       .text(r.centerX, r.centerY - 90, "Music Volume", subtitleStyle)
       .setOrigin(0.5, 0.5);
     this.musicVolumeValue = this.scene.add
-      .text(r.centerX, r.centerY  - 40, `${storedSettings.musicVolume}`, subtitleStyle)
+      .text(r.centerX, r.centerY - 40, `${storedSettings.musicVolume}`, subtitleStyle)
       .setOrigin(0.5, 0.5);
 
-    const musicVolumeUpButton = new TextButton(this.scene, r.centerX + 120, r.centerY  - 40, "+", {
-      origin: { x: 0.5, y: 0.5 },
-    });
+    const musicVolumeUpButton = new TextButton(
+      this.scene,
+      r.centerX + 120,
+      r.centerY - 40,
+      "+",
+      {
+        origin: { x: 0.5, y: 0.5 },
+      },
+      this.sound
+    );
     musicVolumeUpButton.events.on("DOWN", this.musicVolumeUp);
     this.musicVolumeUpButton = musicVolumeUpButton;
 
-    const musicVolumeDownButton = new TextButton(this.scene, r.centerX - 120, r.centerY  - 40, "-", {
-      origin: { x: 0.5, y: 0.5 },
-    });
+    const musicVolumeDownButton = new TextButton(
+      this.scene,
+      r.centerX - 120,
+      r.centerY - 40,
+      "-",
+      {
+        origin: { x: 0.5, y: 0.5 },
+      },
+      this.sound
+    );
     musicVolumeDownButton.events.on("DOWN", this.musicVolumeDown);
     this.musicVolumeDownButton = musicVolumeDownButton;
 
@@ -162,18 +191,32 @@ export default class PauseMenu {
       .text(r.centerX, r.centerY + 40, "SFX Volume", subtitleStyle)
       .setOrigin(0.5, 0.5);
     this.sfxVolumeValue = this.scene.add
-      .text(r.centerX,  r.centerY + 90, `${storedSettings.sfxVolume}`, subtitleStyle)
+      .text(r.centerX, r.centerY + 90, `${storedSettings.sfxVolume}`, subtitleStyle)
       .setOrigin(0.5, 0.5);
 
-    const sfxVolumeUpButton = new TextButton(this.scene, r.centerX + 120,  r.centerY + 90, "+", {
-      origin: { x: 0.5, y: 0.5 },
-    });
+    const sfxVolumeUpButton = new TextButton(
+      this.scene,
+      r.centerX + 120,
+      r.centerY + 90,
+      "+",
+      {
+        origin: { x: 0.5, y: 0.5 },
+      },
+      this.sound
+    );
     sfxVolumeUpButton.events.on("DOWN", this.sfxVolumeUp);
     this.sfxVolumeUpButton = sfxVolumeUpButton;
 
-    const sfxVolumeDownButton = new TextButton(this.scene, r.centerX - 120,  r.centerY + 90, "-", {
-      origin: { x: 0.5, y: 0.5 },
-    });
+    const sfxVolumeDownButton = new TextButton(
+      this.scene,
+      r.centerX - 120,
+      r.centerY + 90,
+      "-",
+      {
+        origin: { x: 0.5, y: 0.5 },
+      },
+      this.sound
+    );
     sfxVolumeDownButton.events.on("DOWN", this.sfxVolumeDown);
     this.sfxVolumeDownButton = sfxVolumeDownButton;
 
@@ -231,25 +274,25 @@ export default class PauseMenu {
     this.scene.scene.start(SCENE_NAME.START);
   };
 
-  musicVolumeUp = () : void => {
-    this.gameStore.musicVolumeUp()
-    this.musicVolumeValue.setText(`${this.gameStore.musicVolume}`)
-  }
+  musicVolumeUp = (): void => {
+    this.gameStore.musicVolumeUp();
+    this.musicVolumeValue.setText(`${this.gameStore.musicVolume}`);
+  };
 
-  musicVolumeDown = () : void => {
-    this.gameStore.musicVolumeDown()
-    this.musicVolumeValue.setText(`${this.gameStore.musicVolume}`)
-  }
+  musicVolumeDown = (): void => {
+    this.gameStore.musicVolumeDown();
+    this.musicVolumeValue.setText(`${this.gameStore.musicVolume}`);
+  };
 
-  sfxVolumeUp = () : void => {
-    this.gameStore.sfxVolumeUp()
-    this.sfxVolumeValue.setText(`${this.gameStore.sfxVolume}`)
-  }
+  sfxVolumeUp = (): void => {
+    this.gameStore.sfxVolumeUp();
+    this.sfxVolumeValue.setText(`${this.gameStore.sfxVolume}`);
+  };
 
-  sfxVolumeDown = () : void => {
-    this.gameStore.sfxVolumeDown()
-    this.sfxVolumeValue.setText(`${this.gameStore.sfxVolume}`)
-  }
+  sfxVolumeDown = (): void => {
+    this.gameStore.sfxVolumeDown();
+    this.sfxVolumeValue.setText(`${this.gameStore.sfxVolume}`);
+  };
 
   /** Manually call this when closing menu because of bug where button stays in pressed state */
   resetButtons() {

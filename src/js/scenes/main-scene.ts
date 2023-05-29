@@ -26,15 +26,15 @@ export default class MainScene extends Scene {
     const player = new Player(this, 0, 0);
     const toastManager = new ToastManager(this);
     const soundManager = new SoundManager(this, store);
-    const dialogueManager = new DialogueManager(this, store);
+    const dialogueManager = new DialogueManager(this, store, soundManager);
     const randomPickupManager = new RandomPickupManager();
 
     // Create the game manager.
     new GameManager(this, player, toastManager, dialogueManager, randomPickupManager, soundManager);
 
     // Create the menus...
-    new DebugMenu(this, store);
-    new PauseMenu(this, store);
+    new DebugMenu(this, store, soundManager);
+    new PauseMenu(this, store, soundManager);
     
     // And other HUD stuff!
     new AlertIndicator(this, store);

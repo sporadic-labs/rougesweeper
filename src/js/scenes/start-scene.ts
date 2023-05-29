@@ -36,6 +36,9 @@ export default class StartScene extends Scene {
   private sfx: SoundManager;
 
   create() {
+    /* Add sound fx needed for the main menu. */
+    this.sfx = new SoundManager(this, store);
+
     const width = Number(this.game.config.width);
     const height = Number(this.game.config.height);
 
@@ -59,7 +62,7 @@ export default class StartScene extends Scene {
       .setAlpha(0.95)
       .setDepth(DEPTHS.ABOVE_GROUND);
     this.cloud_01_poser = new TweenPoser(this, this.cloud_01, {
-      duration: 60 * 5 * 1000 + Math.RND.between(200, 800),
+      duration: 60 * 2 * 1000 + Math.RND.between(200, 800),
       yoyo: true,
       hold: Math.RND.between(250, 350),
       repeat: -1,
@@ -83,7 +86,7 @@ export default class StartScene extends Scene {
       .setAlpha(0.9)
       .setDepth(DEPTHS.ABOVE_GROUND);
     this.cloud_02_poser = new TweenPoser(this, this.cloud_02, {
-      duration: 60 * 5 * 1000 + Math.RND.between(200, 800),
+      duration: 60 * 2 * 1000 + Math.RND.between(200, 800),
       yoyo: true,
       hold: Math.RND.between(250, 350),
       repeat: -1,
@@ -177,7 +180,7 @@ export default class StartScene extends Scene {
       .setDepth(DEPTHS.HUD);
 
     // Play Button
-    this.playButton = new TextButton(this, width / 2, height - 224, "Start");
+    this.playButton = new TextButton(this, width / 2, height - 224, "Start", {}, this.sfx);
     this.playButton.events.once(BUTTON_EVENTS.DOWN, () => {
       this.sound.stopAll();
       this.scene.stop();
@@ -185,17 +188,16 @@ export default class StartScene extends Scene {
     });
 
     // Create the Pause Menu, to be used by the settings button.
-    this.pauseMenu = new PauseMenu(this, store);
+    this.pauseMenu = new PauseMenu(this, store, this.sfx);
 
     // Settings Button
-    const settingsButton = new TextButton(this, width / 2, height - 148, "Settings");
+    const settingsButton = new TextButton(this, width / 2, height - 148, "Settings", {}, this.sfx);
     this.settingsButton = settingsButton;
     settingsButton.events.on(BUTTON_EVENTS.DOWN, () => {
       store.setPauseMenuOpen(true);
     });
 
-    /* Add sound fx needed for the main menu. */
-    this.sfx = new SoundManager(this, store);
+    // Start the background music!
     this.sfx.playMusic(AUDIO_KEYS.MAIN_MENU_MUSIC);
   }
 

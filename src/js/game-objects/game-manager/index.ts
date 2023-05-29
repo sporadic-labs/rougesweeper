@@ -132,6 +132,7 @@ export default class GameManager {
       this.scene.scene.stop();
       this.scene.scene.start(SCENE_NAME.WIN);
     } else {
+      this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE);
       this.toast.setMessage("That door is locked - find the key.");
     }
 
@@ -143,6 +144,7 @@ export default class GameManager {
 
     // If the player doesn't have a weapon yet, they can't do anything!
     if (!store.hasWeapon) {
+      this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE);
       this.toast.setMessage("No way to hack!");
       return;
     }
@@ -159,6 +161,7 @@ export default class GameManager {
     if (itemInfo.key === "compass") {
       // only allow one active compass
       if (this.compass) {
+        this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE);
         this.toast.setMessage("A compass is already active!");
       } else {
         this.compass = new Compass(this.scene, this.player, this.level);
@@ -169,6 +172,7 @@ export default class GameManager {
       if (success) {
         store.removeAmmo("clearRadar", 1);
       } else {
+        this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE);
         this.toast.setMessage("No tiles to reveal around you - try using in a different spot.");
       }
     } else if (itemInfo.key === "revealTile") {
@@ -178,6 +182,7 @@ export default class GameManager {
       const path = this.level.findPathBetween(playerGridPos, tileGridPos, true);
       const canAttack = path && !tile.isRevealed;
       if (!canAttack) {
+        this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE);
         this.toast.setMessage("You can't hack that location.");
         return;
       }
@@ -221,6 +226,7 @@ export default class GameManager {
     const canRevealDistantTile = !tile.isRevealed;
 
     if (!canRevealDistantTile) {
+      this.sound.playSfx(AUDIO_KEYS.INVALID_MOVE);
       this.toast.setMessage("This tile is already revealed!");
       return;
     }
@@ -414,10 +420,11 @@ export default class GameManager {
   async runAttackFlow(tile: Tile, path: Point[]) {
     this.level.disableAllTiles();
 
-    await this.tutorialLogic.onTileClick(tile.type);
-
     if (path.length > 2) await this.movePlayerAlongPath(path.slice(0, path.length - 1));
     await tile.flipToFront();
+
+    await this.tutorialLogic.onTileClick(tile.type);
+
     store.removeAmmo("hack", 1);
     const { x, y } = tile.getPosition();
     const attackAnimKey = `attack-fx-${Phaser.Math.RND.integerInRange(1, 3)}`;

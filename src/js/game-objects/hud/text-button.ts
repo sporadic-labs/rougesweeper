@@ -2,6 +2,8 @@ import EventProxy from "../../helpers/event-proxy";
 import { Types } from "phaser";
 import EventEmitter from "../../helpers/event-emitter";
 import DEPTHS from "../depths";
+import SoundManager from "../sound-manager";
+import { AUDIO_KEYS } from "../../scenes";
 
 const defaultOrigin = { x: 0.5, y: 0.5 } as const;
 const defaultStyle = {
@@ -59,7 +61,8 @@ export default class TextButton {
       origin?: { x: number; y: number };
       textStyle?: Types.GameObjects.Text.TextStyle;
       depth?: number
-    } = {}
+    } = {},
+    private sound: SoundManager
   ) {
     this.scene = scene;
     this.isHovered = false;
@@ -152,6 +155,7 @@ export default class TextButton {
   }
 
   onPointerOver() {
+    this.sound.playUI(AUDIO_KEYS.UI_HOVER)
     this.isHovered = true;
     this.updateTextStyle();
     this.events.emit(BUTTON_EVENTS.OVER, undefined);
@@ -170,6 +174,7 @@ export default class TextButton {
   }
 
   onPointerDown() {
+    this.sound.playUI(AUDIO_KEYS.UI_CLICK)
     this.isPressed = true;
     this.updateTextStyle();
     this.events.emit(BUTTON_EVENTS.DOWN, undefined);

@@ -36,6 +36,9 @@ export default class LoseScene extends Scene {
   private sfx: SoundManager;
 
   create() {
+    /* Add sound fx needed for the main menu. */
+    this.sfx = new SoundManager(this, store);
+
     const width = Number(this.game.config.width);
     const height = Number(this.game.config.height);
     const y = height / 2;
@@ -202,7 +205,7 @@ export default class LoseScene extends Scene {
       .setOrigin(0.5, 0.5);
     this.goldText = goldText;
 
-    const playButton = new TextButton(this, width / 2, y + 164, "Play Again?");
+    const playButton = new TextButton(this, width / 2, y + 164, "Play Again?", {}, this.sfx);
     this.playButton = playButton;
 
     playButton.events.once(BUTTON_EVENTS.DOWN, () => {
@@ -210,7 +213,7 @@ export default class LoseScene extends Scene {
       this.scene.start(SCENE_NAME.MAIN);
     });
 
-    const mainMenuButton = new TextButton(this, width / 2, y + 240, "Main Menu");
+    const mainMenuButton = new TextButton(this, width / 2, y + 240, "Main Menu", {}, this.sfx);
     this.mainMenuButton = mainMenuButton;
 
     mainMenuButton.events.once(BUTTON_EVENTS.DOWN, () => {
@@ -218,8 +221,7 @@ export default class LoseScene extends Scene {
       this.scene.start(SCENE_NAME.START);
     });
 
-    /* Add sound fx needed for the main menu. */
-    this.sfx = new SoundManager(this, store);
+    // Start playing the audio!
     this.sfx.playMusic(AUDIO_KEYS.MAIN_MENU_MUSIC);
   }
 
